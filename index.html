@@ -30,11 +30,11 @@
 -->
 <meta http-equiv="Content-Security-Policy" content="
   default-src 'self';
-  script-src 'self' 'unsafe-inline' https://www.gstatic.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;
+  script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;
   style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
   font-src 'self' https://fonts.gstatic.com data:;
   img-src 'self' data: blob: https:;
-  connect-src 'self' https://*.googleapis.com https://*.firebaseio.com https://firestore.googleapis.com https://api.emailjs.com https://*.gstatic.com;
+  connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.emailjs.com;
   object-src 'none';
   base-uri 'self';
   form-action 'self';
@@ -43,8 +43,7 @@
 ">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <title>POWER-IMS — Inventory Management</title>
-<script defer src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
-<script defer src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -2071,7 +2070,8 @@ const LANG={
 };
 const L=k=>(LANG[S.lang]||LANG.en)[k]||k;
 
-const FIREBASE_CONFIG={apiKey:'AIzaSyByTcdFcZDo0Cv_Dmo_IW3EeP2KTe-K_dQ',authDomain:'powerims.firebaseapp.com',projectId:'powerims',appId:'1:306983469410:web:d65eedf6eb78602a8e6c3b'};
+const SUPABASE_URL='https://bfzmtbdnucefypqbdohr.supabase.co';
+const SUPABASE_KEY='sb_publishable_5EtdaQZdXOwdRUC9a5dr_A_0Nnl3A8w';
 
 /* ═══════════════════════════════════════════════════════
    ⚠️ SECURITY NOTICE
@@ -2081,8 +2081,8 @@ const FIREBASE_CONFIG={apiKey:'AIzaSyByTcdFcZDo0Cv_Dmo_IW3EeP2KTe-K_dQ',authDoma
      • Passwords are SHA-256 hashed before storage/comparison
      • OTPs use crypto.getRandomValues (not Math.random)
      • Failed login attempts are rate-limited
-   For production: move auth to Firebase Auth + Cloud Functions
-   and lock down Firestore security rules.
+   For production: move auth to Supabase Auth + Edge Functions
+   and lock down Supabase RLS policies.
 ═══════════════════════════════════════════════════════ */
 const OWNER_USERNAME = 'Mb';
 // SHA-256 hash of the original system-owner password.
@@ -2208,7 +2208,7 @@ function showToast(msg,type='',dur=2800){
 }
 
 /* ═══════════════════════════════════════════════════════
-   ★ REGISTRY — Cross-device via Firebase
+   ★ REGISTRY — Cross-device via Supabase
    Local registry is the primary store.
    Cloud registry is synced on login and on save.
 ═══════════════════════════════════════════════════════ */
@@ -2256,7 +2256,7 @@ function saveRegistryToCloud(reg,forceImmediate){
   }catch(e){console.warn('[registry cloud save threw]',e);}
 }
 
-// Pull registry from Firestore and merge with local.
+// Pull registry from Supabase and merge with local.
 // Conflict resolution: strict ">" means local wins on tie (avoids overwriting
 // fresh local edits made offline with a stale cloud snapshot of equal time).
 async function loadRegistryFromCloud(){
@@ -2387,26 +2387,69 @@ async function loadFromCloud(ns){
 }
 
 /* ═══════════════════════════════════════════════════════
-   FIREBASE
+   SUPABASE
 ═══════════════════════════════════════════════════════ */
 // Module-scoped sync coordination state. Declared before any function that uses them.
 let _syncT=null;
 let _lastWrittenAt='';
 
-function initFirebase(){
+function _createSupabaseCompat(client){
+  return{
+    collection(table){
+      return{
+        doc(id){
+          return{
+            async get(){
+              const{data,error}=await client.from(table).select('data').eq('id',id).maybeSingle();
+              if(error)throw error;
+              return{exists:!!data,data(){return data?data.data:null;}};
+            },
+            async set(updates,options){
+              if(options&&options.merge){
+                const{data:existing}=await client.from(table).select('data').eq('id',id).maybeSingle();
+                const merged=Object.assign({},existing?existing.data:{},updates);
+                const{error}=await client.from(table).upsert({id,data:merged},{onConflict:'id'});
+                if(error)throw error;
+              }else{
+                const{error}=await client.from(table).upsert({id,data:updates},{onConflict:'id'});
+                if(error)throw error;
+              }
+            },
+            onSnapshot(callback,errCallback){
+              client.from(table).select('data').eq('id',id).maybeSingle()
+                .then(({data,error})=>{
+                  if(error){if(errCallback)errCallback(error);return;}
+                  callback({exists:!!data,data(){return data?data.data:null;}});
+                });
+              const channel=client.channel(`${table}:${id}`)
+                .on('postgres_changes',{event:'*',schema:'public',table,filter:`id=eq.${id}`},payload=>{
+                  const row=payload.new;
+                  callback({exists:!!row&&Object.keys(row).length>0,data(){return row&&row.data?row.data:null;}});
+                })
+                .subscribe(status=>{
+                  if(status==='CHANNEL_ERROR'&&errCallback)errCallback(new Error('Realtime channel error'));
+                });
+              return()=>client.removeChannel(channel);
+            }
+          };
+        }
+      };
+    }
+  };
+}
+
+function initSupabase(){
   try{
-    if(typeof firebase==='undefined'){
-      console.warn('Firebase SDK not loaded yet — sync disabled.');
+    if(typeof supabase==='undefined'||typeof supabase.createClient!=='function'){
+      console.warn('Supabase SDK not loaded yet — sync disabled.');
       setSyncRing(false);return false;
     }
-    let app;
-    try{app=firebase.app('pims5');}
-    catch(e){app=firebase.initializeApp(FIREBASE_CONFIG,'pims5');}
-    S.db=firebase.firestore(app);S.dbConnected=true;
+    const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+    S.db=_createSupabaseCompat(client);S.dbConnected=true;
     if(S_isOnline){setSyncRing(true);}else{setSyncRing(false);}
     return true;
   }catch(e){
-    console.error('initFirebase:',e);
+    console.error('initSupabase:',e);
     setSyncRing(false);return false;
   }
 }
@@ -2832,7 +2875,7 @@ async function doLogin(u,ownerId,role){
   _lsSet('ims_currentRole',role);
   const reg=getRegistry();
   S.userBranch=(role==='user'||role==='storekeeper')?reg[u]?.branch||null:null;
-  initFirebase();
+  initSupabase();
   startRealtimeSync();
   markUserAsActive(u);
   if(S._onlinePingInterval){clearInterval(S._onlinePingInterval);}
@@ -3052,7 +3095,7 @@ function doLoginSystemOwner(){
   document.getElementById('req-notif-btn').style.display='none';
   document.getElementById('owner-back-btn').style.display='none';
   document.getElementById('drawer-hdr').className='drawer-hdr owner-drawer-hdr';
-  initFirebase();
+  initSupabase();
   hideLoader();
   loadPendingOwnersFromCloud().then(()=>renderSystemOwnerDashboard());
 }
@@ -4878,8 +4921,10 @@ function buildExpenseForm(row,mode,idx){
   document.getElementById('add-form-icon').textContent='💸';
   document.getElementById('add-form-title').textContent=mode==='add'?'Add Expense':'Edit Expense';
   document.getElementById('add-form-sub').textContent='Record an expense entry';
-  const d=row||{date:nowDt(),reason:'',amt:'',payment:'CASH'};
+  const defaultBranch=S.userBranch||(S.branches[0]||'STORE');
+  const d=row||{date:nowDt(),reason:'',amt:'',payment:'CASH',branch:defaultBranch};
   const pmOpts=PAYMENT_METHODS.map(m=>`<option value="${m}" ${(d.payment||'CASH')===m?'selected':''}>${m}</option>`).join('');
+  const branchOpts=(isOwner()||isSystemOwner())?[...S.branches.map(b=>`<option value="${esc(b)}" ${(d.branch||'')=== b?'selected':''}>${esc(b)} (Branch)</option>`),`<option value="STORE" ${(d.branch||'')==='STORE'?'selected':''}>🏪 Store</option>`].join(''):'';
   const body=document.getElementById(mode==='add'?'add-form-body':'edit-form-body');
   body.innerHTML=`
     <div class="field"><label>Date *</label><input type="datetime-local" id="f-date" value="${d.date||nowDt()}"></div>
@@ -4888,6 +4933,7 @@ function buildExpenseForm(row,mode,idx){
       <div class="field"><label>Amount *</label><input type="number" id="f-amt" value="${d.amt||''}" placeholder="0.00" step="any"></div>
       <div class="field"><label>Payment</label><select id="f-payment">${pmOpts}</select></div>
     </div>
+    ${(isOwner()||isSystemOwner())?`<div class="field"><label>Type</label><select id="f-expense-branch">${branchOpts}</select></div>`:''}
     <button type="button" class="modal-btn" onclick="submitExpenseForm('${mode}',${idx??-1})">${mode==='add'?'➕ Add Expense':'💾 Save'}</button>
     <button type="button" class="modal-btn secondary" onclick="closeModal('${mode==='add'?'add-row-modal':'edit-row-modal'}')" style="margin-top:5px">Cancel</button>
     <div class="modal-error" id="f-error"></div>`;
@@ -4898,7 +4944,8 @@ function submitExpenseForm(mode,idx){
   const amt=parseFloat(document.getElementById('f-amt').value)||0;
   const payment=document.getElementById('f-payment').value;
   if(!date||!reason||!amt){showMsg('f-error','All fields required');return;}
-  const row={date,reason,amt,payment,_by:S.user};
+  const expBranch=document.getElementById('f-expense-branch')?.value||(S.userBranch||'STORE');
+  const row={date,reason,amt,payment,branch:expBranch,_by:S.user};
   if(mode==='add')S.expense.push(row);else S.expense[idx]={...S.expense[idx],...row};
   saveUserData();renderTab();
   closeModal(mode==='add'?'add-row-modal':'edit-row-modal');
@@ -5448,17 +5495,18 @@ function renderExpense(){
   const total=rows.reduce((a,b)=>a+(parseFloat(b.amt)||0),0);
   document.getElementById('tab-content').innerHTML=`<div class="table-wrap">
     <table>
-      <thead><tr><th>${L('date')}</th><th>${L('reason')}</th><th class="num">${L('amount')}</th><th>${L('payment')}</th></tr></thead>
+      <thead><tr><th>${L('date')}</th><th>${L('reason')}</th><th class="num">${L('amount')}</th><th>${L('payment')}</th><th>Type</th></tr></thead>
       <tbody>
-        ${rows.map(row=>{const amt=parseFloat(row.amt)||0;
+        ${rows.map(row=>{const amt=parseFloat(row.amt)||0;const expType=row.branch==='STORE'||!row.branch?'🏪 Store':`🏢 ${esc(row.branch||'')}`;
           return`<tr oncontextmenu="showCtxMenu(event,${S.expense.indexOf(row)},'expense')" title="Right-click for options">
             <td class="td-mono" data-label="Date" style="font-size:11.5px">${(row.date||'').replace('T',' ')}</td>
             <td data-label="Reason" style="font-weight:500">${esc(row.reason||'—')}</td>
             <td class="num td-mono ${colorClass(-amt)}" data-label="Amount">${fmt(amt)}</td>
             <td data-label="Payment"><span class="td-badge ${row.payment==='CASH'?'badge-cash':row.payment==='CREDIT'?'badge-credit':'badge-other'}">${row.payment||'CASH'}</span></td>
+            <td data-label="Type" style="font-size:11.5px;color:var(--text2)">${expType}</td>
           </tr>`;}).join('')}
-        ${rows.length?`<tr class="summary-row"><td colspan="2" data-label="">${L('totals').toUpperCase()}</td><td class="num td-mono ${colorClass(-total)}" data-label="">${fmt(total)}</td><td data-label=""></td></tr>`:''}
-        ${!rows.length?`<tr><td colspan="4" style="text-align:center;color:var(--text3);padding:32px">${L('emptyExpense')}</td></tr>`:''}
+        ${rows.length?`<tr class="summary-row"><td colspan="2" data-label="">${L('totals').toUpperCase()}</td><td class="num td-mono ${colorClass(-total)}" data-label="">${fmt(total)}</td><td data-label=""></td><td data-label=""></td></tr>`:''}
+        ${!rows.length?`<tr><td colspan="5" style="text-align:center;color:var(--text3);padding:32px">${L('emptyExpense')}</td></tr>`:''}
       </tbody>
     </table>
   </div>`;
@@ -5483,13 +5531,15 @@ function _reportCalc(branch){
   });
   const PR=inRange(branch?S.purchase.filter(p=>p.branch===branch):S.purchase);
   const SR=inRange(branch?S.sales.filter(s=>s.branch===branch):S.sales);
-  const ER=inRange(S.expense);
+  const ER=inRange(branch?S.expense.filter(e=>e.branch===branch):S.expense.filter(e=>e.branch&&e.branch!=='STORE'));
+  const storeER=inRange(S.expense.filter(e=>!e.branch||e.branch==='STORE'));
   const initBal=branch?_branchBal(branch):S.branches.reduce((a,b)=>a+_branchBal(b),0);
   const tPC=PR.filter(p=>p.payment==='CASH').reduce((a,b)=>a+calcPT(b),0);
   const tPCr=PR.filter(p=>p.payment!=='CASH').reduce((a,b)=>a+calcPT(b),0);
   const tSC=SR.filter(s=>s.payment==='CASH').reduce((a,b)=>a+calcST(b),0);
   const tSCr=SR.filter(s=>s.payment!=='CASH').reduce((a,b)=>a+calcST(b),0);
   const tE=ER.reduce((a,b)=>a+(parseFloat(b.amt)||0),0);
+  const tStoreE=branch?0:storeER.reduce((a,b)=>a+(parseFloat(b.amt)||0),0);
   // Credit payments settled: use actual partial amounts paid, capped at the full credit value
   const tSCrPaid=SR.filter(s=>s.payment==='CREDIT'&&s._cid).reduce((a,s)=>{
     const paid=Math.min(getCreditPaidAmt(s._cid),calcST(s));return a+paid;},0);
@@ -5524,7 +5574,7 @@ function _reportCalc(branch){
   const tVwh=SR.filter(s=>s.payment==='CASH').reduce((a,s)=>{const b=(s.qty||0)*(s.sPrice||0);return a+(s.vwhOn?b*0.075:0);},0);
   const tWh3=SR.filter(s=>s.payment==='CASH').reduce((a,s)=>{const b=(s.qty||0)*(s.sPrice||0);return a+(s.wh3On?b*0.03:0);},0);
   const tComm=SR.reduce((a,s)=>a+(parseFloat(s.commission)||0),0);
-  return{PR,SR,ER,initBal,tPC,tPCr,tPCrPaid,tPCrOut,tSC,tSCr,tSCrPaid,tSCrOut,tE,net,coh,totalSales:totalSalesPL,totalPurchases,entryPL,tVwh,tWh3,tComm};
+  return{PR,SR,ER,initBal,tPC,tPCr,tPCrPaid,tPCrOut,tSC,tSCr,tSCrPaid,tSCrOut,tE,tStoreE,net,coh,totalSales:totalSalesPL,totalPurchases,entryPL,tVwh,tWh3,tComm};
 }
 
 function renderReport(){
@@ -5565,7 +5615,7 @@ function _renderAllBranchesReport(branchTabsHtml,datebar){
       {l:'Purchase on Cash',v:c.tPC,neg:true},
       {l:'Purchase in Credit',v:c.tPCr,neg:true},
       {l:'Total Purchase',v:c.tPC+c.tPCr,neg:true},
-      {l:L('totalExpenses'),v:c.tE,neg:true},
+      {l:'Branch Expenses',v:c.tE,neg:true},
       {l:L('netProfitLoss'),v:c.net,total:true},
       {l:'VAT Withholding 7.5%',v:c.tVwh},
       {l:'Withholding 3%',v:c.tWh3},
@@ -5581,6 +5631,10 @@ function _renderAllBranchesReport(branchTabsHtml,datebar){
   }).join('');
 
   const tot=S.branches.reduce((acc,b)=>{const c=_reportCalc(b);acc.ib+=c.initBal;acc.tSC+=c.tSC;acc.tSCrOut+=c.tSCrOut;acc.tPC+=c.tPC;acc.tPCr+=c.tPCr;acc.tE+=c.tE;acc.net+=c.net;acc.coh+=c.coh;acc.tVwh+=c.tVwh;acc.tWh3+=c.tWh3;acc.tComm+=c.tComm;return acc;},{ib:0,tSC:0,tSCrOut:0,tPC:0,tPCr:0,tE:0,net:0,coh:0,tVwh:0,tWh3:0,tComm:0});
+  const _inRng=r=>{if(!r.date)return true;const d=r.date.slice(0,10);if(S.reportRange.from&&d<S.reportRange.from)return false;if(S.reportRange.to&&d>S.reportRange.to)return false;return true;};
+  tot.tStoreE=S.expense.filter(e=>!e.branch||e.branch==='STORE').filter(_inRng).reduce((a,b)=>a+(parseFloat(b.amt)||0),0);
+  tot.net-=tot.tStoreE;
+  tot.coh-=tot.tStoreE;
   const totRows=[
     {l:L('initBalance'),v:tot.ib},
     {l:'Sales on Cash',v:tot.tSC,pos:true},
@@ -5588,7 +5642,8 @@ function _renderAllBranchesReport(branchTabsHtml,datebar){
     {l:'Purchase on Cash',v:tot.tPC,neg:true},
     {l:'Purchase in Credit',v:tot.tPCr,neg:true},
     {l:'Total Purchase',v:tot.tPC+tot.tPCr,neg:true},
-    {l:L('totalExpenses'),v:tot.tE,neg:true},
+    {l:'Branch Expenses',v:tot.tE,neg:true},
+    {l:'Store Expenses',v:tot.tStoreE,neg:true},
     {l:L('netProfitLoss'),v:tot.net,total:true},
     {l:'VAT Withholding 7.5%',v:tot.tVwh},
     {l:'Withholding 3%',v:tot.tWh3},
@@ -5625,7 +5680,7 @@ function _renderSingleBranchReport(branch,branchTabsHtml,datebar){
     {l:`Purchase on Cash${label?` ${label}`:''}`,v:c.tPC,neg:true},
     {l:`Purchase in Credit${label?` ${label}`:''}`,v:c.tPCr,neg:true},
     {l:`Total Purchase${label?` ${label}`:''}`,v:c.tPC+c.tPCr,neg:true},
-    {l:L('totalExpenses'),v:c.tE,neg:true},
+    {l:'Branch Expenses',v:c.tE,neg:true},
     {l:L('netProfitLoss'),v:c.net,total:true},
     {l:'VAT Withholding 7.5%',v:c.tVwh},
     {l:'Withholding 3%',v:c.tWh3},
@@ -6341,7 +6396,7 @@ document.addEventListener('touchcancel',_lpCancel,{passive:true});
 /* ═══════════════════════════════════════════════════════
    ★ BOOT — now async to support cloud registry fetch
 ═══════════════════════════════════════════════════════ */
-// Wait for the Firebase SDK to actually be defined. The <script defer>
+// Wait for the Supabase SDK to actually be defined. The <script defer>
 // guarantees execution after parsing but DOMContentLoaded fires when parsing
 // is done, not when defers have all executed in some browsers. Poll briefly.
 function _waitFor(predicate, timeoutMs){
@@ -6362,10 +6417,10 @@ async function init(){
     const savedOwner=localStorage.getItem('ims_currentOwner');
     const savedRole=localStorage.getItem('ims_currentRole');
     const hasSession=!!(savedUser&&savedOwner&&savedRole);
-    // Wait up to 3s for Firebase SDK to load — but proceed regardless so
+    // Wait up to 3s for Supabase SDK to load — but proceed regardless so
     // the auth screen still appears if the user is offline.
-    await _waitFor(()=>typeof firebase!=='undefined'&&firebase.firestore,3000);
-    initEmailJS();initFirebase();
+    await _waitFor(()=>typeof supabase!=='undefined'&&typeof supabase.createClient==='function',3000);
+    initEmailJS();initSupabase();
     if(hasSession){
       // Fast path for returning users: boot immediately from local cache so the
       // loading screen disappears right away, then refresh the registry quietly
