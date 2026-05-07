@@ -1218,6 +1218,14 @@ html[data-view="mobile"] .table-search-bar{display:none}
       <span class="di-icon" style="background:rgba(59,130,246,.12);color:var(--p)">📥</span>
       <div class="di-info"><div class="di-label">Import from Excel</div><div class="di-sub">Upload .xlsx to import data</div></div>
     </button>
+    <button type="button" class="drawer-item" id="btn-backup-data" onclick="backupData();closeSettings()" style="display:none">
+      <span class="di-icon" style="background:rgba(16,185,129,.12);color:var(--success)">💾</span>
+      <div class="di-info"><div class="di-label">Backup Data</div><div class="di-sub">Download full JSON backup</div></div>
+    </button>
+    <button type="button" class="drawer-item" id="btn-restore-data" onclick="triggerRestoreFile();closeSettings()" style="display:none">
+      <span class="di-icon" style="background:rgba(239,68,68,.12);color:var(--error)">📂</span>
+      <div class="di-info"><div class="di-label">Restore Data</div><div class="di-sub">Upload JSON backup file</div></div>
+    </button>
     <div class="drawer-divider"></div>
     <div class="drawer-section" data-i18n="settingsAccount">Account</div>
     <button type="button" class="drawer-item" onclick="openChangePass();closeSettings()">
@@ -2861,6 +2869,8 @@ async function doLogin(u,ownerId,role){
   document.getElementById('btn-owner-users').style.display=isOwner()?'flex':'none';
   document.getElementById('btn-owner-shopname').style.display=isOwner()?'flex':'none';
   document.getElementById('btn-owner-sub').style.display=isOwner()?'flex':'none';
+  document.getElementById('btn-backup-data').style.display=isOwner()?'flex':'none';
+  document.getElementById('btn-restore-data').style.display=isOwner()?'flex':'none';
   document.getElementById('btn-request-store').style.display=(isUser()&&S.userBranch)?'flex':'none';
   document.getElementById('danger-zone-wrap').style.display=isOwner()?'block':'none';
   document.getElementById('owner-back-btn').style.display='none';
@@ -5490,11 +5500,31 @@ function _reportCalc(branch){
     const tot=calcPT(p);return a+tot-Math.min(getCreditPaidAmt(p._cid),tot);},0);
   const tSCrOut=SR.filter(s=>s.payment==='CREDIT'&&s._cid).reduce((a,s)=>{
     const tot=calcST(s);return a+tot-Math.min(getCreditPaidAmt(s._cid),tot);},0);
-  // Accrual P/L: all sales - all purchases - expenses (credit counted when made, not when settled)
-  const net=(tSC+tSCr)-(tPC+tPCr)-tE;
   // Cash on hand: only actual cash movements (paid credit settlements included)
   const coh=initBal+tSC+tSCrPaid-tPC-tPCrPaid-tE;
-  return{PR,SR,ER,initBal,tPC,tPCr,tPCrPaid,tPCrOut,tSC,tSCr,tSCrPaid,tSCrOut,tE,net,coh};
+  const totalSales=tSC+tSCr;
+  // Net P/L via FIFO: net per entry = qty×sPrice − qty×uPrice (matched purchase lot)
+  const allBranchPR=branch?S.purchase.filter(p=>p.branch===branch):S.purchase;
+  const fifo={};
+  allBranchPR.forEach(p=>{if(!p.id)return;if(!fifo[p.id])fifo[p.id]=[];fifo[p.id].push({uPrice:parseFloat(p.uPrice)||0,qty:parseFloat(p.qty)||0,date:p.date||''});});
+  Object.values(fifo).forEach(q=>q.sort((a,b)=>a.date.localeCompare(b.date)));
+  const consumeFIFO=(id,qty)=>{let rem=qty,cogs=0;for(const lot of fifo[id]||[]){if(rem<=0)break;const take=Math.min(rem,lot.qty);cogs+=take*lot.uPrice;lot.qty-=take;rem-=take;}return cogs;};
+  // Walk ALL branch sales oldest-first so pre-range sales deplete FIFO correctly
+  const allBranchSales=(branch?S.sales.filter(s=>s.branch===branch):S.sales).slice().sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+  const srSet=new Set(SR);
+  const entryPLMap=new Map();
+  allBranchSales.forEach(s=>{
+    const cogs=consumeFIFO(s.id,parseFloat(s.qty)||0);
+    if(srSet.has(s)){const saleAmt=(parseFloat(s.qty)||0)*(parseFloat(s.sPrice)||0);const comm=parseFloat(s.commission)||0;const wh3=s.wh3On?saleAmt*0.03:0;entryPLMap.set(s,{saleAmt,cogs,profit:saleAmt-cogs-comm-wh3});}
+  });
+  const entryPL=SR.map(s=>{const d=entryPLMap.get(s);if(d)return{...s,...d};const saleAmt=(parseFloat(s.qty)||0)*(parseFloat(s.sPrice)||0);const comm=parseFloat(s.commission)||0;const wh3=s.wh3On?saleAmt*0.03:0;return{...s,saleAmt,cogs:0,profit:saleAmt-comm-wh3};});
+  const totalSalesPL=entryPL.reduce((a,e)=>a+e.saleAmt,0);
+  const totalPurchases=entryPL.reduce((a,e)=>a+e.cogs,0);
+  const net=entryPL.reduce((a,e)=>a+e.profit,0)-tE;
+  const tVwh=SR.filter(s=>s.payment==='CASH').reduce((a,s)=>{const b=(s.qty||0)*(s.sPrice||0);return a+(s.vwhOn?b*0.075:0);},0);
+  const tWh3=SR.filter(s=>s.payment==='CASH').reduce((a,s)=>{const b=(s.qty||0)*(s.sPrice||0);return a+(s.wh3On?b*0.03:0);},0);
+  const tComm=SR.reduce((a,s)=>a+(parseFloat(s.commission)||0),0);
+  return{PR,SR,ER,initBal,tPC,tPCr,tPCrPaid,tPCrOut,tSC,tSCr,tSCrPaid,tSCrOut,tE,net,coh,totalSales:totalSalesPL,totalPurchases,entryPL,tVwh,tWh3,tComm};
 }
 
 function renderReport(){
@@ -5530,12 +5560,16 @@ function _renderAllBranchesReport(branchTabsHtml,datebar){
     const c=_reportCalc(b);
     const rows=[
       {l:L('initBalance'),v:c.initBal,edit:true},
-      {l:L('totalPurchCash'),v:c.tPC},
-      {l:'Purchase Outstanding',v:c.tPCrOut,neg:true},
-      {l:L('totalSalesCash'),v:c.tSC},
-      {l:'Sales Outstanding',v:c.tSCrOut,pos:true},
-      {l:L('totalExpenses'),v:c.tE},
+      {l:'Sales on Cash',v:c.tSC,pos:true},
+      {l:'Sales on Credit',v:c.tSCrOut,pos:true},
+      {l:'Purchase on Cash',v:c.tPC,neg:true},
+      {l:'Purchase in Credit',v:c.tPCr,neg:true},
+      {l:'Total Purchase',v:c.tPC+c.tPCr,neg:true},
+      {l:L('totalExpenses'),v:c.tE,neg:true},
       {l:L('netProfitLoss'),v:c.net,total:true},
+      {l:'VAT Withholding 7.5%',v:c.tVwh},
+      {l:'Withholding 3%',v:c.tWh3},
+      {l:'Commission',v:c.tComm},
       {l:L('cashOnHand'),v:c.coh,total:true},
     ];
     return`<div style="margin:12px 14px;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:var(--surface)">
@@ -5546,15 +5580,19 @@ function _renderAllBranchesReport(branchTabsHtml,datebar){
     </div>`;
   }).join('');
 
-  const tot=S.branches.reduce((acc,b)=>{const c=_reportCalc(b);acc.ib+=c.initBal;acc.tPC+=c.tPC;acc.tPCrOut+=c.tPCrOut;acc.tSC+=c.tSC;acc.tSCrOut+=c.tSCrOut;acc.tE+=c.tE;acc.net+=c.net;acc.coh+=c.coh;return acc;},{ib:0,tPC:0,tPCrOut:0,tSC:0,tSCrOut:0,tE:0,net:0,coh:0});
+  const tot=S.branches.reduce((acc,b)=>{const c=_reportCalc(b);acc.ib+=c.initBal;acc.tSC+=c.tSC;acc.tSCrOut+=c.tSCrOut;acc.tPC+=c.tPC;acc.tPCr+=c.tPCr;acc.tE+=c.tE;acc.net+=c.net;acc.coh+=c.coh;acc.tVwh+=c.tVwh;acc.tWh3+=c.tWh3;acc.tComm+=c.tComm;return acc;},{ib:0,tSC:0,tSCrOut:0,tPC:0,tPCr:0,tE:0,net:0,coh:0,tVwh:0,tWh3:0,tComm:0});
   const totRows=[
     {l:L('initBalance'),v:tot.ib},
-    {l:L('totalPurchCash'),v:tot.tPC},
-    {l:'Purchase Outstanding',v:tot.tPCrOut,neg:true},
-    {l:L('totalSalesCash'),v:tot.tSC},
-    {l:'Sales Outstanding',v:tot.tSCrOut,pos:true},
-    {l:L('totalExpenses'),v:tot.tE},
+    {l:'Sales on Cash',v:tot.tSC,pos:true},
+    {l:'Sales on Credit',v:tot.tSCrOut,pos:true},
+    {l:'Purchase on Cash',v:tot.tPC,neg:true},
+    {l:'Purchase in Credit',v:tot.tPCr,neg:true},
+    {l:'Total Purchase',v:tot.tPC+tot.tPCr,neg:true},
+    {l:L('totalExpenses'),v:tot.tE,neg:true},
     {l:L('netProfitLoss'),v:tot.net,total:true},
+    {l:'VAT Withholding 7.5%',v:tot.tVwh},
+    {l:'Withholding 3%',v:tot.tWh3},
+    {l:'Commission',v:tot.tComm},
     {l:L('cashOnHand'),v:tot.coh,total:true},
   ];
   const totCard=`<div style="margin:12px 14px 20px;border-radius:14px;overflow:hidden;border:1.5px solid var(--success);background:var(--surface)">
@@ -5582,12 +5620,16 @@ function _renderSingleBranchReport(branch,branchTabsHtml,datebar){
   const label=branch?`(${branch})`:'';
   const reportData=[
     {l:`${L('initBalance')}${label?` — ${label}`:''}`,v:c.initBal,edit:true,branch},
-    {l:`${L('totalPurchCash')} ${label}`,v:c.tPC},
-    {l:`Purchase Outstanding ${label}`,v:c.tPCrOut,neg:true},
-    {l:`${L('totalSalesCash')} ${label}`,v:c.tSC},
-    {l:`Sales Outstanding ${label}`,v:c.tSCrOut,pos:true},
-    {l:L('totalExpenses'),v:c.tE},
+    {l:`Sales on Cash${label?` ${label}`:''}`,v:c.tSC,pos:true},
+    {l:`Sales on Credit${label?` ${label}`:''}`,v:c.tSCrOut,pos:true},
+    {l:`Purchase on Cash${label?` ${label}`:''}`,v:c.tPC,neg:true},
+    {l:`Purchase in Credit${label?` ${label}`:''}`,v:c.tPCr,neg:true},
+    {l:`Total Purchase${label?` ${label}`:''}`,v:c.tPC+c.tPCr,neg:true},
+    {l:L('totalExpenses'),v:c.tE,neg:true},
     {l:L('netProfitLoss'),v:c.net,total:true},
+    {l:'VAT Withholding 7.5%',v:c.tVwh},
+    {l:'Withholding 3%',v:c.tWh3},
+    {l:'Commission',v:c.tComm},
     {l:L('cashOnHand'),v:c.coh,total:true},
   ];
   const rr=rows=>rows.map(r=>`<div class="${r.total?'report-row report-total-row':'report-row'}">
@@ -5613,9 +5655,41 @@ function _renderSingleBranchReport(branch,branchTabsHtml,datebar){
   </tr>`;}).join(''):`<tr><td colspan="7" class="credit-empty">No credit sales in range</td></tr>`;
   const creditTotalP=creditPurchases.reduce((a,r)=>a+(parseFloat(r.qty)||0)*(parseFloat(r.uPrice)||0),0);
   const creditTotalS=creditSales.reduce((a,s)=>{const b=(s.qty||0)*(s.sPrice||0);return a+b+(s.vatOn?b*0.15:0)-(s.wh3On?b*0.03:0)-(s.vwhOn?b*0.075:0);},0);
+  const plRows=c.entryPL.map(e=>`<tr>
+    <td>${(e.date||'').slice(0,10)}</td>
+    <td>${esc(e.party||'—')}</td>
+    <td>${esc(e.name||'—')}</td>
+    <td class="num">${fmtQ(e.qty||0)}</td>
+    <td class="num">${fmt(e.saleAmt)}</td>
+    <td class="num">${fmt(e.cogs)}</td>
+    <td class="num ${e.profit>=0?'num-pos':'num-neg'}">${fmt(e.profit)}</td>
+  </tr>`).join('')||`<tr><td colspan="7" class="credit-empty">No sales in range</td></tr>`;
+  const plTotProfit=c.entryPL.reduce((a,e)=>a+e.profit,0);
   document.getElementById('tab-content').innerHTML=`
     ${branchTabsHtml}${datebar}
     ${rr(reportData)}
+    <div class="credit-section" style="margin-top:16px">
+      <div class="credit-section-hdr">
+        <div class="credit-section-hdr-icon sales">📊</div>
+        <span class="credit-section-title">Profit / Loss Per Entry</span>
+        <span class="credit-section-count sales">${c.entryPL.length} entries · Net ${fmt(plTotProfit-c.tE)}</span>
+      </div>
+      <div class="credit-table-wrap"><table class="credit-table">
+        <thead><tr><th>${L('date')}</th><th>${L('customer')}</th><th>${L('item')}</th><th class="num">${L('qty')}</th><th class="num">Sale Total</th><th class="num">Cost of Goods</th><th class="num">Profit</th></tr></thead>
+        <tbody>${plRows}
+          <tr class="summary-row">
+            <td colspan="4">TOTALS</td>
+            <td class="num">${fmt(c.totalSales)}</td>
+            <td class="num">${fmt(c.totalPurchases)}</td>
+            <td class="num ${plTotProfit>=0?'num-pos':'num-neg'}">${fmt(plTotProfit)}</td>
+          </tr>
+          <tr style="background:var(--surface2)">
+            <td colspan="6" style="font-weight:700;font-size:12px">Net Profit / Loss (after expenses ${fmt(c.tE)})</td>
+            <td class="num ${c.net>=0?'num-pos':'num-neg'}" style="font-weight:700">${fmt(c.net)}</td>
+          </tr>
+        </tbody>
+      </table></div>
+    </div>
     <div class="credit-section">
       <div class="credit-section-hdr">
         <div class="credit-section-hdr-icon purchase">🛒</div>
@@ -6116,6 +6190,85 @@ function doImport(){
       showToast(`${rows.length} ${sheet} row(s) imported ✓`,'success');
     },50);
   },30);
+}
+
+/* ═══════════════════════════════════════════════════════
+   BACKUP & RESTORE
+═══════════════════════════════════════════════════════ */
+function backupData(){
+  if(!isOwner()&&!isSystemOwner()){showToast('⛔ Owner only','error');return;}
+  const branchReceipts={};
+  (S.branches||['Main']).forEach(b=>{branchReceipts[b]=loadBranchReceipts(b);});
+  const backup={
+    version:1,
+    exportedAt:new Date().toISOString(),
+    owner:S.ownerId,
+    items:S.items,
+    purchase:S.purchase,
+    sales:S.sales,
+    expense:S.expense,
+    storeItems:S.storeItems,
+    storeDispatches:S.storeDispatches,
+    beginBal:S.beginBal,
+    branchBeginBal:S.branchBeginBal||{},
+    perms:S.perms,
+    exportPerms:S.exportPerms,
+    branches:S.branches,
+    creditPayments:S.creditPayments||[],
+    deletedUsers:S.deletedUsers||[],
+    branchReceipts
+  };
+  const blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`POWER-IMS-backup-${new Date().toISOString().slice(0,10)}.json`;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast('✅ Backup downloaded','success');
+}
+
+function triggerRestoreFile(){
+  if(!isOwner()&&!isSystemOwner()){showToast('⛔ Owner only','error');return;}
+  const input=document.createElement('input');
+  input.type='file';input.accept='.json';
+  input.onchange=e=>{
+    const file=e.target.files[0];if(!file)return;
+    const reader=new FileReader();
+    reader.onload=ev=>{
+      try{
+        const data=JSON.parse(ev.target.result);
+        if(!data.version||!Array.isArray(data.items)){showToast('❌ Invalid backup file','error');return;}
+        const dateStr=data.exportedAt?new Date(data.exportedAt).toLocaleString():'unknown date';
+        customConfirm('Restore Backup?',
+          `Replace ALL current data with the backup from ${dateStr}? This cannot be undone.`,
+          '⚠️','Restore',()=>_applyRestore(data));
+      }catch(err){showToast('❌ Could not read backup file','error');}
+    };
+    reader.readAsText(file);
+  };
+  input.click();
+}
+
+function _applyRestore(data){
+  S.items=data.items||[];
+  S.purchase=data.purchase||[];
+  S.sales=data.sales||[];
+  S.expense=data.expense||[];
+  S.storeItems=data.storeItems||[];
+  S.storeDispatches=data.storeDispatches||[];
+  S.beginBal=parseFloat(data.beginBal)||0;
+  S.branchBeginBal=data.branchBeginBal||{};
+  S.perms=data.perms||{};
+  S.exportPerms=data.exportPerms||{};
+  S.branches=data.branches||['Main'];
+  S.creditPayments=data.creditPayments||[];
+  S.deletedUsers=data.deletedUsers||[];
+  if(data.branchReceipts){
+    Object.entries(data.branchReceipts).forEach(([b,receipts])=>saveBranchReceipts(b,receipts));
+  }
+  saveUserData();
+  renderTab();
+  showToast('✅ Data restored successfully','success');
 }
 
 /* ═══════════════════════════════════════════════════════
