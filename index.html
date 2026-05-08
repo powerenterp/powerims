@@ -86,8 +86,14 @@
   --shadow:0 2px 16px rgba(0,0,0,.08);--shadow-lg:0 16px 48px rgba(0,0,0,.14);
 }
 [data-theme="light"] .bottom-nav{
-  background:rgba(255,255,255,.95);border-top:1px solid rgba(0,0,0,.08);
+  background:rgba(248,249,253,.96);border-top:1px solid rgba(0,0,0,.07);
 }
+[data-theme="light"] .nav-item{color:rgba(0,0,0,.38)}
+[data-theme="light"] .nav-item:hover{color:rgba(0,0,0,.6)}
+[data-theme="light"] .nav-item.active{color:var(--p)}
+[data-theme="light"] .ni-bubble{border:1px solid transparent}
+[data-theme="light"] .nav-item.active .ni-bubble{background:rgba(91,138,248,.12);border-color:rgba(91,138,248,.18)}
+[data-theme="light"] .nav-item.store-nav.active .ni-bubble{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.18)}
 [data-theme="light"] .app-header{
   background:rgba(255,255,255,.92);border-bottom-color:rgba(0,0,0,.08);
 }
@@ -215,31 +221,39 @@ tbody tr:nth-child(n+11){animation-delay:.33s}
 /* ── Bottom Nav ── */
 .bottom-nav{
   position:fixed;bottom:0;left:0;right:0;z-index:400;
-  padding:6px 8px calc(6px + env(safe-area-inset-bottom));
-  background:rgba(9,16,30,.92);border-top:1px solid rgba(255,255,255,.07);
-  display:flex;gap:2px;backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);
+  padding:6px 6px calc(8px + env(safe-area-inset-bottom));
+  background:rgba(8,14,28,.96);border-top:1px solid rgba(255,255,255,.06);
+  display:flex;gap:0;backdrop-filter:blur(32px);-webkit-backdrop-filter:blur(32px);
   animation:flyInUp .42s cubic-bezier(.22,1,.36,1)
 }
 .nav-item{
-  flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;
-  padding:8px 4px;border-radius:10px;border:none;background:transparent;
-  color:var(--text3);cursor:pointer;font-family:var(--font);transition:all .2s;
-  position:relative
+  flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;
+  padding:6px 4px 5px;border-radius:14px;border:none;background:transparent;
+  color:var(--text3);cursor:pointer;font-family:var(--font);
+  transition:color .2s;position:relative;-webkit-tap-highlight-color:transparent;outline:none;
+}
+.ni-bubble{
+  width:46px;height:30px;display:flex;align-items:center;justify-content:center;
+  border-radius:15px;transition:background .22s cubic-bezier(.34,1.56,.64,1),transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s;
 }
 .nav-item svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.7;
-  stroke-linecap:round;stroke-linejoin:round;transition:transform .2s;flex-shrink:0}
-.nav-item .ni-icon{line-height:1;transition:transform .2s;font-size:18px}
-.nav-item .ni-label{font-size:9.5px;font-weight:600;letter-spacing:.02em;white-space:nowrap;line-height:1}
+  stroke-linecap:round;stroke-linejoin:round;transition:transform .22s cubic-bezier(.34,1.56,.64,1);flex-shrink:0}
+.nav-item .ni-icon{line-height:1;font-size:20px;transition:transform .22s cubic-bezier(.34,1.56,.64,1)}
+.nav-item .ni-label{font-size:9.5px;font-weight:600;letter-spacing:.02em;white-space:nowrap;line-height:1;opacity:.6;transition:opacity .2s,color .2s}
+.nav-item:hover .ni-bubble{background:rgba(255,255,255,.06)}
 .nav-item:hover{color:var(--text2)}
+.nav-item:hover .ni-label{opacity:.85}
 .nav-item.active{color:var(--p)}
-.nav-item.active::before{
-  content:'';position:absolute;inset:2px;border-radius:10px;
-  background:var(--p-glass);border:1px solid rgba(91,138,248,.2)
+.nav-item.active .ni-label{opacity:1}
+.nav-item.active .ni-bubble{
+  background:rgba(91,138,248,.16);
+  box-shadow:0 2px 12px rgba(91,138,248,.18);
+  transform:translateY(-3px)
 }
-.nav-item:hover svg,.nav-item.active svg{transform:translateY(-1px)}
-.nav-item:hover .ni-icon,.nav-item.active .ni-icon{transform:translateY(-1px)}
+.nav-item.active svg{transform:scale(1.12)}
+.nav-item.active .ni-icon{transform:scale(1.12) translateY(-1px)}
 .nav-item.store-nav.active{color:var(--store)}
-.nav-item.store-nav.active::before{background:var(--store-glass);border-color:rgba(34,197,94,.22)}
+.nav-item.store-nav.active .ni-bubble{background:rgba(34,197,94,.15);box-shadow:0 2px 12px rgba(34,197,94,.15)}
 
 .nav-store-combo{display:flex;align-items:stretch}
 .store-sub-menu{
@@ -1010,9 +1024,10 @@ html[data-view="mobile"] .btn{min-height:42px;padding:9px 14px}
 html[data-view="mobile"] .modal-btn{min-height:50px;font-size:14px;border-radius:11px}
 html[data-view="mobile"] .apv-btn{min-height:44px;font-size:13px;border-radius:9px}
 html[data-view="mobile"] .nav-item{padding:9px 4px}
-html[data-view="mobile"] .nav-item .ni-icon{font-size:21px}
+html[data-view="mobile"] .nav-item .ni-icon{font-size:22px}
 html[data-view="mobile"] .nav-item .ni-label{font-size:10px}
-html[data-view="mobile"] .bottom-nav{padding:8px 6px calc(10px + env(safe-area-inset-bottom));gap:2px}
+html[data-view="mobile"] .bottom-nav{padding:6px 2px calc(10px + env(safe-area-inset-bottom));gap:0}
+html[data-view="mobile"] .ni-bubble{width:50px;height:32px}
 html[data-view="mobile"] .content{padding:10px}
 html[data-view="mobile"] .page-card-head{padding:11px 13px;gap:8px}
 html[data-view="mobile"] .page-card{border-radius:16px}
@@ -1917,43 +1932,43 @@ html[data-view="mobile"] .table-search-bar{display:none}
 <!-- BOTTOM NAV -->
 <div class="bottom-nav" id="bottom-nav" style="display:none">
   <button type="button" class="nav-item" data-tab="PURCHASE" onclick="switchTab('PURCHASE')" id="nav-PURCHASE">
-    <svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+    <span class="ni-bubble"><svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></span>
     <span class="ni-label" data-i18n="navPurchase">Purchase</span>
   </button>
   <button type="button" class="nav-item" data-tab="SALES" onclick="switchTab('SALES')" id="nav-SALES">
-    <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+    <span class="ni-bubble"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>
     <span class="ni-label" data-i18n="navSales">Sales</span>
   </button>
   <button type="button" class="nav-item" data-tab="BALANCE" onclick="switchTab('BALANCE')" id="nav-BALANCE">
-    <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+    <span class="ni-bubble"><svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg></span>
     <span class="ni-label" data-i18n="navBalance">Balance</span>
   </button>
   <button type="button" class="nav-item" data-tab="EXPENSE" onclick="switchTab('EXPENSE')" id="nav-EXPENSE">
-    <svg viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1-2-1z"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/></svg>
+    <span class="ni-bubble"><svg viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1-2-1z"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/></svg></span>
     <span class="ni-label" data-i18n="navExpense">Expense</span>
   </button>
   <button type="button" class="nav-item" data-tab="REPORT" onclick="switchTab('REPORT')" id="nav-REPORT">
-    <svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    <span class="ni-bubble"><svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg></span>
     <span class="ni-label" data-i18n="navReport">Report</span>
   </button>
   <button type="button" class="nav-item" data-tab="CREDIT" onclick="switchTab('CREDIT')" id="nav-CREDIT" style="display:none">
-    <svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+    <span class="ni-bubble"><svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>
     <span class="ni-label">Credit</span>
   </button>
   <button type="button" class="nav-item" data-tab="ITEMS" onclick="switchTab('ITEMS')" id="nav-ITEMS" style="display:none">
-    <svg viewBox="0 0 24 24"><path d="m16.5 9.4-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+    <span class="ni-bubble"><svg viewBox="0 0 24 24"><path d="m16.5 9.4-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
     <span class="ni-label" data-i18n="navItems">Items</span>
   </button>
   <button type="button" class="nav-item" data-tab="STORE" onclick="switchTab('STORE')" id="nav-STORE" style="display:none">
-    <svg viewBox="0 0 24 24"><path d="M3 9l1-5h16l1 5"/><path d="M3 9h18v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><line x1="9" y1="14" x2="9" y2="18"/><line x1="15" y1="14" x2="15" y2="18"/></svg>
+    <span class="ni-bubble"><svg viewBox="0 0 24 24"><path d="M3 9l1-5h16l1 5"/><path d="M3 9h18v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><line x1="9" y1="14" x2="9" y2="18"/><line x1="15" y1="14" x2="15" y2="18"/></svg></span>
     <span class="ni-label" data-i18n="navStore">Store</span>
   </button>
   <button type="button" class="nav-item" data-tab="STOREBALANCE" onclick="switchTab('STOREBALANCE')" id="nav-STOREBALANCE" style="display:none">
-    <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+    <span class="ni-bubble"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></span>
     <span class="ni-label" data-i18n="navStoreBalance">Balance</span>
   </button>
   <button type="button" class="nav-item" data-tab="STOREREPORT" onclick="switchTab('STOREREPORT')" id="nav-STOREREPORT" style="display:none">
-    <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+    <span class="ni-bubble"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
     <span class="ni-label" data-i18n="navStoreReport">Report</span>
   </button>
 </div>
@@ -2090,15 +2105,12 @@ const OWNER_USERNAME = 'Mb';
 //   crypto.subtle.digest('SHA-256', new TextEncoder().encode('newPass')).then(b=>console.log([...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')))
 const OWNER_PASSWORD_HASH = '6d6e1059500ddb11aefec9d93e6847aab619cc084be4a20d11ffa1e58ec4a137';
 
-// Per-field length caps to keep Firestore docs under 1 MB and prevent UI breakage
+// Per-field length caps to prevent UI breakage
 const MAX_USERNAME_LEN = 40;
 const MAX_PASSWORD_LEN = 128;
 const MAX_NAME_LEN = 80;
 const MAX_NOTE_LEN = 500;
 
-if(typeof console!=='undefined'){
-  console.warn('%c⚠️ POWER-IMS','font-size:14px;font-weight:bold;color:#f59e0b','— Client-side auth is defense-in-depth only. Do not store secrets in the browser. Lock down Firestore rules server-side.');
-}
 
 const LOGO_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><linearGradient id="pwrG2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#5b8af8"/><stop offset="100%" stop-color="#22d3ee"/></linearGradient></defs><rect x="6" y="6" width="88" height="88" rx="20" fill="url(#pwrG2)"/><path d="M55 22 L33 54 H47 L42 78 L67 44 H53 Z" fill="#fff" opacity="0.97"/></svg>';
 
@@ -2240,7 +2252,6 @@ function isUserOnline(entry){
   return !Number.isNaN(last) && Date.now()-last <= ONLINE_THRESHOLD_MS;
 }
 
-// Push registry to Firestore with optional force flag for immediate sync
 function saveRegistryToCloud(reg,forceImmediate){
   if(!S.db)return;
   try{
@@ -2248,17 +2259,10 @@ function saveRegistryToCloud(reg,forceImmediate){
       registry:JSON.stringify(reg),
       updatedAt:new Date().toISOString()
     },{merge:true}).catch(err=>console.warn('[registry cloud save]',err));
-    if(forceImmediate){
-      save();
-    }else{
-      setTimeout(save,100);
-    }
+    if(forceImmediate){save();}else{setTimeout(save,100);}
   }catch(e){console.warn('[registry cloud save threw]',e);}
 }
 
-// Pull registry from Supabase and merge with local.
-// Conflict resolution: strict ">" means local wins on tie (avoids overwriting
-// fresh local edits made offline with a stale cloud snapshot of equal time).
 async function loadRegistryFromCloud(){
   if(!S.db)return getRegistry();
   try{
@@ -2270,9 +2274,7 @@ async function loadRegistryFromCloud(){
       Object.keys(cloudReg).forEach(u=>{
         const cloudT=cloudReg[u]?.updatedAt||'';
         const localT=merged[u]?.updatedAt||'';
-        if(!merged[u]||cloudT>localT){
-          merged[u]=cloudReg[u];
-        }
+        if(!merged[u]||cloudT>localT){merged[u]=cloudReg[u];}
       });
       try{_lsSet('ims_reg',merged);}catch(e){console.error('merged save:',e);}
       return merged;
@@ -2389,7 +2391,6 @@ async function loadFromCloud(ns){
 /* ═══════════════════════════════════════════════════════
    SUPABASE
 ═══════════════════════════════════════════════════════ */
-// Module-scoped sync coordination state. Declared before any function that uses them.
 let _syncT=null;
 let _lastWrittenAt='';
 
@@ -2414,6 +2415,10 @@ function _createSupabaseCompat(client){
                 const{error}=await client.from(table).upsert({id,data:updates},{onConflict:'id'});
                 if(error)throw error;
               }
+            },
+            async delete(){
+              const{error}=await client.from(table).delete().eq('id',id);
+              if(error)throw error;
             },
             onSnapshot(callback,errCallback){
               client.from(table).select('data').eq('id',id).maybeSingle()
@@ -2488,29 +2493,19 @@ let S_pendingSync=false;
 
 function setSyncRing(ok){
   const r=document.getElementById('sync-ring');
-  if(!r) return;
+  if(!r)return;
   if(!S_isOnline){
-    r.className='sync-ring';
-    r.style.borderColor='#f59e0b';
-    r.title='Offline — changes saved locally';
+    r.className='sync-ring';r.style.borderColor='#f59e0b';r.title='Offline — changes saved locally';
   }else if(ok){
-    r.className='sync-ring active';
-    r.style.borderColor='';
-    r.title='Synced';
+    r.className='sync-ring active';r.style.borderColor='';r.title='Synced';
   }else{
-    r.className='sync-ring';
-    r.style.borderColor='#f43f5e';
-    r.title='Sync failed';
+    r.className='sync-ring';r.style.borderColor='#f43f5e';r.title='Sync failed';
   }
 }
 
 function manualSync(){
-  if(!S_isOnline){
-    showToast('📵 Offline — changes saved locally','warn');
-    return;
-  }
-  syncToCloud();
-  showToast('☁️ Syncing…');
+  if(!S_isOnline){showToast('📵 Offline — changes saved locally','warn');return;}
+  syncToCloud();showToast('☁️ Syncing…');
 }
 
 // Offline detection and auto-sync
@@ -2518,9 +2513,8 @@ window.addEventListener('online',()=>{
   S_isOnline=true;
   console.log('[POWER-IMS] Connection restored — syncing…');
   showToast('🟢 Connected — syncing…','success');
-  setSyncRing(true);
-  syncToCloud();
-  if(S.db) startRealtimeSync();
+  setSyncRing(true);syncToCloud();
+  if(S.db)startRealtimeSync();
 });
 
 window.addEventListener('offline',()=>{
@@ -2528,33 +2522,27 @@ window.addEventListener('offline',()=>{
   console.log('[POWER-IMS] Offline — data saved locally');
   showToast('📵 Offline mode — changes saved locally','warn');
   setSyncRing(false);
-  if(S._unsubscribe){
-    try{S._unsubscribe();}catch(e){}
-    S._unsubscribe=null;
-  }
+  if(S._unsubscribe){try{S._unsubscribe();}catch(e){}S._unsubscribe=null;}
 });
 
 function applyCloudSnapshot(ns,d){
-  // Cloud values are pre-stringified payloads; write through verbatim.
-  // Route through _lsSet so a QuotaExceededError surfaces a toast.
-  if(d.items!==undefined) _lsSet(`ims_${ns}_items`,d.items);
-  if(d.purchase!==undefined) _lsSet(`ims_${ns}_purchase`,d.purchase);
-  if(d.sales!==undefined) _lsSet(`ims_${ns}_sales`,d.sales);
-  if(d.expense!==undefined) _lsSet(`ims_${ns}_expense`,d.expense);
-  if(d.storeItems!==undefined) _lsSet(`ims_${ns}_storeItems`,d.storeItems);
-  if(d.storeDispatches!==undefined) _lsSet(`ims_${ns}_storeDispatches`,d.storeDispatches);
-  // beginBal can be a number from older payloads; coerce to string for consistency
-  if(d.beginBal!==undefined) _lsSet(`ims_${ns}_beginBal`,String(d.beginBal));
-  if(d.branchBeginBal!==undefined) _lsSet(`ims_${ns}_branchBeginBal`,d.branchBeginBal);
-  if(d.perms!==undefined) _lsSet(`ims_${ns}_perms`,d.perms);
-  if(d.exportPerms!==undefined) _lsSet(`ims_${ns}_exportperms`,d.exportPerms);
-  if(d.pending!==undefined) _lsSet(`ims_${ns}_pending`,d.pending);
-  if(d.branches!==undefined) _lsSet(`ims_${ns}_branches`,d.branches);
-  if(d.storereqs!==undefined) _lsSet(`ims_${ns}_storereqs`,d.storereqs);
-  if(d.creditPayments!==undefined) _lsSet(`ims_${ns}_creditPayments`,d.creditPayments);
-  if(d.deletedUsers!==undefined) _lsSet(`ims_${ns}_deletedUsers`,d.deletedUsers);
+  if(d.items!==undefined)_lsSet(`ims_${ns}_items`,d.items);
+  if(d.purchase!==undefined)_lsSet(`ims_${ns}_purchase`,d.purchase);
+  if(d.sales!==undefined)_lsSet(`ims_${ns}_sales`,d.sales);
+  if(d.expense!==undefined)_lsSet(`ims_${ns}_expense`,d.expense);
+  if(d.storeItems!==undefined)_lsSet(`ims_${ns}_storeItems`,d.storeItems);
+  if(d.storeDispatches!==undefined)_lsSet(`ims_${ns}_storeDispatches`,d.storeDispatches);
+  if(d.beginBal!==undefined)_lsSet(`ims_${ns}_beginBal`,String(d.beginBal));
+  if(d.branchBeginBal!==undefined)_lsSet(`ims_${ns}_branchBeginBal`,d.branchBeginBal);
+  if(d.perms!==undefined)_lsSet(`ims_${ns}_perms`,d.perms);
+  if(d.exportPerms!==undefined)_lsSet(`ims_${ns}_exportperms`,d.exportPerms);
+  if(d.pending!==undefined)_lsSet(`ims_${ns}_pending`,d.pending);
+  if(d.branches!==undefined)_lsSet(`ims_${ns}_branches`,d.branches);
+  if(d.storereqs!==undefined)_lsSet(`ims_${ns}_storereqs`,d.storereqs);
+  if(d.creditPayments!==undefined)_lsSet(`ims_${ns}_creditPayments`,d.creditPayments);
+  if(d.deletedUsers!==undefined)_lsSet(`ims_${ns}_deletedUsers`,d.deletedUsers);
   const branches=d.branches?_safeJSON(d.branches,['Main'],'cloud branches'):['Main'];
-  branches.forEach(b=>{if(d[`br_${b}`]!==undefined) _lsSet(`ims_${ns}_branchreceipts_${b}`,d[`br_${b}`]);});
+  branches.forEach(b=>{if(d[`br_${b}`]!==undefined)_lsSet(`ims_${ns}_branchreceipts_${b}`,d[`br_${b}`]);});
   if(d.resetAt&&d.resetAt!==localStorage.getItem(`ims_${ns}_lastResetAt`)){
     _lsSet(`ims_${ns}_lastResetAt`,d.resetAt);
     setTimeout(()=>showToast('⚠️ Your data has been reset by the software owner.','warn'),800);
@@ -2562,10 +2550,7 @@ function applyCloudSnapshot(ns,d){
 }
 
 function startRealtimeSync(){
-  if(S._unsubscribe){
-    try{S._unsubscribe();}catch(e){console.warn('unsubscribe:',e);}
-    S._unsubscribe=null;
-  }
+  if(S._unsubscribe){try{S._unsubscribe();}catch(e){console.warn('unsubscribe:',e);}S._unsubscribe=null;}
   const ns=ownerNS();
   if(!S.db||!ns||ns==='_system_')return;
   S._unsubscribe=S.db.collection('power_ims5').doc(ns).onSnapshot(doc=>{
@@ -2574,18 +2559,11 @@ function startRealtimeSync(){
     if(!d||!d.updatedAt||d.updatedAt===_lastWrittenAt)return;
     _lastWrittenAt=d.updatedAt;
     applyCloudSnapshot(ns,d);
-    loadUserData();
-    renderTab();
+    loadUserData();renderTab();
     if(isOwner())loadPendingApprovals();
-    updateNotifBadge();
-    updateStoreNotifBadge();
-    updateRequestBadge();
+    updateNotifBadge();updateStoreNotifBadge();updateRequestBadge();
   },err=>console.warn('realtime sync error:',err));
-  // Registry listener — fires when password or perms change on another device
-  if(S._registryUnsubscribe){
-    try{S._registryUnsubscribe();}catch(e){}
-    S._registryUnsubscribe=null;
-  }
+  if(S._registryUnsubscribe){try{S._registryUnsubscribe();}catch(e){}S._registryUnsubscribe=null;}
   if(S.db){
     S._registryUnsubscribe=S.db.collection('power_ims5').doc('_global_registry').onSnapshot(doc=>{
       if(!doc.exists)return;
@@ -3170,16 +3148,28 @@ function restoreOwner(i){
   });
 }
 function deleteOwner(u){
-  customConfirm(`Delete Owner "${u}"?`,'This removes their account and permanently blocks re-registration unless you restore them.','🗑️','Delete',()=>{
+  customConfirm(`Permanently Delete "${u}"?`,'This removes their account and wipes ALL their inventory data from this device. They can re-apply as a new user. This cannot be undone.','🗑️','Delete Permanently',()=>{
     const reg=getRegistry();
     const ownerData=reg[u]||{};
-    const banned=getBannedOwners();
-    if(!banned.find(b=>b.username===u)){
-      banned.push({username:u,email:ownerData.email||'',shopName:ownerData.shopName||'',bannedAt:new Date().toISOString(),originalData:{...ownerData}});
-      saveBannedOwners(banned);
+    const ns=ownerData.ownerId||u;
+    // Wipe all localStorage keys for this owner's namespace
+    const keysToRemove=[];
+    for(let i=0;i<localStorage.length;i++){
+      const k=localStorage.key(i);
+      if(k&&k.startsWith(`ims_${ns}_`))keysToRemove.push(k);
     }
-    delete reg[u];saveRegistry(reg);
-    showToast(`${u} removed and blocked`,'success');renderSystemOwnerDashboard();
+    keysToRemove.forEach(k=>localStorage.removeItem(k));
+    // Also remove any users registered under this owner from the registry
+    Object.keys(reg).forEach(k=>{if(reg[k].ownerId===ns&&k!==u)delete reg[k];});
+    delete reg[u];
+    saveRegistry(reg);
+    // Delete from cloud: remove main data doc and registry entry
+    if(S.db){
+      S.db.collection('power_ims5').doc(ns).delete().catch(err=>console.warn('cloud delete owner doc:',err));
+      saveRegistryToCloud(getRegistry(),true);
+    }
+    showToast(`🗑️ ${u} permanently deleted`,'success');
+    renderSystemOwnerDashboard();
   });
 }
 
@@ -4287,8 +4277,7 @@ function exportStoreReceiptPDF(){
 function _getResetRequests(){return _lsGet('ims_reset_requests',[]);}
 function _saveResetRequests(reqs){
   _lsSet('ims_reset_requests',reqs);
-  if(S.db)S.db.collection('power_ims5').doc('_reset_requests')
-    .set({requests:JSON.stringify(reqs),updatedAt:new Date().toISOString()},{merge:true}).catch(err=>console.warn('reqs cloud sync:',err));
+  if(S.db)S.db.collection('power_ims5').doc('_reset_requests').set({requests:JSON.stringify(reqs),updatedAt:new Date().toISOString()},{merge:true}).catch(err=>console.warn('reqs cloud sync:',err));
 }
 function requestDataReset(){
   customConfirm(
@@ -4325,7 +4314,7 @@ function approveDataReset(idx){
       });
       localStorage.setItem(`ims_${ns}_beginBal`,'0');
       localStorage.setItem(`ims_${ns}_branchBeginBal`,'{}');
-      // Push reset via Firestore for cross-device
+      // Push reset via cloud for cross-device
       if(S.db){
         const now=new Date().toISOString();
         S.db.collection('power_ims5').doc(ns).set({
