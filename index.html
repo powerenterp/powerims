@@ -1679,7 +1679,7 @@ html[data-view="mobile"] .table-search-bar{display:none}
 </div>
 
 <!-- OWNER / PLATFORM DASHBOARD -->
-<div id="owner-screen" style="display: block; position: fixed; inset: 0px; z-index: 300; background: var(--bg); overflow-y: auto; padding-bottom: 20px;">
+<div id="owner-screen" style="display: none; position: fixed; inset: 0px; z-index: 300; background: var(--bg); overflow-y: auto; padding-bottom: 20px;">
   <div class="owner-screen">
     <div class="owner-hero">
       <div class="owner-hero-top">
@@ -1691,70 +1691,13 @@ html[data-view="mobile"] .table-search-bar{display:none}
       </div>
     </div>
     <div id="owner-sub-banner"></div>
-    <div class="owner-stats" id="owner-stats">
-    <div class="owner-stat"><div class="stat-icon">👑</div><div class="stat-val">4</div><div class="stat-lbl">Platform Owners</div></div>
-    <div class="owner-stat"><div class="stat-icon">✅</div><div class="stat-val">2</div><div class="stat-lbl">Paid Active</div></div>
-    <div class="owner-stat"><div class="stat-icon">⏳</div><div class="stat-val">2</div><div class="stat-lbl">On Trial</div></div>
-    <div class="owner-stat"><div class="stat-icon">🔴</div><div class="stat-val">0</div><div class="stat-lbl">Expired/Sus</div></div>
-    </div>
+    <div class="owner-stats" id="owner-stats"></div>
     <div class="owner-section">
       <div class="owner-section-hdr">
         <h3 id="owner-users-title">👤 All Users</h3>
         <button type="button" class="btn btn-owner" onclick="openAddUserModal()">➕ Add User</button>
       </div>
-      <div id="user-list-body"><div class="user-card" style="animation-delay:0s;">
-      <div class="user-avatar">O</div>
-      <div class="user-info">
-        <div class="user-name">owner <span class="role-badge regular" style="margin-left:6px">Owner</span></div>
-        <div class="user-meta" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-          <span class="sub-badge sub-trial">Trial · 14d left</span>
-          <span style="font-size:10px;color:var(--text3)">Trial plan</span>
-          
-        </div>
-      </div>
-      <button type="button" class="btn btn-sm" onclick="openSubModal('owner')" style="margin-left:8px">💎 Manage</button>
-      <button type="button" class="btn btn-sm btn-danger" onclick="suspendUser('owner')" style="margin-left:4px" title="Suspend">🚫</button>
-      <button type="button" class="btn btn-sm" onclick="deleteOwner('owner')" style="margin-left:4px;color:var(--error)" title="Delete owner">🗑️</button>
-    </div><div class="user-card" style="animation-delay:0.06s;">
-      <div class="user-avatar">M</div>
-      <div class="user-info">
-        <div class="user-name">Mb <span class="role-badge regular" style="margin-left:6px">Owner</span></div>
-        <div class="user-meta" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-          <span class="sub-badge sub-trial">Trial · 14d left</span>
-          <span style="font-size:10px;color:var(--text3)">Pro plan</span>
-          
-        </div>
-      </div>
-      <button type="button" class="btn btn-sm" onclick="openSubModal('Mb')" style="margin-left:8px">💎 Manage</button>
-      <button type="button" class="btn btn-sm btn-danger" onclick="suspendUser('Mb')" style="margin-left:4px" title="Suspend">🚫</button>
-      <button type="button" class="btn btn-sm" onclick="deleteOwner('Mb')" style="margin-left:4px;color:var(--error)" title="Delete owner">🗑️</button>
-    </div><div class="user-card" style="animation-delay:0.12s;">
-      <div class="user-avatar">F</div>
-      <div class="user-info">
-        <div class="user-name">FGT <span class="role-badge regular" style="margin-left:6px">Owner</span></div>
-        <div class="user-meta" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-          <span class="sub-badge sub-active-paid">Active · 31d left</span>
-          <span style="font-size:10px;color:var(--text3)">Pro plan</span>
-          <span style="font-size:10px;color:var(--text3)">Until 2026-06-02</span>
-        </div>
-      </div>
-      <button type="button" class="btn btn-sm" onclick="openSubModal('FGT')" style="margin-left:8px">💎 Manage</button>
-      <button type="button" class="btn btn-sm btn-danger" onclick="suspendUser('FGT')" style="margin-left:4px" title="Suspend">🚫</button>
-      <button type="button" class="btn btn-sm" onclick="deleteOwner('FGT')" style="margin-left:4px;color:var(--error)" title="Delete owner">🗑️</button>
-    </div><div class="user-card" style="animation-delay:0.18s;">
-      <div class="user-avatar">G</div>
-      <div class="user-info">
-        <div class="user-name">Getnet <span class="role-badge regular" style="margin-left:6px">Owner</span></div>
-        <div class="user-meta" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-          <span class="sub-badge sub-active-paid">Active · 19606d left</span>
-          <span style="font-size:10px;color:var(--text3)">Trial plan</span>
-          <span style="font-size:10px;color:var(--text3)">Until 2080-01-05</span>
-        </div>
-      </div>
-      <button type="button" class="btn btn-sm" onclick="openSubModal('Getnet')" style="margin-left:8px">💎 Manage</button>
-      <button type="button" class="btn btn-sm btn-danger" onclick="suspendUser('Getnet')" style="margin-left:4px" title="Suspend">🚫</button>
-      <button type="button" class="btn btn-sm" onclick="deleteOwner('Getnet')" style="margin-left:4px;color:var(--error)" title="Delete owner">🗑️</button>
-    </div></div>
+      <div id="user-list-body"></div>
     </div>
     <div class="owner-section">
       <div class="owner-section-hdr">
