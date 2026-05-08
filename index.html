@@ -802,14 +802,36 @@ tbody tr:last-child td{border-bottom:none}
 .auth-body{padding:22px 24px;overflow-y:auto;flex:1}
 .auth-tabs{
   display:flex;gap:3px;background:var(--surface2);padding:3px;
-  border-radius:9px;margin-bottom:18px
+  border-radius:9px;margin-bottom:18px;position:relative
 }
 .auth-tab{
   flex:1;padding:8px;border:none;background:transparent;
   color:var(--text3);font-family:var(--font);font-size:12px;font-weight:600;
-  cursor:pointer;border-radius:7px;transition:all .16s
+  cursor:pointer;border-radius:7px;transition:color .16s;position:relative;z-index:1
 }
-.auth-tab.active{background:var(--surface);color:var(--text);box-shadow:0 1px 6px rgba(0,0,0,.14)}
+.auth-tab.active{background:transparent;color:var(--text);box-shadow:none}
+.auth-tab-slider{
+  position:absolute;top:3px;left:3px;bottom:3px;width:calc(50% - 3px);
+  background:var(--surface);border-radius:7px;
+  box-shadow:0 1px 6px rgba(0,0,0,.14);
+  transition:transform .22s cubic-bezier(.4,0,.2,1);pointer-events:none;z-index:0
+}
+.auth-tabs[data-active="signup"] .auth-tab-slider{transform:translateX(calc(100% + 3px))}
+.pw-wrap{position:relative;display:flex;align-items:center}
+.pw-wrap input{flex:1;padding-right:38px!important}
+.pw-toggle{
+  position:absolute;right:9px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;color:var(--text3);
+  padding:3px;display:flex;align-items:center;justify-content:center;
+  transition:color .16s;line-height:1;flex-shrink:0
+}
+.pw-toggle:hover{color:var(--p)}
+.auth-input-wrap{position:relative;display:flex;align-items:center}
+.auth-input-wrap .auth-field-icon{
+  position:absolute;left:10px;top:50%;transform:translateY(-50%);
+  color:var(--text3);pointer-events:none;display:flex;align-items:center
+}
+.auth-input-wrap input{width:100%;padding-left:32px}
 
 .avatar-ring{width:76px;height:76px;border-radius:50%;margin:0 auto 11px;background:var(--surface2);border:2px dashed var(--border2);display:flex;align-items:center;justify-content:center;font-size:30px;overflow:hidden;cursor:pointer;transition:border-color .18s,transform .18s}
 .avatar-ring:hover{border-color:var(--p);transform:scale(1.04)}
@@ -1103,7 +1125,8 @@ html[data-view="mobile"] .table-search-bar{display:none}
       </div>
     </div>
     <div class="auth-body">
-      <div class="auth-tabs">
+      <div class="auth-tabs" id="auth-tabs" data-active="login">
+        <div class="auth-tab-slider"></div>
         <button type="button" class="auth-tab active" id="tab-login-btn" onclick="setAuthMode('login')">Log In</button>
         <button type="button" class="auth-tab" id="tab-signup-btn" onclick="setAuthMode('signup')">Request Access</button>
       </div>
@@ -1122,9 +1145,9 @@ html[data-view="mobile"] .table-search-bar{display:none}
       <div class="field" id="auth-shopname-wrap" style="display:none"><label>Business / Shop Name *</label><input id="auth-shopname" placeholder="e.g. Abebe General Trading" maxlength="80" autocomplete="organization"></div>
       <div class="field" id="auth-email-wrap" style="display:none"><label>Email Address *</label><input id="auth-email" type="email" placeholder="your@email.com" autocomplete="email" maxlength="120"></div>
       <div class="field" id="auth-phone-wrap" style="display:none"><label>Phone Number</label><input id="auth-phone" type="tel" placeholder="e.g. 0911 234 567" autocomplete="tel" maxlength="40"></div>
-      <div class="field"><label id="auth-user-label">Username</label><input id="auth-user" placeholder="Enter your username" autocomplete="username" maxlength="40" spellcheck="false" onkeydown="if(event.key==='Enter')document.getElementById('auth-pass').focus()"></div>
-      <div class="field"><label>Password</label><input id="auth-pass" type="password" placeholder="Enter your password" autocomplete="current-password" maxlength="128" onkeydown="if(event.key==='Enter')submitAuth()"></div>
-      <div class="field" id="auth-confirm-wrap" style="display:none"><label>Confirm Password</label><input id="auth-confirm" type="password" placeholder="Re-enter password" autocomplete="new-password" maxlength="128"></div>
+      <div class="field"><label id="auth-user-label">Username</label><div class="auth-input-wrap"><span class="auth-field-icon"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><input id="auth-user" placeholder="Enter your username" autocomplete="username" maxlength="40" spellcheck="false" onkeydown="if(event.key==='Enter')document.getElementById('auth-pass').focus()"></div></div>
+      <div class="field"><label>Password</label><div class="pw-wrap"><span class="auth-field-icon" style="left:10px;position:absolute;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;display:flex;align-items:center"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span><input id="auth-pass" type="password" placeholder="Enter your password" autocomplete="current-password" maxlength="128" style="padding-left:32px" onkeydown="if(event.key==='Enter')submitAuth()"><button type="button" class="pw-toggle" onclick="togglePassVisibility('auth-pass')" tabindex="-1" aria-label="Show/hide password"><svg id="auth-pass-eye" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+      <div class="field" id="auth-confirm-wrap" style="display:none"><label>Confirm Password</label><div class="pw-wrap"><span class="auth-field-icon" style="left:10px;position:absolute;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;display:flex;align-items:center"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span><input id="auth-confirm" type="password" placeholder="Re-enter password" autocomplete="new-password" maxlength="128" style="padding-left:32px"><button type="button" class="pw-toggle" onclick="togglePassVisibility('auth-confirm')" tabindex="-1" aria-label="Show/hide password"><svg id="auth-confirm-eye" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
       <div class="field" id="auth-admin-target-wrap" style="display:none">
         <label>Platform Owner Username <span style="color:var(--text3);font-size:9px">(who manages your account)</span></label>
         <input id="auth-admin-target" placeholder="Enter the platform owner's username" maxlength="40" spellcheck="false" autocomplete="off">
@@ -1684,8 +1707,8 @@ html[data-view="mobile"] .table-search-bar{display:none}
     <div class="owner-hero">
       <div class="owner-hero-top">
         <div>
-          <h1 id="owner-dash-title">👑 Platform Dashboard</h1>
-          <p id="owner-dash-sub">POWER — Full visibility over all users on your platform</p>
+          <h1 id="owner-dash-title"></h1>
+          <p id="owner-dash-sub"></p>
         </div>
         <button type="button" class="owner-logout-btn" onclick="logout()">🚪 Log Out</button>
       </div>
@@ -1695,7 +1718,7 @@ html[data-view="mobile"] .table-search-bar{display:none}
     <div class="owner-section">
       <div class="owner-section-hdr">
         <h3 id="owner-users-title">👤 All Users</h3>
-        <button type="button" class="btn btn-owner" onclick="openAddUserModal()">➕ Add User</button>
+        <button type="button" class="btn btn-owner" id="owner-add-user-btn" onclick="openAddUserModal()">➕ Add User</button>
       </div>
       <div id="user-list-body"></div>
     </div>
@@ -2628,6 +2651,19 @@ function setAuthMode(m){
   }
   document.getElementById('auth-btn').innerHTML=m==='signup'?'📧 Send Verification Code':'🔐 Log In';
   hideMsg('auth-error');hideMsg('auth-success');
+  const tabs=document.getElementById('auth-tabs');if(tabs)tabs.dataset.active=m;
+  setTimeout(()=>{const u=document.getElementById('auth-user');if(u)u.focus();},60);
+}
+function togglePassVisibility(id){
+  const inp=document.getElementById(id);
+  if(!inp)return;
+  const show=inp.type==='password';
+  inp.type=show?'text':'password';
+  const eyeId=id+'-eye';
+  const eye=document.getElementById(eyeId);
+  if(eye)eye.innerHTML=show
+    ?'<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>'
+    :'<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
 }
 
 // submitAuth — checks cloud registry for cross-device login.
@@ -2940,7 +2976,7 @@ function getSubStatus(r){
     return{status:'active',daysLeft:diff,label:`Active · ${diff}d left`,variant:'active-paid'};
   }
   if(r.trialStart){
-    const te=new Date(r.trialStart);te.setDate(te.getDate()+(r.trialDays||30));
+    const te=new Date(r.trialStart);te.setDate(te.getDate()+(r.trialDays||14));
     const teStr=te.toISOString().slice(0,10);
     if(teStr>=today){
       const diff=Math.ceil((te-new Date(today))/86400000);
@@ -3006,6 +3042,10 @@ function doLoginSystemOwner(){
   document.getElementById('app-header').style.display='flex';
   document.getElementById('bottom-nav').style.display='none';
   document.getElementById('content').style.display='none';
+  document.getElementById('owner-dash-title').textContent='⚙️ System Administration';
+  document.getElementById('owner-dash-sub').textContent='POWER-IMS — Software-level control over all platform owners';
+  document.getElementById('owner-users-title').textContent='👑 All Platform Owners';
+  document.getElementById('owner-pending-title').textContent='⏳ Pending Owner Registrations';
   document.getElementById('owner-screen').style.display='block';
   const hdr=document.getElementById('app-header');hdr.className='app-header owner-mode';
   document.getElementById('brand-logo').className='brand-logo owner';
@@ -3082,15 +3122,16 @@ function saveBannedOwners(list){
   _lsSet(BANNED_LS_KEY,list);
   if(S.db)S.db.collection('power_ims5').doc('_banned_owners').set({banned:JSON.stringify(list),updatedAt:new Date().toISOString()},{merge:true}).catch(err=>console.warn('banned cloud sync:',err));
 }
-function restoreOwner(i){
+function restoreOwner(username){
   const banned=getBannedOwners();
-  const b=banned[i];
+  const b=banned.find(x=>x.username===username);
+  if(!b){showToast('Entry not found — the list may have updated','warn');renderSystemOwnerDashboard();return;}
   customConfirm(`Restore "${b.username}"?`,'This re-activates their account so they can log back in.','✅','Restore',()=>{
     const reg=getRegistry();
     reg[b.username]={...b.originalData,status:'active'};
     saveRegistry(reg);
-    banned.splice(i,1);
-    saveBannedOwners(banned);
+    const updated=getBannedOwners().filter(x=>x.username!==username);
+    saveBannedOwners(updated);
     showToast(`✅ ${b.username} restored`,'success');
     renderSystemOwnerDashboard();
   });
@@ -3166,6 +3207,9 @@ function _setOwnerDashMode(mode){
   const SHOP_ONLY=['section-branches'];
   SYS_ONLY.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display=mode==='sys-admin'?'':'none';});
   SHOP_ONLY.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display=mode==='shop-owner'?'':'none';});
+  // "Add User" only makes sense in shop-owner mode; in sys-admin the button would create users under _system_
+  const addBtn=document.getElementById('owner-add-user-btn');
+  if(addBtn)addBtn.style.display=mode==='shop-owner'?'':'none';
 }
 
 function renderSystemOwnerDashboard(){
@@ -3224,8 +3268,8 @@ function renderSystemOwnerDashboard(){
     <div class="user-card" style="animation-delay:${i*.06}s">
       <div class="user-avatar" style="background:var(--owner-gradient)">${p.username[0].toUpperCase()}</div>
       <div class="user-info"><div class="user-name">${esc(p.username)}</div><div class="user-meta">${p.email?`📧 ${esc(p.email)} · `:''}Requested: ${new Date(p.requestedAt).toLocaleString()}</div></div>
-      <button type="button" class="apv-btn approve" style="width:auto;padding:6px 12px" onclick="approveOwner(${i})">✅ Approve + Trial</button>
-      <button type="button" class="apv-btn deny" style="width:auto;padding:6px 12px;margin-left:6px" onclick="denyOwner(${i})">❌ Deny</button>
+      <button type="button" class="apv-btn approve" style="width:auto;padding:6px 12px" onclick="approveOwner('${esc(p.username)}')">✅ Approve + Trial</button>
+      <button type="button" class="apv-btn deny" style="width:auto;padding:6px 12px;margin-left:6px" onclick="denyOwner('${esc(p.username)}')">❌ Deny</button>
     </div>`).join(''):`<div style="padding:24px;text-align:center;color:var(--text3)">No pending requests 🎉</div>`;
   const bannedOwners=getBannedOwners();
   document.getElementById('banned-count').textContent=bannedOwners.length;
@@ -3238,7 +3282,7 @@ function renderSystemOwnerDashboard(){
         </div>
         <div class="user-meta">${b.email?`📧 ${esc(b.email)} · `:''}Removed: ${new Date(b.bannedAt).toLocaleString()}</div>
       </div>
-      <button type="button" class="btn btn-sm btn-success" onclick="restoreOwner(${i})" style="margin-left:8px;white-space:nowrap">✅ Restore</button>
+      <button type="button" class="btn btn-sm btn-success" onclick="restoreOwner('${esc(b.username)}')" style="margin-left:8px;white-space:nowrap">✅ Restore</button>
     </div>`).join(''):`<div style="padding:24px;text-align:center;color:var(--text3)">No banned owners</div>`;
   document.getElementById('owner-branch-list').innerHTML=`<div style="padding:14px 18px;color:var(--text3);font-size:13px">Branches are managed per platform owner.</div>`;
   // Subscription requests section
@@ -3284,55 +3328,59 @@ function renderSystemOwnerDashboard(){
         <div class="user-meta">Requested: ${new Date(r.requestedAt).toLocaleString()}${r.respondedAt?` · Responded: ${new Date(r.respondedAt).toLocaleString()}`:''}</div>
       </div>
       ${r.status==='pending'?`
-        <button type="button" class="btn btn-sm btn-success" onclick="approveDataReset(${i})" style="margin-left:8px">✅ Approve</button>
-        <button type="button" class="btn btn-sm btn-danger" onclick="denyDataReset(${i})" style="margin-left:4px">❌ Deny</button>`:''}
+        <button type="button" class="btn btn-sm btn-success" onclick="approveDataReset('${esc(r.requestedAt)}')" style="margin-left:8px">✅ Approve</button>
+        <button type="button" class="btn btn-sm btn-danger" onclick="denyDataReset('${esc(r.requestedAt)}')" style="margin-left:4px">❌ Deny</button>`:''}
     </div>`;
   }).join(''):`<div style="padding:24px;text-align:center;color:var(--text3)">No reset requests 🎉</div>`;
 }
 
-async function approveOwner(i){
+async function approveOwner(username){
   const pending=_lsGet('ims_pending_owners',[]);
-  const p=pending[i];const reg=getRegistry();
-  // If pending password is still legacy plaintext (pre-fix), hash it now
+  const p=pending.find(x=>x.username===username);
+  if(!p){showToast('Request no longer found — the list may have updated','warn');renderSystemOwnerDashboard();return;}
+  const reg=getRegistry();
+  if(reg[username]){showToast(`"${username}" is already registered`,'warn');return;}
   const pwd=isHashed(p.password)?p.password:await sha256Hex(p.password);
   reg[p.username]={
     password:pwd,ownerId:p.username,role:'owner',
-    shopName:p.shopName||'',
-    email:p.email||'',
+    shopName:p.shopName||'',email:p.email||'',phone:p.phone||'',
     sub:'trial',status:'trial',
-    trialStart:new Date().toISOString().slice(0,10),trialDays:30,
+    trialStart:new Date().toISOString().slice(0,10),trialDays:14,
     payHistory:[]
   };
-  saveRegistry(reg);pending.splice(i,1);
-  _lsSet('ims_pending_owners',pending);
-  if(S.db)S.db.collection('power_ims5').doc('_pending_owners').set({pending:JSON.stringify(pending),updatedAt:new Date().toISOString()},{merge:true}).catch(err=>console.error('approve sync:',err));
+  saveRegistry(reg);
+  const updated=pending.filter(x=>x.username!==username);
+  _lsSet('ims_pending_owners',updated);
+  if(S.db)S.db.collection('power_ims5').doc('_pending_owners').set({pending:JSON.stringify(updated),updatedAt:new Date().toISOString()},{merge:true}).catch(err=>console.error('approve sync:',err));
   showToast(`✅ ${p.username} approved — 14-day trial started!`,'success');renderSystemOwnerDashboard();
 }
-function denyOwner(i){
+function denyOwner(username){
   const pending=_lsGet('ims_pending_owners',[]);
-  const name=pending[i]?.username||'Unknown';
+  const name=pending.find(x=>x.username===username)?.username||username;
   customConfirm(
     `Deny "${name}"?`,
     'Their request will be removed. They can re-apply at any time.',
     '❌','Deny',
     ()=>{
       const list=_lsGet('ims_pending_owners',[]);
-      list.splice(i,1);
-      _lsSet('ims_pending_owners',list);
-      if(S.db)S.db.collection('power_ims5').doc('_pending_owners').set({pending:JSON.stringify(list),updatedAt:new Date().toISOString()},{merge:true}).catch(err=>console.warn('pending list cloud sync:',err));
+      const updated=list.filter(x=>x.username!==username);
+      _lsSet('ims_pending_owners',updated);
+      if(S.db)S.db.collection('power_ims5').doc('_pending_owners').set({pending:JSON.stringify(updated),updatedAt:new Date().toISOString()},{merge:true}).catch(err=>console.warn('pending list cloud sync:',err));
       showToast(`❌ ${name} denied — they may re-apply`,'warn');renderSystemOwnerDashboard();
     }
   );
 }
 function suspendUser(u){
-  customConfirm('Suspend User?',`${u} will lose access.`,'🚫','Suspend',()=>{
+  customConfirm('Suspend Owner?',`"${u}" will immediately lose access to their account and all users under them will be locked out.`,'🚫','Suspend',()=>{
     const reg=getRegistry();if(reg[u])reg[u].status='suspended';saveRegistry(reg);
     showToast(`${u} suspended`,'warn');renderSystemOwnerDashboard();
   });
 }
 function unsuspendUser(u){
-  const reg=getRegistry();if(reg[u])reg[u].status='active';saveRegistry(reg);
-  showToast(`${u} reactivated`,'success');renderSystemOwnerDashboard();
+  customConfirm('Restore Access?',`"${u}" and their users will regain full access immediately.`,'✅','Restore',()=>{
+    const reg=getRegistry();if(reg[u])reg[u].status='active';saveRegistry(reg);
+    showToast(`${u} reactivated`,'success');renderSystemOwnerDashboard();
+  });
 }
 
 let _subTarget='';
@@ -3667,8 +3715,10 @@ function suspendMyUser(u){
   });
 }
 function unsuspendMyUser(u){
-  const reg=getRegistry();if(reg[u])reg[u].status='active';saveRegistry(reg);
-  showToast(`${u} reactivated`,'success');renderOwnerDashboard();
+  customConfirm('Restore Access?',`"${u}" will regain full access.`,'✅','Restore',()=>{
+    const reg=getRegistry();if(reg[u])reg[u].status='active';saveRegistry(reg);
+    showToast(`${u} reactivated`,'success');renderOwnerDashboard();
+  });
 }
 function deleteMyUser(u){
   customConfirm('Delete User?',`Remove "${u}" permanently? They will never be able to rejoin this account.`,'🗑️','Delete',()=>{
@@ -4243,26 +4293,29 @@ function requestDataReset(){
     }
   );
 }
-function approveDataReset(idx){
+function approveDataReset(reqAt){
   const reqs=_getResetRequests();
+  const idx=reqs.findIndex(r=>r.requestedAt===reqAt);
+  if(idx===-1){showToast('Request not found — the list may have updated','warn');renderSystemOwnerDashboard();return;}
   const req=reqs[idx];
-  if(!req||req.status!=='pending')return;
+  if(req.status!=='pending')return;
   customConfirm(
     `Approve Reset for "${req.ownerUsername}"?`,
     'This permanently clears ALL their inventory data — items, purchases, sales, expenses, store records. Cannot be undone.',
     '🗑️','Approve & Reset',
     ()=>{
-      req.status='approved';req.respondedAt=new Date().toISOString();
-      _saveResetRequests(reqs);
-      const ns=req.ownerId;
+      const fresh=_getResetRequests();
+      const fi=fresh.findIndex(r=>r.requestedAt===reqAt);
+      if(fi===-1)return;
+      fresh[fi].status='approved';fresh[fi].respondedAt=new Date().toISOString();
+      _saveResetRequests(fresh);
+      const ns=fresh[fi].ownerId;
       const empty='[]';
-      // Clear on this device
       ['items','purchase','sales','expense','storeItems','storeDispatches'].forEach(k=>{
         localStorage.setItem(`ims_${ns}_${k}`,empty);
       });
       localStorage.setItem(`ims_${ns}_beginBal`,'0');
       localStorage.setItem(`ims_${ns}_branchBeginBal`,'{}');
-      // Push reset via cloud for cross-device
       if(S.db){
         const now=new Date().toISOString();
         S.db.collection('power_ims5').doc(ns).set({
@@ -4272,18 +4325,19 @@ function approveDataReset(idx){
           resetAt:now,updatedAt:now
         },{merge:true}).catch(err=>console.warn('data reset cloud push:',err));
       }
-      showToast(`✅ Data reset approved for ${req.ownerUsername}`,'success');
+      showToast(`✅ Data reset approved for ${fresh[fi].ownerUsername}`,'success');
       renderSystemOwnerDashboard();
     }
   );
 }
-function denyDataReset(idx){
+function denyDataReset(reqAt){
   const reqs=_getResetRequests();
-  const req=reqs[idx];
-  if(!req||req.status!=='pending')return;
-  req.status='denied';req.respondedAt=new Date().toISOString();
+  const idx=reqs.findIndex(r=>r.requestedAt===reqAt);
+  if(idx===-1){showToast('Request not found — the list may have updated','warn');renderSystemOwnerDashboard();return;}
+  if(reqs[idx].status!=='pending')return;
+  reqs[idx].status='denied';reqs[idx].respondedAt=new Date().toISOString();
   _saveResetRequests(reqs);
-  showToast(`❌ Reset denied for ${req.ownerUsername}`,'warn');
+  showToast(`❌ Reset denied for ${reqs[idx].ownerUsername}`,'warn');
   renderSystemOwnerDashboard();
 }
 
@@ -4407,9 +4461,16 @@ function logout(){
   document.getElementById('bottom-nav').style.display='none';
   document.getElementById('owner-screen').style.display='none';
   document.getElementById('auth-user').value='';document.getElementById('auth-pass').value='';
-  document.getElementById('auth-confirm').value='';setAuthMode('login');_authAvatar=null;
+  document.getElementById('auth-confirm').value='';
+  // reset password toggles back to hidden
+  document.getElementById('auth-pass').type='password';
+  document.getElementById('auth-confirm').type='password';
+  const pe=document.getElementById('auth-pass-eye');if(pe)pe.innerHTML='<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  const ce=document.getElementById('auth-confirm-eye');if(ce)ce.innerHTML='<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+  setAuthMode('login');_authAvatar=null;
   document.getElementById('auth-avatar-preview').innerHTML='👤';
   document.getElementById('auth-screen').style.display='flex';
+  setTimeout(()=>{const u=document.getElementById('auth-user');if(u)u.focus();},80);
   document.getElementById('app-header').className='app-header';
   document.getElementById('brand-logo').className='brand-logo';document.getElementById('brand-logo').innerHTML=LOGO_SVG;
   document.getElementById('brand-sub').textContent='Inventory System';
@@ -6387,7 +6448,7 @@ async function init(){
     // so authentication works against up-to-date account data.
     try{await Promise.race([loadRegistryFromCloud(),new Promise(r=>setTimeout(r,4000))]);}catch(e){}
   }catch(e){console.error('init error',e);}finally{
-    if(!loggedIn){hideLoader();document.getElementById('auth-screen').style.display='flex';}
+    if(!loggedIn){hideLoader();document.getElementById('auth-screen').style.display='flex';setTimeout(()=>{const u=document.getElementById('auth-user');if(u)u.focus();},120);}
   }
 }
 document.addEventListener('DOMContentLoaded',init);
