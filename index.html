@@ -2485,7 +2485,6 @@ function syncToCloud(){
     S.db.collection('power_ims5').doc(ns).set(payload,{merge:true})
       .then(()=>{S_pendingSync=false;setSyncRing(true);console.log('[POWER-IMS] Cloud sync complete');})
       .catch(err=>{S_pendingSync=true;console.warn('[POWER-IMS] syncToCloud:',err);setSyncRing(false);});
-    saveRegistryToCloud(getRegistry());
   },1200);
 }
 let S_isOnline=navigator.onLine;
@@ -2570,6 +2569,11 @@ function startRealtimeSync(){
       const d=doc.data();
       if(!d||!d.updatedAt)return;
       const cloudReg=_safeJSON(d.registry,{},'registry snapshot');
+      if(S.user&&!isSystemOwner()&&Object.keys(cloudReg).length>0&&!cloudReg[S.user]){
+        showToast('⚠️ Your account has been removed. You may register as a new user.','warn',5000);
+        setTimeout(logout,2000);
+        return;
+      }
       const localReg=getRegistry();
       try{
         Object.keys(cloudReg).forEach(u=>{
@@ -2578,6 +2582,7 @@ function startRealtimeSync(){
             localReg[u]=cloudReg[u];
           }
         });
+        Object.keys(localReg).forEach(u=>{if(!cloudReg[u])delete localReg[u];});
         _lsSet('ims_reg',localReg);
       }catch(e){console.warn('registry snapshot apply:',e);}
     },err=>console.warn('[registry listener error]',err));
