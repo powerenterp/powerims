@@ -770,10 +770,35 @@ tbody tr:last-child td{border-bottom:none}
 .auth-orb2{width:280px;height:280px;background:var(--accent2);bottom:-60px;left:-80px;animation:orbFloat 7s ease-in-out infinite reverse}
 @keyframes orbFloat{0%,100%{transform:translate(0,0)}50%{transform:translate(18px,-18px)}}
 .auth-card{
-  background:var(--surface);border-radius:var(--radius-xl);width:min(420px,100%);
-  border:1px solid var(--border2);box-shadow:var(--shadow-lg);overflow:hidden;
+  background:var(--surface);border-radius:28px;width:min(900px,100%);max-width:900px;
+  border:1px solid rgba(148,163,184,.18);box-shadow:0 22px 60px rgba(15,23,42,.14);overflow:hidden;
   position:relative;z-index:1;animation:flyInScale .45s cubic-bezier(.22,1,.36,1);
-  max-height:calc(100vh - 40px);display:flex;flex-direction:column
+  max-height:calc(100vh - 40px);display:grid;grid-template-columns:1fr 1fr
+}
+.auth-side-panel{
+  padding:40px 32px;background:linear-gradient(180deg,#4f7cfb,#2563eb);color:#fff;
+  display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden
+}
+.auth-side-panel::before{content:'';position:absolute;top:-40px;right:-40px;width:140px;height:140px;
+  background:rgba(255,255,255,.12);border-radius:50%}
+.auth-side-panel::after{content:'';position:absolute;bottom:-30px;left:-30px;width:120px;height:120px;
+  background:rgba(255,255,255,.08);border-radius:50%}
+.auth-side-content{position:relative;z-index:1;max-width:280px}
+.auth-side-content h2{font-size:2.2rem;line-height:1.05;margin:0 0 14px;font-weight:800}
+.auth-side-content p{font-size:1rem;opacity:.9;margin:0 0 24px;line-height:1.5}
+.auth-side-cta{border:none;background:#fff;color:#1f2937;font-weight:700;font-size:.95rem;
+  padding:14px 24px;border-radius:999px;cursor:pointer;box-shadow:0 20px 40px rgba(15,23,42,.18);
+  transition:transform .18s ease,box-shadow .18s ease}
+.auth-side-cta:hover{transform:translateY(-1px);box-shadow:0 22px 46px rgba(15,23,42,.2)}
+.auth-main-panel{background:var(--surface);display:flex;flex-direction:column}
+@media(max-width:900px){
+  .auth-card{grid-template-columns:1fr;max-width:640px}
+  .auth-side-panel{border-radius:28px 28px 0 0}
+  .auth-main-panel{border-radius:0 0 28px 28px}
+}
+@media(max-width:640px){
+  .auth-side-panel{padding:32px 20px;min-height:220px}
+  .auth-body{padding:20px}
 }
 .auth-hdr{flex-shrink:0}
 .auth-hdr{
@@ -1108,7 +1133,15 @@ html[data-view="mobile"] .table-search-bar{display:none}
 <div class="auth-screen" id="auth-screen" style="display:none">
   <div class="auth-bg"><div class="auth-orb auth-orb1"></div><div class="auth-orb auth-orb2"></div></div>
   <div class="auth-card">
-    <div class="auth-hdr">
+    <div class="auth-side-panel">
+      <div class="auth-side-content">
+        <h2>Hello, Welcome!</h2>
+        <p>Don't have an account?</p>
+        <button type="button" class="auth-side-cta" onclick="setAuthMode('signup')">Register</button>
+      </div>
+    </div>
+    <div class="auth-main-panel">
+      <div class="auth-hdr">
       <div class="auth-hdr-content">
         <div class="ah-icon"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100">
   <defs>
@@ -1142,24 +1175,20 @@ html[data-view="mobile"] .table-search-bar{display:none}
         </div>
         <div id="auth-type-hint" style="font-size:10px;color:var(--text3);margin-top:6px;text-align:center">Register your business for a 14-day free trial</div>
       </div>
-      <div class="field" id="auth-shopname-wrap" style="display:none"><label>Business / Shop Name *</label><input id="auth-shopname" placeholder="e.g. Abebe General Trading" maxlength="80" autocomplete="organization"></div>
-      <div class="field" id="auth-email-wrap" style="display:none"><label>Email Address *</label><input id="auth-email" type="email" placeholder="your@email.com" autocomplete="email" maxlength="120"></div>
+      <div class="field" id="auth-shopname-wrap" style="display:none"><label>Business / Shop Name *</label><input id="auth-shopname" placeholder="e.g. Power General Trading" maxlength="80" autocomplete="organization"></div>
       <div class="field" id="auth-phone-wrap" style="display:none"><label>Phone Number</label><input id="auth-phone" type="tel" placeholder="e.g. 0911 234 567" autocomplete="tel" maxlength="40"></div>
-      <div class="field"><label id="auth-user-label">Username</label><div class="auth-input-wrap"><span class="auth-field-icon"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><input id="auth-user" placeholder="Enter your username" autocomplete="username" maxlength="40" spellcheck="false" onkeydown="if(event.key==='Enter')document.getElementById('auth-pass').focus()"></div></div>
+      <div class="field"><label id="auth-user-label">Telegram ID / Username</label><div class="auth-input-wrap"><span class="auth-field-icon"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><input id="auth-user" placeholder="Enter your Telegram numeric ID or @username" autocomplete="off" maxlength="40" spellcheck="false" onkeydown="if(event.key==='Enter')document.getElementById('auth-pass').focus()"></div></div>
       <div class="field"><label>Password</label><div class="pw-wrap"><span class="auth-field-icon" style="left:10px;position:absolute;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;display:flex;align-items:center"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span><input id="auth-pass" type="password" placeholder="Enter your password" autocomplete="current-password" maxlength="128" style="padding-left:32px" onkeydown="if(event.key==='Enter')submitAuth()"><button type="button" class="pw-toggle" onclick="togglePassVisibility('auth-pass')" tabindex="-1" aria-label="Show/hide password"><svg id="auth-pass-eye" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
       <div class="field" id="auth-confirm-wrap" style="display:none"><label>Confirm Password</label><div class="pw-wrap"><span class="auth-field-icon" style="left:10px;position:absolute;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;display:flex;align-items:center"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span><input id="auth-confirm" type="password" placeholder="Re-enter password" autocomplete="new-password" maxlength="128" style="padding-left:32px"><button type="button" class="pw-toggle" onclick="togglePassVisibility('auth-confirm')" tabindex="-1" aria-label="Show/hide password"><svg id="auth-confirm-eye" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
       <div class="field" id="auth-admin-target-wrap" style="display:none">
         <label>Platform Owner Username <span style="color:var(--text3);font-size:9px">(who manages your account)</span></label>
         <input id="auth-admin-target" placeholder="Enter the platform owner's username" maxlength="40" spellcheck="false" autocomplete="off">
       </div>
-      <div id="auth-otp-wrap" style="display:none">
-        <div class="field"><label>Verification Code *</label><input id="auth-otp" maxlength="6" placeholder="Enter 6-digit code" style="letter-spacing:.2em;font-family:var(--mono);text-align:center" onkeydown="if(event.key==='Enter')submitAuth()"></div>
-        <div id="auth-otp-hint" style="font-size:10px;color:var(--text3);margin:-6px 0 8px;text-align:center"></div>
-      </div>
       <button type="button" class="modal-btn" onclick="submitAuth()" id="auth-btn">🔐 Log In</button>
       <div class="modal-error" id="auth-error"></div>
       <div class="modal-success" id="auth-success"></div>
       <div class="cloud-auth-note" id="cloud-auth-note">☁️ Accounts sync across all devices</div>
+    </div>
     </div>
   </div>
 </div>
@@ -1848,7 +1877,7 @@ html[data-view="mobile"] .table-search-bar{display:none}
       <div class="exp-section-label">Record Payment</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
         <div class="field" style="margin-bottom:0"><label>Amount Paid</label><input id="sub-pay-amount" type="number" min="0" placeholder="e.g. 500"></div>
-        <div class="field" style="margin-bottom:0"><label>Active Until</label><input id="sub-paid-until" type="date"></div>
+        <div class="field" style="margin-bottom:0"><label>Active Until</label><input id="sub-paid-until" type="text" placeholder="dd-mm-yyyy"></div>
       </div>
       <div class="field"><label>Note (optional)</label><input id="sub-notes" placeholder="e.g. Bank transfer ref #123"></div>
       <div style="display:flex;gap:8px;margin-top:4px">
@@ -1878,6 +1907,20 @@ html[data-view="mobile"] .table-search-bar{display:none}
 <datalist id="party-list"></datalist>
 <datalist id="item-list"></datalist>
 <datalist id="branch-dl"></datalist>
+
+<script>
+document.addEventListener('input', function(e){
+  if(e.target.id==='f-date' || e.target.id==='sub-paid-until'){
+    let val=e.target.value.replace(/[^0-9-]/g,'');
+    if(val.length===6&&!val.includes('-')){
+      const dd=val.slice(0,2);const mm=val.slice(2,4);const yy=val.slice(4,6);
+      const yyyy=parseInt(yy)<50?2000+parseInt(yy):1900+parseInt(yy);
+      val=`${dd}-${mm}-${yyyy}`;
+    }
+    e.target.value=val.slice(0,10);
+  }
+});
+</script>
 
 <!-- CONTENT -->
 <div class="content" id="content" style="display:none">
@@ -2071,6 +2114,7 @@ const OWNER_USERNAME = 'Mb';
 //   crypto.subtle.digest('SHA-256', new TextEncoder().encode('newPass')).then(b=>console.log([...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')))
 const OWNER_PASSWORD_HASH = '6d6e1059500ddb11aefec9d93e6847aab619cc084be4a20d11ffa1e58ec4a137';
 
+// Telegram bot settings for OTP (set your actual bot token below)
 // Per-field length caps to prevent UI breakage
 const MAX_USERNAME_LEN = 40;
 const MAX_PASSWORD_LEN = 128;
@@ -2087,7 +2131,7 @@ const S={
   storeItems:[],storeDispatches:[],
   branchReceipts:[],
   beginBal:0,reportRange:{from:'',to:''},
-  branchBeginBal:{},reportBranch:'',
+  branchBeginBal:{},reportBranch:'',expenseBranch:'',
   perms:{},exportPerms:{},pendingSignups:[],
   avatarDataUrl:null,
   branches:['Main'],
@@ -2108,7 +2152,7 @@ const S={
 const fmt=n=>{const v=parseFloat(n)||0;return v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})};
 const fmtQ=n=>(parseFloat(n)||0).toLocaleString();
 const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;');
-const nowDt=()=>new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,16);
+const nowDt=()=>{const d=new Date();return `${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;}
 const sum=(arr,fn)=>arr.reduce((a,b)=>a+(parseFloat(fn(b))||0),0);
 const colorClass=n=>parseFloat(n)<0?'num-neg':parseFloat(n)>0?'num-pos':'num-zero';
 // Use crypto-quality randomness; substr() replaced with slice() (substr is deprecated)
@@ -2118,15 +2162,6 @@ const genCode=()=>{
     return Array.from(a,b=>b.toString(36)).join('').slice(0,8).toUpperCase().padEnd(8,'0');
   }catch(e){
     return Math.random().toString(36).slice(2,10).toUpperCase().padEnd(8,'0');
-  }
-};
-// 6-digit OTP using CSPRNG (replaces Math.floor(100000+Math.random()*900000))
-const genOTP=()=>{
-  try{
-    const a=new Uint32Array(1);crypto.getRandomValues(a);
-    return String(100000+(a[0]%900000));
-  }catch(e){
-    return String(Math.floor(100000+Math.random()*900000));
   }
 };
 // SHA-256 hex via SubtleCrypto. Used for password hashing.
@@ -2318,6 +2353,7 @@ function loadUserData(){
 
 function saveUserData(){
   const ns=ownerNS();
+  localStorage.setItem(`ims_${ns}_localAt`,new Date().toISOString());
   _lsSet(`ims_${ns}_items`,S.items);
   _lsSet(`ims_${ns}_purchase`,S.purchase);
   _lsSet(`ims_${ns}_sales`,S.sales);
@@ -2391,7 +2427,7 @@ function _createSupabaseCompat(client){
                 .then(({data,error})=>{
                   if(error){if(errCallback)errCallback(error);return;}
                   callback({exists:!!data,data(){return data?data.data:null;}});
-                });
+                }).catch(err=>{if(errCallback)errCallback(err);else console.error(err);});
               const channel=client.channel(`${table}:${id}`)
                 .on('postgres_changes',{event:'*',schema:'public',table,filter:`id=eq.${id}`},payload=>{
                   const row=payload.new;
@@ -2449,7 +2485,7 @@ function syncToCloud(){
       payload[`br_${b}`]=JSON.stringify(loadBranchReceipts(b));
     });
     S.db.collection('power_ims5').doc(ns).set(payload,{merge:true})
-      .then(()=>{S_pendingSync=false;setSyncRing(true);console.log('[POWER-IMS] Cloud sync complete');})
+      .then(()=>{S_pendingSync=false;setSyncRing(true);localStorage.setItem(`ims_${ns}_syncedAt`,now);console.log('[POWER-IMS] Cloud sync complete');})
       .catch(err=>{S_pendingSync=true;console.warn('[POWER-IMS] syncToCloud:',err);setSyncRing(false);});
   },1200);
 }
@@ -2518,10 +2554,22 @@ function startRealtimeSync(){
   if(S._unsubscribe){try{S._unsubscribe();}catch(e){console.warn('unsubscribe:',e);}S._unsubscribe=null;}
   const ns=ownerNS();
   if(!S.db||!ns||ns==='_system_')return;
+  // Restore last-synced timestamp so page reloads don't lose the guard
+  if(!_lastWrittenAt)_lastWrittenAt=localStorage.getItem(`ims_${ns}_syncedAt`)||'';
   S._unsubscribe=S.db.collection('power_ims5').doc(ns).onSnapshot(doc=>{
     if(!doc.exists)return;
     const d=doc.data();
     if(!d||!d.updatedAt||d.updatedAt===_lastWrittenAt)return;
+    // If local data was modified after the last successful cloud sync,
+    // there are unsynced offline changes — push them up instead of pulling down
+    const localAt=localStorage.getItem(`ims_${ns}_localAt`)||'';
+    const syncedAt=localStorage.getItem(`ims_${ns}_syncedAt`)||_lastWrittenAt;
+    if(localAt&&localAt>syncedAt){
+      console.log('[POWER-IMS] Offline changes detected — pushing local data to cloud');
+      _lastWrittenAt=d.updatedAt;
+      syncToCloud();
+      return;
+    }
     _lastWrittenAt=d.updatedAt;
     applyCloudSnapshot(ns,d);
     loadUserData();renderTab();
@@ -2589,67 +2637,35 @@ function initEmailJS(){
   if(cfg&&typeof emailjs!=='undefined')emailjs.init(cfg.publicKey);
 }
 
-// OTP state for owner email verification — persisted to sessionStorage so a
-// page refresh during signup doesn't drop the user back to step 1.
-let _ownerOTP=null,_ownerOTPEmail=null,_ownerOTPExpiry=null;
-const _OTP_SS_KEY='ims_owner_otp_state';
-function _saveOTPState(){
-  try{
-    if(_ownerOTP){
-      sessionStorage.setItem(_OTP_SS_KEY,JSON.stringify({otp:_ownerOTP,email:_ownerOTPEmail,exp:_ownerOTPExpiry}));
-    }else{
-      sessionStorage.removeItem(_OTP_SS_KEY);
-    }
-  }catch(e){/* sessionStorage may be unavailable in some browsers */}
-}
-function _restoreOTPState(){
-  try{
-    const raw=sessionStorage.getItem(_OTP_SS_KEY);
-    if(!raw)return;
-    const s=JSON.parse(raw);
-    if(s&&s.otp&&s.exp&&Date.now()<s.exp){
-      _ownerOTP=s.otp;_ownerOTPEmail=s.email;_ownerOTPExpiry=s.exp;
-    }else{
-      sessionStorage.removeItem(_OTP_SS_KEY);
-    }
-  }catch(e){/* corrupt session — ignore */}
-}
-_restoreOTPState();
 function setAuthSubMode(m){
   authSubMode=m;
-  _ownerOTP=null;_ownerOTPEmail=null;_ownerOTPExpiry=null;_saveOTPState();
   document.getElementById('auth-type-biz').classList.toggle('active',m==='business');
   document.getElementById('auth-type-emp').classList.toggle('active',m==='employee');
   document.getElementById('auth-admin-target-wrap').style.display=m==='employee'?'':'none';
   document.getElementById('auth-shopname-wrap').style.display=m==='business'?'':'none';
-  document.getElementById('auth-email-wrap').style.display=m==='business'?'':'none';
   document.getElementById('auth-phone-wrap').style.display=m==='employee'?'':'none';
-  document.getElementById('auth-otp-wrap').style.display='none';
   document.getElementById('auth-user-label').textContent=m==='employee'?'Full Name':'Username';
-  document.getElementById('auth-user').placeholder=m==='employee'?'Enter your full name':'Enter your username';
+  document.getElementById('auth-user').placeholder=m==='employee'?'Enter your full name':'Choose your username';
   const hint=document.getElementById('auth-type-hint');
   if(hint)hint.textContent=m==='business'?'Register your business for a 14-day free trial':'Request access under an existing business account';
-  document.getElementById('auth-btn').innerHTML=m==='business'?'📧 Send Verification Code':'📝 Request Access';
+  document.getElementById('auth-btn').innerHTML=m==='business'?'🏢 Register Business':'📝 Request Access';
   hideMsg('auth-error');hideMsg('auth-success');
 }
 function setAuthMode(m){
   authMode=m;
-  _ownerOTP=null;_ownerOTPEmail=null;_ownerOTPExpiry=null;_saveOTPState();
   document.getElementById('tab-login-btn').classList.toggle('active',m==='login');
   document.getElementById('tab-signup-btn').classList.toggle('active',m==='signup');
   document.getElementById('auth-confirm-wrap').style.display=m==='signup'?'':'none';
   document.getElementById('auth-signup-avatar').style.display=m==='signup'?'':'none';
   document.getElementById('auth-type-toggle').style.display=m==='signup'?'':'none';
-  document.getElementById('auth-otp-wrap').style.display='none';
   if(m==='signup'){setAuthSubMode('business');}
   else{
     document.getElementById('auth-admin-target-wrap').style.display='none';
-    document.getElementById('auth-email-wrap').style.display='none';
     document.getElementById('auth-phone-wrap').style.display='none';
     document.getElementById('auth-user-label').textContent='Username';
     document.getElementById('auth-user').placeholder='Enter your username';
   }
-  document.getElementById('auth-btn').innerHTML=m==='signup'?'📧 Send Verification Code':'🔐 Log In';
+  document.getElementById('auth-btn').innerHTML=m==='login'?'🔐 Log In':'🏢 Register Business';
   hideMsg('auth-error');hideMsg('auth-success');
   const tabs=document.getElementById('auth-tabs');if(tabs)tabs.dataset.active=m;
   setTimeout(()=>{const u=document.getElementById('auth-user');if(u)u.focus();},60);
@@ -2738,69 +2754,18 @@ async function submitAuth(){
       if(reg[u]||u===OWNER_USERNAME){showMsg('auth-error','Username already taken. Choose a different username.');return;}
       if(authSubMode==='business'){
         const shopName=cap(document.getElementById('auth-shopname')?.value.trim()||'',MAX_NAME_LEN);
-        const email=cap((document.getElementById('auth-email')?.value||'').trim().toLowerCase(),120);
         if(!shopName){showMsg('auth-error','Please enter your business/shop name.');return;}
-        if(!email||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showMsg('auth-error','Please enter a valid email address.');return;}
-        // Forbid duplicate email in registry
-        if(Object.values(reg).some(v=>v.email&&v.email.toLowerCase()===email)){showMsg('auth-error','This email address is already registered.');return;}
         const pending=_lsGet('ims_pending_owners',[]);
-        if(pending.find(x=>x.email&&x.email.toLowerCase()===email)){showMsg('auth-error','This email address already has a pending request.');return;}
         if(pending.find(x=>x.username===u)){showMsg('auth-error','A request with this username is already pending.');return;}
-        // Block banned owners from re-registering
         const banned=getBannedOwners();
         if(banned.find(b=>b.username===u)){showMsg('auth-error','⛔ This username has been removed from the platform. Contact the platform administrator.');return;}
-        if(email&&banned.find(b=>b.email&&b.email.toLowerCase()===email)){showMsg('auth-error','⛔ This email address has been removed from the platform. Contact the platform administrator.');return;}
-
-        if(_ownerOTP===null){
-          // Phase 1 — validate fields then send OTP (CSPRNG-backed)
-          _ownerOTP=genOTP();
-          _ownerOTPEmail=email;
-          _ownerOTPExpiry=Date.now()+10*60*1000;
-          _saveOTPState();
-          let emailSent=false;
-          const ejsCfg=getEmailConfig();
-          if(ejsCfg&&typeof emailjs!=='undefined'){
-            try{
-              initEmailJS();
-              await emailjs.send(ejsCfg.serviceId,ejsCfg.templateId,{
-                to_email:email,to_name:u,shop_name:shopName,otp_code:_ownerOTP
-              });
-              emailSent=true;
-            }catch(e){console.error('EmailJS:',e);}
-          }
-          document.getElementById('auth-otp-wrap').style.display='';
-          document.getElementById('auth-otp').value='';
-          document.getElementById('auth-otp-hint').textContent=`Code sent to ${email} — valid for 10 minutes`;
-          document.getElementById('auth-otp').focus();
-          origText='🏢 Register Business';
-          if(emailSent){
-            showMsg('auth-success',`📧 Verification code sent to ${email}. Enter it above to complete registration.`,'success');
-          }else{
-            showMsg('auth-success',`🔑 Dev mode — code not emailed. Your code: ${_ownerOTP}  (set EmailJS credentials to enable real emails)`,'success');
-          }
-        }else{
-          // Phase 2 — verify OTP then complete registration
-          const entered=(document.getElementById('auth-otp')?.value||'').trim();
-          if(!entered){showMsg('auth-error','Please enter the 6-digit verification code.');return;}
-          if(Date.now()>_ownerOTPExpiry){
-            _ownerOTP=null;_ownerOTPEmail=null;_ownerOTPExpiry=null;_saveOTPState();
-            document.getElementById('auth-otp-wrap').style.display='none';
-            origText='📧 Send Verification Code';
-            showMsg('auth-error','Verification code expired. Please request a new one.');return;
-          }
-          if(entered!==_ownerOTP){showMsg('auth-error','Incorrect verification code. Try again.');return;}
-          // OTP verified — push to pending queue with HASHED password
-          const pwdHash=await sha256Hex(p);
-          pending.push({username:u,password:pwdHash,shopName,email,requestedAt:new Date().toISOString()});
-          _lsSet('ims_pending_owners',pending);
-          if(S.db){
-            S.db.collection('power_ims5').doc('_pending_owners').set({pending:JSON.stringify(pending),updatedAt:new Date().toISOString()},{merge:true}).catch(err=>console.error('pending sync:',err));
-          }
-          _ownerOTP=null;_ownerOTPEmail=null;_ownerOTPExpiry=null;_saveOTPState();
-          document.getElementById('auth-otp-wrap').style.display='none';
-          origText='📧 Send Verification Code';
-          showMsg('auth-success','✅ Email verified! Your registration is pending administrator approval.','success');
+        const pwdHash=await sha256Hex(p);
+        pending.push({username:u,password:pwdHash,shopName,requestedAt:new Date().toISOString()});
+        _lsSet('ims_pending_owners',pending);
+        if(S.db){
+          S.db.collection('power_ims5').doc('_pending_owners').set({pending:JSON.stringify(pending),updatedAt:new Date().toISOString()},{merge:true}).catch(err=>console.error('pending sync:',err));
         }
+        showMsg('auth-success','✅ Your registration is pending administrator approval.','success');
       }else{
         // Employee/user signup — goes to their owner's pending queue
         const ownerTarget=cap(document.getElementById('auth-admin-target').value.trim(),MAX_USERNAME_LEN);
@@ -2809,9 +2774,9 @@ async function submitAuth(){
         const ns=reg[ownerTarget].ownerId||ownerTarget;
         const _delList=_lsGet(`ims_${ns}_deletedUsers`,[]);
         if(_delList.includes(u)){showMsg('auth-error','⛔ This username has been removed from this account and cannot rejoin.');return;}
-        const pending=_lsGet(`ims_${ns}_pending`,[]);
         const phone=cap((document.getElementById('auth-phone')?.value||'').trim(),40);
         const pwdHash=await sha256Hex(p);
+        const pending=_lsGet(`ims_${ns}_pending`,[]);
         pending.push({username:u,password:pwdHash,role:'user',ownerId:ns,requestedAt:new Date().toISOString(),avatar:_authAvatar||null,phone:phone||null});
         _lsSet(`ims_${ns}_pending`,pending);
         if(S.db){
@@ -3920,8 +3885,8 @@ function openStoreReceipts(){
         ${r.status==='pending'?`<div class="receipt-actions">
           <button type="button" class="apv-btn approve" onclick="approveStoreReceipt('${branch}',${origIdx})">✅ Approve & Receive</button>
           <button type="button" class="apv-btn deny" onclick="rejectStoreReceipt('${branch}',${origIdx})">❌ Reject</button>
-          <button type="button" class="btn btn-sm" style="margin-left:4px" onclick='viewStoreReceiptPrint(${JSON.stringify(r)})'>🖨️</button>
-        </div>`:`<div style="margin-top:8px"><button type="button" class="btn btn-sm" onclick='viewStoreReceiptPrint(${JSON.stringify(r)})'>🖨️ Print</button></div>`}
+          <button type="button" class="btn btn-sm" style="margin-left:4px" onclick='viewStoreReceiptPrint(${esc(JSON.stringify(r))})'>🖨️</button>
+        </div>`:`<div style="margin-top:8px"><button type="button" class="btn btn-sm" onclick='viewStoreReceiptPrint(${esc(JSON.stringify(r))})'>🖨️ Print</button></div>`}
       </div>`;
     }).join('');
   }
@@ -4444,7 +4409,7 @@ function openModal(id){document.getElementById(id).classList.add('open');}
 function closeModal(id){document.getElementById(id).classList.remove('open');}
 function openSettings(){document.getElementById('settings-drawer').classList.add('open');document.getElementById('drawer-overlay').classList.add('open');}
 function closeSettings(){document.getElementById('settings-drawer').classList.remove('open');document.getElementById('drawer-overlay').classList.remove('open');}
-function showMsg(id,msg,type='error'){const el=document.getElementById(id);el.textContent=msg;el.className=(type==='success'?'modal-success':'modal-error')+' show';}
+function showMsg(id,msg,type='error'){const el=document.getElementById(id);if(!el)return;el.textContent=msg;el.className=(type==='success'?'modal-success':'modal-error')+' show';}
 function hideMsg(id){const el=document.getElementById(id);el.className=el.className.replace(' show','');}
 
 function logout(){
@@ -4528,7 +4493,7 @@ function getList(type){
   if(type==='sales')return S.sales;
   if(type==='expense')return S.expense;
   if(type==='storeItems')return S.storeItems;
-  return S.expense;
+  return [];
 }
 function deleteRow(idx,listType){
   hideCtxMenu();
@@ -4675,7 +4640,7 @@ function buildStoreEntryForm(row,mode,idx){
   const d=row||{itemId:'',itemName:'',itemDesc:'',qty:0,cost:0,supplier:'',date:nowDt()};
   const body=document.getElementById(mode==='add'?'add-form-body':'edit-form-body');
   body.innerHTML=`
-    <div class="field"><label>Date *</label><input type="datetime-local" id="f-date" value="${d.date||nowDt()}"></div>
+    <div class="field"><label>Date *</label><input type="text" id="f-date" placeholder="dd-mm-yyyy" value="${d.date||''}"></div>
     <div class="field"><label>Part Number (from catalog) *</label>
       <select id="f-item" onchange="autoFillStoreItem()"><option value="">— Select item —</option>${itemOpts}</select>
     </div>
@@ -4702,12 +4667,24 @@ function autoFillStoreItem(){
   document.getElementById('f-name').value=item?item.name:'';
   document.getElementById('f-desc').value=item?item.desc:'';
 }
+function _validateDate(dateStr){
+  const match=dateStr.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+  if(!match)return false;
+  const dd=parseInt(match[1]);const mm=parseInt(match[2]);const yyyy=parseInt(match[3]);
+  if(mm<1||mm>12)return false;
+  const days=[31,28,31,30,31,30,31,31,30,31,30,31];
+  if(yyyy%4===0&&(yyyy%100!==0||yyyy%400===0))days[1]=29;
+  if(dd<1||dd>days[mm-1])return false;
+  return true;
+}
 function submitStoreEntryForm(mode,idx){
-  const date=document.getElementById('f-date').value;
+  const date=document.getElementById('f-date').value.trim();
   const itemId=document.getElementById('f-item').value;
   const supplier=document.getElementById('f-supplier').value.trim();
   const qty=parseFloat(document.getElementById('f-qty').value)||0;
   const cost=parseFloat(document.getElementById('f-cost').value)||0;
+  if(!date){showMsg('f-error','Date is required');return;}
+  if(!_validateDate(date)){showMsg('f-error','Date must be in dd-mm-yyyy format');return;}
   if(!itemId){showMsg('f-error','Please select an item from catalog');return;}
   if(!qty){showMsg('f-error','Quantity required');return;}
   const item=S.items.find(m=>m.id===itemId)||{name:'',desc:''};
@@ -4821,7 +4798,7 @@ function buildTxForm(row,mode,isP,idx){
   const body=document.getElementById(mode==='add'?'add-form-body':'edit-form-body');
   body.innerHTML=`
     <div class="field-row">
-      <div class="field"><label>Date & Time *</label><input type="datetime-local" id="f-date" value="${d.date||nowDt()}"></div>
+      <div class="field"><label>Date & Time *</label><input type="text" id="f-date" placeholder="dd-mm-yyyy" value="${d.date||''}"></div>
       <div class="field"><label>${isP?L('supplier'):L('customer')} *</label><input id="f-party" list="party-list" value="${esc(d.party||'')}" placeholder="${isP?'Supplier name':'Customer name'}"></div>
     </div>
     <div class="field"><label>Branch</label><select id="f-branch">${branchOpts}</select></div>
@@ -4882,7 +4859,7 @@ function recalcFormTotals(isP){
   const td=document.getElementById('f-total-display');if(td)td.textContent=fmt(total);
 }
 function submitTxForm(mode,idx,isP){
-  const date=document.getElementById('f-date').value;
+  const date=document.getElementById('f-date').value.trim();
   const party=document.getElementById('f-party').value.trim();
   const branch=document.getElementById('f-branch')?.value||S.branches[0];
   const itemId=document.getElementById('f-id')?.value||'';
@@ -4890,6 +4867,7 @@ function submitTxForm(mode,idx,isP){
   const price=parseFloat(document.getElementById('f-price').value)||0;
   const payment=document.getElementById('f-payment')?.value||'CASH';
   if(!date){showMsg('f-error','Date is required');return;}
+  if(!_validateDate(date)){showMsg('f-error','Date must be in dd-mm-yyyy format');return;}
   if(!party){showMsg('f-error',isP?'Supplier required':'Customer required');return;}
   if(!itemId){showMsg('f-error','Please select an item');return;}
   if(!qty){showMsg('f-error','Quantity required');return;}
@@ -4919,13 +4897,14 @@ function buildExpenseForm(row,mode,idx){
   document.getElementById('add-form-icon').textContent='💸';
   document.getElementById('add-form-title').textContent=mode==='add'?'Add Expense':'Edit Expense';
   document.getElementById('add-form-sub').textContent='Record an expense entry';
-  const defaultBranch=S.userBranch||(S.branches[0]||'STORE');
+  const isOwnerRole=isOwner()||isSystemOwner();
+  const defaultBranch=S.userBranch||(isOwnerRole?(S.expenseBranch||(S.branches[0]||'STORE')):'STORE');
   const d=row||{date:nowDt(),reason:'',amt:'',payment:'CASH',branch:defaultBranch};
   const pmOpts=PAYMENT_METHODS.map(m=>`<option value="${m}" ${(d.payment||'CASH')===m?'selected':''}>${m}</option>`).join('');
-  const branchOpts=(isOwner()||isSystemOwner())?[...S.branches.map(b=>`<option value="${esc(b)}" ${(d.branch||'')=== b?'selected':''}>${esc(b)} (Branch)</option>`),`<option value="STORE" ${(d.branch||'')==='STORE'?'selected':''}>🏪 Store</option>`].join(''):'';
+  const branchOpts=(isOwner()||isSystemOwner())?[...S.branches.map(b=>`<option value="${esc(b)}" ${(d.branch||defaultBranch)===b?'selected':''}>${esc(b)} (Branch)</option>`),`<option value="STORE" ${(d.branch||defaultBranch)==='STORE'?'selected':''}>🏪 Store</option>`].join(''):'';
   const body=document.getElementById(mode==='add'?'add-form-body':'edit-form-body');
   body.innerHTML=`
-    <div class="field"><label>Date *</label><input type="datetime-local" id="f-date" value="${d.date||nowDt()}"></div>
+    <div class="field"><label>Date *</label><input type="text" id="f-date" placeholder="dd-mm-yyyy" value="${d.date||''}"></div>
     <div class="field"><label>Reason *</label><input id="f-reason" value="${esc(d.reason||'')}" placeholder="What was this expense for?"></div>
     <div class="field-row">
       <div class="field"><label>Amount *</label><input type="number" id="f-amt" value="${d.amt||''}" placeholder="0.00" step="any"></div>
@@ -4937,11 +4916,13 @@ function buildExpenseForm(row,mode,idx){
     <div class="modal-error" id="f-error"></div>`;
 }
 function submitExpenseForm(mode,idx){
-  const date=document.getElementById('f-date').value;
+  const date=document.getElementById('f-date').value.trim();
   const reason=cap(document.getElementById('f-reason').value.trim(),MAX_NOTE_LEN);
   const amt=parseFloat(document.getElementById('f-amt').value)||0;
   const payment=document.getElementById('f-payment').value;
-  if(!date||!reason||!amt){showMsg('f-error','All fields required');return;}
+  if(!date){showMsg('f-error','Date is required');return;}
+  if(!_validateDate(date)){showMsg('f-error','Date must be in dd-mm-yyyy format');return;}
+  if(!reason||!amt){showMsg('f-error','All fields required');return;}
   const expBranch=document.getElementById('f-expense-branch')?.value||(S.userBranch||'STORE');
   const row={date,reason,amt,payment,branch:expBranch,_by:S.user};
   if(mode==='add')S.expense.push(row);else S.expense[idx]={...S.expense[idx],...row};
@@ -4978,7 +4959,7 @@ function renderTx(){
   const list=isP?S.purchase:S.sales;
   const branchF=document.getElementById('branch-filter')?.value||'';
   const effectiveBranchF=S.userBranch||branchF;
-  const visible=list.filter(r=>r.id||r.name||r.party||r.qty).filter(r=>!effectiveBranchF||r.branch===effectiveBranchF).filter(r=>shouldUserSeeData(r));
+  const visible=list.filter(r=>r.id||r.name||r.party||r.qty).filter(r=>!effectiveBranchF||r.branch===effectiveBranchF).filter(r=>shouldUserSeeData(r)).slice().sort(_dateSort);
   let totQty=0,totVal=0,totComm=0;
   const rows=visible.map(row=>{
     const i=list.indexOf(row);
@@ -5221,8 +5202,8 @@ function renderStoreReport(){
   </tr>`).join('');
   document.getElementById('tab-content').innerHTML=`
     <div class="date-bar no-print">
-      <label>From: <input type="date" value="${S.storeReportRange.from}" onchange="S.storeReportRange.from=this.value;renderTab()"></label>
-      <label>To: <input type="date" value="${S.storeReportRange.to}" onchange="S.storeReportRange.to=this.value;renderTab()"></label>
+      <label>From: <input type="text" placeholder="dd-mm-yyyy" value="${S.storeReportRange.from}" onchange="S.storeReportRange.from=this.value;renderTab()"></label>
+      <label>To: <input type="text" placeholder="dd-mm-yyyy" value="${S.storeReportRange.to}" onchange="S.storeReportRange.to=this.value;renderTab()"></label>
       <button type="button" class="btn btn-sm" onclick="S.storeReportRange.from='';S.storeReportRange.to='';renderTab()">${L('btnClear')}</button>
       <button type="button" class="btn btn-sm no-print" onclick="printStoreReport()" style="margin-left:auto">${L('btnPrint')}</button>
     </div>
@@ -5271,8 +5252,8 @@ function renderStore(){
   const dispatches=S.storeDispatches;
   const totalStoreVal=sum(items,s=>s.qty*(s.cost||0));
 
-  const storeRows=items.map((s,i)=>`
-    <tr oncontextmenu="showCtxMenu(event,${i},'storeItems')" title="Right-click for options">
+  const storeRows=[...items].sort(_dateSort).map(s=>`
+    <tr oncontextmenu="showCtxMenu(event,${items.indexOf(s)},'storeItems')" title="Right-click for options">
       <td class="td-mono" data-label="Part No.">${esc(s.itemId)}</td>
       <td data-label="Item Name" style="font-weight:600">${esc(s.itemName)}</td>
       <td data-label="Description" style="color:var(--text3)">${esc(s.itemDesc||'')}</td>
@@ -5283,7 +5264,7 @@ function renderStore(){
       <td class="num td-mono" data-label="Total Value">${fmt(s.qty*(s.cost||0))}</td>
     </tr>`).join('');
 
-  const dispatchRows=[...dispatches].reverse().slice(0,30).map(d=>{
+  const dispatchRows=[...dispatches].sort(_dateSort).slice(0,30).map(d=>{
     const statusBadge=d.status==='pending'?`<span class="td-badge badge-pending">⏳ Pending</span>`:d.status==='approved'?`<span class="td-badge badge-approved">✅ Approved</span>`:`<span class="td-badge badge-rejected">❌ Rejected</span>`;
     return`<tr>
       <td class="td-mono" data-label="Date" style="font-size:11px">${(d.date||'').replace('T',' ')}</td>
@@ -5383,6 +5364,30 @@ function clearCreditPayments(cid){
   });
 }
 
+function payAllCreditForParty(party){
+  if(!party)return;
+  const calcPT=p=>{const b=(p.qty||0)*(p.uPrice||0);return b+(p.vatOn?b*0.15:0);};
+  const calcST=s=>{const b=(s.qty||0)*(s.sPrice||0);return b+(s.vatOn?b*0.15:0)-(s.wh3On?b*0.03:0)-(s.vwhOn?b*0.075:0)-(s.commission||0);};
+  const rows=[
+    ...S.sales.filter(s=>s.payment==='CREDIT'&&s._cid&&(s.party||'')===party).map(r=>({...r,_amt:calcST(r)})),
+    ...S.purchase.filter(p=>p.payment==='CREDIT'&&p._cid&&(p.party||'')===party).map(r=>({...r,_amt:calcPT(r)}))
+  ];
+  const outstanding=rows.filter(r=>getCreditPaidAmt(r._cid)<r._amt-0.001);
+  if(!outstanding.length){showToast('No outstanding balance for '+party,'warn');return;}
+  const totalRemaining=outstanding.reduce((a,r)=>a+Math.max(0,r._amt-getCreditPaidAmt(r._cid)),0);
+  customConfirm('Pay All Outstanding?',
+    `Settle all ${outstanding.length} outstanding record(s) for "${party}" — total ${fmt(totalRemaining)}?`,
+    '💳','Pay All',()=>{
+      if(!S.creditPayments)S.creditPayments=[];
+      outstanding.forEach(r=>{
+        const remaining=Math.max(0,r._amt-getCreditPaidAmt(r._cid));
+        if(remaining>0.001)S.creditPayments.push({cid:r._cid,paidAt:new Date().toISOString(),paidBy:S.user,amount:remaining});
+      });
+      saveUserData();renderTab();
+      showToast(`✅ ${outstanding.length} record(s) settled for ${party}`,'success');
+    });
+}
+
 function renderCreditPage(){
   const calcPT=p=>{const b=(p.qty||0)*(p.uPrice||0);return b+(p.vatOn?b*0.15:0);};
   const calcST=s=>{const b=(s.qty||0)*(s.sPrice||0);return b+(s.vatOn?b*0.15:0)-(s.wh3On?b*0.03:0)-(s.vwhOn?b*0.075:0)-(s.commission||0);};
@@ -5399,13 +5404,37 @@ function renderCreditPage(){
   const settledPay=creditPurch.reduce((a,p)=>a+getCreditPaidAmt(p._cid),0);
   const outstandingPay=totalPay-settledPay;
 
-  const activeFilter=S.creditFilter||'all';
+  const activeFilter=S.creditFilter||'outstanding';
+  const activeParty=S.creditPartyFilter||'';
   const all=[
     ...creditSales.map(r=>({...r,_type:'sale',_amt:calcST(r)})),
     ...creditPurch.map(r=>({...r,_type:'purchase',_amt:calcPT(r)}))
-  ].sort((a,b)=>(b.date||'').localeCompare(a.date||''));
-  const filtered=activeFilter==='sales'?all.filter(r=>r._type==='sale'):
-                 activeFilter==='purchases'?all.filter(r=>r._type==='purchase'):all;
+  ].sort(_dateSort);
+  const allParties=[...new Set(all.map(r=>r.party||'').filter(Boolean))].sort();
+  // Filter parties based on active filter context
+  let filteredParties = allParties;
+  if(activeFilter === 'sales') {
+    filteredParties = [...new Set(all.filter(r=>r._type==='sale').map(r=>r.party||'').filter(Boolean))].sort();
+  } else if(activeFilter === 'purchases') {
+    filteredParties = [...new Set(all.filter(r=>r._type==='purchase').map(r=>r.party||'').filter(Boolean))].sort();
+  } else if(activeFilter === 'paid') {
+    filteredParties = [...new Set(all.filter(r=>getCreditPaidAmt(r._cid)>=r._amt-0.001).map(r=>r.party||'').filter(Boolean))].sort();
+  } else if(activeFilter === 'outstanding') {
+    filteredParties = [...new Set(all.filter(r=>getCreditPaidAmt(r._cid)<r._amt-0.001).map(r=>r.party||'').filter(Boolean))].sort();
+  }
+
+  if(activeParty && !filteredParties.includes(activeParty)){
+    S.creditPartyFilter='';
+    activeParty='';
+  }
+
+  const isPaidView=activeFilter==='paid';
+  const byType=activeFilter==='sales'?all.filter(r=>r._type==='sale'):
+               activeFilter==='purchases'?all.filter(r=>r._type==='purchase'):all;
+  let filtered=isPaidView
+    ?byType.filter(r=>getCreditPaidAmt(r._cid)>=r._amt-0.001)
+    :byType.filter(r=>getCreditPaidAmt(r._cid)<r._amt-0.001);
+  if(activeParty)filtered=filtered.filter(r=>(r.party||'')===activeParty);
 
   const rows=filtered.map(row=>{
     const paidAmt=getCreditPaidAmt(row._cid);
@@ -5450,7 +5479,10 @@ function renderCreditPage(){
     </tr>`;
   }).join('');
 
-  const numOutstanding=filtered.filter(r=>{const p=getCreditPaidAmt(r._cid);return p<r._amt-0.001;}).length;
+  const numOutstandingAll=all.filter(r=>getCreditPaidAmt(r._cid)<r._amt-0.001).length;
+  const numPaidAll=all.filter(r=>getCreditPaidAmt(r._cid)>=r._amt-0.001).length;
+  const numOutstandingSales=all.filter(r=>r._type==='sale'&&getCreditPaidAmt(r._cid)<r._amt-0.001).length;
+  const numOutstandingPurch=all.filter(r=>r._type==='purchase'&&getCreditPaidAmt(r._cid)<r._amt-0.001).length;
 
   const summaryCards=`
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 16px;background:var(--surface2);border-bottom:1px solid var(--border)">
@@ -5468,19 +5500,40 @@ function renderCreditPage(){
       </div>
     </div>`;
 
+  const partySummary=activeParty?(()=>{
+    const partyAll=all.filter(r=>(r.party||'')===activeParty);
+    const partyTotal=partyAll.reduce((a,r)=>a+r._amt,0);
+    const partyPaid=partyAll.reduce((a,r)=>a+getCreditPaidAmt(r._cid),0);
+    const partyOut=Math.max(0,partyTotal-partyPaid);
+    const hasOut=partyAll.some(r=>getCreditPaidAmt(r._cid)<r._amt-0.001);
+    return`<div style="padding:12px 16px;background:var(--p-glass);border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:20px;flex-wrap:wrap">
+      <div style="font-size:13px;font-weight:700;color:var(--p2)">${esc(activeParty)}</div>
+      <div style="display:flex;gap:18px;font-size:12px;flex-wrap:wrap">
+        <span style="color:var(--text2)">Total <strong class="td-mono" style="color:var(--text)">${fmt(partyTotal)}</strong></span>
+        <span style="color:var(--text2)">Paid <strong class="td-mono num-pos">${fmt(partyPaid)}</strong></span>
+        <span style="color:var(--text2)">Outstanding <strong class="td-mono ${partyOut>0?'num-neg':'num-pos'}">${fmt(partyOut)}</strong></span>
+      </div>
+      ${canMark&&hasOut?`<button type="button" class="btn btn-sm btn-primary" onclick="payAllCreditForParty('${esc(activeParty)}')" style="margin-left:auto;font-size:11px">💳 Pay All Outstanding</button>`:''}
+    </div>`;
+  })():'';
+
+  const partyOpts='<option value="">All Parties</option>'+filteredParties.map(p=>`<option value="${esc(p)}"${activeParty===p?' selected':''}>${esc(p)}</option>`).join('');
   const filterBar=`
     <div style="display:flex;gap:8px;padding:10px 16px;background:var(--surface2);border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center">
-      <button type="button" class="btn btn-sm${activeFilter==='all'?' btn-primary':''}" onclick="S.creditFilter='all';renderTab()">All (${all.length})</button>
-      <button type="button" class="btn btn-sm${activeFilter==='sales'?' btn-primary':''}" onclick="S.creditFilter='sales';renderTab()">💰 Sales (${creditSales.length})</button>
-      <button type="button" class="btn btn-sm${activeFilter==='purchases'?' btn-primary':''}" onclick="S.creditFilter='purchases';renderTab()">🛒 Purchases (${creditPurch.length})</button>
-      <span style="margin-left:auto;font-size:10px;color:var(--text3)">${numOutstanding} outstanding of ${filtered.length}</span>
+      <button type="button" class="btn btn-sm${activeFilter==='outstanding'?' btn-primary':''}" onclick="S.creditFilter='outstanding';renderTab()">⏳ Outstanding (${numOutstandingAll})</button>
+      <button type="button" class="btn btn-sm${activeFilter==='sales'?' btn-primary':''}" onclick="S.creditFilter='sales';renderTab()">💰 Sales (${numOutstandingSales})</button>
+      <button type="button" class="btn btn-sm${activeFilter==='purchases'?' btn-primary':''}" onclick="S.creditFilter='purchases';renderTab()">🛒 Purchases (${numOutstandingPurch})</button>
+      <button type="button" class="btn btn-sm${activeFilter==='paid'?' btn-primary':''}" onclick="S.creditFilter='paid';renderTab()" style="${activeFilter==='paid'?'':'background:rgba(34,197,94,.1);color:var(--success);border-color:rgba(34,197,94,.3)'}">✅ Paid (${numPaidAll})</button>
+      <select onchange="S.creditPartyFilter=this.value;renderTab()" style="height:30px;padding:0 8px;border-radius:8px;border:1px solid var(--border2);background:var(--surface3);color:var(--text);font-size:12px;cursor:pointer;max-width:160px">${partyOpts}</select>
+      ${activeParty?`<button type="button" class="btn btn-sm" onclick="S.creditPartyFilter='';renderTab()" style="opacity:.7" title="Clear party filter">✕ ${esc(activeParty)}</button>`:''}
+      <span style="margin-left:auto;font-size:10px;color:var(--text3)">${filtered.length} record(s)</span>
     </div>`;
 
-  document.getElementById('tab-content').innerHTML=summaryCards+filterBar+`
+  document.getElementById('tab-content').innerHTML=summaryCards+filterBar+partySummary+`
     <div class="table-wrap">
       <table>
         <thead><tr><th>${L('date')}</th><th>Type</th><th>Party</th><th>${L('branch')}</th><th>${L('partNo')}</th><th>${L('itemName')}</th><th class="num">Amount</th><th>Status / Payments</th><th></th></tr></thead>
-        <tbody>${rows||`<tr><td colspan="9" style="text-align:center;color:var(--text3);padding:32px">No credit records yet. Use <strong>CREDIT</strong> as payment method when adding purchases or sales.</td></tr>`}</tbody>
+        <tbody>${rows||`<tr><td colspan="9" style="text-align:center;color:var(--text3);padding:32px">${isPaidView?'No paid credit records yet.':'No outstanding credits. All settled!'+(numPaidAll?` <button type="button" class="btn btn-sm" onclick="S.creditFilter=\'paid\';renderTab()" style="margin-left:8px">View Paid (${numPaidAll})</button>`:' Add purchases or sales with CREDIT payment.')}</td></tr>`}</tbody>
       </table>
     </div>`;
 }
@@ -5489,22 +5542,28 @@ function renderCreditPage(){
    RENDER EXPENSE
 ═══════════════════════════════════════════════════════ */
 function renderExpense(){
-  const rows=S.expense.filter(r=>r.reason||r.amt).filter(r=>shouldUserSeeData(r));
+  const isOwnerRole=isOwner()||isSystemOwner();
+  const activeCtx=S.userBranch||(isOwnerRole?(S.expenseBranch||(S.branches[0]||'STORE')):'STORE');
+  const allRows=S.expense.filter(r=>r.reason||r.amt).filter(r=>shouldUserSeeData(r));
+  const rows=(activeCtx==='STORE'?allRows.filter(r=>!r.branch||r.branch==='STORE'):allRows.filter(r=>r.branch===activeCtx)).slice().sort(_dateSort);
   const total=rows.reduce((a,b)=>a+(parseFloat(b.amt)||0),0);
-  document.getElementById('tab-content').innerHTML=`<div class="table-wrap">
+  const tabsHtml=isOwnerRole?`<div style="display:flex;flex-wrap:wrap;gap:6px;padding:10px 16px;background:var(--surface2);border-bottom:1px solid var(--border)">
+    ${S.branches.map(b=>`<button type="button" class="btn btn-sm${activeCtx===b?' btn-primary':''}" onclick="S.expenseBranch='${esc(b)}';renderTab()">🏢 ${esc(b)}</button>`).join('')}
+    <button type="button" class="btn btn-sm${activeCtx==='STORE'?' btn-primary':''}" onclick="S.expenseBranch='STORE';renderTab()">🏪 Store</button>
+  </div>`:'';
+  document.getElementById('tab-content').innerHTML=`${tabsHtml}<div class="table-wrap">
     <table>
-      <thead><tr><th>${L('date')}</th><th>${L('reason')}</th><th class="num">${L('amount')}</th><th>${L('payment')}</th><th>Type</th></tr></thead>
+      <thead><tr><th>${L('date')}</th><th>${L('reason')}</th><th class="num">${L('amount')}</th><th>${L('payment')}</th></tr></thead>
       <tbody>
-        ${rows.map(row=>{const amt=parseFloat(row.amt)||0;const expType=row.branch==='STORE'||!row.branch?'🏪 Store':`🏢 ${esc(row.branch||'')}`;
+        ${rows.map(row=>{const amt=parseFloat(row.amt)||0;
           return`<tr oncontextmenu="showCtxMenu(event,${S.expense.indexOf(row)},'expense')" title="Right-click for options">
             <td class="td-mono" data-label="Date" style="font-size:11.5px">${(row.date||'').replace('T',' ')}</td>
             <td data-label="Reason" style="font-weight:500">${esc(row.reason||'—')}</td>
             <td class="num td-mono ${colorClass(-amt)}" data-label="Amount">${fmt(amt)}</td>
             <td data-label="Payment"><span class="td-badge ${row.payment==='CASH'?'badge-cash':row.payment==='CREDIT'?'badge-credit':'badge-other'}">${row.payment||'CASH'}</span></td>
-            <td data-label="Type" style="font-size:11.5px;color:var(--text2)">${expType}</td>
           </tr>`;}).join('')}
-        ${rows.length?`<tr class="summary-row"><td colspan="2" data-label="">${L('totals').toUpperCase()}</td><td class="num td-mono ${colorClass(-total)}" data-label="">${fmt(total)}</td><td data-label=""></td><td data-label=""></td></tr>`:''}
-        ${!rows.length?`<tr><td colspan="5" style="text-align:center;color:var(--text3);padding:32px">${L('emptyExpense')}</td></tr>`:''}
+        ${rows.length?`<tr class="summary-row"><td colspan="2">${L('totals').toUpperCase()}</td><td class="num td-mono ${colorClass(-total)}">${fmt(total)}</td><td></td></tr>`:''}
+        ${!rows.length?`<tr><td colspan="4" style="text-align:center;color:var(--text3);padding:32px">${L('emptyExpense')}</td></tr>`:''}
       </tbody>
     </table>
   </div>`;
@@ -5529,7 +5588,7 @@ function _reportCalc(branch){
   });
   const PR=inRange(branch?S.purchase.filter(p=>p.branch===branch):S.purchase);
   const SR=inRange(branch?S.sales.filter(s=>s.branch===branch):S.sales);
-  const ER=inRange(branch?S.expense.filter(e=>e.branch===branch):S.expense.filter(e=>e.branch&&e.branch!=='STORE'));
+  const ER=inRange(branch==='STORE'?S.expense.filter(e=>!e.branch||e.branch==='STORE'):branch?S.expense.filter(e=>e.branch===branch):S.expense.filter(e=>e.branch&&e.branch!=='STORE'));
   const storeER=inRange(S.expense.filter(e=>!e.branch||e.branch==='STORE'));
   const initBal=branch?_branchBal(branch):S.branches.reduce((a,b)=>a+_branchBal(b),0);
   const tPC=PR.filter(p=>p.payment==='CASH').reduce((a,b)=>a+calcPT(b),0);
@@ -5555,10 +5614,10 @@ function _reportCalc(branch){
   const allBranchPR=branch?S.purchase.filter(p=>p.branch===branch):S.purchase;
   const fifo={};
   allBranchPR.forEach(p=>{if(!p.id)return;if(!fifo[p.id])fifo[p.id]=[];fifo[p.id].push({uPrice:parseFloat(p.uPrice)||0,qty:parseFloat(p.qty)||0,date:p.date||''});});
-  Object.values(fifo).forEach(q=>q.sort((a,b)=>a.date.localeCompare(b.date)));
+  Object.values(fifo).forEach(q=>q.sort(_dateSortAsc));
   const consumeFIFO=(id,qty)=>{let rem=qty,cogs=0;for(const lot of fifo[id]||[]){if(rem<=0)break;const take=Math.min(rem,lot.qty);cogs+=take*lot.uPrice;lot.qty-=take;rem-=take;}return cogs;};
   // Walk ALL branch sales oldest-first so pre-range sales deplete FIFO correctly
-  const allBranchSales=(branch?S.sales.filter(s=>s.branch===branch):S.sales).slice().sort((a,b)=>(a.date||'').localeCompare(b.date||''));
+  const allBranchSales=(branch?S.sales.filter(s=>s.branch===branch):S.sales).slice().sort(_dateSortAsc);
   const srSet=new Set(SR);
   const entryPLMap=new Map();
   allBranchSales.forEach(s=>{
@@ -5577,16 +5636,17 @@ function _reportCalc(branch){
 
 function renderReport(){
   const activeBranch=S.userBranch||S.reportBranch||'';
-  const showBranchTabs=isOwner()&&S.branches.length>1;
+  const showBranchTabs=isOwner();
 
   const branchTabsHtml=showBranchTabs?`<div style="display:flex;flex-wrap:wrap;gap:6px;padding:10px 16px;background:var(--surface2);border-bottom:1px solid var(--border)">
     <button type="button" class="btn btn-sm${activeBranch===''?' btn-primary':''}" onclick="S.reportBranch='';renderTab()">🌐 ${L('allBranchesBtn')}</button>
     ${S.branches.map(b=>`<button type="button" class="btn btn-sm${activeBranch===b?' btn-primary':''}" onclick="S.reportBranch='${esc(b)}';renderTab()">${esc(b)}</button>`).join('')}
+    <button type="button" class="btn btn-sm${activeBranch==='STORE'?' btn-primary':''}" onclick="S.reportBranch='STORE';renderTab()">🏪 Store</button>
   </div>`:'';
 
   const datebar=`<div class="date-bar no-print">
-    <label>From: <input type="date" value="${S.reportRange.from}" onchange="S.reportRange.from=this.value;renderTab()"></label>
-    <label>To: <input type="date" value="${S.reportRange.to}" onchange="S.reportRange.to=this.value;renderTab()"></label>
+    <label>From: <input type="text" placeholder="dd-mm-yyyy" value="${S.reportRange.from}" onchange="S.reportRange.from=this.value;renderTab()"></label>
+    <label>To: <input type="text" placeholder="dd-mm-yyyy" value="${S.reportRange.to}" onchange="S.reportRange.to=this.value;renderTab()"></label>
     <button type="button" class="btn btn-sm" onclick="S.reportRange.from='';S.reportRange.to='';renderTab()">${L('btnClear')}</button>
     <button type="button" class="btn btn-sm no-print" onclick="printReport()" style="margin-left:auto">${L('btnPrint')}</button>
   </div>`;
@@ -5594,7 +5654,7 @@ function renderReport(){
   if(isOwner()&&activeBranch===''){
     _renderAllBranchesReport(branchTabsHtml,datebar);
   }else{
-    _renderSingleBranchReport(activeBranch,branchTabsHtml,datebar);
+    _renderSingleBranchReport(activeBranch||'',branchTabsHtml,datebar);
   }
 }
 
@@ -5608,12 +5668,13 @@ function _renderAllBranchesReport(branchTabsHtml,datebar){
     const c=_reportCalc(b);
     const rows=[
       {l:L('initBalance'),v:c.initBal,edit:true},
+      {l:'Purchase on Cash',v:c.tPC,neg:true},
+      {l:'Purchase on Credit',v:c.tPCr,neg:true},
+      {l:'Total Purchase',v:c.tPC+c.tPCr,neg:true},
       {l:'Sales on Cash',v:c.tSC,pos:true},
       {l:'Sales on Credit',v:c.tSCrOut,pos:true},
-      {l:'Purchase on Cash',v:c.tPC,neg:true},
-      {l:'Purchase in Credit',v:c.tPCr,neg:true},
-      {l:'Total Purchase',v:c.tPC+c.tPCr,neg:true},
-      {l:'Branch Expenses',v:c.tE,neg:true},
+      {l:'Total Sales',v:c.tSC+c.tSCr,pos:true},
+      {l:`${esc(b)} Expenses`,v:c.tE,neg:true},
       {l:L('netProfitLoss'),v:c.net,total:true},
       {l:'VAT Withholding 7.5%',v:c.tVwh},
       {l:'Withholding 3%',v:c.tWh3},
@@ -5678,7 +5739,7 @@ function _renderSingleBranchReport(branch,branchTabsHtml,datebar){
     {l:`Purchase on Cash${label?` ${label}`:''}`,v:c.tPC,neg:true},
     {l:`Purchase in Credit${label?` ${label}`:''}`,v:c.tPCr,neg:true},
     {l:`Total Purchase${label?` ${label}`:''}`,v:c.tPC+c.tPCr,neg:true},
-    {l:'Branch Expenses',v:c.tE,neg:true},
+    {l:branch==='STORE'?'Store Expenses':'Branch Expenses',v:c.tE,neg:true},
     {l:L('netProfitLoss'),v:c.net,total:true},
     {l:'VAT Withholding 7.5%',v:c.tVwh},
     {l:'Withholding 3%',v:c.tWh3},
@@ -5737,7 +5798,7 @@ function _renderSingleBranchReport(branch,branchTabsHtml,datebar){
             <td class="num ${plTotProfit>=0?'num-pos':'num-neg'}">${fmt(plTotProfit)}</td>
           </tr>
           <tr style="background:var(--surface2)">
-            <td colspan="6" style="font-weight:700;font-size:12px">Net Profit / Loss (after expenses ${fmt(c.tE)})</td>
+            <td colspan="6" style="font-weight:700;font-size:12px">Net Profit / Loss (after ${branch==='STORE'?'store':'branch'} expenses ${fmt(c.tE)})</td>
             <td class="num ${c.net>=0?'num-pos':'num-neg'}" style="font-weight:700">${fmt(c.net)}</td>
           </tr>
         </tbody>
@@ -6027,7 +6088,7 @@ const _rstMeta={
   SALES:  {label:'all sales records',hint:'Purchases, expenses, and other data will be kept.'},
   EXPENSE:{label:'all expense records',hint:'Purchases, sales, and other data will be kept.'},
   ITEMS:  {label:'all items (master list)',hint:'Transaction history will be kept.'},
-  STORE:  {label:'all store inventory records',hint:'Purchases, sales, and expenses will be kept.'},
+  STORE:  {label:'all store inventory and store expense records',hint:'Branch purchases, sales, and branch expenses will be kept.'},
 };
 
 function openResetDataModal(){
@@ -6065,7 +6126,7 @@ function confirmResetData(){
   else if(_rstTab==='SALES'){S.sales=[];S.creditPayments=(S.creditPayments||[]).filter(p=>!p._salesId);}
   else if(_rstTab==='EXPENSE'){S.expense=[];}
   else if(_rstTab==='ITEMS'){S.items=[];}
-  else if(_rstTab==='STORE'){S.storeItems=[];S.storeDispatches=[];}
+  else if(_rstTab==='STORE'){S.storeItems=[];S.storeDispatches=[];S.expense=S.expense.filter(e=>e.branch&&e.branch!=='STORE');}
   saveUserData();renderTab();
   closeModal('reset-data-modal');
   showToast(`${_rstMeta[_rstTab].label.replace('all ','').replace(/^\w/,c=>c.toUpperCase())} cleared`,'success');
@@ -6117,132 +6178,210 @@ function onImpFileChange(input){
       document.getElementById('imp-preview').innerHTML=
         `<span style="color:var(--success);font-weight:600">${_impRows.length} row(s) ready to import</span> from ${file.name}`;
     }catch(err){
+      console.error('Import error:',err);
       document.getElementById('imp-preview').textContent='Error reading file: '+err.message;
       _impRows=[];
     }
+  };
+  reader.onerror=()=>{
+    document.getElementById('imp-preview').textContent='Error reading file';
+    _impRows=[];
   };
   reader.readAsArrayBuffer(file);
 }
 
 function _parseImpDate(v){
-  if(v instanceof Date)return isNaN(v.getTime())?new Date().toISOString().slice(0,10):new Date(v.getTime()-v.getTimezoneOffset()*60000).toISOString().slice(0,10);
-  if(typeof v==='number'&&v>0){const d=new Date(Date.UTC(1899,11,30)+Math.round(v)*86400000);if(!isNaN(d.getTime()))return d.toISOString().slice(0,10);}
-  const s=String(v||'').trim();
-  if(!s)return new Date().toISOString().slice(0,10);
-  if(/^\d{4}-\d{2}-\d{2}$/.test(s))return s;
-  if(/^\d{4}\/\d{2}\/\d{2}$/.test(s))return s.replace(/\//g,'-');
-  const dmy=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
-  if(dmy)return `${dmy[3]}-${dmy[2].padStart(2,'0')}-${dmy[1].padStart(2,'0')}`;
-  const p=new Date(s);return isNaN(p.getTime())?new Date().toISOString().slice(0,10):p.toISOString().slice(0,10);
+  try{
+    const s=String(v||'').trim();
+    if(!s)return '';
+    const dmy=s.match(/^(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})$/);
+    if(dmy)return `${dmy[1].padStart(2,'0')}-${dmy[2].padStart(2,'0')}-${dmy[3]}`;
+    if(/^\d{4}-\d{2}-\d{2}$/.test(s)){
+      const parts=s.split('-');
+      return `${parts[2]}-${parts[1]}-${parts[0]}`;
+    }
+    if(/^\d{4}\/\d{2}\/\d{2}$/.test(s)){
+      const parts=s.split('/');
+      return `${parts[2]}-${parts[1]}-${parts[0]}`;
+    }
+    if(v instanceof Date&&!isNaN(v.getTime())){
+      const dd=String(v.getDate()).padStart(2,'0');
+      const mm=String(v.getMonth()+1).padStart(2,'0');
+      const yyyy=v.getFullYear();
+      return `${dd}-${mm}-${yyyy}`;
+    }
+    if(typeof v==='number'&&v>0){
+      const d=new Date(Date.UTC(1899,11,30)+Math.round(v)*86400000);
+      if(!isNaN(d.getTime())){
+        const dd=String(d.getUTCDate()).padStart(2,'0');
+        const mm=String(d.getUTCMonth()+1).padStart(2,'0');
+        const yyyy=d.getUTCFullYear();
+        return `${dd}-${mm}-${yyyy}`;
+      }
+    }
+    return '';
+  }catch(e){
+    console.warn('Date parsing error:',v,e);
+    return '';
+  }
 }
-function _normPayment(v){const u=String(v||'').trim().toUpperCase();return PAYMENT_METHODS.includes(u)?u:'CASH';}
+function _dateSort(a,b){
+  const parseDate=d=>{if(!d)return new Date(0);const p=d.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);return p?new Date(p[3],p[2]-1,p[1]):new Date(d);};
+  return parseDate(b.date||'').getTime()-parseDate(a.date||'').getTime();
+}
+function _dateSortAsc(a,b){
+  const parseDate=d=>{if(!d)return new Date(0);const p=d.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);return p?new Date(p[3],p[2]-1,p[1]):new Date(d);};
+  return parseDate(a.date||'').getTime()-parseDate(b.date||'').getTime();
+}
 function _lookupItem(id){return(id!=null&&String(id).trim())?S.items.find(it=>String(it.id).trim()===String(id).trim())||null:null;}
 function _parseBool(v){if(v===true||v===1)return true;if(!v||v===false||v===0)return false;const s=String(v).trim().toLowerCase();return s==='yes'||s==='true'||s==='y'||s==='1'||parseFloat(s)>0;}
+function _normPayment(v){const s=String(v||'').trim().toUpperCase();if(s==='CREDIT'||s==='CR'||s==='CREDIT NOTE')return 'CREDIT';if(s==='STORE TRANSFER'||s==='TRANSFER')return 'STORE TRANSFER';return 'CASH';}
 
 function _parseImpRows(headers,dataRows,sheet){
-  const _aliases={
-    'part no.':['part no.','part no','part number','part#','partno','id','item id','item no','item no.','code'],
-    'item name':['item name','name','item','title'],
-    'description':['description','desc','details','note'],
-    'supplier':['supplier','vendor','party','from'],
-    'customer':['customer','buyer','party','client','to'],
-    'unit price':['unit price','unit cost','uprice','cost'],
-    'price':['price','sale price','selling price','sprice'],
-    'qty':['qty','quantity'],
-    'stock qty':['stock qty','qty','quantity','stock'],
-    'unit cost':['unit cost','unit price','cost'],
-    'date received':['date received','date','received date'],
-    'vat on':['vat on','vat','vat (15%)','vat15','vaton'],
-    'wh3 on':['wh3 on','wh3','withhold 3%','withhold3','withholding 3%','wh 3%','wh3on'],
-    'vwh on':['vwh on','vwh','vat wh 7.5%','vat wh','vwh7.5','vat withhold','vat withholding'],
-    'commission':['commission','comm','comm amount','commission amount','commision'],
-  };
-  const norm=s=>String(s).trim().toLowerCase();
-  const idx=k=>{const aliases=_aliases[norm(k)]||[norm(k)];for(const a of aliases){const i=headers.findIndex(h=>norm(h)===a);if(i>=0)return i;}return -1;};
-  const g=(row,k)=>{const i=idx(k);return i>=0?row[i]:'';};
-  const rows=[];
+  try{
+    const _aliases={
+      'part no.':['part no.','part no','part number','part#','partno','id','item id','item no','item no.','code'],
+      'item name':['item name','name','item','title'],
+      'description':['description','desc','details','note'],
+      'supplier':['supplier','vendor','party','from'],
+      'customer':['customer','buyer','party','client','to'],
+      'unit price':['unit price','unit cost','uprice','cost'],
+      'price':['price','sale price','selling price','sprice'],
+      'qty':['qty','quantity'],
+      'stock qty':['stock qty','qty','quantity','stock'],
+      'unit cost':['unit cost','unit price','cost'],
+      'date received':['date received','date','received date'],
+      'vat on':['vat on','vat','vat (15%)','vat15','vaton'],
+      'wh3 on':['wh3 on','wh3','withhold 3%','withhold3','withholding 3%','wh 3%','wh3on'],
+      'vwh on':['vwh on','vwh','vat wh 7.5%','vat wh','vwh7.5','vat withhold','vat withholding'],
+      'commission':['commission','comm','comm amount','commission amount','commision'],
+    };
+    const norm=s=>String(s).trim().toLowerCase();
+    const idx=k=>{const aliases=_aliases[norm(k)]||[norm(k)];for(const a of aliases){const i=headers.findIndex(h=>norm(h)===a);if(i>=0)return i;}return -1;};
+    const g=(row,k)=>{const i=idx(k);return i>=0?row[i]:'';};
+    const rows=[];
   if(sheet==='PURCHASE'){
     dataRows.forEach(r=>{
-      const party=g(r,'Supplier');const id=g(r,'Part No.');const rawName=g(r,'Name');
-      const qty=parseFloat(g(r,'Qty'))||0;
-      if(!qty&&!id&&!rawName&&!party)return;
-      if(String(g(r,'Qty')).toUpperCase()==='TOTAL')return;
-      const found=_lookupItem(id);
-      const name=rawName||(found?found.name:'')||'';
-      const desc=g(r,'Desc')||(found?found.desc:'')||'';
-      rows.push({date:_parseImpDate(g(r,'Date')),party:String(party),branch:g(r,'Branch')||S.userBranch||(S.branches&&S.branches[0])||'Main',id:String(id),name:String(name),desc:String(desc),qty,uPrice:parseFloat(g(r,'Unit Price'))||0,payment:_normPayment(g(r,'Payment')),vatOn:false,_by:S.user});
+      try{
+        const party=g(r,'Supplier');const id=g(r,'Part No.');const rawName=g(r,'Name');
+        const qty=parseFloat(g(r,'Qty'))||0;
+        if(!qty&&!id&&!rawName&&!party)return;
+        if(String(g(r,'Qty')).toUpperCase()==='TOTAL')return;
+        const found=_lookupItem(id);
+        const name=rawName||(found?found.name:'')||'';
+        const desc=g(r,'Desc')||(found?found.desc:'')||'';
+        rows.push({date:_parseImpDate(g(r,'Date')),party:String(party),branch:g(r,'Branch')||S.userBranch||(S.branches&&S.branches[0])||'Main',id:String(id),name:String(name),desc:String(desc),qty,uPrice:parseFloat(g(r,'Unit Price'))||0,payment:_normPayment(g(r,'Payment')),vatOn:false,_by:S.user});
+      }catch(e){
+        console.warn('Skipping invalid purchase row:',r,e);
+      }
     });
   }else if(sheet==='SALES'){
     dataRows.forEach(r=>{
-      const party=g(r,'Customer');const id=g(r,'Part No.');const rawName=g(r,'Name');
-      const qty=parseFloat(g(r,'Qty'))||0;
-      if(!qty&&!id&&!rawName&&!party)return;
-      if(String(g(r,'Qty')).toUpperCase()==='TOTAL')return;
-      const found=_lookupItem(id);
-      const name=rawName||(found?found.name:'')||'';
-      const desc=g(r,'Desc')||(found?found.desc:'')||'';
-      const vatRaw=g(r,'vat on');const wh3Raw=g(r,'wh3 on');const vwhRaw=g(r,'vwh on');
-      const vatOn=_parseBool(vatRaw);
-      const wh3On=_parseBool(wh3Raw);
-      const vwhOn=_parseBool(vwhRaw);
-      const commission=parseFloat(g(r,'commission'))||0;
-      rows.push({date:_parseImpDate(g(r,'Date')),party:String(party),branch:g(r,'Branch')||S.userBranch||(S.branches&&S.branches[0])||'Main',id:String(id),name:String(name),desc:String(desc),qty,sPrice:parseFloat(g(r,'Price'))||0,payment:_normPayment(g(r,'Payment')),vatOn,wh3On,vwhOn,commission,_by:S.user});
+      try{
+        const party=g(r,'Customer');const id=g(r,'Part No.');const rawName=g(r,'Name');
+        const qty=parseFloat(g(r,'Qty'))||0;
+        if(!qty&&!id&&!rawName&&!party)return;
+        if(String(g(r,'Qty')).toUpperCase()==='TOTAL')return;
+        const found=_lookupItem(id);
+        const name=rawName||(found?found.name:'')||'';
+        const desc=g(r,'Desc')||(found?found.desc:'')||'';
+        const vatRaw=g(r,'vat on');const wh3Raw=g(r,'wh3 on');const vwhRaw=g(r,'vwh on');
+        const vatOn=_parseBool(vatRaw);
+        const wh3On=_parseBool(wh3Raw);
+        const vwhOn=_parseBool(vwhRaw);
+        const commission=parseFloat(g(r,'commission'))||0;
+        rows.push({date:_parseImpDate(g(r,'Date')),party:String(party),branch:g(r,'Branch')||S.userBranch||(S.branches&&S.branches[0])||'Main',id:String(id),name:String(name),desc:String(desc),qty,sPrice:parseFloat(g(r,'Price'))||0,payment:_normPayment(g(r,'Payment')),vatOn,wh3On,vwhOn,commission,_by:S.user});
+      }catch(e){
+        console.warn('Skipping invalid sales row:',r,e);
+      }
     });
   }else if(sheet==='EXPENSE'){
     dataRows.forEach(r=>{
-      const reason=g(r,'Reason');const amt=parseFloat(g(r,'Amount'))||0;
-      if(!reason&&!amt)return;
-      rows.push({date:_parseImpDate(g(r,'Date')),reason:String(reason),amt,payment:_normPayment(g(r,'Payment')),_by:S.user});
+      try{
+        const reason=g(r,'Reason');const amt=parseFloat(g(r,'Amount'))||0;
+        if(!reason&&!amt)return;
+        rows.push({date:_parseImpDate(g(r,'Date')),reason:String(reason),amt,payment:_normPayment(g(r,'Payment')),branch:g(r,'Branch')||S.expenseBranch||S.userBranch||(S.branches&&S.branches[0])||'STORE',_by:S.user});
+      }catch(e){
+        console.warn('Skipping invalid expense row:',r,e);
+      }
     });
   }else if(sheet==='ITEMS'){
     dataRows.forEach(r=>{
-      const id=g(r,'Part No.');const name=g(r,'Item Name');
-      if(!id&&!name)return;
-      if(S.items.some(it=>it.id===String(id)))return;
-      rows.push({id:String(id),name:String(name),desc:String(g(r,'Description')),_by:S.user});
+      try{
+        const id=g(r,'Part No.');const name=g(r,'Item Name');
+        if(!id&&!name)return;
+        if(S.items.some(it=>it.id===String(id)))return;
+        rows.push({id:String(id),name:String(name),desc:String(g(r,'Description')),_by:S.user});
+      }catch(e){
+        console.warn('Skipping invalid item row:',r,e);
+      }
     });
   }else if(sheet==='STORE'){
     dataRows.forEach(r=>{
-      const itemId=g(r,'Part No.');const itemName=g(r,'Item Name');
-      const qty=parseFloat(g(r,'Stock Qty'))||0;
-      if(!itemId&&!itemName&&!qty)return;
-      const found=_lookupItem(itemId);
-      const resolvedName=itemName||(found?found.name:'')||'';
-      const resolvedDesc=g(r,'Desc')||(found?found.desc:'')||'';
-      rows.push({itemId:String(itemId),itemName:String(resolvedName),itemDesc:String(resolvedDesc),supplier:String(g(r,'Supplier')),date:_parseImpDate(g(r,'Date Received')),qty,cost:parseFloat(g(r,'Unit Cost'))||0});
+      try{
+        const itemId=g(r,'Part No.');const itemName=g(r,'Item Name');
+        const qty=parseFloat(g(r,'Stock Qty'))||0;
+        if(!itemId&&!itemName&&!qty)return;
+        const found=_lookupItem(itemId);
+        const resolvedName=itemName||(found?found.name:'')||'';
+        const resolvedDesc=g(r,'Desc')||(found?found.desc:'')||'';
+        rows.push({itemId:String(itemId),itemName:String(resolvedName),itemDesc:String(resolvedDesc),supplier:String(g(r,'Supplier')),date:_parseImpDate(g(r,'Date Received')),qty,cost:parseFloat(g(r,'Unit Cost'))||0});
+      }catch(e){
+        console.warn('Skipping invalid store row:',r,e);
+      }
     });
   }
-  return rows;
+  return rows.filter(row=>{
+    if(sheet==='PURCHASE'||sheet==='SALES'){
+      return row.qty > 0 && (row.party || row.id || row.name);
+    }else if(sheet==='EXPENSE'){
+      return row.amt > 0 && row.reason;
+    }else if(sheet==='ITEMS'){
+      return row.id || row.name;
+    }else if(sheet==='STORE'){
+      return row.itemId && row.qty > 0;
+    }
+    return true;
+  });
+  }catch(err){
+    console.error('Parse error:',err);
+    throw new Error('Failed to parse import data: '+err.message);
+  }
 }
 
 function doImport(){
   if(!_impRows.length){showToast('No rows to import — choose a file first','warn');return;}
-  const rows=_impRows.slice();const sheet=_impSheet;
-  _impRows=[];
-  closeModal('import-modal');
-  showToast(`Importing ${rows.length} row(s)…`,'success');
-  setTimeout(()=>{
-    if(sheet==='PURCHASE') S.purchase.push(...rows);
-    else if(sheet==='SALES') S.sales.push(...rows);
-    else if(sheet==='EXPENSE') S.expense.push(...rows);
-    else if(sheet==='ITEMS') S.items.push(...rows);
-    else if(sheet==='STORE') S.storeItems.push(...rows);
-    saveUserData();
+  try{
+    const rows=_impRows.slice();const sheet=_impSheet;
+    _impRows=[];
+    closeModal('import-modal');
+    showToast(`Importing ${rows.length} row(s)…`,'success');
     setTimeout(()=>{
-      const _tabMap={PURCHASE:'PURCHASE',SALES:'SALES',EXPENSE:'EXPENSE',ITEMS:'ITEMS',STORE:'STORE'};
-      const _target=_tabMap[sheet];
-      if(_target&&S.tab!==_target){switchTab(_target);}
-      updateSuggestions();renderTab();
-      // Reset branch filter to show all branches after import to ensure visibility
-      if(sheet==='PURCHASE'||sheet==='SALES'){
-        const bf=document.getElementById('branch-filter');
-        if(bf)bf.value='';
-      }
-      const _si=document.querySelector('.table-search-bar input[type="search"]');
-      if(_si&&_si.value){_si.value='';_si.dispatchEvent(new Event('input'));}
-      showToast(`${rows.length} ${sheet} row(s) imported ✓`,'success');
-    },50);
-  },30);
+      if(sheet==='PURCHASE') S.purchase.push(...rows);
+      else if(sheet==='SALES') S.sales.push(...rows);
+      else if(sheet==='EXPENSE') S.expense.push(...rows);
+      else if(sheet==='ITEMS') S.items.push(...rows);
+      else if(sheet==='STORE') S.storeItems.push(...rows);
+      saveUserData();
+      setTimeout(()=>{
+        const _tabMap={PURCHASE:'PURCHASE',SALES:'SALES',EXPENSE:'EXPENSE',ITEMS:'ITEMS',STORE:'STORE'};
+        const _target=_tabMap[sheet];
+        if(_target&&S.tab!==_target){switchTab(_target);}
+        updateSuggestions();renderTab();
+        // Reset branch filter to show all branches after import to ensure visibility
+        if(sheet==='PURCHASE'||sheet==='SALES'){
+          const bf=document.getElementById('branch-filter');
+          if(bf)bf.value='';
+        }
+        const _si=document.querySelector('.table-search-bar input[type="search"]');
+        if(_si&&_si.value){_si.value='';_si.dispatchEvent(new Event('input'));}
+        showToast(`${rows.length} ${sheet} row(s) imported ✓`,'success');
+      },50);
+    },30);
+  }catch(err){
+    console.error('Import error:',err);
+    showToast('Import failed: '+err.message,'error');
+  }
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -6477,17 +6616,233 @@ document.addEventListener('DOMContentLoaded',init);
   function applyFilter(rows, q, count){
     const ql = q.trim().toLowerCase();
     let visible = 0;
-    rows.forEach(tr => {
-      const show = !ql || tr.textContent.toLowerCase().includes(ql);
-      tr.style.display = show ? '' : 'none';
-      if(show) visible++;
-    });
+    const tab = S.tab;
+
+    // Handle different tab types for total recalculation
+    if(tab === 'PURCHASE' || tab === 'SALES') {
+      const isP = tab === 'PURCHASE';
+      const dataArray = isP ? S.purchase : S.sales;
+      const branchF = document.getElementById('branch-filter')?.value || '';
+      const effectiveBranchF = S.userBranch || branchF;
+
+      let totQty = 0, totVal = 0, totComm = 0;
+
+      rows.forEach((tr, index) => {
+        const show = !ql || tr.textContent.toLowerCase().includes(ql);
+        tr.style.display = show ? '' : 'none';
+        if(show) {
+          visible++;
+          // Extract data index from oncontextmenu attribute
+          const oncontextmenu = tr.getAttribute('oncontextmenu');
+          if(oncontextmenu) {
+            const match = oncontextmenu.match(/showCtxMenu\(event,(\d+),'(?:purchase|sales)'\)/);
+            if(match) {
+              const dataIndex = parseInt(match[1]);
+              const rowData = dataArray[dataIndex];
+              if(rowData) {
+                const qty = parseFloat(rowData.qty) || 0;
+                const price = parseFloat(isP ? rowData.uPrice : rowData.sPrice) || 0;
+                const base = qty * price;
+                let total = base;
+                if(rowData.vatOn) total += base * 0.15;
+                const comm = (!isP && rowData.commission) ? parseFloat(rowData.commission) || 0 : 0;
+                if(!isP) {
+                  if(rowData.wh3On) total -= base * 0.03;
+                  if(rowData.vwhOn) total -= base * 0.075;
+                  if(comm) total -= comm;
+                }
+                totQty += qty;
+                totVal += total;
+                totComm += comm;
+              }
+            }
+          }
+        }
+      });
+
+      // Update summary row totals for PURCHASE/SALES
+      const summaryRow = document.querySelector('.summary-row');
+      if(summaryRow) {
+        const qtyCell = summaryRow.querySelector('td[data-label="Qty"]');
+        const totalCell = summaryRow.querySelector('td[data-label="Total"]');
+        const commCell = summaryRow.querySelector('td[data-label="Commission"]');
+
+        if(qtyCell) qtyCell.textContent = fmtQ(totQty);
+        if(totalCell) {
+          totalCell.textContent = fmt(totVal);
+          totalCell.className = `num td-mono ${colorClass(totVal)}`;
+        }
+        if(commCell && !isP) {
+          commCell.textContent = totComm ? fmt(totComm) : '';
+        }
+      }
+    } else if(tab === 'EXPENSE') {
+      let total = 0;
+      rows.forEach((tr, index) => {
+        const show = !ql || tr.textContent.toLowerCase().includes(ql);
+        tr.style.display = show ? '' : 'none';
+        if(show) {
+          visible++;
+          // Extract data index from oncontextmenu attribute
+          const oncontextmenu = tr.getAttribute('oncontextmenu');
+          if(oncontextmenu) {
+            const match = oncontextmenu.match(/showCtxMenu\(event,(\d+),'expense'\)/);
+            if(match) {
+              const dataIndex = parseInt(match[1]);
+              const rowData = S.expense[dataIndex];
+              if(rowData) {
+                total += parseFloat(rowData.amt) || 0;
+              }
+            }
+          }
+        }
+      });
+
+      // Update summary row total for EXPENSE
+      const summaryRow = document.querySelector('.summary-row');
+      if(summaryRow) {
+        const totalCell = summaryRow.querySelector('td:nth-child(3)'); // Amount column
+        if(totalCell) {
+          totalCell.textContent = fmt(total);
+          totalCell.className = `num td-mono ${colorClass(-total)}`;
+        }
+      }
+    } else if(tab === 'STORE') {
+      let totalVal = 0;
+      rows.forEach((tr, index) => {
+        const show = !ql || tr.textContent.toLowerCase().includes(ql);
+        tr.style.display = show ? '' : 'none';
+        if(show) {
+          visible++;
+          // Extract data index from oncontextmenu attribute
+          const oncontextmenu = tr.getAttribute('oncontextmenu');
+          if(oncontextmenu) {
+            const match = oncontextmenu.match(/showCtxMenu\(event,(\d+),'store'\)/);
+            if(match) {
+              const dataIndex = parseInt(match[1]);
+              const rowData = S.storeItems[dataIndex];
+              if(rowData) {
+                totalVal += (parseFloat(rowData.qty) || 0) * (parseFloat(rowData.cost) || 0);
+              }
+            }
+          }
+        }
+      });
+
+      // Update header total for STORE
+      const totalSpan = document.querySelector('#tab-content > div:first-child span:nth-child(2)');
+      if(totalSpan) {
+        totalSpan.textContent = `${L('totalValue')}: ${fmt(totalVal)}`;
+      }
+    } else if(tab === 'BALANCE') {
+      let totalV = 0;
+      const filterBranch = S.userBranch || '';
+      rows.forEach((tr, index) => {
+        const show = !ql || tr.textContent.toLowerCase().includes(ql);
+        tr.style.display = show ? '' : 'none';
+        if(show) {
+          visible++;
+          // For BALANCE tab, extract item data from the row content
+          const itemNameCell = tr.querySelector('td[data-label="Item Name"], td[data-label="Item"]');
+          if(itemNameCell) {
+            const itemName = itemNameCell.textContent.trim();
+            const item = S.items.find(i => i.name === itemName);
+            if(item) {
+              const purFilter = filterBranch ? S.purchase.filter(p => p.id === item.id && p.branch === filterBranch) : S.purchase.filter(p => p.id === item.id);
+              const salFilter = filterBranch ? S.sales.filter(s => s.id === item.id && s.branch === filterBranch) : S.sales.filter(s => s.id === item.id);
+              const inQ = purFilter.reduce((a, b) => a + (parseFloat(b.qty) || 0), 0);
+              const outQ = salFilter.reduce((a, b) => a + (parseFloat(b.qty) || 0), 0);
+              const stock = inQ - outQ;
+              const cost = purFilter.reduce((a, b) => a + (b.qty || 0) * (b.uPrice || 0), 0);
+              const avg = inQ > 0 ? cost / inQ : 0;
+              const val = stock * avg;
+              totalV += val;
+            }
+          }
+        }
+      });
+
+      // Update extras total for BALANCE
+      const totalSpan = document.querySelector('#extras span[style*="font-family"]');
+      if(totalSpan) {
+        totalSpan.textContent = fmt(totalV);
+      }
+    } else if(tab === 'CREDIT') {
+      // For CREDIT tab, recalculate summary cards based on visible rows
+      let visibleRecTotal = 0, visibleRecCollected = 0, visibleRecOutstanding = 0;
+      let visiblePayTotal = 0, visiblePaySettled = 0, visiblePayOutstanding = 0;
+
+      rows.forEach((tr, index) => {
+        const show = !ql || tr.textContent.toLowerCase().includes(ql);
+        tr.style.display = show ? '' : 'none';
+        if(show) {
+          visible++;
+          // Extract data from the row - look for the credit ID in the payment buttons
+          const payBtn = tr.querySelector('button[onclick*="openCreditPayModal"]');
+          if(payBtn) {
+            const onclick = payBtn.getAttribute('onclick');
+            const match = onclick.match(/openCreditPayModal\('([^']+)',\s*([\d.]+)\)/);
+            if(match) {
+              const cid = match[1];
+              const amt = parseFloat(match[2]) || 0;
+              const paidAmt = getCreditPaidAmt(cid);
+              
+              // Determine if this is a sale or purchase from the type badge
+              const typeBadge = tr.querySelector('.td-badge');
+              const isSale = typeBadge && typeBadge.textContent.includes('SALE');
+              
+              if(isSale) {
+                visibleRecTotal += amt;
+                visibleRecCollected += paidAmt;
+                visibleRecOutstanding += Math.max(0, amt - paidAmt);
+              } else {
+                visiblePayTotal += amt;
+                visiblePaySettled += paidAmt;
+                visiblePayOutstanding += Math.max(0, amt - paidAmt);
+              }
+            }
+          }
+        }
+      });
+
+      // Update summary cards
+      const recCard = document.querySelector('.credit-receivable');
+      const payCard = document.querySelector('.credit-payable');
+      
+      if(recCard) {
+        const collectedSpan = recCard.querySelector('.csc-row:nth-child(2) span:last-child');
+        const outstandingSpan = recCard.querySelector('.csc-row:nth-child(3) span:last-child');
+        if(collectedSpan) collectedSpan.textContent = fmt(visibleRecCollected);
+        if(outstandingSpan) {
+          outstandingSpan.textContent = fmt(visibleRecOutstanding);
+          outstandingSpan.className = visibleRecOutstanding > 0 ? 'num-neg td-mono' : 'num-pos td-mono';
+        }
+      }
+      
+      if(payCard) {
+        const settledSpan = payCard.querySelector('.csc-row:nth-child(2) span:last-child');
+        const outstandingSpan = payCard.querySelector('.csc-row:nth-child(3) span:last-child');
+        if(settledSpan) settledSpan.textContent = fmt(visiblePaySettled);
+        if(outstandingSpan) {
+          outstandingSpan.textContent = fmt(visiblePayOutstanding);
+          outstandingSpan.className = visiblePayOutstanding > 0 ? 'num-neg td-mono' : 'num-pos td-mono';
+        }
+      }
+    } else {
+      // Default behavior for other tabs
+      rows.forEach(tr => {
+        const show = !ql || tr.textContent.toLowerCase().includes(ql);
+        tr.style.display = show ? '' : 'none';
+        if(show) visible++;
+      });
+    }
+
     count.textContent = ql ? visible + ' / ' + rows.length + ' rows' : rows.length + ' rows';
   }
 
   function injectSearchBar(){
     const tab = S.tab;
-    if(!['PURCHASE','SALES','BALANCE','ITEMS','EXPENSE','STORE','STOREBALANCE'].includes(tab)) return;
+    if(!['PURCHASE','SALES','BALANCE','ITEMS','EXPENSE','STORE','STOREBALANCE','CREDIT'].includes(tab)) return;
     const tableWrap = document.querySelector('#tab-content .table-wrap');
     if(!tableWrap) return;
     if(tableWrap.previousElementSibling && tableWrap.previousElementSibling.classList.contains('table-search-bar')) return;
