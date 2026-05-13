@@ -188,6 +188,7 @@ tbody tr:nth-child(n+11){animation-delay:.33s}
 .brand-logo.store-logo{box-shadow:0 0 0 2px var(--store),0 2px 10px var(--store-glow)}
 .brand-text .t1{font-family:var(--brand);font-size:1rem;font-weight:normal;color:var(--text);letter-spacing:.06em}
 .brand-text .t2{font-size:.58rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-top:1px}
+.brand-text .t3{font-size:.55rem;color:var(--text3);opacity:.75;margin-top:1px;letter-spacing:.04em}
 
 .hdr-right{display:flex;align-items:center;gap:6px}
 .hdr-divider{width:1px;height:22px;background:var(--border2);margin:0 2px}
@@ -1131,13 +1132,31 @@ html[data-card="1"] tbody tr.row-zero{border-color:rgba(245,158,11,.3)}
 }
 
 /* ── Permissions ── */
-.perm-user-card{padding:15px;background:var(--surface2);border-radius:var(--radius);margin-bottom:11px;border:1px solid var(--border);animation:flyInUp .3s cubic-bezier(.22,1,.36,1) both}
-.perm-username{font-weight:700;margin-bottom:11px;display:flex;align-items:center;gap:8px;font-size:13px}
-.perm-avatar-sm{width:28px;height:28px;border-radius:50%;background:var(--gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:12px}
-.perm-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:11px}
-.perm-field label{font-size:10px;color:var(--text3);font-weight:700;display:block;margin-bottom:3px}
-.perm-select{width:100%;padding:5px 8px;border:1.5px solid var(--border2);border-radius:7px;background:var(--surface);color:var(--text);font-family:var(--font);font-size:11px;cursor:pointer}
-.perm-perm-row{display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-top:1px solid var(--border);margin-top:3px}
+.perm-user-card{padding:16px;background:var(--surface2);border-radius:var(--radius);margin-bottom:12px;border:1px solid var(--border);animation:flyInUp .3s cubic-bezier(.22,1,.36,1) both}
+.perm-user-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border)}
+.perm-avatar-sm{width:32px;height:32px;border-radius:50%;background:var(--gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;flex-shrink:0}
+.perm-user-info{flex:1;min-width:0}
+.perm-username-text{font-weight:700;font-size:13px;color:var(--text)}
+.perm-user-meta{font-size:10px;color:var(--text3);margin-top:2px}
+.perm-quick-set{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.perm-preset-btn{padding:3px 7px;border-radius:6px;border:1.5px solid var(--border2);background:var(--surface);color:var(--text2);font-size:10px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .15s}
+.perm-preset-btn:hover{border-color:var(--accent);color:var(--accent)}
+.perm-preset-full:hover{border-color:#22c55e!important;color:#22c55e!important}
+.perm-preset-add_only:hover{border-color:#eab308!important;color:#eab308!important}
+.perm-preset-read:hover{border-color:#3b82f6!important;color:#3b82f6!important}
+.perm-preset-none:hover{border-color:#ef4444!important;color:#ef4444!important}
+.perm-group{margin-bottom:10px}
+.perm-group-label{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:4px;padding:0 2px}
+.perm-tab-row{display:flex;align-items:center;justify-content:space-between;padding:7px 2px;border-top:1px solid var(--border)}
+.perm-tab-label{font-size:11px;font-weight:600;color:var(--text2);display:flex;align-items:center;gap:5px;min-width:90px}
+.perm-chips{display:flex;gap:3px}
+.perm-chip{padding:3px 8px;border-radius:6px;border:1.5px solid var(--border2);background:transparent;color:var(--text3);font-size:10px;font-weight:600;cursor:pointer;font-family:var(--font);transition:all .15s}
+.perm-chip:hover{border-color:var(--text2);color:var(--text2)}
+.perm-chip.ppc-full.active{background:rgba(34,197,94,.15);border-color:#22c55e;color:#22c55e}
+.perm-chip.ppc-add_only.active{background:rgba(234,179,8,.15);border-color:#eab308;color:#eab308}
+.perm-chip.ppc-read.active{background:rgba(59,130,246,.15);border-color:#3b82f6;color:#3b82f6}
+.perm-chip.ppc-none.active{background:rgba(239,68,68,.15);border-color:#ef4444;color:#ef4444}
+.perm-perm-row{display:flex;align-items:center;justify-content:space-between;padding:8px 2px;border-top:1px solid var(--border);margin-top:3px}
 .perm-perm-row label{font-size:12px;font-weight:600;color:var(--text2)}
 
 .role-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:600}
@@ -1247,7 +1266,6 @@ html[data-view="mobile"] .sub-plan-cards{grid-template-columns:1fr 1fr}
 html[data-view="mobile"] .exp-format-cards{grid-template-columns:1fr 1fr}
 html[data-view="mobile"] .exp-sheets{gap:8px}
 html[data-view="mobile"] .exp-sheet-pill{padding:7px 15px;font-size:12px}
-html[data-view="mobile"] .perm-grid{grid-template-columns:1fr!important}
 html[data-view="mobile"] .head-actions .btn{padding:8px 12px;font-size:12px}
 html[data-view="mobile"] .icon-btn{width:38px;height:38px}
 html[data-view="mobile"] .hdr-chip{padding:4px 8px}
@@ -1256,7 +1274,10 @@ html[data-view="mobile"] .receipt-actions{flex-wrap:wrap;gap:7px}
 html[data-view="mobile"] .receipt-actions .apv-btn{flex:1 1 40%}
 html[data-view="mobile"] .confirm-box{border-radius:22px}
 html[data-view="mobile"] .table-wrap{-webkit-overflow-scrolling:touch;scroll-snap-type:x proximity}
-html[data-view="mobile"] .perm-user-card{padding:13px}
+html[data-view="mobile"] .perm-user-card{padding:12px}
+html[data-view="mobile"] .perm-user-hdr{flex-wrap:wrap}
+html[data-view="mobile"] .perm-quick-set{width:100%;margin-top:8px;justify-content:flex-start}
+html[data-view="mobile"] .perm-chips{flex-wrap:wrap}
 html[data-view="mobile"] .drawer-item{padding:12px 17px}
 html[data-view="mobile"] .drawer-item .di-label{font-size:13px}
 html[data-view="mobile"] .table-search-bar{display:none}
@@ -1391,6 +1412,7 @@ html[data-view="mobile"] .table-search-bar{display:none}
     <div class="brand-text">
       <div class="t1">Power</div>
       <div class="t2" id="brand-sub">System Dashboard</div>
+      <div class="t3" id="brand-user"></div>
     </div>
   </div>
   <div class="hdr-right">
@@ -3022,6 +3044,7 @@ async function doLogin(u,ownerId,role){
   logo.innerHTML=LOGO_SVG;
   const shopName=getRegistry()[ownerId]?.shopName||'';
   document.getElementById('brand-sub').textContent=shopName||'Inventory System';
+  document.getElementById('brand-user').textContent=u;
   const hdr=document.getElementById('app-header');
   hdr.className='app-header'+(role==='storekeeper'?' store-mode':'');
   document.getElementById('drawer-hdr').className='drawer-hdr'+(role==='storekeeper'?' store-drawer-hdr':'');
@@ -3207,6 +3230,7 @@ function doLoginSystemOwner(){
   document.getElementById('brand-logo').className='brand-logo owner';
   document.getElementById('brand-logo').innerHTML=LOGO_SVG;
   document.getElementById('brand-sub').textContent='System Dashboard';
+  document.getElementById('brand-user').textContent=OWNER_USERNAME;
   document.getElementById('user-label').textContent=OWNER_USERNAME;
   document.getElementById('user-role-label').textContent='SYSTEM OWNER';
   document.getElementById('user-role-label').className='role owner-role';
@@ -4620,6 +4644,7 @@ function logout(){
   document.getElementById('app-header').className='app-header';
   document.getElementById('brand-logo').className='brand-logo';document.getElementById('brand-logo').innerHTML=LOGO_SVG;
   document.getElementById('brand-sub').textContent='Inventory System';
+  document.getElementById('brand-user').textContent='';
   document.getElementById('user-role-label').className='role';
   document.getElementById('hdr-chip').className='hdr-chip no-print';
   document.getElementById('hdr-avatar').className='hdr-avatar';
@@ -6213,25 +6238,72 @@ function printReceiptDirectly(){
 /* ═══════════════════════════════════════════════════════
    PERMISSIONS MODAL
 ═══════════════════════════════════════════════════════ */
-function openPermissions(){
+const PERM_TAB_GROUPS=[
+  {label:'Inventory',tabs:['ITEMS','STORE','BALANCE']},
+  {label:'Transactions',tabs:['PURCHASE','SALES','EXPENSE','CREDIT']},
+  {label:'Reports',tabs:['REPORT']}
+];
+const PERM_TAB_ICON={ITEMS:'📦',PURCHASE:'🛒',SALES:'💰',BALANCE:'⚖️',STORE:'🏪',EXPENSE:'💸',REPORT:'📊',CREDIT:'💳'};
+const PERM_LABELS={full:'Full',add_only:'Add',read:'Read',none:'None'};
+
+function openPermissions(){_renderPermBody();openModal('perm-modal');}
+
+function _renderPermBody(){
   const reg=getRegistry();
   const users=Object.keys(reg).filter(u=>u!==S.user&&reg[u].ownerId===S.ownerId&&reg[u].role==='user');
   const body=document.getElementById('perm-body');
   if(!users.length){
     body.innerHTML='<p style="color:var(--text3)">No regular users under your account yet.</p><button type="button" class="modal-btn secondary" onclick="closeModal(\'perm-modal\')" style="margin-top:14px">Close</button>';
-  }else{
-    body.innerHTML=users.map(u=>{
-      const up=S.perms[u]||{};const ep=S.exportPerms[u]??true;
-      return`<div class="perm-user-card">
-        <div class="perm-username"><div class="perm-avatar-sm">${u[0].toUpperCase()}</div>${esc(u)} <span style="font-size:10px;color:var(--text3)">(Branch: ${esc(reg[u]?.branch||'None')})</span></div>
-        <div class="perm-grid">${PERM_TABS.map(t=>`<div class="perm-field"><label>${t}</label><select class="perm-select" onchange="setUserPerm('${u}','${t}',this.value)">${PERM_OPTS.map(o=>`<option value="${o.v}"${(up[t]||'full')===o.v?' selected':''}>${o.l}</option>`).join('')}</select></div>`).join('')}</div>
-        <div class="perm-perm-row"><label>Export Permission</label><label class="toggle-sw"><input type="checkbox" ${ep?'checked':''} onchange="setExportPerm('${u}',this.checked)"><span></span></label></div>
-      </div>`;
-    }).join('')+`<button type="button" class="modal-btn secondary" onclick="closeModal('perm-modal')" style="margin-top:4px">Close</button>`;
+    return;
   }
-  openModal('perm-modal');
+  body.innerHTML=users.map(u=>{
+    const up=S.perms[u]||{};const ep=S.exportPerms[u]??true;
+    const groupsHtml=PERM_TAB_GROUPS.map(g=>`
+      <div class="perm-group">
+        <div class="perm-group-label">${g.label}</div>
+        ${g.tabs.map(t=>{
+          const cur=up[t]||'full';
+          return`<div class="perm-tab-row">
+            <span class="perm-tab-label"><span>${PERM_TAB_ICON[t]||''}</span>${t}</span>
+            <div class="perm-chips">${PERM_OPTS.map(o=>`<button type="button" class="perm-chip ppc-${o.v}${cur===o.v?' active':''}" onclick="setUserPermUI('${u}','${t}','${o.v}',this)">${PERM_LABELS[o.v]}</button>`).join('')}</div>
+          </div>`;
+        }).join('')}
+      </div>`).join('');
+    return`<div class="perm-user-card">
+      <div class="perm-user-hdr">
+        <div class="perm-avatar-sm">${u[0].toUpperCase()}</div>
+        <div class="perm-user-info">
+          <div class="perm-username-text">${esc(u)}</div>
+          <div class="perm-user-meta">Branch: ${esc(reg[u]?.branch||'None')}</div>
+        </div>
+        <div class="perm-quick-set">
+          <span style="font-size:9px;color:var(--text3);margin-right:3px">Set all:</span>
+          ${['full','add_only','read','none'].map(v=>`<button type="button" class="perm-preset-btn perm-preset-${v}" onclick="setAllPerms('${u}','${v}')">${PERM_LABELS[v]}</button>`).join('')}
+        </div>
+      </div>
+      ${groupsHtml}
+      <div class="perm-perm-row"><label data-i18n="exportPermLabel">Export Permission</label><label class="toggle-sw"><input type="checkbox" ${ep?'checked':''} onchange="setExportPerm('${u}',this.checked)"><span></span></label></div>
+    </div>`;
+  }).join('')+`<button type="button" class="modal-btn secondary" onclick="closeModal('perm-modal')" style="margin-top:4px">Close</button>`;
 }
-function setUserPerm(u,tab,v){if(!S.perms[u])S.perms[u]={};S.perms[u][tab]=v;saveUserData();showToast(`Perm updated for ${u}`,'success');}
+
+function setUserPermUI(u,tab,v,btn){
+  if(!S.perms[u])S.perms[u]={};
+  S.perms[u][tab]=v;
+  saveUserData();
+  const row=btn.closest('.perm-tab-row');
+  row.querySelectorAll('.perm-chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+  showToast(`${tab}: ${PERM_LABELS[v]} for ${u}`,'success');
+}
+function setAllPerms(u,v){
+  if(!S.perms[u])S.perms[u]={};
+  PERM_TABS.forEach(t=>{S.perms[u][t]=v;});
+  saveUserData();
+  _renderPermBody();
+  showToast(`All permissions → ${PERM_LABELS[v]} for ${u}`,'success');
+}
+function setUserPerm(u,tab,v){if(!S.perms[u])S.perms[u]={};S.perms[u][tab]=v;saveUserData();}
 function setExportPerm(u,v){S.exportPerms[u]=v;saveUserData();showToast(`Export ${v?'enabled':'disabled'} for ${u}`,'success');}
 
 /* ═══════════════════════════════════════════════════════
