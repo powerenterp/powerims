@@ -3942,6 +3942,7 @@ function getUserJoinDate(){
 }
 function shouldUserSeeData(row){
   if(isOwner()||isSystemOwner())return true;
+  if(getPerm(S.tab)==='full')return true;
   if(getPerm(S.tab)==='add_only'){
     if(!row._by||row._by!==S.user)return false;
     if(!row.createdAt)return false;
@@ -4324,6 +4325,7 @@ function viewStoreReceiptPrint(r){
   openModal('store-receipt-print-modal');
 }
 function printStoreReceiptDirectly(){
+  if(!canExport()){showToast('⛔ No export permission','error');return;}
   const pa=document.getElementById('print-area');
   pa.innerHTML=`<style>@media print{body *{visibility:hidden}#print-area,#print-area *{visibility:visible}}
     #print-area{position:fixed;top:0;left:0;width:88mm;background:white;padding:16px;font-family:monospace}
@@ -4347,6 +4349,7 @@ function _pdfLine(doc,label,val,y,margin,W,bold){
   doc.text(val,W-margin,y,{align:'right'});
 }
 function exportReceiptPDF(){
+  if(!canExport()){showToast('⛔ No export permission','error');return;}
   if(!_rcptRow){showToast('No receipt open','error');return;}
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a6'});
@@ -4408,6 +4411,7 @@ function exportReceiptPDF(){
   doc.save('receipt-'+Date.now()+'.pdf');
 }
 function exportStoreReceiptPDF(){
+  if(!canExport()){showToast('⛔ No export permission','error');return;}
   if(!_storeRcptRow){showToast('No receipt open','error');return;}
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a6'});
@@ -5278,6 +5282,7 @@ function renderBalance(){
 }
 
 function exportBalancePDF(){
+  if(!canExport()){showToast('⛔ No export permission','error');return;}
   if(typeof window.jspdf==='undefined'||!window.jspdf.jsPDF){showToast('PDF library not loaded','error');return;}
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({orientation:'landscape',unit:'pt',format:'a4'});
@@ -5337,6 +5342,7 @@ function exportBalancePDF(){
 }
 
 function exportCreditPDF(){
+  if(!canExport()){showToast('⛔ No export permission','error');return;}
   if(typeof window.jspdf==='undefined'||!window.jspdf.jsPDF){showToast('PDF library not loaded','error');return;}
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({orientation:'landscape',unit:'pt',format:'a4'});
@@ -6226,6 +6232,7 @@ function openRowReceipt(idx,listType){
   openModal('receipt-modal');
 }
 function printReceiptDirectly(){
+  if(!canExport()){showToast('⛔ No export permission','error');return;}
   const pa=document.getElementById('print-area');
   pa.innerHTML=`<style>@media print{body *{visibility:hidden}#print-area,#print-area *{visibility:visible}}
     #print-area{position:fixed;top:0;left:0;width:88mm;background:white;padding:16px;font-family:monospace}
@@ -7186,19 +7193,19 @@ document.addEventListener('DOMContentLoaded',init);
         if(show) {
           visible++;
           // For BALANCE tab, extract item data from the row content
-          const itemNameCell = tr.querySelector('td[data-label="Item Name"], td[data-label="Item"]');
-          if(itemNameCell) {
-            const itemName = itemNameCell.textContent.trim();
-            const item = S.items.find(i => i.name === itemName);
+          const partNoCell = tr.querySelector('td[data-label="Part No."]');
+          if(partNoCell) {
+            const itemId = partNoCell.textContent.trim();
+            const item = S.items.find(i => i.id === itemId);
             if(item) {
               const purFilter = filterBranch ? S.purchase.filter(p => p.id === item.id && p.branch === filterBranch) : S.purchase.filter(p => p.id === item.id);
               const salFilter = filterBranch ? S.sales.filter(s => s.id === item.id && s.branch === filterBranch) : S.sales.filter(s => s.id === item.id);
               const inQ = purFilter.reduce((a, b) => a + (parseFloat(b.qty) || 0), 0);
               const outQ = salFilter.reduce((a, b) => a + (parseFloat(b.qty) || 0), 0);
               const stock = inQ - outQ;
-              const cost = purFilter.reduce((a, b) => a + (b.qty || 0) * (b.uPrice || 0), 0);
+              const cost = purFilter.reduce((a, b) => a + (parseFloat(b.qty) || 0) * (parseFloat(b.uPrice) || 0), 0);
               const avg = inQ > 0 ? cost / inQ : 0;
-              const val = stock * avg;
+              const val = Math.max(0, stock) * avg;
               totalV += val;
             }
           }
