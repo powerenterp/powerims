@@ -3,7 +3,7 @@
 
 <meta charset="UTF-8">
 <!-- Accessibility: removed maximum-scale=1.0 + user-scalable=no so users can pinch-zoom (WCAG 1.4.4) -->
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=1280, initial-scale=1.0, viewport-fit=cover">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="POWER-IMS">
@@ -2203,7 +2203,7 @@ const STOREKEEPER_ALLOWED_TABS = ['STORE','STOREBALANCE','EXPENSE','STOREREPORT'
 
 const LANG={
   en:{
-    date:'Date',supplier:'Supplier',customer:'Customer',branch:'Branch',partNo:'Part Number',itemName:'Item Name',desc:'Description',qty:'Qty',unitPrice:'Unit Price',total:'Total',payment:'Payment',status:'Status',price:'Price',totals:'Totals',vat:'VAT (15%)',wh3:'Withhold 3%',vwh:'VAT WH 7.5%',totalPrice:'Total Price',cash:'Cash',credit:'Credit',reason:'Reason',amount:'Amount',
+    date:'Date',supplier:'Supplier',customer:'Customer',branch:'Branch',partNo:'Item ID',itemName:'Item Name',desc:'Description',qty:'Qty',unitPrice:'Unit Price',total:'Total',payment:'Payment',status:'Status',price:'Price',totals:'Totals',vat:'VAT (15%)',wh3:'Withhold 3%',vwh:'VAT WH 7.5%',totalPrice:'Total Price',cash:'Cash',credit:'Credit',reason:'Reason',amount:'Amount',
     navPurchase:'Purchase',navSales:'Sales',navBalance:'Balance',navExpense:'Expense',navReport:'Report',navItems:'Items',navStore:'Store',navStoreBalance:'Balance',navStoreReport:'Report',
     titleItems:'Add Items',subItems:'Manage inventory catalog',titlePurchase:'Purchase',subPurchase:'Purchase records',titleSales:'Sales',subSales:'Sales records',titleBalance:'Balance',subBalance:'Inventory stock levels',titleStore:'Store',subStore:'Central store inventory & dispatch',titleStoreBalance:'Store Balance',subStoreBalance:'Store stock levels & total value',titleExpense:'Expense',subExpense:'Expense tracking',titleReport:'Report',subReport:'Financial summary',titleStoreReport:'Store Report',subStoreReport:'Store financial summary',
     settingsTitle:'Settings',settingsNav:'Navigation',settingsAddItems:'Add Items',settingsAddItemsSub:'Manage inventory catalog',settingsStore:'Store',settingsStoreSub:'Manage store inventory',settingsStoreBalance:'Store Balance',settingsStoreBalanceSub:'Store stock levels',settingsStoreReport:'Store Report',settingsStoreReportSub:'Store financial summary',settingsStoreExpense:'Store Expense',settingsStoreExpenseSub:'Manage store expenses',settingsExport:'Export Data',settingsExportBtn:'Export (PDF & Excel)',settingsAccount:'Account',settingsChangePass:'Change Password',settingsPhoto:'Profile Photo',settingsShopName:'Shop Name',settingsShopNameSub:'Edit your business name',settingsPerms:'User Permissions',settingsPermsSub:'Owner only',settingsBranches:'Manage Branches',settingsAddUser:'Add User',settingsAddUserSub:'Create user for a branch',settingsReqStore:'Request from Store',settingsReqStoreSub:'Request items for your branch',settingsDanger:'Danger Zone',settingsResetReq:'Request Data Reset',settingsResetReqSub:'Requires software owner approval',settingsPrefs:'Preferences',settingsLight:'☀️ Light Mode',settingsMobile:'📱 Mobile View',settingsLang:'🌐 Language',settingsLogout:'Log Out',
@@ -2226,7 +2226,7 @@ const LANG={
     btnSave:'Save',btnCancel:'Cancel',btnClose:'Close',btnPrint:'🖨️ Print',btnExportPdf:'Export PDF (A6)',btnClear:'Clear',
     permFull:'Full',permAddOnly:'Add Only',permRead:'Read Only',permNone:'No Access',
     dateReceived:'Date Received',stockQty:'Stock Qty',unitCost:'Unit Cost',totalValue:'Total Value',purchaseQty:'Purchase Qty',salesQty:'Sales Qty',receivedQty:'Received Qty',dispatchedQty:'Dispatched Qty',storeValue:'Store Value',method:'Method',item:'Item',subtotal:'Subtotal',amountDue:'AMOUNT DUE',
-    dateLabel:'Date *',selectItem:'— Select item —',storeItemLbl:'Store Item *',noStoreItems:'No items in store',dispatchQtyLbl:'Quantity *',dispatchPriceLbl:'Dispatch Price (per unit) *',toBranchLbl:'To Branch *',dispatchTotal:'DISPATCH TOTAL',partNoLbl:'Part Number *',partNoPh:'e.g. P001',itemNameLbl:'Item Name *',itemNamePh:'Product name',descLbl:'Description',descPh:'Optional',taxOptions:'TAX OPTIONS',totalAmountLbl:'TOTAL AMOUNT',reasonLbl:'Reason *',reasonPh:'What was this expense for?',amountLbl:'Amount *',
+    dateLabel:'Date *',selectItem:'— Select item —',storeItemLbl:'Store Item *',noStoreItems:'No items in store',dispatchQtyLbl:'Quantity *',dispatchPriceLbl:'Dispatch Price (per unit) *',toBranchLbl:'To Branch *',dispatchTotal:'DISPATCH TOTAL',partNoLbl:'Item ID *',partNoPh:'e.g. P001',itemNameLbl:'Item Name *',itemNamePh:'Product name',descLbl:'Description',descPh:'Optional',taxOptions:'TAX OPTIONS',totalAmountLbl:'TOTAL AMOUNT',reasonLbl:'Reason *',reasonPh:'What was this expense for?',amountLbl:'Amount *',
     initBalance:'Initial Cash Balance',totalPurchCash:'Total Purchases — Cash',totalPurchCredit:'Total Purchases — Credit',totalSalesCash:'Total Sales — Cash',totalSalesCredit:'Total Sales — Credit',totalExpenses:'Total Expenses',netProfitLoss:'Net Profit / Loss',cashOnHand:'Cash on Hand',creditPurchTitle:'Pending Purchase on Credit',creditSalesTitle:'Sales on Credit',initBalShort:'Init. Balance',purchCashShort:'Purchase Cash',purchCreditShort:'Purchase Credit',salesCashShort:'Sales Cash',salesCreditShort:'Sales Credit',expensesShort:'Expenses',netPLShort:'Net P/L',allBranches:'ALL BRANCHES',allBranchesBtn:'All Branches',editBalanceHint:'Edit initial balance per branch inline in the table below',
     storeInventory:'🏪 CENTRAL STORE INVENTORY',storeDispatchHistory:'📤 DISPATCH HISTORY (last 30)',storeKeeperMode:'Store Keeper Mode',dispatchLog:'Dispatch Log',noDispatchRange:'No dispatches in range',noStorePending:'No pending requests 🎉',storeStockReceived:'Total Store Stock Received',storeDispatchedBranches:'Total Dispatched to Branches',storeNetValue:'Net Store Value',
     emptyItems:'No items yet. Click "Add Items" to get started.',emptyRecords:'No records yet.',emptyActivity:'No activity recorded yet.',emptyExpense:'No expenses yet.',emptyStore:'No store stock yet.',emptyStoreBalance:'No store activity yet. Add stock from the Store tab.',emptyRequests:'No requests yet.',emptyOwners:'No owners yet.',
@@ -2238,7 +2238,7 @@ const LANG={
     storeKeeperLabel:'Store Keeper',
     totalInventoryValue:'TOTAL INVENTORY VALUE',exportPdfBtn:'📄 Export PDF',
     back:'Back',syncBtn:'Cloud Sync',storeReceiptsBtn:'Store Receipts',branchReqBtn:'Branch Store Requests',settingsBtn:'Settings',systemOwner:'SYSTEM OWNER',searchPh:'Search…',rows:'rows',
-    valUsername:'Please enter username and password',valPassMatch:'Passwords do not match.',valPassLen:'Password must be at least 4 characters.',valUserTaken:'Username already taken. Choose a different username.',valBizName:'Please enter your business/shop name.',valPendingReq:'A request with this username is already pending.',valSelectItem:'Please select or enter an item name',valQtyMin:'Quantity must be at least 1',valPartExists:'Part Number already exists — choose a unique one',valPassCurrent:'Current password incorrect',valPassMin:'Min 4 characters',valPassMatchShort:'Passwords do not match',valUserExists:'Username already exists',valPassRequired:'Password min 4 characters',valUsernameReq:'Please enter username and password required',valDispatchPrice:'Please enter a valid price',
+    valUsername:'Please enter username and password',valPassMatch:'Passwords do not match.',valPassLen:'Password must be at least 4 characters.',valUserTaken:'Username already taken. Choose a different username.',valBizName:'Please enter your business/shop name.',valPendingReq:'A request with this username is already pending.',valSelectItem:'Please select or enter an item name',valQtyMin:'Quantity must be at least 1',valPartExists:'Item ID already exists — choose a unique one',valPassCurrent:'Current password incorrect',valPassMin:'Min 4 characters',valPassMatchShort:'Passwords do not match',valUserExists:'Username already exists',valPassRequired:'Password min 4 characters',valUsernameReq:'Please enter username and password required',valDispatchPrice:'Please enter a valid price',
     confirmSuspendTitle:'Suspend User?',confirmDeleteUserTitle:'Delete User?',confirmDeleteBranchTitle:'Delete Branch?',confirmDeleteOwnerTitle:'Delete Owner?',confirmDeleteOwnerMsg:'This removes their account. Inventory data stays intact.',confirmResetTitle:'⚠️ Request Data Reset',confirmApproveResetTitle:'Approve Reset?',
     branchLabel:'Branch:',exportPermLabel:'Export Permission',
     subStatusTrial:'Trial · 14d left',subStatusActive:'Active',subStatusExpired:'Expired',subStatusSuspended:'Suspended',
@@ -2344,7 +2344,8 @@ const S={
 const fmt=n=>{const v=parseFloat(n)||0;return v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})};
 const fmtQ=n=>(parseFloat(n)||0).toLocaleString();
 const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;');
-const nowDt=()=>{const d=new Date();return `${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;}
+const toEthiopianDate=gDate=>{const yr=gDate.getFullYear(),mo=gDate.getMonth()+1,dy=gDate.getDate();const a=Math.floor((14-mo)/12),y=yr+4800-a,m=mo+12*a-3;const jdn=dy+Math.floor((153*m+2)/5)+365*y+Math.floor(y/4)-Math.floor(y/100)+Math.floor(y/400)-32045;const ET_EPOCH=1723856,offset=jdn-ET_EPOCH,r=offset%1461,n=(r%365)+365*Math.floor(r/1460);return{year:4*Math.floor(offset/1461)+Math.floor(r/365)-Math.floor(r/1460),month:Math.floor(n/30)+1,day:n%30+1};};
+const nowDt=()=>{const et=toEthiopianDate(new Date());return `${String(et.day).padStart(2,'0')}-${String(et.month).padStart(2,'0')}-${et.year}`;}
 const sum=(arr,fn)=>arr.reduce((a,b)=>a+(parseFloat(fn(b))||0),0);
 const colorClass=n=>parseFloat(n)<0?'num-neg':parseFloat(n)>0?'num-pos':'num-zero';
 // Use crypto-quality randomness; substr() replaced with slice() (substr is deprecated)
@@ -3941,6 +3942,11 @@ function getUserJoinDate(){
 }
 function shouldUserSeeData(row){
   if(isOwner()||isSystemOwner())return true;
+  if(getPerm(S.tab)==='add_only'){
+    if(!row._by||row._by!==S.user)return false;
+    if(!row.createdAt)return false;
+    return(Date.now()-new Date(row.createdAt).getTime())<10*60*1000;
+  }
   const joinDate=getUserJoinDate();
   if(!joinDate)return true;
   const rowDate=row?.createdAt||row?.date;
@@ -4586,7 +4592,8 @@ function toggleCardView(){
 function loadPrefs(){
   setTheme(localStorage.getItem(`ims_${S.user}_theme`)||'dark');
   setLang(localStorage.getItem(`ims_${S.user}_lang`)||'en');
-  setViewMode(localStorage.getItem(`ims_${S.user}_view`)||'desktop');
+  const savedView=localStorage.getItem(`ims_${S.user}_view`);
+  setViewMode(savedView||(window.screen.width<768?'mobile':'desktop'));
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -4847,7 +4854,7 @@ function buildStoreEntryForm(row,mode,idx){
   const body=document.getElementById(mode==='add'?'add-form-body':'edit-form-body');
   body.innerHTML=`
     <div class="field"><label>Date *</label><input type="text" id="f-date" placeholder="dd-mm-yyyy" value="${d.date||''}"></div>
-    <div class="field"><label>Part Number (from catalog) *</label>
+    <div class="field"><label>Item ID (from catalog) *</label>
       <select id="f-item" onchange="autoFillStoreItem()"><option value="">— Select item —</option>${itemOpts}</select>
     </div>
     <div class="field-row">
@@ -4877,10 +4884,9 @@ function _validateDate(dateStr){
   const match=dateStr.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
   if(!match)return false;
   const dd=parseInt(match[1]);const mm=parseInt(match[2]);const yyyy=parseInt(match[3]);
-  if(mm<1||mm>12)return false;
-  const days=[31,28,31,30,31,30,31,31,30,31,30,31];
-  if(yyyy%4===0&&(yyyy%100!==0||yyyy%400===0))days[1]=29;
-  if(dd<1||dd>days[mm-1])return false;
+  if(mm<1||mm>13)return false;
+  const maxDay=mm===13?(yyyy%4===0?6:5):30;
+  if(dd<1||dd>maxDay)return false;
   return true;
 }
 function submitStoreEntryForm(mode,idx){
@@ -4967,7 +4973,7 @@ function buildItemForm(row,mode,idx){
   const body=document.getElementById(mode==='add'?'add-form-body':'edit-form-body');
   body.innerHTML=`
     <div class="field-row">
-      <div class="field"><label>Part Number *</label><input id="f-id" value="${esc(d.id)}" placeholder="e.g. P001"></div>
+      <div class="field"><label>Item ID *</label><input id="f-id" value="${esc(d.id)}" placeholder="e.g. P001"></div>
       <div class="field"><label>Item Name *</label><input id="f-name" value="${esc(d.name)}" placeholder="Product name"></div>
     </div>
     <div class="field"><label>Description</label><input id="f-desc" value="${esc(d.desc||'')}" placeholder="Optional"></div>
@@ -4979,10 +4985,10 @@ function submitItemForm(mode,idx){
   const id=cap(document.getElementById('f-id').value.trim(),MAX_NAME_LEN);
   const name=cap(document.getElementById('f-name').value.trim(),MAX_NAME_LEN);
   const desc=cap(document.getElementById('f-desc').value.trim(),MAX_NOTE_LEN);
-  if(!id||!name){showMsg('f-error','Part Number and Name are required');return;}
+  if(!id||!name){showMsg('f-error','Item ID and Name are required');return;}
   const dupIdx=S.items.findIndex(m=>m.id.toLowerCase()===id.toLowerCase());
-  if(dupIdx!==-1&&(mode==='add'||dupIdx!==idx)){showMsg('f-error','Part Number already exists — choose a unique one');return;}
-  if(mode==='add')S.items.push({id,name,desc,_by:S.user});
+  if(dupIdx!==-1&&(mode==='add'||dupIdx!==idx)){showMsg('f-error','Item ID already exists — choose a unique one');return;}
+  if(mode==='add')S.items.push({id,name,desc,_by:S.user,createdAt:new Date().toISOString()});
   else S.items[idx]={...S.items[idx],id,name,desc,_by:S.user};
   saveUserData();renderTab();closeModal(mode==='add'?'add-row-modal':'edit-row-modal');
   showToast(mode==='add'?L('toastItemAdded'):L('toastItemUpdated'),'success');updateSuggestions();
@@ -5008,7 +5014,7 @@ function buildTxForm(row,mode,isP,idx){
       <div class="field"><label>${isP?L('supplier'):L('customer')} *</label><input id="f-party" list="party-list" value="${esc(d.party||'')}" placeholder="${isP?'Supplier name':'Customer name'}"></div>
     </div>
     <div class="field"><label>Branch</label><select id="f-branch">${branchOpts}</select></div>
-    <div class="field"><label>Part Number *</label><select id="f-id" onchange="autoFillItem()"><option value="">— Select item —</option>${itemOpts}</select></div>
+    <div class="field"><label>Item ID *</label><select id="f-id" onchange="autoFillItem()"><option value="">— Select item —</option>${itemOpts}</select></div>
     <div class="field-row">
       <div class="field"><label>Item Name (auto)</label><input id="f-name" readonly style="background:var(--surface3);cursor:not-allowed"></div>
       <div class="field"><label>Description (auto)</label><input id="f-desc" readonly style="background:var(--surface3);cursor:not-allowed"></div>
@@ -5084,7 +5090,7 @@ function submitTxForm(mode,idx,isP){
     const vatOn=document.getElementById('f-vat')?.checked??false;
     const row={date,party,branch,id:itemId,name:item.name,desc:item.desc,qty,uPrice:price,payment,vatOn,_by:S.user};
     if(_cid)row._cid=_cid;
-    if(mode==='add')S.purchase.push(row);else S.purchase[idx]={...S.purchase[idx],...row};
+    if(mode==='add'){row.createdAt=new Date().toISOString();S.purchase.push(row);}else S.purchase[idx]={...S.purchase[idx],...row};
   }else{
     const vatOn=document.getElementById('f-vat')?.checked??true;
     const wh3On=document.getElementById('f-wh3')?.checked??false;
@@ -5092,7 +5098,7 @@ function submitTxForm(mode,idx,isP){
     const commission=parseFloat(document.getElementById('f-commission')?.value)||0;
     const row={date,party,branch,id:itemId,name:item.name,desc:item.desc,qty,sPrice:price,payment,vatOn,wh3On,vwhOn,commission,_by:S.user};
     if(_cid)row._cid=_cid;
-    if(mode==='add')S.sales.push(row);else S.sales[idx]={...S.sales[idx],...row};
+    if(mode==='add'){row.createdAt=new Date().toISOString();S.sales.push(row);}else S.sales[idx]={...S.sales[idx],...row};
   }
   saveUserData();renderTab();updateSuggestions();
   closeModal(mode==='add'?'add-row-modal':'edit-row-modal');
@@ -5131,7 +5137,7 @@ function submitExpenseForm(mode,idx){
   if(!reason||!amt){showMsg('f-error','All fields required');return;}
   const expBranch=document.getElementById('f-expense-branch')?.value||(S.userBranch||'STORE');
   const row={date,reason,amt,payment,branch:expBranch,_by:S.user};
-  if(mode==='add')S.expense.push(row);else S.expense[idx]={...S.expense[idx],...row};
+  if(mode==='add'){row.createdAt=new Date().toISOString();S.expense.push(row);}else S.expense[idx]={...S.expense[idx],...row};
   saveUserData();renderTab();
   closeModal(mode==='add'?'add-row-modal':'edit-row-modal');
   showToast(mode==='add'?L('toastExpenseAdded'):L('toastUpdated'),'success');
@@ -6677,7 +6683,7 @@ function _normPayment(v){const s=String(v||'').trim().toUpperCase();if(s==='CRED
 function _parseImpRows(headers,dataRows,sheet){
   try{
     const _aliases={
-      'part no.':['part no.','part no','part number','part#','partno','id','item id','item no','item no.','code'],
+      'part no.':['part no.','part no','item id','part#','partno','id','item id','item no','item no.','code'],
       'item name':['item name','name','item','title'],
       'description':['description','desc','details','note'],
       'supplier':['supplier','vendor','party','from'],
