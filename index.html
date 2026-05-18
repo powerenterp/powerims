@@ -11,36 +11,6 @@
 <meta name="theme-color" content="#f2f5fc" media="(prefers-color-scheme: light)">
 <meta name="description" content="POWER-IMS — Inventory Management System with multi-branch, store dispatch, and credit ledger.">
 <meta name="referrer" content="strict-origin-when-cross-origin">
-
-<!--
-  Content-Security-Policy
-  ─────────────────────────────────────────────────────────────────────────
-  'unsafe-inline' is currently REQUIRED in script-src because the body still
-  uses ~200 inline onclick="…" attributes. Removing those is on the roadmap.
-  When the migration to addEventListener is done, drop 'unsafe-inline' from
-  script-src and add a per-load nonce.
-
-  Even with 'unsafe-inline', this CSP still meaningfully:
-    • Blocks eval / new Function (no 'unsafe-eval')
-    • Whitelists script origins to known CDNs (no rogue script injection)
-    • Blocks plugins (object-src 'none')
-    • Prevents this page from being framed (frame-ancestors 'none' = clickjacking off)
-    • Forbids form posts to off-origin URLs
-    • Forces HTTPS upgrades on any http:// asset that slips in
--->
-<meta http-equiv="Content-Security-Policy" content="
-  default-src 'self';
-  script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com https://cdn.jsdelivr.net;
-  style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
-  font-src 'self' https://fonts.gstatic.com data:;
-  img-src 'self' data: blob: https:;
-  connect-src 'self' https://*.supabase.co wss://*.supabase.co https://api.emailjs.com;
-  object-src 'none';
-  base-uri 'self';
-  form-action 'self';
-  frame-ancestors 'none';
-  upgrade-insecure-requests;
-">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <title>POWER-IMS — Inventory Management</title>
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
@@ -71,9 +41,6 @@
   --radius:12px;--radius-sm:8px;--radius-lg:18px;--radius-xl:24px;
   --font:'Inter',system-ui,sans-serif;--display:'Plus Jakarta Sans','Inter',sans-serif;--brand:'Gebuk','Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;
   --nav-h:68px;--hdr-h:58px;
-  --gradient:linear-gradient(135deg,#1e3a8a 0%,#2563eb 50%,#0ea5e9 100%);
-  --owner-gradient:linear-gradient(135deg,#78350f 0%,#b45309 55%,#d97706 100%);
-  --store-gradient:linear-gradient(135deg,#064e3b 0%,#059669 55%,#10b981 100%);
 }
 [data-theme="light"]{
   --bg:#f2f5fc;--bg2:#e8edf8;--surface:#ffffff;--surface2:#f7f9ff;--surface3:#edf0fb;
@@ -83,7 +50,6 @@
   --success:#16a34a;--error:#e11d48;--warn:#c07a00;
   --owner:#b45309;--owner-glow:rgba(180,83,9,.2);--owner-glass:rgba(180,83,9,.08);
   --store:#16a34a;--store-glow:rgba(22,163,74,.2);--store-glass:rgba(22,163,74,.08);
-  --gradient:linear-gradient(135deg,#1e40af 0%,#3b72f0 50%,#0ea5e9 100%);
   --shadow:0 2px 16px rgba(0,0,0,.08);--shadow-lg:0 16px 48px rgba(0,0,0,.14);
 }
 [data-theme="light"] .bottom-nav{
@@ -105,8 +71,7 @@
   box-shadow:0 20px 60px rgba(0,0,0,.14),0 0 0 1px rgba(0,0,0,.05)
 }
 [data-theme="light"] .auth-bg::before{
-  background-image:linear-gradient(rgba(59,110,240,.05) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(59,110,240,.05) 1px,transparent 1px)
+  background-image:radial-gradient(rgba(59,110,240,.1) 1px,transparent 1px)
 }
 [data-theme="light"] .auth-orb1{opacity:.1}
 [data-theme="light"] .auth-orb2{opacity:.08}
@@ -172,8 +137,8 @@ tbody tr:nth-child(n+11){animation-delay:.33s}
   box-shadow:0 1px 0 var(--border),0 4px 24px rgba(0,0,0,.25);
   animation:flyInUp .36s cubic-bezier(.22,1,.36,1)
 }
-.app-header.owner-mode{background:linear-gradient(90deg,rgba(146,64,14,.12),var(--surface));border-bottom-color:rgba(245,158,11,.25)}
-.app-header.store-mode{background:linear-gradient(90deg,rgba(6,95,70,.12),var(--surface));border-bottom-color:rgba(16,185,129,.25)}
+.app-header.owner-mode{background:var(--surface);border-bottom-color:rgba(245,158,11,.3);border-left:3px solid var(--owner)}
+.app-header.store-mode{background:var(--surface);border-bottom-color:rgba(16,185,129,.3);border-left:3px solid var(--store)}
 
 .brand{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:default}
 .brand-logo{
@@ -217,13 +182,13 @@ html[data-view="mobile"] .brand-text{display:none}
 
 .hdr-avatar{
   width:28px;height:28px;border-radius:50%;
-  background:var(--gradient);display:flex;align-items:center;justify-content:center;
+  background:var(--p);display:flex;align-items:center;justify-content:center;
   font-size:11px;font-weight:700;color:#fff;overflow:hidden;flex-shrink:0;
   cursor:pointer;transition:transform .18s;letter-spacing:0
 }
 .hdr-avatar:hover{transform:scale(1.1)}
-.hdr-avatar.owner-avatar{background:var(--owner-gradient);box-shadow:0 0 0 2px var(--owner)}
-.hdr-avatar.store-avatar{background:var(--store-gradient);box-shadow:0 0 0 2px var(--store)}
+.hdr-avatar.owner-avatar{background:var(--owner);box-shadow:0 0 0 2px var(--owner)}
+.hdr-avatar.store-avatar{background:var(--store);box-shadow:0 0 0 2px var(--store)}
 
 .icon-btn{
   width:36px;height:36px;border-radius:10px;border:1px solid var(--border);
@@ -335,70 +300,87 @@ html[data-view="mobile"] .brand-text{display:none}
 .head-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 
 /* ── Owner / Platform Dashboard ── */
-.owner-screen{min-height:100vh;padding:22px;max-width:1200px;margin:0 auto}
+.owner-screen{min-height:100vh;padding:18px;max-width:1100px;margin:0 auto}
+/* ── Hero ── */
 .owner-hero{
-  background:var(--owner-gradient);border-radius:var(--radius-xl);
-  padding:28px 32px;margin-bottom:22px;position:relative;overflow:hidden;
+  background:var(--owner);border-radius:var(--radius-xl);
+  padding:24px 28px;margin-bottom:18px;position:relative;overflow:hidden;
   animation:flyInUp .36s cubic-bezier(.22,1,.36,1)
 }
-.owner-hero::before{content:'';position:absolute;top:-50px;right:-50px;width:180px;height:180px;background:rgba(255,255,255,.07);border-radius:50%}
-.owner-hero::after{content:'';position:absolute;bottom:-25px;left:80px;width:110px;height:110px;background:rgba(255,255,255,.05);border-radius:50%}
-.owner-hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;position:relative;z-index:1}
-.owner-hero h1{font-family:var(--display);font-size:1.5rem;font-weight:800;color:#fff;margin-bottom:4px}
-.owner-hero p{color:rgba(255,255,255,.65);font-size:.78rem}
-/* ── System admin mode (software owner) — purple/indigo, clearly a higher tier ── */
-#owner-screen.sys-admin-mode .owner-hero{
-  background:linear-gradient(135deg,#1e1b4b 0%,#312e81 50%,#4c1d95 100%);
-  border:1.5px solid rgba(139,92,246,.3);
+.owner-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;background:rgba(255,255,255,.07);border-radius:50%;pointer-events:none}
+.owner-hero::after{content:'';position:absolute;bottom:-20px;left:60px;width:90px;height:90px;background:rgba(255,255,255,.05);border-radius:50%;pointer-events:none}
+.owner-hero-top{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;position:relative;z-index:1}
+.owner-hero-badge{display:inline-flex;align-items:center;gap:5px;padding:2px 9px 2px 5px;background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.2);border-radius:99px;font-size:9.5px;font-weight:700;color:rgba(255,255,255,.85);letter-spacing:.07em;text-transform:uppercase;margin-bottom:7px}
+.owner-hero-badge-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.9);animation:heroDotPulse 2s ease infinite}
+@keyframes heroDotPulse{0%,100%{opacity:1}50%{opacity:.3}}
+.owner-hero h1{font-family:var(--display);font-size:1.35rem;font-weight:800;color:#fff;margin-bottom:3px;letter-spacing:-.01em}
+.owner-hero p{color:rgba(255,255,255,.6);font-size:.75rem;line-height:1.5}
+.owner-hero-btns{display:flex;gap:6px;align-items:center;flex-shrink:0}
+/* Sys-admin — deep indigo with dot texture */
+#owner-screen.sys-admin-mode .owner-hero{background:#1e1b4b;border:1px solid rgba(139,92,246,.25)}
+#owner-screen.sys-admin-mode .owner-hero::before{
+  content:'';position:absolute;inset:0;width:auto;height:auto;top:0;right:0;border-radius:0;
+  background-image:radial-gradient(rgba(139,92,246,.15) 1px,transparent 1px);
+  background-size:22px 22px
 }
-#owner-screen.sys-admin-mode .owner-logout-btn{
-  background:rgba(139,92,246,.22);color:#c4b5fd;
-  border:1px solid rgba(139,92,246,.4)
-}
-#owner-screen.sys-admin-mode .owner-logout-btn:hover{background:rgba(139,92,246,.38)}
-#owner-screen.sys-admin-mode .owner-stat{border-left:3px solid rgba(139,92,246,.5)}
-#owner-screen.sys-admin-mode .owner-stats{background:rgba(139,92,246,.06);border:1px solid rgba(139,92,246,.15);border-radius:var(--radius)}
-/* ── Shop owner mode — keep amber/gold, add a subtle back-to-store badge ── */
-#owner-screen.shop-owner-mode .owner-hero{background:var(--owner-gradient)}
+#owner-screen.sys-admin-mode .owner-hero::after{display:none}
+#owner-screen.sys-admin-mode .owner-hero-badge{background:rgba(139,92,246,.25);border-color:rgba(139,92,246,.4)}
+#owner-screen.sys-admin-mode .owner-hero-badge-dot{background:#a78bfa}
+#owner-screen.sys-admin-mode .owner-logout-btn{background:rgba(139,92,246,.18);color:#c4b5fd;border-color:rgba(139,92,246,.35)}
+#owner-screen.sys-admin-mode .owner-logout-btn:hover{background:rgba(139,92,246,.38);border-color:rgba(139,92,246,.6)}
+/* Shop owner */
+#owner-screen.shop-owner-mode .owner-hero{background:var(--owner)}
 .owner-logout-btn{
-  display:flex;align-items:center;gap:6px;padding:8px 14px;
-  border:1.5px solid rgba(255,255,255,.25);border-radius:8px;
-  background:rgba(255,255,255,.1);color:#fff;font-family:var(--font);
-  font-size:12px;font-weight:600;cursor:pointer;transition:all .18s;
-  white-space:nowrap;flex-shrink:0
+  display:flex;align-items:center;gap:6px;padding:7px 13px;
+  border:1px solid rgba(255,255,255,.22);border-radius:8px;
+  background:rgba(255,255,255,.1);color:rgba(255,255,255,.9);font-family:var(--font);
+  font-size:11.5px;font-weight:600;cursor:pointer;transition:all .18s;white-space:nowrap
 }
-.owner-logout-btn:hover{background:rgba(239,68,68,.4);border-color:rgba(239,68,68,.5);transform:translateY(-1px)}
+.owner-logout-btn:hover{background:rgba(239,68,68,.35);border-color:rgba(239,68,68,.5);transform:translateY(-1px)}
+.owner-refresh-btn{
+  display:flex;align-items:center;gap:5px;padding:7px 12px;
+  border:1px solid rgba(255,255,255,.2);border-radius:8px;
+  background:rgba(255,255,255,.08);color:rgba(255,255,255,.8);font-family:var(--font);
+  font-size:11.5px;font-weight:600;cursor:pointer;transition:all .18s;white-space:nowrap
+}
+.owner-refresh-btn:hover{background:rgba(255,255,255,.16);color:#fff}
+.owner-refresh-btn svg{width:13px;height:13px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
 
-.owner-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:14px;margin-bottom:22px}
+/* ── Stats strip for sys-admin ── */
+.owner-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px}
 .owner-stat{
   background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);
-  padding:18px 20px;position:relative;overflow:hidden;
+  padding:16px 18px;position:relative;overflow:hidden;display:flex;align-items:center;gap:12px;
   animation:flyInUp .38s cubic-bezier(.22,1,.36,1) both;
-  transition:transform .2s,box-shadow .2s;cursor:default
+  transition:transform .18s,box-shadow .18s;cursor:default
 }
-.owner-stat:hover{transform:translateY(-3px);box-shadow:var(--shadow),0 0 0 1px rgba(255,255,255,.07)}
-.owner-stat:active{transform:translateY(-1px)}
-.owner-stat::after{content:'';position:absolute;top:0;left:0;right:0;height:3px;border-radius:3px 3px 0 0;background:var(--owner);opacity:.6}
-.owner-stat:nth-child(1){animation-delay:.05s}
-.owner-stat:nth-child(2){animation-delay:.10s}
-.owner-stat:nth-child(3){animation-delay:.15s}
-.owner-stat:nth-child(4){animation-delay:.20s}
-.stat-icon{font-size:22px;margin-bottom:8px;opacity:.8}
-.stat-val{font-family:var(--display);font-size:1.8rem;font-weight:800;color:var(--owner);line-height:1}
-.stat-lbl{font-size:.67rem;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-top:4px}
+.owner-stat:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.owner-stat::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:0;background:var(--border2)}
+.owner-stat:nth-child(1){animation-delay:.04s}
+.owner-stat:nth-child(2){animation-delay:.08s}
+.owner-stat:nth-child(3){animation-delay:.12s}
+.owner-stat:nth-child(4){animation-delay:.16s}
+.owner-stat:nth-child(5){animation-delay:.20s}
+.owner-stat:nth-child(6){animation-delay:.24s}
+.stat-icon-box{width:34px;height:34px;border-radius:9px;background:var(--surface2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.stat-icon{font-size:15px;line-height:1}
+.stat-body{min-width:0}
+.stat-val{font-family:var(--display);font-size:1.5rem;font-weight:800;color:var(--text);line-height:1}
+.stat-lbl{font-size:.6rem;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-top:3px}
+#owner-screen.sys-admin-mode .owner-stat::before{background:rgba(139,92,246,.5)}
 
+/* ── Section card ── */
 .owner-section{
   background:var(--surface);border:1px solid var(--border);
-  border-radius:var(--radius-xl);margin-bottom:18px;overflow:hidden;
-  animation:flyInUp .44s cubic-bezier(.22,1,.36,1) both
+  border-radius:var(--radius-xl);margin-bottom:14px;overflow:hidden;
+  animation:flyInUp .38s cubic-bezier(.22,1,.36,1) both
 }
-.owner-section:nth-child(1){animation-delay:.10s}
-.owner-section:nth-child(2){animation-delay:.16s}
 .owner-section-hdr{
-  padding:14px 18px;background:var(--surface2);border-bottom:1px solid var(--border);
-  display:flex;align-items:center;justify-content:space-between
+  padding:13px 18px;background:var(--surface);border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;gap:10px
 }
-.owner-section-hdr h3{font-family:var(--display);font-size:.82rem;font-weight:700;color:var(--text)}
+.owner-section-hdr h3{font-family:var(--display);font-size:.82rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:7px}
+.sec-count-badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:99px;font-size:10.5px;font-weight:700;background:var(--surface2);border:1px solid var(--border2);color:var(--text3)}
 
 .user-card{
   padding:14px 18px;border-bottom:1px solid var(--border);
@@ -408,7 +390,7 @@ html[data-view="mobile"] .brand-text{display:none}
 .user-card:hover{background:var(--surface2)}
 .user-card:last-child{border-bottom:none}
 .user-avatar{
-  width:40px;height:40px;border-radius:10px;background:var(--gradient);
+  width:40px;height:40px;border-radius:10px;background:var(--p);
   display:flex;align-items:center;justify-content:center;
   font-weight:700;font-size:15px;color:#fff;flex-shrink:0;letter-spacing:0
 }
@@ -429,6 +411,98 @@ html[data-view="mobile"] .brand-text{display:none}
 .sub-active-paid{background:rgba(16,185,129,.13);color:var(--success);border:1px solid rgba(16,185,129,.25)}
 .sub-expired{background:rgba(239,68,68,.13);color:var(--error);border:1px solid rgba(239,68,68,.25)}
 .sub-sus{background:rgba(100,116,139,.1);color:var(--text3);border:1px solid var(--border2)}
+
+/* ── System Owner Dashboard — tabs, filter, cards ── */
+.sys-tab-bar{
+  display:flex;gap:0;background:var(--surface);border:1px solid var(--border);
+  border-radius:var(--radius-lg);margin-bottom:14px;overflow-x:auto;
+  -webkit-overflow-scrolling:touch;padding:0
+}
+.sys-tab{
+  flex:1;min-width:fit-content;display:flex;align-items:center;justify-content:center;gap:6px;
+  padding:11px 14px;border:none;background:transparent;color:var(--text3);
+  font-family:var(--font);font-size:11.5px;font-weight:600;cursor:pointer;
+  transition:all .18s;white-space:nowrap;border-bottom:2px solid transparent;position:relative
+}
+.sys-tab:hover{color:var(--text);background:var(--surface2)}
+.sys-tab.active{color:rgba(139,92,246,1);border-bottom-color:rgba(139,92,246,1);background:rgba(139,92,246,.06)}
+.sys-tab-badge{
+  min-width:17px;height:17px;border-radius:99px;padding:0 4px;
+  font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;
+  background:rgba(139,92,246,.18);color:rgba(139,92,246,1);line-height:1
+}
+.sys-tab-badge.tb-warn{background:rgba(245,158,11,.18);color:var(--warn)}
+.sys-tab-badge.tb-err{background:rgba(239,68,68,.18);color:var(--error)}
+.sys-sec{display:none}
+.sys-sec.active{display:block;animation:flyInUp .2s cubic-bezier(.22,1,.36,1)}
+/* Filter bar */
+.sys-filter-bar{
+  display:flex;align-items:center;gap:7px;padding:10px 14px;
+  background:var(--surface2);border-bottom:1px solid var(--border);flex-wrap:wrap
+}
+.sys-search{
+  flex:1;min-width:130px;padding:7px 11px 7px 32px;
+  border:1.5px solid var(--border2);border-radius:8px;background:var(--surface);
+  color:var(--text);font-family:var(--font);font-size:12px;outline:none;
+  transition:border .18s;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238496b0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='8'/%3E%3Cpath d='m21 21-4.35-4.35'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:10px center
+}
+.sys-search:focus{border-color:rgba(139,92,246,.6)}
+.sf-chip{
+  padding:4px 11px;border-radius:99px;border:1px solid var(--border2);
+  background:transparent;color:var(--text3);font-size:10.5px;font-weight:600;
+  cursor:pointer;font-family:var(--font);transition:all .15s;white-space:nowrap
+}
+.sf-chip:hover{border-color:rgba(139,92,246,.5);color:rgba(139,92,246,1)}
+.sf-chip.active{background:rgba(139,92,246,.12);color:rgba(139,92,246,1);border-color:rgba(139,92,246,.4)}
+.sf-chip.sf-trial.active{background:rgba(245,158,11,.12);color:var(--warn);border-color:rgba(245,158,11,.4)}
+.sf-chip.sf-expired.active{background:rgba(239,68,68,.12);color:var(--error);border-color:rgba(239,68,68,.4)}
+.sf-chip.sf-sus.active{background:rgba(124,58,237,.12);color:#7c3aed;border-color:rgba(124,58,237,.4)}
+/* Owner cards */
+.oc-wrap{border-bottom:1px solid var(--border);transition:background .14s}
+.oc-wrap:hover{background:var(--surface2)}
+.oc-wrap:last-child{border-bottom:none}
+.oc-top{display:flex;align-items:flex-start;gap:12px;padding:14px 18px}
+.oc-avatar{
+  width:40px;height:40px;border-radius:11px;background:var(--p);
+  display:flex;align-items:center;justify-content:center;
+  font-weight:800;font-size:15px;color:#fff;flex-shrink:0;letter-spacing:0;
+  box-shadow:0 2px 8px rgba(0,0,0,.18)
+}
+.oc-main{flex:1;min-width:0}
+.oc-name{font-weight:700;font-size:13px;display:flex;align-items:center;gap:6px;flex-wrap:wrap;line-height:1.35}
+.oc-detail{font-size:10.5px;color:var(--text3);margin-top:4px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.oc-actions{display:flex;gap:4px;align-items:center;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
+.oc-ext-row{
+  display:flex;align-items:center;gap:6px;padding:8px 18px 11px;
+  border-top:1px solid var(--border);flex-wrap:wrap;background:var(--surface2)
+}
+.oc-ext-lbl{font-size:9.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;flex-shrink:0;padding-right:2px}
+.oc-ext-btn{
+  padding:3px 10px;border-radius:6px;border:1px solid var(--border2);
+  background:var(--surface);color:var(--text2);font-size:10.5px;font-weight:600;
+  cursor:pointer;font-family:var(--font);transition:all .14s
+}
+.oc-ext-btn:hover{border-color:rgba(139,92,246,.5);color:rgba(139,92,246,1);background:rgba(139,92,246,.06)}
+/* Pending / banned / reset cards */
+.pc-card{border-bottom:1px solid var(--border);transition:background .14s}
+.pc-card:hover{background:var(--surface2)}
+.pc-card:last-child{border-bottom:none}
+.pc-top{display:flex;align-items:flex-start;gap:12px;padding:14px 18px}
+.pc-avatar{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#fff;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.pc-meta{font-size:10.5px;color:var(--text3);margin-top:3px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.pc-actions{display:flex;gap:6px;padding:0 18px 13px;flex-wrap:wrap}
+/* Sub request cards */
+.sr-card{border-bottom:1px solid var(--border);transition:background .14s}
+.sr-card:hover{background:var(--surface2)}
+.sr-card:last-child{border-bottom:none}
+.sr-top{display:flex;align-items:flex-start;gap:12px;padding:14px 18px}
+.sr-info{flex:1;min-width:0}
+.gen-code-box{margin:0 18px 14px;background:rgba(16,185,129,.06);border:1.5px solid rgba(16,185,129,.25);border-radius:10px;padding:12px 14px}
+.gen-code-val{font-family:var(--mono);font-size:1.2rem;font-weight:800;color:var(--success);letter-spacing:.16em;margin:4px 0 8px}
+/* Empty state */
+.sys-empty{padding:40px 24px;text-align:center;color:var(--text3);font-size:13px;display:flex;flex-direction:column;align-items:center;gap:8px}
+.sys-empty-icon{font-size:32px;opacity:.5}
 
 /* ── Subscription Gate ── */
 .sub-gate{position:fixed;inset:0;z-index:9999;background:rgba(8,12,24,.97);display:flex;align-items:center;justify-content:center;padding:24px}
@@ -499,8 +573,8 @@ html[data-view="mobile"] .brand-text{display:none}
 .btn-primary:hover{background:var(--p2);border-color:var(--p2);box-shadow:0 6px 20px var(--p-glow)}
 .btn-success{background:var(--success);color:#fff;border-color:var(--success);box-shadow:0 3px 12px rgba(34,197,94,.28)}
 .btn-danger{background:var(--error);color:#fff;border-color:var(--error);box-shadow:0 3px 12px rgba(244,63,94,.28)}
-.btn-owner{background:var(--owner-gradient);color:#fff;border:none;box-shadow:0 3px 14px var(--owner-glow)}
-.btn-store{background:var(--store-gradient);color:#fff;border:none;box-shadow:0 3px 14px var(--store-glow)}
+.btn-owner{background:var(--owner);color:#fff;border:none;box-shadow:0 3px 14px var(--owner-glow)}
+.btn-store{background:var(--store);color:#fff;border:none;box-shadow:0 3px 14px var(--store-glow)}
 .btn-sm{padding:5px 10px;font-size:10.5px;border-radius:8px}
 .btn-icon{width:34px;height:34px;padding:0;justify-content:center;font-size:14px}
 .btn:active{transform:translateY(0)!important;box-shadow:none!important}
@@ -577,7 +651,7 @@ tbody tr:last-child td{border-bottom:none}
 .row-low td{background:rgba(239,68,68,.05)!important}
 .row-zero td{background:rgba(245,158,11,.04)!important}
 .summary-row td{
-  background:linear-gradient(90deg,rgba(16,185,129,.07),var(--surface2))!important;
+  background:rgba(16,185,129,.07)!important;
   font-weight:700!important;border-top:1.5px solid var(--border2)!important
 }
 
@@ -620,8 +694,8 @@ tbody tr:last-child td{border-bottom:none}
   border-radius:var(--radius-xl) var(--radius-xl) 0 0;
   display:flex;align-items:center;gap:12px
 }
-.modal-hdr.owner-hdr{background:var(--owner-gradient);color:#fff}
-.modal-hdr.store-hdr{background:var(--store-gradient);color:#fff}
+.modal-hdr.owner-hdr{background:var(--owner);color:#fff}
+.modal-hdr.store-hdr{background:var(--store);color:#fff}
 .modal-hdr .modal-hdr-icon-wrap{
   width:36px;height:36px;border-radius:9px;
   background:var(--p-glass);border:1px solid rgba(59,130,246,.2);
@@ -673,9 +747,7 @@ tbody tr:last-child td{border-bottom:none}
   box-shadow:0 4px 16px var(--p-glow);letter-spacing:.01em;
   position:relative;overflow:hidden
 }
-.modal-btn::after{content:'';position:absolute;top:0;left:-100%;width:55%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent);transition:left .55s ease;pointer-events:none}
 .modal-btn:hover{transform:translateY(-1px);box-shadow:0 6px 20px var(--p-glow)}
-.modal-btn:hover::after{left:150%}
 .modal-btn:active{transform:translateY(0);box-shadow:0 2px 8px var(--p-glow)}
 .modal-btn.secondary{
   background:var(--surface2);color:var(--text2);
@@ -683,8 +755,8 @@ tbody tr:last-child td{border-bottom:none}
 }
 .modal-btn.secondary:hover{background:var(--surface3);transform:none}
 .modal-btn.danger{background:var(--error);box-shadow:0 3px 12px rgba(239,68,68,.25)}
-.modal-btn.owner-btn{background:var(--owner-gradient);box-shadow:0 3px 12px var(--owner-glow)}
-.modal-btn.store-btn{background:var(--store-gradient);box-shadow:0 3px 12px var(--store-glow)}
+.modal-btn.owner-btn{background:var(--owner);box-shadow:0 3px 12px var(--owner-glow)}
+.modal-btn.store-btn{background:var(--store);box-shadow:0 3px 12px var(--store-glow)}
 .modal-error{margin-top:8px;padding:9px 12px;border-radius:7px;background:rgba(239,68,68,.09);color:var(--error);font-size:12px;font-weight:500;display:none;border-left:3px solid var(--error)}
 .modal-error.show{display:block}
 .modal-success{margin-top:8px;padding:9px 12px;border-radius:7px;background:rgba(16,185,129,.09);color:var(--success);font-size:12px;font-weight:500;display:none;border-left:3px solid var(--success)}
@@ -705,8 +777,8 @@ tbody tr:last-child td{border-bottom:none}
   border-bottom:1px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;flex-shrink:0
 }
-.drawer-hdr.owner-drawer-hdr{background:var(--owner-gradient);color:#fff}
-.drawer-hdr.store-drawer-hdr{background:var(--store-gradient);color:#fff}
+.drawer-hdr.owner-drawer-hdr{background:var(--owner);color:#fff}
+.drawer-hdr.store-drawer-hdr{background:var(--store);color:#fff}
 .drawer-hdr h3{font-family:var(--display);font-size:.88rem;font-weight:700}
 .drawer-body{flex:1;overflow-y:auto;padding:8px 0 24px;overscroll-behavior:contain;scroll-behavior:smooth}
 .drawer-section{
@@ -827,7 +899,7 @@ tbody tr:last-child td{border-bottom:none}
 .loader-logo svg,.loader-logo img{width:88px;height:88px;object-fit:cover;display:block}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
 .loader-bar{width:140px;height:2px;background:var(--surface2);border-radius:99px;overflow:hidden}
-.loader-fill{height:100%;background:linear-gradient(90deg,var(--p),var(--accent));border-radius:99px;animation:loadFill 1.2s ease-in-out infinite}
+.loader-fill{height:100%;background:var(--p);border-radius:99px;animation:loadFill 1.2s ease-in-out infinite}
 @keyframes loadFill{0%{width:0;margin-left:0}50%{width:70%;margin-left:15%}100%{width:0;margin-left:100%}}
 .loader-text{font-family:var(--display);font-size:.95rem;font-weight:700;color:var(--text)}
 .loader-sub{font-size:.7rem;color:var(--text3)}
@@ -839,11 +911,9 @@ tbody tr:last-child td{border-bottom:none}
 .auth-bg{position:absolute;inset:0;overflow:hidden;pointer-events:none}
 .auth-bg::before{
   content:'';position:absolute;inset:0;
-  background-image:linear-gradient(rgba(91,138,248,.05) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(91,138,248,.05) 1px,transparent 1px);
-  background-size:52px 52px;
-  -webkit-mask-image:radial-gradient(ellipse 90% 90% at 50% 50%,black 10%,transparent 72%);
-  mask-image:radial-gradient(ellipse 90% 90% at 50% 50%,black 10%,transparent 72%)
+  background-image:radial-gradient(rgba(91,138,248,.08) 1px,transparent 1px);
+  background-size:28px 28px;
+  opacity:.6
 }
 .auth-orb{position:absolute;border-radius:50%;filter:blur(100px)}
 .auth-orb1{width:560px;height:560px;background:var(--p);opacity:.2;top:-200px;right:-130px;animation:orbFloat 9s ease-in-out infinite}
@@ -901,7 +971,7 @@ tbody tr:last-child td{border-bottom:none}
 }
 .auth-feature-icon{
   width:30px;height:30px;border-radius:9px;
-  background:linear-gradient(135deg,rgba(255,255,255,.3),rgba(255,255,255,.14));
+  background:rgba(255,255,255,.18);
   display:flex;align-items:center;justify-content:center;
   font-size:14px;flex-shrink:0;
   border:1px solid rgba(255,255,255,.22);
@@ -940,7 +1010,7 @@ tbody tr:last-child td{border-bottom:none}
 }
 .auth-hdr::before{
   content:'';position:absolute;top:0;left:0;right:0;height:3px;
-  background:linear-gradient(90deg,#1e3a8a 0%,#2563eb 40%,#0ea5e9 75%,#22d3ee 100%)
+  background:var(--p)
 }
 .auth-hdr::after{content:none}
 .auth-hdr-content{display:contents}
@@ -1003,15 +1073,15 @@ tbody tr:last-child td{border-bottom:none}
 .auth-input-wrap input{width:100%;padding-left:32px}
 /* Auth-specific submit button */
 .auth-submit-btn{
-  background:linear-gradient(135deg,#1e3a8a 0%,#2563eb 55%,#0ea5e9 100%)!important;
+  background:var(--p)!important;
   padding:14px!important;font-size:13.5px!important;
   border-radius:12px!important;margin-top:14px!important;letter-spacing:.03em!important;
-  box-shadow:0 4px 22px rgba(37,99,235,.4),inset 0 1px 0 rgba(255,255,255,.12)!important;
+  box-shadow:0 4px 22px var(--p-glow),inset 0 1px 0 rgba(255,255,255,.12)!important;
   transition:transform .18s ease,box-shadow .18s ease,filter .18s ease!important
 }
 .auth-submit-btn:hover{
   transform:translateY(-2px)!important;
-  box-shadow:0 8px 30px rgba(37,99,235,.52),inset 0 1px 0 rgba(255,255,255,.12)!important;
+  box-shadow:0 8px 30px var(--p-glow),inset 0 1px 0 rgba(255,255,255,.12)!important;
   filter:brightness(1.07)!important
 }
 .auth-submit-btn svg{opacity:.9}
@@ -1051,7 +1121,7 @@ tbody tr:last-child td{border-bottom:none}
 .report-row:last-child{border-bottom:none}
 .report-label{font-size:12.5px;color:var(--text2);font-weight:500}
 .report-val{font-family:var(--mono);font-size:13px;font-weight:700}
-.report-total-row{background:linear-gradient(90deg,rgba(16,185,129,.08),var(--surface2));border-top:1.5px solid var(--success)!important}
+.report-total-row{background:rgba(16,185,129,.07);border-top:1.5px solid var(--success)!important}
 .report-total-row .report-label{font-weight:700;color:var(--text)}
 .report-total-row .report-val{color:var(--success)}
 .date-bar{
@@ -1121,7 +1191,7 @@ html[data-card="1"] tbody td{display:flex!important;justify-content:space-betwee
 html[data-card="1"] tbody td:last-child{border-bottom:none}
 html[data-card="1"] tbody td::before{content:attr(data-label);font-size:9px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.07em;text-align:left;flex-shrink:0;white-space:nowrap}
 html[data-card="1"] tbody td[data-label=""]{display:none!important}
-html[data-card="1"] tbody tr.summary-row{display:flex!important;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:9px 13px;gap:6px;background:linear-gradient(90deg,rgba(16,185,129,.07),var(--surface2))!important;border-top:1.5px solid var(--border2)}
+html[data-card="1"] tbody tr.summary-row{display:flex!important;flex-wrap:wrap;justify-content:space-between;align-items:center;padding:9px 13px;gap:6px;background:rgba(16,185,129,.07)!important;border-top:1.5px solid var(--border2)}
 html[data-card="1"] tbody tr.summary-row td{display:inline-flex!important;padding:2px 6px;border-bottom:none!important;font-size:12px}
 html[data-card="1"] tbody tr.summary-row td::before{display:none}
 html[data-card="1"] tbody tr.row-low{border-color:rgba(239,68,68,.3)}
@@ -1158,6 +1228,7 @@ html[data-card="1"] tbody tr.row-zero{border-color:rgba(245,158,11,.3)}
     font-size:9px;color:#94a3b8;z-index:9999;font-family:sans-serif
   }
 }
+@media print{body *{visibility:hidden}#print-area,#print-area *{visibility:visible}}
 #print-area{display:none}
 
 /* ── Responsive ── */
@@ -1177,7 +1248,7 @@ html[data-card="1"] tbody tr.row-zero{border-color:rgba(245,158,11,.3)}
 /* ── Permissions ── */
 .perm-user-card{padding:16px;background:var(--surface2);border-radius:var(--radius);margin-bottom:12px;border:1px solid var(--border);animation:flyInUp .3s cubic-bezier(.22,1,.36,1) both}
 .perm-user-hdr{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border)}
-.perm-avatar-sm{width:32px;height:32px;border-radius:50%;background:var(--gradient);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;flex-shrink:0}
+.perm-avatar-sm{width:32px;height:32px;border-radius:50%;background:var(--p);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;flex-shrink:0}
 .perm-user-info{flex:1;min-width:0}
 .perm-username-text{font-weight:700;font-size:13px;color:var(--text)}
 .perm-user-meta{font-size:10px;color:var(--text3);margin-top:2px}
@@ -1213,7 +1284,7 @@ html[data-card="1"] tbody tr.row-zero{border-color:rgba(245,158,11,.3)}
 .auth-type-btn:not(.active):hover{border-color:var(--p);color:var(--p)}
 
 /* ── Export modal ── */
-.exp-modal-hdr{padding:22px 22px 18px;background:linear-gradient(135deg,#1e3a8a 0%,#1e40af 55%,#0369a1 100%);border-radius:var(--radius-xl) var(--radius-xl) 0 0;color:#fff;position:relative;overflow:hidden}
+.exp-modal-hdr{padding:22px 22px 18px;background:var(--p);border-radius:var(--radius-xl) var(--radius-xl) 0 0;color:#fff;position:relative;overflow:hidden}
 .exp-modal-hdr::before{content:'';position:absolute;top:-28px;right:-28px;width:110px;height:110px;background:rgba(255,255,255,.06);border-radius:50%}
 .exp-modal-hdr::after{content:'';position:absolute;bottom:-18px;left:36px;width:72px;height:72px;background:rgba(255,255,255,.04);border-radius:50%}
 .exp-modal-hdr-row{display:flex;align-items:flex-start;justify-content:space-between;position:relative;z-index:1}
@@ -1245,7 +1316,7 @@ html[data-card="1"] tbody tr.row-zero{border-color:rgba(245,158,11,.3)}
 .exp-sheet-pill.active{border-color:var(--p);background:var(--p);color:#fff;box-shadow:0 2px 8px var(--p-glow)}
 .exp-export-btn{
   width:100%;padding:12px;border:none;border-radius:8px;
-  background:var(--gradient);color:#fff;font-weight:700;font-size:13.5px;
+  background:var(--p);color:#fff;font-weight:700;font-size:13.5px;
   cursor:pointer;transition:all .18s;display:flex;align-items:center;
   justify-content:center;gap:7px;box-shadow:0 4px 16px var(--p-glow);font-family:var(--font)
 }
@@ -1812,7 +1883,7 @@ tbody tr:nth-child(even) td{background:rgba(255,255,255,.013)}
 
 <div class="modal-overlay" id="reset-data-modal">
   <div class="modal-box narrow">
-    <div class="modal-hdr" style="background:linear-gradient(135deg,rgba(239,68,68,.15),var(--surface2))">
+    <div class="modal-hdr" style="background:rgba(239,68,68,.1);border-left:3px solid var(--error)">
       <div class="modal-hdr-icon-wrap"><span class="modal-hdr-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span></div>
       <div><h2 style="color:var(--error)">Reset Data Entries</h2><p style="color:var(--text2)">This cannot be undone</p></div>
       <button type="button" class="modal-hdr-close" onclick="closeModal('reset-data-modal')">✕</button>
@@ -2119,57 +2190,96 @@ tbody tr:nth-child(even) td{background:rgba(255,255,255,.013)}
   <div class="owner-screen">
     <div class="owner-hero">
       <div class="owner-hero-top">
-        <div>
-          <button type="button" onclick="exitOwnerDashboard()" style="display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);color:#fff;padding:6px 14px;border-radius:8px;cursor:pointer;font-size:12px;font-weight:600;font-family:var(--font);margin-bottom:12px;transition:background .18s;" onmouseover="this.style.background='rgba(255,255,255,.22)'" onmouseout="this.style.background='rgba(255,255,255,.12)'">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-            Back
-          </button>
+        <div style="position:relative;z-index:1">
+          <div class="owner-hero-badge" id="owner-hero-badge">
+            <span class="owner-hero-badge-dot"></span>
+            <span id="owner-hero-badge-text">POWER-IMS</span>
+          </div>
           <h1 id="owner-dash-title"></h1>
           <p id="owner-dash-sub"></p>
         </div>
-        <button type="button" class="owner-logout-btn" onclick="logout()">🚪 Log Out</button>
+        <div class="owner-hero-btns">
+          <button type="button" class="owner-refresh-btn" onclick="loadPendingOwnersFromCloud&&loadPendingOwnersFromCloud().then(()=>renderSystemOwnerDashboard())" title="Sync from cloud">
+            <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            Refresh
+          </button>
+          <button type="button" class="owner-logout-btn" onclick="exitOwnerDashboard()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+            Back
+          </button>
+          <button type="button" class="owner-logout-btn" onclick="logout()">🚪 Log Out</button>
+        </div>
       </div>
     </div>
     <div id="owner-sub-banner"></div>
     <div class="owner-stats" id="owner-stats"></div>
-    <div class="owner-section">
+
+    <!-- Tab bar (sys-admin mode only) -->
+    <div class="sys-tab-bar" id="sys-tab-bar">
+      <button type="button" class="sys-tab active" id="stab-owners" onclick="switchSysTab('owners')">👑 Owners <span class="sys-tab-badge" id="stab-owners-badge" style="display:none">0</span></button>
+      <button type="button" class="sys-tab" id="stab-pending" onclick="switchSysTab('pending')">⏳ Pending <span class="sys-tab-badge tb-warn" id="stab-pending-badge" style="display:none">0</span></button>
+      <button type="button" class="sys-tab" id="stab-subs" onclick="switchSysTab('subs')">💎 Sub Requests <span class="sys-tab-badge tb-warn" id="stab-subs-badge" style="display:none">0</span></button>
+      <button type="button" class="sys-tab" id="stab-resets" onclick="switchSysTab('resets')">🗑️ Resets <span class="sys-tab-badge tb-err" id="stab-resets-badge" style="display:none">0</span></button>
+      <button type="button" class="sys-tab" id="stab-banned" onclick="switchSysTab('banned')">🚫 Banned <span class="sys-tab-badge tb-err" id="stab-banned-badge" style="display:none">0</span></button>
+    </div>
+
+    <!-- Owners section -->
+    <div class="owner-section sys-sec active" id="sys-sec-owners">
       <div class="owner-section-hdr">
-        <h3 id="owner-users-title">👤 All Users</h3>
-        <button type="button" class="btn btn-owner" id="owner-add-user-btn" onclick="openAddUserModal()">➕ Add User</button>
+        <h3 id="owner-users-title">👑 All Platform Owners</h3>
+        <button type="button" class="btn btn-sm" style="background:rgba(139,92,246,.12);color:rgba(139,92,246,1);border-color:rgba(139,92,246,.3)" id="owner-add-user-btn" onclick="openAddUserModal()">+ Add User</button>
+      </div>
+      <div class="sys-filter-bar" id="sys-owner-filter-bar">
+        <input class="sys-search" type="text" id="sys-owner-search" placeholder="Search by name, shop, email…" oninput="renderSystemOwnerDashboard()">
+        <button type="button" class="sf-chip active" id="sf-all"      onclick="setSysFilter('all')">All</button>
+        <button type="button" class="sf-chip sf-trial"   id="sf-trial"  onclick="setSysFilter('trial')">Trial</button>
+        <button type="button" class="sf-chip active"     id="sf-active" onclick="setSysFilter('active')" style="display:none">Active</button>
+        <button type="button" class="sf-chip sf-expired" id="sf-expired" onclick="setSysFilter('expired')">Expired</button>
+        <button type="button" class="sf-chip sf-sus"     id="sf-sus"    onclick="setSysFilter('suspended')">Suspended</button>
       </div>
       <div id="user-list-body"></div>
     </div>
-    <div class="owner-section">
+
+    <!-- Pending section -->
+    <div class="owner-section sys-sec" id="sys-sec-pending">
       <div class="owner-section-hdr">
-        <h3 id="owner-pending-title">⏳ Pending Access Requests</h3>
-        <span id="pending-count" style="background:var(--owner-glass);color:var(--owner);padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700">0</span>
+        <h3 id="owner-pending-title">⏳ Pending Registrations</h3>
+        <span id="pending-count" class="sec-count-badge">0</span>
       </div>
-      <div id="pending-user-list"><div style="padding:24px;text-align:center;color:var(--text3)">No pending requests 🎉</div></div>
+      <div id="pending-user-list"></div>
     </div>
-    <div class="owner-section" id="section-banned-owners" style="animation-delay:.24s">
+
+    <!-- Subscription requests section -->
+    <div class="owner-section sys-sec" id="sys-sec-subs">
+      <div class="owner-section-hdr" style="border-left:3px solid var(--warn)">
+        <h3>💎 Subscription Requests</h3>
+        <span id="sub-req-count" class="sec-count-badge" style="background:rgba(245,158,11,.12);color:var(--warn);border-color:rgba(245,158,11,.3)">0</span>
+      </div>
+      <div id="sub-req-list"></div>
+    </div>
+
+    <!-- Reset requests section -->
+    <div class="owner-section sys-sec" id="sys-sec-resets">
+      <div class="owner-section-hdr" style="border-left:3px solid var(--error)">
+        <h3>🗑️ Data Reset Requests</h3>
+        <span id="reset-req-count" class="sec-count-badge" style="background:rgba(239,68,68,.12);color:var(--error);border-color:rgba(239,68,68,.3)">0</span>
+      </div>
+      <div id="reset-request-list"></div>
+    </div>
+
+    <!-- Banned section -->
+    <div class="owner-section sys-sec" id="sys-sec-banned">
       <div class="owner-section-hdr">
         <h3>🚫 Banned Owners</h3>
-        <span id="banned-count" style="background:rgba(239,68,68,.12);color:var(--error);padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700">0</span>
+        <span id="banned-count" class="sec-count-badge" style="background:rgba(239,68,68,.12);color:var(--error);border-color:rgba(239,68,68,.3)">0</span>
       </div>
-      <div id="banned-owner-list"><div style="padding:24px;text-align:center;color:var(--text3)">No banned owners</div></div>
+      <div id="banned-owner-list"></div>
     </div>
-    <div class="owner-section" id="section-branches" style="animation-delay:.28s">
+
+    <!-- Branches (shop-owner mode only, hidden for sys-admin) -->
+    <div class="owner-section" id="section-branches" style="display:none">
       <div class="owner-section-hdr"><h3>🏢 Branches</h3><button type="button" class="btn" onclick="openBranches()">Manage</button></div>
-      <div id="owner-branch-list"><div style="padding:14px 18px;color:var(--text3);font-size:13px">Branches are managed per platform owner.</div></div>
-    </div>
-    <div class="owner-section" id="section-reset-reqs" style="animation-delay:.30s;border:1.5px solid rgba(239,68,68,.3);border-radius:var(--radius)">
-      <div class="owner-section-hdr">
-        <h3 style="color:var(--error)">🗑️ Data Reset Requests</h3>
-        <span id="reset-req-count" style="background:rgba(239,68,68,.15);color:var(--error);padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700">0</span>
-      </div>
-      <div id="reset-request-list"><div style="padding:24px;text-align:center;color:var(--text3)">No reset requests 🎉</div></div>
-    </div>
-    <div class="owner-section" id="section-sub-reqs" style="animation-delay:.34s;border:1.5px solid rgba(245,158,11,.3)">
-      <div class="owner-section-hdr">
-        <h3 style="color:var(--owner)">💎 Subscription Requests</h3>
-        <span id="sub-req-count" style="background:var(--owner-glass);color:var(--owner);padding:3px 10px;border-radius:99px;font-size:11px;font-weight:700">0</span>
-      </div>
-      <div id="sub-req-list"><div style="padding:24px;text-align:center;color:var(--text3)">No subscription requests</div></div>
+      <div id="owner-branch-list"></div>
     </div>
   </div>
 </div>
@@ -2367,7 +2477,7 @@ tbody tr:nth-child(even) td{background:rgba(255,255,255,.013)}
     <div class="sub-gate-title" id="sub-gate-title">Subscription Expired</div>
     <div class="sub-gate-sub" id="sub-gate-sub">Your subscription has expired. Please contact the platform administrator to renew your access.</div>
     <div class="sub-gate-contact">Contact your <strong>POWER-IMS Administrator</strong> to renew your subscription and restore access to the platform.</div>
-    <button type="button" class="sub-gate-btn" id="sub-gate-renew-btn" onclick="openOwnerSubModal()" style="background:var(--owner-gradient);color:#fff;border-color:transparent;margin-bottom:10px">💳 Request Subscription Renewal</button><br>
+    <button type="button" class="sub-gate-btn" id="sub-gate-renew-btn" onclick="openOwnerSubModal()" style="background:var(--owner);color:#fff;border-color:transparent;margin-bottom:10px">💳 Request Subscription Renewal</button><br>
     <button type="button" class="sub-gate-btn" onclick="logout()">← Return to Login</button>
   </div>
 </div>
@@ -2612,7 +2722,7 @@ const S={
   branchReceipts:[],
   beginBal:0,reportRange:{from:'',to:''},
   branchBeginBal:{},reportBranch:'',expenseBranch:'',
-  perms:{},exportPerms:{},pendingSignups:[],
+  perms:{},exportPerms:{},rowEditPerms:{},pendingSignups:[],
   branches:['Main'],
   userBranch:null,
   db:null,dbConnected:false,_unsubscribe:null,
@@ -2631,6 +2741,7 @@ const S={
 const fmt=n=>{const v=parseFloat(n)||0;return v.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2})};
 const fmtQ=n=>(parseFloat(n)||0).toLocaleString();
 const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;');
+function _timeAgo(ts){if(!ts)return'';const s=Math.floor((Date.now()-new Date(ts))/1000);if(s<60)return'just now';if(s<3600)return`${Math.floor(s/60)}m ago`;if(s<86400)return`${Math.floor(s/3600)}h ago`;if(s<2592000)return`${Math.floor(s/86400)}d ago`;return new Date(ts).toLocaleDateString();}
 const _dateSortAsc=(a,b)=>(a.date||'')<(b.date||'')?-1:(a.date||'')>(b.date||'')?1:0;
 const toEthiopianDate=gDate=>{const yr=gDate.getFullYear(),mo=gDate.getMonth()+1,dy=gDate.getDate();const a=Math.floor((14-mo)/12),y=yr+4800-a,m=mo+12*a-3;const jdn=dy+Math.floor((153*m+2)/5)+365*y+Math.floor(y/4)-Math.floor(y/100)+Math.floor(y/400)-32045;const ET_EPOCH=1723856,offset=jdn-ET_EPOCH,r=offset%1461,n=(r%365)+365*Math.floor(r/1460);return{year:4*Math.floor(offset/1461)+Math.floor(r/365)-Math.floor(r/1460),month:Math.floor(n/30)+1,day:n%30+1};};
 const nowDt=()=>{const et=toEthiopianDate(new Date());return `${String(et.day).padStart(2,'0')}-${String(et.month).padStart(2,'0')}-${et.year}`;}
@@ -2813,6 +2924,7 @@ function loadUserData(){
   }
   S.perms=_lsGet(`ims_${ns}_perms`,{});
   S.exportPerms=_lsGet(`ims_${ns}_exportperms`,{});
+  S.rowEditPerms=_lsGet(`ims_${ns}_rowEditPerms`,{});
   S.pendingSignups=_lsGet(`ims_${ns}_pending`,[]);
   S.branches=_lsGet(`ims_${ns}_branches`,['Main']);
   S.creditPayments=_lsGet(`ims_${ns}_creditPayments`,[]);
@@ -2846,6 +2958,7 @@ function saveUserData(){
   _lsSet(`ims_${ns}_branchBeginBal`,S.branchBeginBal||{});
   _lsSet(`ims_${ns}_perms`,S.perms);
   _lsSet(`ims_${ns}_exportperms`,S.exportPerms);
+  _lsSet(`ims_${ns}_rowEditPerms`,S.rowEditPerms||{});
   _lsSet(`ims_${ns}_pending`,S.pendingSignups);
   _lsSet(`ims_${ns}_branches`,S.branches);
   _lsSet(`ims_${ns}_creditPayments`,S.creditPayments||[]);
@@ -3518,10 +3631,6 @@ function doLoginSystemOwner(){
   document.getElementById('app-header').style.display='flex';
   document.getElementById('bottom-nav').style.display='none';
   document.getElementById('content').style.display='none';
-  document.getElementById('owner-dash-title').textContent='⚙️ System Administration';
-  document.getElementById('owner-dash-sub').textContent='POWER-IMS — Software-level control over all platform owners';
-  document.getElementById('owner-users-title').textContent='👑 All Platform Owners';
-  document.getElementById('owner-pending-title').textContent='⏳ Pending Owner Registrations';
   document.getElementById('owner-screen').style.display='block';
   const hdr=document.getElementById('app-header');hdr.className='app-header owner-mode';
   document.getElementById('brand-logo').className='brand-logo owner';
@@ -3618,22 +3727,51 @@ function deleteOwner(u){
     const reg=getRegistry();
     const ownerData=reg[u]||{};
     const ns=ownerData.ownerId||u;
-    // Wipe all localStorage keys for this owner's namespace
+
+    // 1. Wipe all localStorage keys for this owner's namespace
     const keysToRemove=[];
     for(let i=0;i<localStorage.length;i++){
       const k=localStorage.key(i);
       if(k&&k.startsWith(`ims_${ns}_`))keysToRemove.push(k);
     }
     keysToRemove.forEach(k=>localStorage.removeItem(k));
-    // Also remove any users registered under this owner from the registry
+
+    // 2. Remove owner and their sub-users from registry
     Object.keys(reg).forEach(k=>{if(reg[k].ownerId===ns&&k!==u)delete reg[k];});
     delete reg[u];
     saveRegistry(reg);
-    // Delete from cloud: remove main data doc and registry entry
+
+    // 3. Remove from pending owners list
+    const pendingOwners=_lsGet('ims_pending_owners',[]).filter(x=>x.username!==u&&x.ownerId!==ns);
+    _lsSet('ims_pending_owners',pendingOwners);
+
+    // 4. Remove from banned owners list
+    const banned=getBannedOwners().filter(x=>x.username!==u&&x.ownerId!==ns);
+    _lsSet(BANNED_LS_KEY,banned);
+
+    // 5. Remove from reset requests
+    const resetReqs=_lsGet('ims_reset_requests',[]).filter(x=>x.username!==u&&x.ownerId!==ns);
+    _lsSet('ims_reset_requests',resetReqs);
+
+    // 6. Remove from subscription requests
+    const subReqs=getSubRequests().filter(x=>x.username!==u&&x.ownerId!==ns);
+    _lsSet(SUB_REQ_KEY,subReqs);
+
+    // 7. Sync all changes to cloud
     if(S.db){
-      S.db.collection('power_ims5').doc(ns).delete().catch(err=>console.warn('cloud delete owner doc:',err));
+      const db=S.db;
+      const col='power_ims5';
+      // Delete owner's main data document
+      db.collection(col).doc(ns).delete().catch(err=>console.warn('cloud delete owner doc:',err));
+      // Update registry in cloud
       saveRegistryToCloud(getRegistry(),true);
+      // Update the four shared system lists
+      db.collection(col).doc('_pending_owners').set({pending:JSON.stringify(pendingOwners),updatedAt:new Date().toISOString()},{merge:true}).catch(err=>console.warn('cloud pending_owners sync:',err));
+      db.collection(col).doc('_banned_owners').set({banned:JSON.stringify(banned),updatedAt:new Date().toISOString()},{merge:true}).catch(err=>console.warn('cloud banned_owners sync:',err));
+      db.collection(col).doc('_reset_requests').set({requests:JSON.stringify(resetReqs),updatedAt:new Date().toISOString()},{merge:true}).catch(err=>console.warn('cloud reset_requests sync:',err));
+      db.collection(col).doc('_sub_requests').set({requests:JSON.stringify(subReqs),updatedAt:new Date().toISOString()},{merge:true}).catch(err=>console.warn('cloud sub_requests sync:',err));
     }
+
     showToast(`🗑️ ${u} permanently deleted`,'success');
     renderSystemOwnerDashboard();
   });
@@ -3680,90 +3818,182 @@ function _setOwnerDashMode(mode){
   const outer=document.getElementById('owner-screen');
   outer.classList.toggle('sys-admin-mode',mode==='sys-admin');
   outer.classList.toggle('shop-owner-mode',mode==='shop-owner');
-  const SYS_ONLY=['section-banned-owners','section-reset-reqs','section-sub-reqs','section-email-settings'];
-  const SHOP_ONLY=['section-branches'];
-  SYS_ONLY.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display=mode==='sys-admin'?'':'none';});
-  SHOP_ONLY.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display=mode==='shop-owner'?'':'none';});
-  // "Add User" only makes sense in shop-owner mode; in sys-admin the button would create users under _system_
+  // Tab bar + tabbed sections only for sys-admin; shop-owner gets flat sections
+  const tabBar=document.getElementById('sys-tab-bar');
+  const sysSecs=document.querySelectorAll('.sys-sec');
+  const shopSecs=['section-branches'];
+  const sysOnlyPlain=['section-email-settings'];
+  if(tabBar)tabBar.style.display=mode==='sys-admin'?'':'none';
+  if(mode==='sys-admin'){
+    // sections are controlled by switchSysTab — don't touch them here
+  } else {
+    sysSecs.forEach(s=>s.style.display='none');
+  }
+  shopSecs.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display=mode==='shop-owner'?'':'none';});
+  sysOnlyPlain.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display=mode==='sys-admin'?'':'none';});
+  // "Add User" only for shop-owner mode
   const addBtn=document.getElementById('owner-add-user-btn');
   if(addBtn)addBtn.style.display=mode==='shop-owner'?'':'none';
+  // In shop-owner mode, show the single user list section
+  const userSec=document.getElementById('sys-sec-owners');
+  if(userSec)userSec.style.display=mode==='shop-owner'?'block':'';
+  // hide filter bar in shop-owner mode
+  const fb=document.getElementById('sys-owner-filter-bar');
+  if(fb)fb.style.display=mode==='sys-admin'?'':'none';
 }
 
-function renderSystemOwnerDashboard(){
-  _setOwnerDashMode('sys-admin');
-  document.getElementById('owner-dash-title').textContent='⚙️ System Administration';
-  document.getElementById('owner-dash-sub').textContent='POWER-IMS — Software-level control over all platform owners';
-  document.getElementById('owner-users-title').textContent='👑 All Platform Owners';
-  document.getElementById('owner-pending-title').textContent='⏳ Pending Owner Registrations';
+let _sysTab='owners',_sysFilter='all';
+function switchSysTab(tab){
+  _sysTab=tab;
+  document.querySelectorAll('.sys-tab').forEach(b=>b.classList.remove('active'));
+  document.querySelectorAll('.sys-sec').forEach(s=>s.classList.remove('active'));
+  const tb=document.getElementById('stab-'+tab);if(tb)tb.classList.add('active');
+  const sec=document.getElementById('sys-sec-'+tab);if(sec)sec.classList.add('active');
+}
+function setSysFilter(f){
+  _sysFilter=f;
+  ['all','trial','active','expired','suspended'].forEach(x=>{
+    const el=document.getElementById('sf-'+x);if(el)el.classList.toggle('active',x===f);
+  });
+  _renderSysOwnerList();
+}
+function extendOwnerSub(u,days){
+  const reg=getRegistry();const r=reg[u];if(!r)return;
+  const today=new Date().toISOString().slice(0,10);
+  const base=r.paidUntil&&r.paidUntil>today?r.paidUntil:today;
+  const d=new Date(base);d.setDate(d.getDate()+days);
+  r.paidUntil=d.toISOString().slice(0,10);
+  r.sub=r.sub||'basic';
+  (r.payHistory=r.payHistory||[]).push({date:today,plan:r.sub,until:r.paidUntil,note:`+${days}d extension by system owner`,amount:0});
+  saveRegistry(reg);
+  showToast(`+${days}d added for ${u} → until ${r.paidUntil}`,'success');
+  renderSystemOwnerDashboard();
+}
+function _renderSysOwnerList(){
   const reg=getRegistry();
-  const owners=Object.keys(reg).filter(u=>reg[u].role==='owner');
-  const allUsers=Object.keys(reg).filter(u=>reg[u].role!=='system_owner');
-  const ssList=owners.map(u=>getSubStatus(reg[u]));
-  const paidCount=ssList.filter(s=>s.status==='active').length;
-  const trialCount=ssList.filter(s=>s.status==='trial').length;
-  const expiredCount=ssList.filter(s=>s.status==='expired'||s.status==='suspended').length;
-  const expiringSoon=ssList.filter(s=>(s.status==='active'||s.status==='trial')&&s.daysLeft<=5).length;
-  const onlineCount=owners.filter(u=>isUserOnline(reg[u])).length;
-  document.getElementById('owner-stats').innerHTML=`
-    <div class="owner-stat"><div class="stat-icon">👑</div><div class="stat-val">${owners.length}</div><div class="stat-lbl">Platform Owners</div></div>
-    <div class="owner-stat"><div class="stat-icon">✅</div><div class="stat-val">${paidCount}</div><div class="stat-lbl">Paid Active</div></div>
-    <div class="owner-stat"><div class="stat-icon">🟢</div><div class="stat-val">${onlineCount}</div><div class="stat-lbl">Online Now</div></div>
-    <div class="owner-stat"><div class="stat-icon">⏳</div><div class="stat-val">${trialCount}</div><div class="stat-lbl">On Trial</div></div>
-    <div class="owner-stat"><div class="stat-icon">🔴</div><div class="stat-val">${expiredCount}</div><div class="stat-lbl">Expired/Sus</div></div>
-    ${expiringSoon?`<div class="owner-stat" style="border-color:rgba(245,158,11,.3)"><div class="stat-icon">⚠️</div><div class="stat-val" style="color:var(--warn)">${expiringSoon}</div><div class="stat-lbl">Expiring Soon</div></div>`:''}`;
-  const sortedOwners=[...owners].sort((a,b)=>{
-    const sa=getSubStatus(reg[a]);const sb=getSubStatus(reg[b]);
+  const q=(document.getElementById('sys-owner-search')||{}).value||'';
+  const filter=_sysFilter;
+  let owners=Object.keys(reg).filter(u=>reg[u].role==='owner');
+  if(q){
+    const ql=q.toLowerCase();
+    owners=owners.filter(u=>{const r=reg[u];return u.toLowerCase().includes(ql)||(r.shopName||'').toLowerCase().includes(ql)||(r.email||'').toLowerCase().includes(ql);});
+  }
+  if(filter!=='all') owners=owners.filter(u=>getSubStatus(reg[u]).status===filter);
+  owners.sort((a,b)=>{
+    const sa=getSubStatus(reg[a]),sb=getSubStatus(reg[b]);
     const rank={expired:0,suspended:1,trial:2,active:3};
     if(rank[sa.status]!==rank[sb.status])return rank[sa.status]-rank[sb.status];
     return sa.daysLeft-sb.daysLeft;
   });
-  document.getElementById('user-list-body').innerHTML=sortedOwners.length?sortedOwners.map((u,i)=>{
-    const r=reg[u];const ss=getSubStatus(r);
-    const online=isUserOnline(r);
-    const onlineTag=online?'<span class="status-online">Online</span>':'<span class="status-offline">Offline</span>';
-    const planLabel={trial:'Trial',basic:'Basic',pro:'Pro',enterprise:'Enterprise'}[r.sub||'trial']||'Trial';
-    const urgentStyle=ss.daysLeft<=3&&ss.status!=='expired'&&ss.status!=='suspended'?'border-left:3px solid var(--warn);':'';
-    return`<div class="user-card" style="animation-delay:${i*.06}s;${urgentStyle}">
-      <div class="user-avatar">${u[0].toUpperCase()}</div>
-      <div class="user-info">
-        <div class="user-name">${esc(u)} <span class="role-badge regular" style="margin-left:6px">Owner</span></div>
-        <div class="user-meta" style="display:flex;align-items:center;gap:6px;flex-wrap:wrap">
-          <span class="sub-badge sub-${ss.variant}">${ss.label}</span>
-          <span style="font-size:10px;color:var(--text3)">${planLabel} plan</span>
-          ${r.paidUntil?`<span style="font-size:10px;color:var(--text3)">Until ${r.paidUntil}</span>`:''}
-          ${onlineTag}
+  const body=document.getElementById('user-list-body');if(!body)return;
+  if(!owners.length){body.innerHTML=`<div class="sys-empty"><div class="sys-empty-icon">${q||filter!=='all'?'🔍':'👑'}</div>${q||filter!=='all'?'No owners match the filter.':'No owners registered yet.'}</div>`;return;}
+  body.innerHTML=owners.map((u,i)=>{
+    const r=reg[u],ss=getSubStatus(r),online=isUserOnline(r);
+    const userCount=Object.keys(reg).filter(k=>reg[k].ownerId===u&&k!==u).length;
+    const urgBorder=ss.daysLeft<=3&&ss.status!=='expired'&&ss.status!=='suspended'?'border-left:3px solid var(--warn);':'';
+    const avatarColor=ss.status==='suspended'?'background:#7c3aed':ss.status==='expired'?'background:var(--error)':ss.status==='active'?'background:var(--success)':'background:var(--owner)';
+    return`<div class="oc-wrap" style="${urgBorder}animation-delay:${i*.05}s">
+      <div class="oc-top">
+        <div class="oc-avatar" style="${avatarColor}">${u[0].toUpperCase()}</div>
+        <div class="oc-main">
+          <div class="oc-name">
+            ${esc(u)}
+            ${r.shopName&&r.shopName!==u?`<span style="font-weight:400;color:var(--text3);font-size:11px">— ${esc(r.shopName)}</span>`:''}
+            <span class="sub-badge sub-${ss.variant}">${ss.label}</span>
+            ${online?'<span style="font-size:9px;background:rgba(16,185,129,.15);color:var(--success);padding:1px 7px;border-radius:99px;font-weight:700">● ONLINE</span>':''}
+          </div>
+          <div class="oc-detail">
+            ${r.email?`<span>📧 ${esc(r.email)}</span>`:''}
+            ${r.phone?`<span>📞 ${esc(r.phone)}</span>`:''}
+            <span>👥 ${userCount} user${userCount!==1?'s':''}</span>
+            ${r.paidUntil?`<span>Until ${r.paidUntil}</span>`:''}
+          </div>
+        </div>
+        <div class="oc-actions">
+          <button type="button" class="btn btn-sm" onclick="openSubModal('${esc(u)}')" title="Manage subscription">💎</button>
+          ${ss.status!=='suspended'
+            ?`<button type="button" class="btn btn-sm btn-danger" onclick="suspendUser('${esc(u)}')" title="Suspend">🚫</button>`
+            :`<button type="button" class="btn btn-sm btn-success" onclick="unsuspendUser('${esc(u)}')" title="Restore">✅</button>`}
+          <button type="button" class="btn btn-sm" onclick="deleteOwner('${esc(u)}')" style="color:var(--error)" title="Delete permanently">🗑️</button>
         </div>
       </div>
-      <button type="button" class="btn btn-sm" onclick="openSubModal('${u}')" style="margin-left:8px">💎 Manage</button>
-      ${ss.status!=='suspended'?`<button type="button" class="btn btn-sm btn-danger" onclick="suspendUser('${u}')" style="margin-left:4px" title="Suspend">🚫</button>`:`<button type="button" class="btn btn-sm btn-success" onclick="unsuspendUser('${u}')" style="margin-left:4px" title="Restore">✅</button>`}
-      <button type="button" class="btn btn-sm" onclick="deleteOwner('${u}')" style="margin-left:4px;color:var(--error)" title="Delete owner">🗑️</button>
+      <div class="oc-ext-row">
+        <span class="oc-ext-lbl">Quick extend:</span>
+        <button type="button" class="oc-ext-btn" onclick="extendOwnerSub('${esc(u)}',7)">+7 days</button>
+        <button type="button" class="oc-ext-btn" onclick="extendOwnerSub('${esc(u)}',30)">+30 days</button>
+        <button type="button" class="oc-ext-btn" onclick="extendOwnerSub('${esc(u)}',90)">+90 days</button>
+        <button type="button" class="oc-ext-btn" onclick="extendOwnerSub('${esc(u)}',365)">+1 year</button>
+      </div>
     </div>`;
-  }).join(''):`<div style="padding:28px;text-align:center;color:var(--text3)">No owners yet.</div>`;
+  }).join('');
+}
+
+function renderSystemOwnerDashboard(){
+  _setOwnerDashMode('sys-admin');
+  document.getElementById('owner-dash-title').textContent='System Administration';
+  document.getElementById('owner-dash-sub').textContent='Software-level control over all platform owners';
+  const badgeEl=document.getElementById('owner-hero-badge-text');if(badgeEl)badgeEl.textContent='POWER-IMS · System Owner';
+
+  // ── Stats ──
+  const reg=getRegistry();
+  const owners=Object.keys(reg).filter(u=>reg[u].role==='owner');
+  const ssList=owners.map(u=>getSubStatus(reg[u]));
+  const paidCount=ssList.filter(s=>s.status==='active').length;
+  const trialCount=ssList.filter(s=>s.status==='trial').length;
+  const expiredCount=ssList.filter(s=>s.status==='expired').length;
+  const susCount=ssList.filter(s=>s.status==='suspended').length;
+  const expiringSoon=ssList.filter(s=>(s.status==='active'||s.status==='trial')&&s.daysLeft<=5).length;
+  const onlineCount=owners.filter(u=>isUserOnline(reg[u])).length;
   const pendingOwners=_lsGet('ims_pending_owners',[]);
-  document.getElementById('pending-count').textContent=pendingOwners.length;
-  document.getElementById('pending-user-list').innerHTML=pendingOwners.length?pendingOwners.map((p,i)=>`
-    <div class="user-card" style="animation-delay:${i*.06}s">
-      <div class="user-avatar" style="background:var(--owner-gradient)">${p.username[0].toUpperCase()}</div>
-      <div class="user-info"><div class="user-name">${esc(p.username)}</div><div class="user-meta">${p.email?`📧 ${esc(p.email)} · `:''}Requested: ${new Date(p.requestedAt).toLocaleString()}</div></div>
-      <button type="button" class="apv-btn approve" style="width:auto;padding:6px 12px" onclick="openApprovePaymentModal('${esc(p.username)}')">✅ Approve</button>
-      <button type="button" class="apv-btn deny" style="width:auto;padding:6px 12px;margin-left:6px" onclick="denyOwner('${esc(p.username)}')">❌ Deny</button>
-    </div>`).join(''):`<div style="padding:24px;text-align:center;color:var(--text3)">No pending requests 🎉</div>`;
   const bannedOwners=getBannedOwners();
-  document.getElementById('banned-count').textContent=bannedOwners.length;
-  document.getElementById('banned-owner-list').innerHTML=bannedOwners.length?bannedOwners.map((b,i)=>`
-    <div class="user-card" style="animation-delay:${i*.06}s;border-left:3px solid var(--error);opacity:.85">
-      <div class="user-avatar" style="background:rgba(239,68,68,.18);color:var(--error)">${b.username[0].toUpperCase()}</div>
-      <div class="user-info">
-        <div class="user-name">${esc(b.username)} ${b.shopName?`<span style="font-size:10px;color:var(--text3);font-weight:400">— ${esc(b.shopName)}</span>`:''}
-          <span style="font-size:9px;background:rgba(239,68,68,.15);color:var(--error);padding:1px 6px;border-radius:99px;margin-left:6px;font-weight:700">BANNED</span>
-        </div>
-        <div class="user-meta">${b.email?`📧 ${esc(b.email)} · `:''}Removed: ${new Date(b.bannedAt).toLocaleString()}</div>
-      </div>
-      <button type="button" class="btn btn-sm btn-success" onclick="restoreOwner('${esc(b.username)}')" style="margin-left:8px;white-space:nowrap">✅ Restore</button>
-    </div>`).join(''):`<div style="padding:24px;text-align:center;color:var(--text3)">No banned owners</div>`;
-  document.getElementById('owner-branch-list').innerHTML=`<div style="padding:14px 18px;color:var(--text3);font-size:13px">Branches are managed per platform owner.</div>`;
-  // Subscription requests section
   const subReqs=getSubRequests();
+  const pendingSubReqs=subReqs.filter(q=>q.status==='pending').length;
+  const resetReqs=_getResetRequests();
+  const pendingResets=resetReqs.filter(r=>r.status==='pending').length;
+  const _st=(icon,val,lbl,vc='',bc='')=>`<div class="owner-stat" style="${bc?`--sb-c:${bc}`:''};border-left-color:${bc||'var(--border2)'}"><div class="stat-icon-box" style="${bc?`background:${bc}22;border-color:${bc}33`:''}"><span class="stat-icon">${icon}</span></div><div class="stat-body"><div class="stat-val" style="${vc?`color:${vc}`:'color:var(--text)'}">${val}</div><div class="stat-lbl">${lbl}</div></div></div>`;
+  document.getElementById('owner-stats').innerHTML=
+    _st('👑',owners.length,'Total Owners','','rgba(139,92,246,1)')+
+    _st('✅',paidCount,'Paid Active','var(--success)','var(--success)')+
+    _st('⏳',trialCount,'On Trial','var(--warn)','var(--warn)')+
+    _st('🟢',onlineCount,'Online Now','','rgba(139,92,246,.7)')+
+    _st('🔴',expiredCount+susCount,'Expired / Sus.','var(--error)','var(--error)')+
+    (expiringSoon?_st('⚠️',expiringSoon,'Expiring ≤5d','var(--warn)','var(--warn)'):'');
+
+  // ── Tab badges ──
+  const _tb=(id,n,cls='')=>{const el=document.getElementById(id);if(!el)return;el.textContent=n;el.style.display=n>0?'flex':'none';if(cls)el.className='sys-tab-badge '+cls;};
+  _tb('stab-owners-badge',owners.length);
+  _tb('stab-pending-badge',pendingOwners.length,'tb-warn');
+  _tb('stab-subs-badge',pendingSubReqs,'tb-warn');
+  _tb('stab-resets-badge',pendingResets,'tb-err');
+  _tb('stab-banned-badge',bannedOwners.length,'tb-err');
+
+  // ── Owners list (via shared helper so search/filter work live) ──
+  _renderSysOwnerList();
+
+  // ── Pending ──
+  document.getElementById('pending-count').textContent=pendingOwners.length;
+  document.getElementById('pending-user-list').innerHTML=pendingOwners.length?[...pendingOwners].reverse().map((p,i)=>{
+    const ago=_timeAgo(p.requestedAt);
+    return`<div class="pc-card" style="animation-delay:${i*.06}s">
+      <div class="pc-top">
+        <div class="pc-avatar" style="background:var(--owner)">${p.username[0].toUpperCase()}</div>
+        <div style="flex:1;min-width:0">
+          <div class="user-name">${esc(p.username)}${p.shopName&&p.shopName!==p.username?` <span style="font-weight:400;font-size:11px;color:var(--text3)">— ${esc(p.shopName)}</span>`:''}</div>
+          <div class="pc-meta">
+            ${p.email?`<span>📧 ${esc(p.email)}</span>`:''}
+            ${p.phone?`<span>📞 ${esc(p.phone)}</span>`:''}
+            <span>🕐 ${ago}</span>
+          </div>
+        </div>
+      </div>
+      <div class="pc-actions">
+        <button type="button" class="btn btn-sm btn-success" onclick="openApprovePaymentModal('${esc(p.username)}')">✅ Approve</button>
+        <button type="button" class="btn btn-sm btn-danger" onclick="denyOwner('${esc(p.username)}')">❌ Deny</button>
+      </div>
+    </div>`;
+  }).join(''):`<div class="sys-empty"><div class="sys-empty-icon">🎉</div>No pending requests</div>`;
+
+  // ── Sub requests ──
   document.getElementById('sub-req-count').textContent=subReqs.length;
   document.getElementById('sub-req-list').innerHTML=subReqs.length?[...subReqs].reverse().map((q,i)=>{
     const dur=SUB_DURATIONS[q.plan]||{label:q.plan,icon:'📅'};
@@ -3776,39 +4006,57 @@ function renderSystemOwnerDashboard(){
       <button type="button" class="btn btn-sm btn-owner" onclick="copySubCode('${q.code}')">📋 Copy Code</button>
     </div>`:'';
     const activatedInfo=q.status==='activated'?`<div style="font-size:10px;color:var(--p);margin-top:4px">Activated ${(q.activatedAt||'').slice(0,10)} · Until ${q.paidUntil||'—'}</div>`:'';
-    return`<div class="user-card" style="animation-delay:${i*.04}s;flex-direction:column;align-items:stretch;gap:8px">
-      <div style="display:flex;align-items:center;gap:10px">
-        <div class="user-avatar" style="background:var(--owner-gradient)">${q.username[0].toUpperCase()}</div>
-        <div class="user-info" style="flex:1">
-          <div class="user-name">${esc(q.username)}${q.shopName&&q.shopName!==q.username?` <span style="font-size:10px;font-weight:400;color:var(--text3)">— ${esc(q.shopName)}</span>`:''}
-            <span style="font-size:10px;color:${statusColor};font-weight:700;margin-left:6px">${statusLabel}</span>
-          </div>
-          <div class="user-meta">${dur.icon} ${dur.label} · Requested ${new Date(q.requestedAt).toLocaleDateString()}</div>
+    return`<div class="sr-card" style="animation-delay:${i*.04}s">
+      <div class="sr-top">
+        <div class="pc-avatar" style="background:var(--owner)">${q.username[0].toUpperCase()}</div>
+        <div class="sr-info">
+          <div class="user-name">${esc(q.username)}${q.shopName&&q.shopName!==q.username?` <span style="font-size:11px;font-weight:400;color:var(--text3)">— ${esc(q.shopName)}</span>`:''} <span style="font-size:10px;color:${statusColor};font-weight:700">${statusLabel}</span></div>
+          <div class="pc-meta">${dur.icon} ${dur.label} · Requested ${_timeAgo(q.requestedAt)}</div>
           ${activatedInfo}
         </div>
-        ${q.status==='pending'?`<button type="button" class="btn btn-sm btn-owner" onclick="generateSubCode('${q.id}')" style="white-space:nowrap">🔑 Generate Code</button>`:''}
+        ${q.status==='pending'?`<button type="button" class="btn btn-sm btn-owner" onclick="generateSubCode('${q.id}')" style="white-space:nowrap;flex-shrink:0">🔑 Generate Code</button>`:''}
       </div>
       ${codeBox}
     </div>`;
-  }).join(''):`<div style="padding:24px;text-align:center;color:var(--text3)">No subscription requests</div>`;
-  updateEmailConfigStatus();
-  const resetReqs=_getResetRequests();
-  const pendingResets=resetReqs.filter(r=>r.status==='pending');
-  document.getElementById('reset-req-count').textContent=pendingResets.length;
+  }).join(''):`<div class="sys-empty"><div class="sys-empty-icon">💎</div>No subscription requests</div>`;
+
+  // ── Reset requests ──
+  document.getElementById('reset-req-count').textContent=pendingResets;
   document.getElementById('reset-request-list').innerHTML=resetReqs.length?resetReqs.map((r,i)=>{
     const statusColor=r.status==='pending'?'var(--warn)':r.status==='approved'?'var(--success)':'var(--error)';
     const statusIcon=r.status==='pending'?'⏳':r.status==='approved'?'✅':'❌';
-    return`<div class="user-card" style="animation-delay:${i*.06}s;border-left:3px solid ${statusColor}">
-      <div class="user-avatar" style="background:rgba(239,68,68,.2);color:var(--error)">🗑️</div>
-      <div class="user-info">
-        <div class="user-name">${esc(r.ownerUsername)} <span style="font-size:10px;color:${statusColor};font-weight:700;margin-left:6px">${statusIcon} ${r.status.toUpperCase()}</span></div>
-        <div class="user-meta">Requested: ${new Date(r.requestedAt).toLocaleString()}${r.respondedAt?` · Responded: ${new Date(r.respondedAt).toLocaleString()}`:''}</div>
+    return`<div class="pc-card" style="animation-delay:${i*.06}s;border-left:3px solid ${statusColor}">
+      <div class="pc-top">
+        <div class="pc-avatar" style="background:rgba(239,68,68,.2);color:var(--error);font-size:18px">🗑️</div>
+        <div style="flex:1;min-width:0">
+          <div class="user-name">${esc(r.ownerUsername)} <span style="font-size:10px;color:${statusColor};font-weight:700">${statusIcon} ${r.status.toUpperCase()}</span></div>
+          <div class="pc-meta"><span>Requested ${_timeAgo(r.requestedAt)}</span>${r.respondedAt?`<span>Responded ${_timeAgo(r.respondedAt)}</span>`:''}</div>
+        </div>
+        ${r.status==='pending'?`<div style="display:flex;gap:4px;flex-shrink:0">
+          <button type="button" class="btn btn-sm btn-success" onclick="approveDataReset('${esc(r.requestedAt)}')">✅ Approve</button>
+          <button type="button" class="btn btn-sm btn-danger" onclick="denyDataReset('${esc(r.requestedAt)}')">❌ Deny</button>
+        </div>`:''}
       </div>
-      ${r.status==='pending'?`
-        <button type="button" class="btn btn-sm btn-success" onclick="approveDataReset('${esc(r.requestedAt)}')" style="margin-left:8px">✅ Approve</button>
-        <button type="button" class="btn btn-sm btn-danger" onclick="denyDataReset('${esc(r.requestedAt)}')" style="margin-left:4px">❌ Deny</button>`:''}
     </div>`;
-  }).join(''):`<div style="padding:24px;text-align:center;color:var(--text3)">No reset requests 🎉</div>`;
+  }).join(''):`<div class="sys-empty"><div class="sys-empty-icon">🎉</div>No reset requests</div>`;
+
+  // ── Banned ──
+  document.getElementById('banned-count').textContent=bannedOwners.length;
+  document.getElementById('banned-owner-list').innerHTML=bannedOwners.length?bannedOwners.map((b,i)=>`
+    <div class="pc-card" style="animation-delay:${i*.06}s;border-left:3px solid var(--error)">
+      <div class="pc-top">
+        <div class="pc-avatar" style="background:rgba(239,68,68,.18);color:var(--error)">${b.username[0].toUpperCase()}</div>
+        <div style="flex:1;min-width:0">
+          <div class="user-name">${esc(b.username)}${b.shopName?` <span style="font-weight:400;font-size:11px;color:var(--text3)">— ${esc(b.shopName)}</span>`:''} <span style="font-size:9px;background:rgba(239,68,68,.15);color:var(--error);padding:1px 7px;border-radius:99px;font-weight:700">BANNED</span></div>
+          <div class="pc-meta">${b.email?`<span>📧 ${esc(b.email)}</span>`:''}${b.bannedAt?`<span>Banned ${_timeAgo(b.bannedAt)}</span>`:''}</div>
+        </div>
+        <button type="button" class="btn btn-sm btn-success" onclick="restoreOwner('${esc(b.username)}')" style="flex-shrink:0">✅ Restore</button>
+      </div>
+    </div>`).join(''):`<div class="sys-empty"><div class="sys-empty-icon">✅</div>No banned owners</div>`;
+
+  updateEmailConfigStatus();
+  // Restore active tab
+  switchSysTab(_sysTab);
 }
 
 async function approveOwner(username){
@@ -4190,11 +4438,9 @@ function renderOwnerDashboard(){
   if(bannerEl)bannerEl.innerHTML=buildSubBanner(ss);
   const myUsers=Object.keys(reg).filter(u=>reg[u].ownerId===S.ownerId&&u!==S.user);
   const pending=_lsGet(`ims_${ownerNS()}_pending`,[]);
-  document.getElementById('owner-stats').innerHTML=`
-    <div class="owner-stat"><div class="stat-icon">👥</div><div class="stat-val">${myUsers.length}</div><div class="stat-lbl">My Users</div></div>
-    <div class="owner-stat"><div class="stat-icon">⏳</div><div class="stat-val">${pending.length}</div><div class="stat-lbl">Pending</div></div>
-    <div class="owner-stat"><div class="stat-icon">🏢</div><div class="stat-val">${S.branches.length}</div><div class="stat-lbl">Branches</div></div>
-    <div class="owner-stat"><div class="stat-icon">🏪</div><div class="stat-val">${myUsers.filter(u=>reg[u].role==='storekeeper').length}</div><div class="stat-lbl">Storekeepers</div></div>`;
+  const _sto=(icon,val,lbl)=>`<div class="owner-stat"><div class="stat-icon-box"><span class="stat-icon">${icon}</span></div><div class="stat-body"><div class="stat-val">${val}</div><div class="stat-lbl">${lbl}</div></div></div>`;
+  document.getElementById('owner-stats').innerHTML=
+    _sto('👥',myUsers.length,'My Users')+_sto('⏳',pending.length,'Pending')+_sto('🏢',S.branches.length,'Branches')+_sto('🏪',myUsers.filter(u=>reg[u].role==='storekeeper').length,'Storekeepers');
   document.getElementById('user-list-body').innerHTML=myUsers.length?myUsers.map((u,i)=>{
     const r=reg[u];const roleClass=r.role==='storekeeper'?'storekeeper':'regular';
     const statusClass=r.status==='suspended'?'status-suspended':'status-active';
@@ -4307,7 +4553,7 @@ const getPerm=tab=>{
 const canWrite=tab=>['full','add_only'].includes(getPerm(tab));
 const canRead=tab=>getPerm(tab)!=='none';
 const canExport=()=>isOwner()||isSystemOwner()||(S.exportPerms[S.user]??true);
-const canEditRow=row=>isOwner()||isSystemOwner()||(!row._by)||(row._by===S.user);
+const canEditRow=()=>isOwner()||isSystemOwner()||(S.rowEditPerms[S.user]===true);
 
 // User join date filtering: new users only see data created after they joined
 function getUserJoinDate(){
@@ -4705,7 +4951,6 @@ function printStoreReceiptDirectly(){
   const pa=document.getElementById('print-area');
   pa.innerHTML=`<style>
 @page{size:A4;margin:10mm}
-@media print{body *{visibility:hidden}#print-area,#print-area *{visibility:visible}}
 #print-area{display:block;width:90mm;margin:0 auto;background:white;padding:12px;font-family:monospace;font-size:12px}
 .rcpt-hdr{text-align:center;padding:12px 0 10px;border-bottom:2px dashed #bbb;margin-bottom:10px}
 .rcpt-biz{font-size:15px;font-weight:800;color:#1e293b;letter-spacing:.03em}
@@ -4741,7 +4986,7 @@ function exportReceiptPDF(){
   const qty=parseFloat(row.qty)||0;
   const price=parseFloat(isP?row.uPrice:row.sPrice)||0;
   const base=qty*price;
-  const vatAmt=!isP&&row.vatOn?base*0.15:0;
+  const vatAmt=row.vatOn?base*0.15:0;
   const wh3Amt=!isP&&row.wh3On?base*0.03:0;
   const vwhAmt=!isP&&row.vwhOn?base*0.075:0;
   const commAmt=!isP&&row.commission?parseFloat(row.commission)||0:0;
@@ -5112,7 +5357,7 @@ function showCtxMenu(e,idx,listType){
   e.preventDefault();_ctxRow={idx,listType};
   const list=getList(listType);const row=list[idx];
   const isStoreTransfer=row&&row.payment==='STORE TRANSFER';
-  const editable=!isStoreTransfer&&(canEditRow(row)||isOwner());
+  const editable=!isStoreTransfer&&canEditRow();
   const rw=canWrite(S.tab);
   const menu=document.getElementById('ctx-menu');
   let html='';
@@ -5208,7 +5453,7 @@ function initNavHistory(){
 function goBack(){
   // Prefer the browser's own back so the history pointer stays consistent
   if(window.history.length>1){history.back();return;}
-  if(S.navHistory.length===0){showToast('No previous tab to return to','info');return;}
+  if(S.navHistory.length===0){showToast('No previous tab to return to');return;}
   const prevTab=S.navHistory.pop();
   S._historyFromPopState=true;
   switchTab(prevTab);
@@ -5240,7 +5485,7 @@ function renderHeadActions(){
     html+=`<button type="button" class="btn btn-primary" onclick="openAddModal()">➕ ${label}</button>`;
   }
   if(S.tab==='STORE'&&(isOwner()||isStorekeeper())){
-    html+=`<button type="button" class="btn" style="background:var(--store-gradient);color:#fff;border:none;box-shadow:0 4px 14px var(--store-glow)" onclick="openDispatchModal()">📤 Dispatch to Branch</button>`;
+    html+=`<button type="button" class="btn" style="background:var(--store);color:#fff;border:none;box-shadow:0 4px 14px var(--store-glow)" onclick="openDispatchModal()">📤 Dispatch to Branch</button>`;
   }
   if(S.tab==='PURCHASE'||S.tab==='SALES'){
     const availBranches=S.userBranch?[S.userBranch]:S.branches;
@@ -5586,12 +5831,13 @@ function renderItems(){
     <table>
       <thead><tr><th>${L('partNo')}</th><th>${L('itemName')}</th><th>${L('desc')}</th></tr></thead>
       <tbody>
-        ${S.items.filter(r=>r.id||r.name).filter(r=>shouldUserSeeData(r)).map((row,i)=>`
-          <tr oncontextmenu="showCtxMenu(event,${i},'items')" title="Right-click for options">
+        ${S.items.filter(r=>r.id||r.name).filter(r=>shouldUserSeeData(r)).map((row)=>{
+          const _ri=S.items.indexOf(row);
+          return`<tr oncontextmenu="showCtxMenu(event,${_ri},'items')" title="Right-click for options">
             <td class="td-mono" data-label="Part No.">${esc(row.id)}</td>
             <td style="font-weight:600" data-label="Item Name">${esc(row.name)}</td>
             <td style="color:var(--text3)" data-label="Description">${esc(row.desc)}</td>
-          </tr>`).join('')}
+          </tr>`;}).join('')}
         ${!S.items.filter(r=>r.id||r.name).filter(r=>shouldUserSeeData(r)).length?`<tr><td colspan="3" style="text-align:center;color:var(--text3);padding:32px">${L('emptyItems')}</td></tr>`:''}
       </tbody>
     </table>
@@ -5605,7 +5851,7 @@ function renderTx(){
   const isP=S.tab==='PURCHASE';
   const list=isP?S.purchase:S.sales;
   const branchF=document.getElementById('branch-filter')?.value||'';
-  const effectiveBranchF=S.userBranch||branchF;
+  const effectiveBranchF=S.userBranch?S.userBranch:branchF;
   const visible=list.filter(r=>r.id||r.name||r.party||r.qty).filter(r=>!effectiveBranchF||r.branch===effectiveBranchF).filter(r=>shouldUserSeeData(r)).slice().sort(_dateSort);
   let totQty=0,totVal=0,totComm=0;
   const rows=visible.map(row=>{
@@ -5698,7 +5944,7 @@ function renderBalance(){
       <tbody>${rows||`<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:32px">${L('emptyActivity')}</td></tr>`}</tbody>
     </table>
   </div>`;
-  document.getElementById('extras').innerHTML=`<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;padding:14px 18px;background:linear-gradient(90deg,rgba(16,185,129,.1),var(--surface2));border-top:2px solid var(--success)">
+  document.getElementById('extras').innerHTML=`<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:12px;padding:14px 18px;background:rgba(16,185,129,.08);border-top:2px solid var(--success)">
     <label style="display:inline-flex;align-items:center;gap:8px;font-size:12px;color:var(--text3);">
       <input type="checkbox" id="balance-hide-zero" onchange="S.hideZeroBalance=this.checked;renderTab()" ${hideZeros?'checked':''}>
       Hide zero balance items
@@ -5926,7 +6172,7 @@ function renderStoreBalance(){
       </tbody>
     </table>
   </div>`;
-  document.getElementById('extras').innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:linear-gradient(90deg,rgba(16,185,129,.1),var(--surface2));border-top:2px solid var(--success)">
+  document.getElementById('extras').innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:rgba(16,185,129,.08);border-top:2px solid var(--success)">
     <span style="font-size:11px;font-weight:700;color:var(--text3)">${L('totalValue').toUpperCase()} — ${L('navStore').toUpperCase()}</span>
     <span style="font-family:var(--mono);font-size:1.05rem;font-weight:800;color:var(--success)">${fmt(totalVal)}</span>
   </div>`;
@@ -5948,7 +6194,7 @@ function renderStoreReport(){
   const ER=inRange(S.expense);
   const totalReceived=SI.reduce((a,s)=>a+(parseFloat(s.qty)||0)*(parseFloat(s.cost)||0),0);
   const totalDispatched=SD.filter(d=>d.status!=='rejected').reduce((a,d)=>a+(parseFloat(d.qty)||0)*(parseFloat(d.price)||0),0);
-  const totalExpense=ER.reduce((a,e)=>a+(parseFloat(e.amt)||0),0);
+  const totalExpense=inRange(S.expense.filter(e=>!e.branch||e.branch==='STORE')).reduce((a,e)=>a+(parseFloat(e.amt)||0),0);
   const netValue=totalReceived-totalDispatched-totalExpense;
   const summaryData=[
     {l:L('storeStockReceived'),v:totalReceived,icon:'📦'},
@@ -5978,7 +6224,7 @@ function renderStoreReport(){
     </div>`).join('')}
     <div class="credit-section" style="margin-top:16px">
       <div class="credit-section-hdr">
-        <div class="credit-section-hdr-icon" style="background:var(--store-gradient)">📤</div>
+        <div class="credit-section-hdr-icon" style="background:var(--store)">📤</div>
         <span class="credit-section-title">${L('dispatchLog')}</span>
         <span class="credit-section-count" style="background:rgba(16,185,129,.15);color:var(--store)">${SD.length}</span>
       </div>
@@ -5997,7 +6243,6 @@ function printStoreReport(){
   const ts=new Date().toLocaleString();
   pa.innerHTML=`<style>
 @page{size:A4;margin:18mm 14mm 16mm}
-@media print{body *{visibility:hidden}#print-area,#print-area *{visibility:visible}}
 #print-area{position:absolute;top:0;left:0;width:100%;background:white;font-family:sans-serif;padding:14mm 14mm 14mm;box-sizing:border-box}
 .pr-hdr{position:fixed;top:0;left:0;right:0;padding:4mm 14mm 3mm;background:#fff;border-bottom:2px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;font-size:10px;color:#64748b}
 .pr-hdr strong{font-size:12px;color:#0f172a;font-weight:700;letter-spacing:.02em}
@@ -6067,7 +6312,7 @@ function renderStore(){
   }).join('');
 
   document.getElementById('tab-content').innerHTML=`
-    <div style="padding:12px 16px;background:linear-gradient(90deg,rgba(16,185,129,.1),var(--surface2));border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px">
+    <div style="padding:12px 16px;background:rgba(16,185,129,.08);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px">
       <span style="font-size:11px;font-weight:700;color:var(--text3)">${L('storeInventory')}</span>
       <span style="font-family:var(--mono);font-size:12px;color:var(--success);font-weight:700">${L('totalValue')}: ${fmt(totalStoreVal)}</span>
       ${isStorekeeper()?`<span style="font-size:10px;color:var(--success);margin-left:auto;background:var(--store-glass);padding:3px 10px;border-radius:99px;border:1px solid rgba(16,185,129,.3)">${L('storeKeeperMode')}</span>`:''}
@@ -6192,7 +6437,7 @@ function renderCreditPage(){
   const outstandingPay=totalPay-settledPay;
 
   const activeFilter=S.creditFilter||'outstanding';
-  const activeParty=S.creditPartyFilter||'';
+  let activeParty=S.creditPartyFilter||'';
   const all=[
     ...creditSales.map(r=>({...r,_type:'sale',_amt:calcST(r)})),
     ...creditPurch.map(r=>({...r,_type:'purchase',_amt:calcPT(r)}))
@@ -6503,7 +6748,7 @@ function _renderAllBranchesReport(branchTabsHtml,datebar){
     {l:L('cashOnHand'),v:tot.coh,total:true},
   ];
   const totCard=`<div style="margin:12px 14px 20px;border-radius:14px;overflow:hidden;border:1.5px solid var(--success);background:var(--surface)">
-    <div style="padding:10px 16px;background:linear-gradient(90deg,rgba(16,185,129,.15),var(--surface2));border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
+    <div style="padding:10px 16px;background:rgba(16,185,129,.1);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
       <span style="font-size:13px;font-weight:800;color:var(--success)">${L('allBranches').toUpperCase()} — COMBINED</span>
     </div>
     ${rr(totRows,'')}
@@ -6633,7 +6878,6 @@ function printReport(){
   const ts=new Date().toLocaleString();
   pa.innerHTML=`<style>
 @page{size:A4;margin:18mm 14mm 16mm}
-@media print{body *{visibility:hidden}#print-area,#print-area *{visibility:visible}}
 #print-area{position:absolute;top:0;left:0;width:100%;background:white;font-family:sans-serif;padding:14mm 14mm 14mm;box-sizing:border-box}
 .pr-hdr{position:fixed;top:0;left:0;right:0;padding:4mm 14mm 3mm;background:#fff;border-bottom:2px solid #e2e8f0;display:flex;align-items:center;justify-content:space-between;font-size:10px;color:#64748b}
 .pr-hdr strong{font-size:12px;color:#0f172a;font-weight:700;letter-spacing:.02em}
@@ -6684,7 +6928,7 @@ function openRowReceipt(idx,listType){
   const qty=parseFloat(row.qty)||0;
   const price=parseFloat(isP?row.uPrice:row.sPrice)||0;
   const base=qty*price;
-  const vatAmt=!isP&&row.vatOn?base*0.15:0;
+  const vatAmt=row.vatOn?base*0.15:0;
   const wh3Amt=!isP&&row.wh3On?base*0.03:0;
   const vwhAmt=!isP&&row.vwhOn?base*0.075:0;
   const commAmt=!isP&&row.commission?parseFloat(row.commission)||0:0;
@@ -6715,7 +6959,6 @@ function printReceiptDirectly(){
   const pa=document.getElementById('print-area');
   pa.innerHTML=`<style>
 @page{size:A4;margin:10mm}
-@media print{body *{visibility:hidden}#print-area,#print-area *{visibility:visible}}
 #print-area{display:block;width:90mm;margin:0 auto;background:white;padding:12px;font-family:monospace;font-size:12px}
 .rcpt-hdr{text-align:center;padding:12px 0 10px;border-bottom:2px dashed #bbb;margin-bottom:10px}
 .rcpt-biz{font-size:15px;font-weight:800;color:#1e293b;letter-spacing:.03em}
@@ -6754,7 +6997,7 @@ function _renderPermBody(){
     return;
   }
   body.innerHTML=users.map(u=>{
-    const up=S.perms[u]||{};const ep=S.exportPerms[u]??true;
+    const up=S.perms[u]||{};const ep=S.exportPerms[u]??true;const rp=S.rowEditPerms[u]??true;
     const groupsHtml=PERM_TAB_GROUPS.map(g=>`
       <div class="perm-group">
         <div class="perm-group-label">${g.label}</div>
@@ -6780,6 +7023,7 @@ function _renderPermBody(){
       </div>
       ${groupsHtml}
       <div class="perm-perm-row"><label data-i18n="exportPermLabel">Export Permission</label><label class="toggle-sw"><input type="checkbox" ${ep?'checked':''} onchange="setExportPerm('${u}',this.checked)"><span></span></label></div>
+      <div class="perm-perm-row"><label>Can Edit / Delete Rows</label><label class="toggle-sw"><input type="checkbox" ${rp?'checked':''} onchange="setRowEditPerm('${u}',this.checked)"><span></span></label></div>
     </div>`;
   }).join('')+`<button type="button" class="modal-btn secondary" onclick="closeModal('perm-modal')" style="margin-top:4px">Close</button>`;
 }
@@ -6802,6 +7046,7 @@ function setAllPerms(u,v){
 }
 function setUserPerm(u,tab,v){if(!S.perms[u])S.perms[u]={};S.perms[u][tab]=v;saveUserData();}
 function setExportPerm(u,v){S.exportPerms[u]=v;saveUserData();showToast(`Export ${v?'enabled':'disabled'} for ${u}`,'success');}
+function setRowEditPerm(u,v){if(!S.rowEditPerms)S.rowEditPerms={};S.rowEditPerms[u]=v;saveUserData();showToast(`Row edit/delete ${v?'enabled':'disabled'} for ${u}`,'success');}
 
 /* ═══════════════════════════════════════════════════════
    BRANCHES
@@ -6952,7 +7197,7 @@ function exportXL(tab,opts={}){
     headers=['Part No.','Item Name','Description'];
     data=S.items.filter(r=>r.id||r.name).map(r=>[r.id||'',r.name||'',r.desc||'']);
   }else if(tab==='CREDIT'){
-    headers=['Date','Type','Party','Branch','Part No.','Item Name','Qty','Description','Qty','Amount','Paid','Balance','Status'];
+    headers=['Date','Type','Party','Branch','Part No.','Item Name','Description','Qty','Amount','Paid','Balance','Status'];
     const activeFilter=S.creditFilter||'outstanding';
     const activeParty=S.creditPartyFilter||'';
     
@@ -6993,9 +7238,8 @@ function exportXL(tab,opts={}){
         row.branch||'Main',
         row.id||'',
         row.name||'',
-       
         row.desc||'',
-         row.qty||0,
+        row.qty||0,
         row._amt,
         paidAmt,
         balance,
@@ -7435,8 +7679,8 @@ async function submitChangePass(){
 document.addEventListener('click',e=>{if(!e.target.closest('#ctx-menu'))hideCtxMenu();});
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
-    closeSettings();closeApprovals();closeStoreReceipts();cancelConfirm();
-    closeModal('receipt-modal');closeModal('add-row-modal');closeModal('edit-row-modal');closeModal('store-receipt-print-modal');
+    closeSettings();closeApprovals();closeStoreReceipts();closeStoreRequestsPanel();cancelConfirm();
+    closeModal('receipt-modal');closeModal('add-row-modal');closeModal('edit-row-modal');closeModal('store-receipt-print-modal');closeModal('request-item-modal');closeModal('credit-pay-modal');
     hideCtxMenu();
   }
 });
