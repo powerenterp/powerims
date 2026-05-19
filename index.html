@@ -499,6 +499,15 @@ html[data-view="mobile"] .brand-text{display:none}
 /* ── Force-reset & activity ── */
 .force-reset-badge{font-size:9px;background:rgba(245,158,11,.14);color:var(--warn);padding:1px 7px;border-radius:99px;font-weight:700;border:1px solid rgba(245,158,11,.25);animation:heroDotPulse 2s ease infinite}
 .oc-activity{font-size:10px;color:var(--text3);margin-top:3px;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.oc-summary-row{display:flex;align-items:center;gap:10px;padding:7px 18px 10px;border-top:1px solid var(--border);flex-wrap:wrap;background:rgba(0,0,0,.015)}
+.alog-row{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.alog-row:last-child{border-bottom:none}
+.alog-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:var(--surface2)}
+.alog-label{font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:2px}
+.alog-val{font-size:13px;font-weight:600;color:var(--text)}
+.alog-sub{font-size:10.5px;color:var(--text3);margin-top:2px}
+.oc-sum-stat{font-size:10px;color:var(--text3);display:flex;align-items:center;gap:3px}
+.oc-sum-val{font-weight:700;color:var(--text2)}
 /* Pending / banned / reset cards */
 .pc-card{border-bottom:1px solid var(--border);transition:background .14s}
 .pc-card:hover{background:var(--surface2)}
@@ -1291,6 +1300,8 @@ html[data-card="1"] tbody tr.row-zero{border-color:rgba(245,158,11,.3)}
 .role-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:99px;font-size:10px;font-weight:600}
 .role-badge.storekeeper{background:var(--store-glass);color:var(--store);border:1px solid rgba(16,185,129,.25)}
 .role-badge.regular{background:var(--p-glass);color:var(--p);border:1px solid rgba(59,130,246,.25)}
+.role-badge.manager{background:rgba(139,92,246,.12);color:rgba(139,92,246,1);border:1px solid rgba(139,92,246,.28)}
+.role-badge.readonly{background:rgba(100,116,139,.1);color:rgba(100,116,139,1);border:1px solid rgba(100,116,139,.25)}
 
 /* ── Cloud auth note ── */
 .cloud-auth-note{font-size:10.5px;color:var(--text3);text-align:center;margin-top:12px;padding:9px 14px;background:var(--surface2);border-radius:9px;border:1px solid var(--border);display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:.01em}
@@ -1566,6 +1577,8 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
 <svg id="icon-sprite" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
 <defs>
 <symbol id="i-ban" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></symbol><symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></symbol><symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol><symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol><symbol id="i-x-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></symbol><symbol id="i-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/><path d="M15.5 7.5l3 3M19 5l2 2"/></symbol><symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol><symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol><symbol id="i-lock-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1.2"/></symbol><symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol><symbol id="i-calendar-days" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="8" cy="15" r=".5" fill="currentColor"/><circle cx="12" cy="15" r=".5" fill="currentColor"/><circle cx="16" cy="15" r=".5" fill="currentColor"/></symbol><symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol><symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6 12 13 2 6"/></symbol><symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></symbol><symbol id="i-smartphone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></symbol><symbol id="i-phone-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-3.33-2.67M5.51 5.51l-1.4 1.4M2 22l20-20"/></symbol><symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol><symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol><symbol id="i-crown" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l3 14h14l3-14-6 7-4-8-4 8-6-7zM5 21h14"/></symbol><symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol><symbol id="i-gem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M11 3 8 9l4 12 4-12-3-6"/><line x1="2" y1="9" x2="22" y2="9"/></symbol><symbol id="i-money" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></symbol><symbol id="i-credit-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></symbol><symbol id="i-cash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></symbol><symbol id="i-cash-fly" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20l3-8 6 2-3 8z"/><rect x="9" y="4" width="12" height="8" rx="1.5" transform="rotate(15 15 8)"/><circle cx="15" cy="8" r="1.6" transform="rotate(15 15 8)"/></symbol><symbol id="i-trending-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></symbol><symbol id="i-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></symbol><symbol id="i-package" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></symbol><symbol id="i-bar-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="3" y1="20" x2="21" y2="20"/></symbol><symbol id="i-edit-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></symbol><symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></symbol><symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></symbol><symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></symbol><symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol><symbol id="i-circle-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" fill="#f43f5e" stroke="none"/></symbol><symbol id="i-circle-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" fill="#22c55e" stroke="none"/></symbol><symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol><symbol id="i-sparkle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.6 5.4L19 10l-5.4 1.6L12 17l-1.6-5.4L5 10l5.4-1.6z"/><path d="M19 16l.6 1.7L21 18l-1.4.3L19 20l-.6-1.7L17 18l1.4-.3z"/></symbol><symbol id="i-monitor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></symbol><symbol id="i-printer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></symbol><symbol id="i-building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="1.5"/><path d="M8 6h2M14 6h2M8 10h2M14 10h2M8 14h2M14 14h2"/><path d="M10 22v-4h4v4"/></symbol><symbol id="i-bank" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M3 10h18M5 10v11M19 10v11M9 10v11M15 10v11M12 3 3 8h18z"/></symbol><symbol id="i-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9"/><path d="M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/><path d="M10 21v-6h4v6"/></symbol><symbol id="i-door" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/><circle cx="15" cy="13" r=".8" fill="currentColor"/></symbol><symbol id="i-receipt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2v20l2.5-2L10 22l2.5-2L15 22l2.5-2L20 22V2l-2.5 2L15 2l-2.5 2L10 2 7.5 4 5 2z"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="14" y2="13"/></symbol><symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol><symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol><symbol id="i-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></symbol><symbol id="i-return" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></symbol><symbol id="i-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol><symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></symbol><symbol id="i-free" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><text x="12" y="15.5" text-anchor="middle" font-size="7" font-weight="800" font-family="sans-serif" fill="currentColor" stroke="none">FREE</text></symbol><symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></symbol>
 </defs>
 </svg>
 
@@ -2076,8 +2089,10 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
       <div class="field"><label data-i18n="addPassLbl">Password *</label><input id="nu-password" type="password" data-i18n="addPassPh" data-i18n-attr="placeholder" placeholder="Set password"></div>
       <div class="field"><label data-i18n="addRoleLbl">Role *</label>
         <select id="nu-role" onchange="toggleAddUserBranch()">
-          <option value="user" data-i18n="roleUser">Regular User</option>
-          <option value="storekeeper" data-i18n="roleStorekeeper">Store Keeper</option>
+          <option value="user">Regular User</option>
+          <option value="manager">Manager</option>
+          <option value="readonly">Read Only</option>
+          <option value="storekeeper">Store Keeper</option>
         </select>
       </div>
       <div class="field" id="nu-branch-wrap"><label data-i18n="addBranchLbl">Assigned Branch *</label><select id="nu-branch"></select></div>
@@ -2256,7 +2271,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
           <p id="owner-dash-sub"></p>
         </div>
         <div class="owner-hero-btns">
-          <button type="button" class="owner-refresh-btn" onclick="loadPendingOwnersFromCloud&&loadPendingOwnersFromCloud().then(()=>renderSystemOwnerDashboard())" title="Sync from cloud">
+          <button type="button" class="owner-refresh-btn" onclick="isSystemOwner()?(loadPendingOwnersFromCloud&&loadPendingOwnersFromCloud().then(()=>renderSystemOwnerDashboard())):renderOwnerDashboard()" title="Sync from cloud">
             <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
             Refresh
           </button>
@@ -2501,6 +2516,37 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
   </div>
 </div>
 
+<!-- RE-AUTH MODAL — 2-step confirmation for sensitive actions -->
+<div class="modal-overlay" id="reauth-modal">
+  <div class="modal-box narrow">
+    <div class="modal-hdr">
+      <div class="modal-hdr-icon-wrap"><span class="modal-hdr-icon"><svg class="ic"><use href="#i-lock"/></svg></span></div>
+      <div><h2>Confirm Identity</h2><p style="font-size:.78rem;color:rgba(255,255,255,.7)" id="reauth-action-label">Re-enter your password to proceed</p></div>
+    </div>
+    <div class="modal-body">
+      <div class="field">
+        <label>Your Password</label>
+        <div class="pw-wrap"><input type="password" id="reauth-pass" class="pw-input" placeholder="Enter your password…" onkeydown="if(event.key==='Enter')submitReAuth()"/></div>
+      </div>
+      <div class="modal-error" id="reauth-error"></div>
+      <button type="button" class="modal-btn" onclick="submitReAuth()"><svg class="ic"><use href="#i-check-circle"/></svg> Confirm</button>
+      <button type="button" class="modal-btn secondary" style="margin-top:7px" onclick="cancelReAuth()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- ACTIVITY LOG MODAL — owner views staff activity -->
+<div class="modal-overlay" id="activity-log-modal">
+  <div class="modal-box narrow">
+    <div class="modal-hdr">
+      <div class="modal-hdr-icon-wrap"><span class="modal-hdr-icon"><svg class="ic"><use href="#i-clock"/></svg></span></div>
+      <div><h2>Activity Log</h2><p id="alog-username" style="font-size:.78rem;color:rgba(255,255,255,.7)"></p></div>
+      <button type="button" class="modal-hdr-close" onclick="closeModal('activity-log-modal')"><svg class="ic"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="modal-body" id="alog-body"></div>
+  </div>
+</div>
+
 <!-- APPROVE + PAYMENT MODAL -->
 <div class="modal-overlay" id="approve-payment-modal">
   <div class="modal-box narrow">
@@ -2557,8 +2603,8 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
       <div class="field">
         <label>Payment Method</label>
         <select id="apv-method">
-          <option value="Cash"><svg class="ic"><use href="#i-cash"/></svg> Cash</option>
-          <option value="Other"><svg class="ic"><use href="#i-clipboard"/></svg> Other</option>
+          <option value="Cash">Cash</option>
+          <option value="Other">Other</option>
         </select>
       </div>
       <div class="field">
@@ -2736,7 +2782,7 @@ const LANG={
     subTitle:'Manage Subscription',subPlan:'Plan',subTrial:'Trial',subTrialPrice:'14 days free',subBasic:'Basic',subBasicPrice:'Up to 2 users',subPro:'Pro',subProPrice:'Up to 10 users',subEnterprise:'Enterprise',subEnterprisePrice:'Unlimited users',subRecordPay:'Record Payment',subAmountPaid:'Amount Paid',subAmountPaidPh:'e.g. 500',subActiveUntil:'Active Until',subNote:'Note (optional)',subNotePh:'e.g. Bank transfer ref #123',subSaveBtn:'Save',subPayHistory:'Payment History',
     gateTitle:'Subscription Expired',gateSub:'Your subscription has expired. Please contact the platform administrator to renew your access.',gateContact:'Contact your',gateBold:'POWER-IMS Administrator',gateContactSuf:'to renew your subscription and restore access to the platform.',gateReturn:'<svg class="ic"><use href="#i-arrow-left"/></svg> Return to Login',
     dashTitle:'<svg class="ic"><use href="#i-crown"/></svg> Platform Dashboard',dashSub:'POWER-IMS — Full visibility over all users on your platform',dashLogout:'Log Out',dashOwners:'Platform Owners',dashPaid:'Paid Active',dashTrial:'On Trial',dashExpired:'Expired/Sus',dashAllUsers:'<svg class="ic"><use href="#i-user"/></svg> All Users',dashAddUser:'<svg class="ic"><use href="#i-plus"/></svg> Add User',dashPending:'<svg class="ic"><use href="#i-clock"/></svg> Pending Access Requests',dashBranches:'<svg class="ic"><use href="#i-building"/></svg> Branches',dashReset:'<svg class="ic"><use href="#i-trash"/></svg> Data Reset Requests',dashNoPending:'No pending requests <svg class="ic"><use href="#i-sparkle"/></svg>',
-    btnSave:'Save',btnCancel:'Cancel',btnClose:'Close',btnPrint:'<svg class="ic"><use href="#i-printer"/></svg> Print',btnExportPdf:'Export PDF (A6)',btnClear:'Clear',
+    btnSave:'Save',btnCancel:'Cancel',btnClose:'Close',btnPrint:'Print',btnExportPdf:'Export PDF (A6)',btnClear:'Clear',
     permFull:'Full',permAddOnly:'Add Only',permRead:'Read Only',permNone:'No Access',
     dateReceived:'Date Received',stockQty:'Stock Qty',unitCost:'Unit Cost',totalValue:'Total Value',purchaseQty:'Purchase Qty',salesQty:'Sales Qty',receivedQty:'Received Qty',dispatchedQty:'Dispatched Qty',storeValue:'Store Value',method:'Method',item:'Item',subtotal:'Subtotal',amountDue:'AMOUNT DUE',
     dateLabel:'Date *',selectItem:'— Select item —',storeItemLbl:'Store Item *',noStoreItems:'No items in store',dispatchQtyLbl:'Quantity *',dispatchPriceLbl:'Dispatch Price (per unit) *',toBranchLbl:'To Branch *',dispatchTotal:'DISPATCH TOTAL',partNoLbl:'Item ID *',partNoPh:'e.g. P001',itemNameLbl:'Item Name *',itemNamePh:'Product name',descLbl:'Description',descPh:'Optional',taxOptions:'TAX OPTIONS',totalAmountLbl:'TOTAL AMOUNT',reasonLbl:'Reason *',reasonPh:'What was this expense for?',amountLbl:'Amount *',
@@ -2746,7 +2792,7 @@ const LANG={
     toastItemNotFound:'Item not found',toastInsufficientStock:'Insufficient store stock',toastNoPermTab:'No permission for this tab',toastRowDeleted:'Row deleted',toastRecordAdded:'Record added!',toastUpdated:'Updated!',toastItemAdded:'Item added!',toastItemUpdated:'Item updated!',toastPassUpdated:'Password updated!',toastExpenseAdded:'Expense added!',toastStoreTransferNoEdit:'Store transfer rows cannot be edited',toastStoreTransferNoDelete:'Store transfer rows cannot be deleted',toastBalancePdf:'Balance PDF downloaded <svg class="ic"><use href="#i-check"/></svg>',toastResetPending:'A reset request is already pending approval.',toastResetSent:'<svg class="ic"><use href="#i-bell"/></svg> Reset request sent to software owner.',
     receiptPurchase:'Purchase Receipt',receiptSales:'Sales Receipt',receiptPartNo:'Part No.',receiptItem:'Item',receiptDesc:'Description',receiptQty:'Qty',receiptUnitPrice:'Unit Price',receiptSubtotal:'Subtotal',receiptTotal:'TOTAL',receiptAmountDue:'AMOUNT DUE',receiptThankYou:'POWER-IMS — Thank you!',receiptPrinted:'Printed:',
     storeReceiptTitle:'<svg class="ic"><use href="#i-package"/></svg> POWER-IMS — STORE',storeReceiptSub:'Dispatch Receipt',storeReceiptId:'Receipt ID',storeReceiptDate:'Date',storeReceiptBranch:'To Branch',storeReceiptPartNo:'Part No.',storeReceiptItem:'Item',storeReceiptQty:'Qty',storeReceiptPrice:'Unit Price',storeReceiptTotal:'Total',storeReceiptBy:'Dispatched by:',storeReceiptPrinted:'Printed:',storeReceiptApproved:'<svg class="ic"><use href="#i-check-circle"/></svg> APPROVED',storeReceiptRejected:'<svg class="ic"><use href="#i-x-circle"/></svg> REJECTED',storeReceiptPending:'<svg class="ic"><use href="#i-clock"/></svg> PENDING',
-    notifPendingUsers:'<svg class="ic"><use href="#i-bell"/></svg> Pending User Requests',notifStoreReceipts:'<svg class="ic"><use href="#i-store"/></svg> Store Receipts',notifBranchRequests:'<svg class="ic"><use href="#i-cart"/></svg> Branch Store Requests',noStoreReceiptsYet:'No store receipts for your branch yet.',
+    notifPendingUsers:'<svg class="ic"><use href="#i-bell"/></svg> Pending User Requests',notifStoreReceipts:'<svg class="ic"><use href="#i-store"/></svg> Store Receipts',notifBranchRequests:'Branch Store Requests',noStoreReceiptsYet:'No store receipts for your branch yet.',
     ctxEdit:'Edit Row',ctxDelete:'Delete Row',ctxPrint:'Print Receipt',ctxStoreTransfer:'Store Transfer — read only',ctxBy:'By:',
     storeKeeperLabel:'Store Keeper',
     totalInventoryValue:'TOTAL INVENTORY VALUE',exportPdfBtn:'<svg class="ic"><use href="#i-file"/></svg> Export PDF',
@@ -2912,11 +2958,19 @@ function checkLoginRateLimit(username){
   }
   return{allowed:true};
 }
+function _getDeviceInfo(){
+  const ua=navigator.userAgent;
+  const mobile=/Mobile|Android|iPhone|iPad/.test(ua);
+  const browser=/Edg\//.test(ua)?'Edge':/OPR\//.test(ua)?'Opera':/Chrome/.test(ua)?'Chrome':/Firefox/.test(ua)?'Firefox':/Safari/.test(ua)?'Safari':'Browser';
+  const os=/Windows/.test(ua)?'Windows':/iPhone|iPad/.test(ua)?'iOS':/Mac/.test(ua)?'Mac':/Android/.test(ua)?'Android':/Linux/.test(ua)?'Linux':'Unknown';
+  return `${browser} on ${os}${mobile?' (Mobile)':''}`;
+}
 function recordLoginFailure(username){
   const d=_rlGet();const now=Date.now();
   if(!d[username]||now-d[username].first>RL_WINDOW){d[username]={first:now,count:1};}
   else{d[username].count++;}
   _rlSave(d);
+  try{const reg=getRegistry();if(reg[username]){reg[username].failedAttempts=(reg[username].failedAttempts||0)+1;reg[username].lastFailedAt=new Date().toISOString();saveRegistry(reg);}}catch(_e){}
 }
 function clearLoginFailures(username){
   const d=_rlGet();if(d[username]){delete d[username];_rlSave(d);}
@@ -2958,6 +3012,13 @@ function markUserAsActive(u){
   if(!u) return;
   const reg=getRegistry();
   if(!reg[u]) return;
+  const forceAt=reg[u].forceLogout;
+  const sessionStart=localStorage.getItem('ims_sessionStart_'+u)||'';
+  if(forceAt&&sessionStart&&forceAt>sessionStart){
+    showToast('Your session was terminated by the administrator.','error',4500);
+    setTimeout(()=>logout(),2800);
+    return;
+  }
   reg[u].lastActive=new Date().toISOString();
   saveRegistry(reg);
 }
@@ -3500,7 +3561,17 @@ async function submitAuth(){
       // Feature 7: Track login activity
       try{
         const _tr=getRegistry();
-        if(_tr[u]){_tr[u].lastLogin=new Date().toISOString();_tr[u].loginCount=(_tr[u].loginCount||0)+1;saveRegistry(_tr);saveRegistryToCloud(_tr,false);}
+        if(_tr[u]){
+          const now=new Date().toISOString();
+          _tr[u].lastLogin=now;
+          _tr[u].loginCount=(_tr[u].loginCount||0)+1;
+          _tr[u].lastDevice=_getDeviceInfo();
+          _tr[u].failedAttempts=0;
+          delete _tr[u].lastFailedAt;
+          delete _tr[u].forceLogout;
+          saveRegistry(_tr);saveRegistryToCloud(_tr,false);
+          localStorage.setItem('ims_sessionStart_'+u,now);
+        }
       }catch(_e){}
       // Feature 2: Force password change if sys-owner reset it
       if(entry.role==='owner'&&_checkForcePassReset(u,entry.ownerId||u,entry.role||'user'))return;
@@ -3560,6 +3631,8 @@ async function doLogin(u,ownerId,role){
   _lsSet('ims_currentRole',role);
   const reg=getRegistry();
   S.userBranch=(role==='user'||role==='storekeeper')?reg[u]?.branch||null:null;
+  // managers and readonly see all branches (same as owner)
+  if(role==='manager'||role==='readonly')S.userBranch=null;
   initSupabase();
   startRealtimeSync();
   markUserAsActive(u);
@@ -3579,7 +3652,7 @@ async function doLogin(u,ownerId,role){
   
   // UI setup
   document.getElementById('user-label').textContent=u;
-  const roleLabel=role==='owner'?'Owner':role==='storekeeper'?'Store Keeper':role==='user'?'User'+(S.userBranch?` — ${S.userBranch}`:''):'User';
+  const roleLabel=role==='owner'?'Owner':role==='manager'?'Manager':role==='readonly'?'Read Only':role==='storekeeper'?'Store Keeper':role==='user'?'User'+(S.userBranch?` — ${S.userBranch}`:''):'User';
   document.getElementById('user-role-label').textContent=roleLabel;
   document.getElementById('hdr-chip').className='hdr-chip no-print'+(role==='storekeeper'?' store-chip':'');
   document.getElementById('user-role-label').className='role'+(role==='storekeeper'?' store-role':'');
@@ -3655,6 +3728,14 @@ async function doLogin(u,ownerId,role){
    All others see their normal tabs (subject to permissions)
 ═══════════════════════════════════════════════════════ */
 function updateNavForRole(){
+  if(isSystemOwner()){
+    ['PURCHASE','SALES','BALANCE','EXPENSE','REPORT','ITEMS','STORE','STOREBALANCE','STOREREPORT','CREDIT'].forEach(tab=>{
+      const el=document.getElementById(`nav-${tab}`);if(el)el.style.display='none';
+    });
+    const drawerItems=document.getElementById('drawer-items-btn');if(drawerItems)drawerItems.style.display='none';
+    const drawerCredit=document.getElementById('drawer-credit-btn');if(drawerCredit)drawerCredit.style.display='none';
+    return;
+  }
   if(isStorekeeper()){
     ['PURCHASE','SALES','BALANCE','REPORT'].forEach(tab=>{
       const el=document.getElementById(`nav-${tab}`);if(el)el.style.display='none';
@@ -3679,6 +3760,12 @@ function updateNavForRole(){
     const drawerCredit=document.getElementById('drawer-credit-btn');
     if(drawerCredit)drawerCredit.style.display='flex';
     if(isOwner())document.getElementById('store-settings-section').style.display='';
+    // Manager and readonly have no admin access
+    if(isManager()||isReadOnly()){
+      document.getElementById('btn-owner-dash').style.display='none';
+      document.getElementById('btn-owner-perms').style.display='none';
+      document.getElementById('store-settings-section').style.display='none';
+    }
   }
 }
 
@@ -3853,6 +3940,7 @@ function restoreOwner(username){
 }
 function deleteOwner(u){
   customConfirm(`Permanently Delete "${u}"?`,'This removes their account and wipes ALL their inventory data from this device. They can re-apply as a new user. This cannot be undone.',_SVG.trash,'Delete Permanently',()=>{
+    requireReAuth(`Confirm permanent deletion of owner "${u}"`,()=>{
     const reg=getRegistry();
     const ownerData=reg[u]||{};
     const ns=ownerData.ownerId||u;
@@ -3903,6 +3991,7 @@ function deleteOwner(u){
 
     showToast(`<svg class="ic"><use href="#i-trash"/></svg> ${u} permanently deleted`,'success');
     renderSystemOwnerDashboard();
+    });
   });
 }
 
@@ -3969,6 +4058,9 @@ function _setOwnerDashMode(mode){
   // hide filter bar in shop-owner mode
   const fb=document.getElementById('sys-owner-filter-bar');
   if(fb)fb.style.display=mode==='sys-admin'?'':'none';
+  // Back button only makes sense for shop-owner (returns to business data)
+  const backBtns=document.querySelectorAll('.owner-logout-btn[onclick="exitOwnerDashboard()"]');
+  backBtns.forEach(b=>b.style.display=mode==='sys-admin'?'none':'');
 }
 
 let _sysTab='owners',_sysFilter='all';
@@ -4136,12 +4228,14 @@ async function confirmForceResetPassword(){
   const err=document.getElementById('frm-error');
   if(p.length<6){err.textContent='Password must be at least 6 characters.';err.style.display='block';return;}
   if(p!==p2){err.textContent='Passwords do not match.';err.style.display='block';return;}
-  const reg=getRegistry();const r=reg[_frmUser];if(!r){closeModal('force-reset-modal');return;}
-  r.password=await sha256Hex(p);r.forcePassReset=true;r.passResetAt=new Date().toISOString();
-  saveRegistry(reg);saveRegistryToCloud(reg,true);
-  closeModal('force-reset-modal');
-  showToast('<svg class="ic"><use href="#i-key"/></svg> Password reset for "'+_frmUser+'" — they will be prompted on next login','success');
-  renderSystemOwnerDashboard();
+  requireReAuth(`Confirm password reset for "${_frmUser}"`,async()=>{
+    const reg=getRegistry();const r=reg[_frmUser];if(!r){closeModal('force-reset-modal');return;}
+    r.password=await sha256Hex(p);r.forcePassReset=true;r.passResetAt=new Date().toISOString();
+    saveRegistry(reg);saveRegistryToCloud(reg,true);
+    closeModal('force-reset-modal');
+    showToast('<svg class="ic"><use href="#i-key"/></svg> Password reset for "'+_frmUser+'" — they will be prompted on next login','success');
+    renderSystemOwnerDashboard();
+  });
 }
 
 let _pendingLoginUser='',_pendingLoginOwnerId='',_pendingLoginRole='';
@@ -4169,6 +4263,19 @@ async function confirmChangePassword(){
   setTimeout(function(){doLogin(_pendingLoginUser,_pendingLoginOwnerId,_pendingLoginRole);},500);
 }
 
+function _getOwnerActivity(ns){
+  const items=_safeJSON(localStorage.getItem(`ims_${ns}_items`),[],`ims_${ns}_items`).length;
+  const purchases=_safeJSON(localStorage.getItem(`ims_${ns}_purchase`),[],`ims_${ns}_purchase`).length;
+  const sales=_safeJSON(localStorage.getItem(`ims_${ns}_sales`),[],`ims_${ns}_sales`).length;
+  const lastChange=localStorage.getItem(`ims_${ns}_localAt`)||'';
+  let bytes=0;
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k&&k.startsWith(`ims_${ns}_`))bytes+=(localStorage.getItem(k)||'').length*2;
+  }
+  return{items,purchases,sales,lastChange,kb:(bytes/1024).toFixed(1)};
+}
+
 function _renderSysOwnerList(){
   const reg=getRegistry();
   const q=(document.getElementById('sys-owner-search')||{}).value||'';
@@ -4190,6 +4297,7 @@ function _renderSysOwnerList(){
   body.innerHTML=owners.map((u,i)=>{
     const r=reg[u],ss=getSubStatus(r),online=isUserOnline(r);
     const userCount=Object.keys(reg).filter(k=>reg[k].ownerId===u&&k!==u).length;
+    const act=_getOwnerActivity(u);
     const urgBorder=ss.daysLeft<=3&&ss.status!=='expired'&&ss.status!=='suspended'?'border-left:3px solid var(--warn);':'';
     const avatarColor=ss.status==='suspended'?'background:#7c3aed':ss.status==='expired'?'background:var(--error)':ss.status==='active'?'background:var(--success)':'background:var(--owner)';
     return`<div class="oc-wrap" style="${urgBorder}animation-delay:${i*.05}s" data-u="${u}">
@@ -4223,6 +4331,14 @@ function _renderSysOwnerList(){
             :`<button type="button" class="btn btn-sm btn-success" onclick="unsuspendUser('${esc(u)}')" title="Restore"><svg class="ic"><use href="#i-check-circle"/></svg></button>`}
           <button type="button" class="btn btn-sm" onclick="deleteOwner('${esc(u)}')" style="color:var(--error)" title="Delete permanently"><svg class="ic"><use href="#i-trash"/></svg></button>
         </div>
+      </div>
+      <div class="oc-summary-row">
+        <span class="oc-ext-lbl">Data:</span>
+        <span class="oc-sum-stat"><svg class="ic"><use href="#i-package"/></svg> <span class="oc-sum-val">${act.items}</span> items</span>
+        <span class="oc-sum-stat"><svg class="ic"><use href="#i-cart"/></svg> <span class="oc-sum-val">${act.purchases}</span> purchases</span>
+        <span class="oc-sum-stat"><svg class="ic"><use href="#i-money"/></svg> <span class="oc-sum-val">${act.sales}</span> sales</span>
+        ${act.lastChange?`<span class="oc-sum-stat"><svg class="ic"><use href="#i-clock"/></svg> Last change: <span class="oc-sum-val">${_timeAgo(act.lastChange)}</span></span>`:'<span class="oc-sum-stat" style="color:var(--text3);font-style:italic">No data yet</span>'}
+        <span class="oc-sum-stat" style="margin-left:auto"><svg class="ic"><use href="#i-save"/></svg> <span class="oc-sum-val">${act.kb} KB</span></span>
       </div>
       <div class="oc-ext-row">
         <span class="oc-ext-lbl">Quick extend:</span>
@@ -4708,6 +4824,7 @@ function copySubCode(code){
 }
 
 function exitOwnerDashboard(){
+  if(isSystemOwner())return;
   document.getElementById('owner-screen').style.display='none';
   document.getElementById('content').style.display='block';
   document.getElementById('bottom-nav').style.display='flex';
@@ -4749,18 +4866,22 @@ function renderOwnerDashboard(){
   document.getElementById('owner-stats').innerHTML=
     _sto('<svg class="ic"><use href="#i-users"/></svg>',myUsers.length,'My Users')+_sto('<svg class="ic"><use href="#i-clock"/></svg>',pending.length,'Pending')+_sto('<svg class="ic"><use href="#i-building"/></svg>',S.branches.length,'Branches')+_sto('<svg class="ic"><use href="#i-store"/></svg>',myUsers.filter(u=>reg[u].role==='storekeeper').length,'Storekeepers');
   document.getElementById('user-list-body').innerHTML=myUsers.length?myUsers.map((u,i)=>{
-    const r=reg[u];const roleClass=r.role==='storekeeper'?'storekeeper':'regular';
+    const r=reg[u];
+    const roleClass=r.role==='storekeeper'?'storekeeper':r.role==='manager'?'manager':r.role==='readonly'?'readonly':'regular';
+    const roleLabel=r.role==='storekeeper'?'<svg class="ic"><use href="#i-store"/></svg> Store Keeper':r.role==='manager'?'<svg class="ic" style="width:11px;height:11px"><use href="#i-shield"/></svg> Manager':r.role==='readonly'?'<svg class="ic" style="width:11px;height:11px"><use href="#i-eye"/></svg> Read Only':'<svg class="ic"><use href="#i-user"/></svg> User';
     const statusClass=r.status==='suspended'?'status-suspended':'status-active';
     return`<div class="user-card" style="animation-delay:${i*.06}s">
       <div class="user-avatar">${u[0].toUpperCase()}</div>
       <div class="user-info">
-        <div class="user-name">${esc(u)} <span class="role-badge ${roleClass}" style="margin-left:6px">${r.role==='storekeeper'?'<svg class="ic"><use href="#i-store"/></svg> Store Keeper':'<svg class="ic"><use href="#i-user"/></svg> User'}</span></div>
+        <div class="user-name">${esc(u)} <span class="role-badge ${roleClass}" style="margin-left:6px">${roleLabel}</span></div>
         <div class="user-meta">Branch: ${esc(r.branch||'—')}</div>
       </div>
       <span class="user-status ${statusClass}">${r.status==='suspended'?'<svg class="ic"><use href="#i-ban"/></svg>':'<svg class="ic"><use href="#i-check-circle"/></svg>'}</span>
       <button type="button" class="btn btn-sm" onclick="openEditUserModal('${u}')" style="margin-left:8px" title="Edit user"><svg class="ic"><use href="#i-pencil"/></svg></button>
-      ${r.status!=='suspended'?`<button type="button" class="btn btn-sm btn-danger" onclick="suspendMyUser('${u}')" style="margin-left:4px"><svg class="ic"><use href="#i-ban"/></svg></button>`:`<button type="button" class="btn btn-sm btn-success" onclick="unsuspendMyUser('${u}')" style="margin-left:4px"><svg class="ic"><use href="#i-check-circle"/></svg></button>`}
-      <button type="button" class="btn btn-sm" onclick="deleteMyUser('${u}')" style="margin-left:4px;color:var(--error)"><svg class="ic"><use href="#i-trash"/></svg></button>
+      ${r.status!=='suspended'?`<button type="button" class="btn btn-sm btn-danger" onclick="suspendMyUser('${u}')" style="margin-left:4px" title="Suspend"><svg class="ic"><use href="#i-ban"/></svg></button>`:`<button type="button" class="btn btn-sm btn-success" onclick="unsuspendMyUser('${u}')" style="margin-left:4px" title="Restore"><svg class="ic"><use href="#i-check-circle"/></svg></button>`}
+      <button type="button" class="btn btn-sm" onclick="deleteMyUser('${u}')" style="margin-left:4px;color:var(--error)" title="Delete user"><svg class="ic"><use href="#i-trash"/></svg></button>
+      <button type="button" class="btn btn-sm" onclick="openActivityLog('${u}')" style="margin-left:4px" title="View activity log"><svg class="ic"><use href="#i-clock"/></svg></button>
+      <button type="button" class="btn btn-sm" onclick="forceLogoutUser('${u}')" style="margin-left:4px;color:var(--warn)" title="Force logout"><svg class="ic"><use href="#i-door"/></svg></button>
     </div>`;
   }).join(''):`<div style="padding:28px;text-align:center;color:var(--text3)">No users yet.</div>`;
   document.getElementById('pending-count').textContent=pending.length;
@@ -4770,8 +4891,10 @@ function renderOwnerDashboard(){
       <div class="user-info"><div class="user-name">${esc(p.username)}</div><div class="user-meta">${p.phone?`<svg class="ic"><use href="#i-phone"/></svg> ${esc(p.phone)} · `:''}Requested: ${new Date(p.requestedAt).toLocaleString()}</div></div>
       <div style="display:flex;gap:6px;align-items:center">
         <select id="approve-role-${i}" style="padding:4px 8px;border:1.5px solid var(--border2);border-radius:6px;background:var(--surface2);color:var(--text);font-family:var(--font);font-size:11px">
-          <option value="user"><svg class="ic"><use href="#i-user"/></svg> User</option>
-          <option value="storekeeper"><svg class="ic"><use href="#i-store"/></svg> Storekeeper</option>
+          <option value="user">Regular User</option>
+          <option value="manager">Manager</option>
+          <option value="readonly">Read Only</option>
+          <option value="storekeeper">Storekeeper</option>
         </select>
         <select id="approve-branch-${i}" style="padding:4px 8px;border:1.5px solid var(--border2);border-radius:6px;background:var(--surface2);color:var(--text);font-family:var(--font);font-size:11px">
           ${S.branches.map(b=>`<option value="${esc(b)}">${esc(b)}</option>`).join('')}
@@ -4832,24 +4955,98 @@ function unsuspendMyUser(u){
 }
 function deleteMyUser(u){
   customConfirm('Delete User?',`Remove "${u}" permanently? They will never be able to rejoin this account.`,_SVG.trash,'Delete',()=>{
-    if(!S.deletedUsers)S.deletedUsers=[];
-    if(!S.deletedUsers.includes(u))S.deletedUsers.push(u);
-    const reg=getRegistry();delete reg[u];saveRegistry(reg);
-    saveUserData();
-    showToast(`${u} permanently removed`,'success');renderOwnerDashboard();
+    requireReAuth(`Confirm deletion of "${u}"`,()=>{
+      if(!S.deletedUsers)S.deletedUsers=[];
+      if(!S.deletedUsers.includes(u))S.deletedUsers.push(u);
+      const reg=getRegistry();delete reg[u];saveRegistry(reg);
+      saveUserData();
+      showToast(`${u} permanently removed`,'success');renderOwnerDashboard();
+    });
   });
 }
+
+/* ═══════════════════════════════════════════════════════
+   FORCE LOGOUT
+═══════════════════════════════════════════════════════ */
+function forceLogoutUser(u){
+  customConfirm('Force Logout?',`"${u}" will be signed out on their next activity check.`,_SVG.ban,'Force Logout',()=>{
+    const reg=getRegistry();
+    if(!reg[u]){showToast('User not found','error');return;}
+    reg[u].forceLogout=new Date().toISOString();
+    saveRegistry(reg);saveRegistryToCloud(reg,false);
+    showToast(`<svg class="ic"><use href="#i-door"/></svg> Force logout set for "${u}"`, 'success');
+  });
+}
+
+/* ═══════════════════════════════════════════════════════
+   ACTIVITY LOG
+═══════════════════════════════════════════════════════ */
+function openActivityLog(u){
+  const reg=getRegistry();
+  const r=reg[u];
+  if(!r){showToast('User not found','error');return;}
+  document.getElementById('alog-username').textContent=u+' · '+(r.role||'user');
+  const row=(icon,bg,label,val,sub='')=>`<div class="alog-row">
+    <div class="alog-icon" style="background:${bg}"><svg class="ic" style="width:14px;height:14px;color:${bg==='rgba(239,68,68,.12)'?'var(--error)':bg==='rgba(245,158,11,.12)'?'var(--warn)':'var(--p)'}"><use href="${icon}"/></svg></div>
+    <div><div class="alog-label">${label}</div><div class="alog-val">${val}</div>${sub?`<div class="alog-sub">${sub}</div>`:''}</div>
+  </div>`;
+  const noData='<span style="color:var(--text3);font-style:italic">No data yet</span>';
+  document.getElementById('alog-body').innerHTML=
+    row('#i-clock','rgba(139,92,246,.12)','Last Login',
+      r.lastLogin?new Date(r.lastLogin).toLocaleString():noData,
+      r.lastLogin?_timeAgo(r.lastLogin):'') +
+    row('#i-monitor','rgba(139,92,246,.12)','Last Device',r.lastDevice||noData,'')+
+    row('#i-zap','rgba(139,92,246,.12)','Total Logins',r.loginCount?r.loginCount+' session'+(r.loginCount!==1?'s':''):noData,'')+
+    row('#i-alert',r.failedAttempts>0?'rgba(239,68,68,.12)':'rgba(139,92,246,.12)','Failed Attempts',
+      r.failedAttempts>0?r.failedAttempts+' failed attempt'+(r.failedAttempts!==1?'s':''):'None recorded',
+      r.lastFailedAt?'Last: '+new Date(r.lastFailedAt).toLocaleString()+' ('+_timeAgo(r.lastFailedAt)+')':(r.failedAttempts>0?'':''))+
+    row('#i-user','rgba(139,92,246,.12)','Member Since',r.addedAt?new Date(r.addedAt).toLocaleDateString():noData,'');
+  openModal('activity-log-modal');
+}
+
+/* ═══════════════════════════════════════════════════════
+   RE-AUTH (2-step on sensitive actions)
+═══════════════════════════════════════════════════════ */
+let _reAuthCb=null,_reAuthLastAt=0;
+const _REAUTH_GRACE=5*60*1000;
+function requireReAuth(label,cb){
+  if(Date.now()-_reAuthLastAt<_REAUTH_GRACE){cb();return;}
+  _reAuthCb=cb;
+  document.getElementById('reauth-action-label').textContent=label||'Re-enter your password to proceed';
+  document.getElementById('reauth-pass').value='';
+  const e=document.getElementById('reauth-error');e.textContent='';e.className='modal-error';
+  openModal('reauth-modal');
+  setTimeout(()=>document.getElementById('reauth-pass').focus(),80);
+}
+async function submitReAuth(){
+  const pass=document.getElementById('reauth-pass').value;
+  const err=document.getElementById('reauth-error');
+  if(!pass){err.textContent='Enter your password.';err.className='modal-error show';return;}
+  const reg=getRegistry();const entry=reg[S.user];
+  if(!entry){closeModal('reauth-modal');if(_reAuthCb)_reAuthCb();_reAuthCb=null;return;}
+  const hash=await sha256Hex(pass);
+  if(hash!==entry.password){err.textContent='Incorrect password.';err.className='modal-error show';return;}
+  _reAuthLastAt=Date.now();
+  closeModal('reauth-modal');
+  const cb=_reAuthCb;_reAuthCb=null;if(cb)cb();
+}
+function cancelReAuth(){_reAuthCb=null;closeModal('reauth-modal');}
 
 /* ═══════════════════════════════════════════════════════
    PERMISSIONS & ROLES
 ═══════════════════════════════════════════════════════ */
 const isSystemOwner=()=>S.role==='system_owner';
 const isOwner=()=>S.role==='owner';
+const isManager=()=>S.role==='manager';
 const isStorekeeper=()=>S.role==='storekeeper';
+const isReadOnly=()=>S.role==='readonly';
 const isUser=()=>S.role==='user';
 
 const getPerm=tab=>{
-  if(isOwner()||isSystemOwner())return'full';
+  if(isOwner())return'full';
+  if(isSystemOwner())return'none';
+  if(isManager())return'full';
+  if(isReadOnly())return'read';
   if(isStorekeeper()){
     if(STOREKEEPER_ALLOWED_TABS.includes(tab))return'full';
     if(tab==='ITEMS')return'read';
@@ -4857,20 +5054,20 @@ const getPerm=tab=>{
   }
   return S.perms[S.user]?.[tab]??'full';
 };
-const canWrite=tab=>['full','add_only'].includes(getPerm(tab));
+const canWrite=tab=>!isReadOnly()&&['full','add_only'].includes(getPerm(tab));
 const canRead=tab=>getPerm(tab)!=='none';
-const canExport=()=>isOwner()||isSystemOwner()||(S.exportPerms[S.user]??true);
-const canEditRow=()=>isOwner()||isSystemOwner()||(S.rowEditPerms[S.user]===true);
+const canExport=()=>isOwner()||isManager()||(S.exportPerms[S.user]??true);
+const canEditRow=()=>isOwner()||isManager()||(S.rowEditPerms[S.user]===true);
 
 // User join date filtering: new users only see data created after they joined
 function getUserJoinDate(){
-  if(isOwner()||isSystemOwner())return null;
+  if(isOwner()||isManager())return null;
   const reg=getRegistry();
   const userEntry=reg[S.user];
   return userEntry?.addedAt||null;
 }
 function shouldUserSeeData(row){
-  if(isOwner()||isSystemOwner())return true;
+  if(isOwner()||isManager())return true;
   if(getPerm(S.tab)==='full')return true;
   if(getPerm(S.tab)==='add_only'){
     if(!row._by||row._by!==S.user)return false;
@@ -5710,6 +5907,7 @@ function deleteRow(idx,listType){
    TAB SWITCHING
 ═══════════════════════════════════════════════════════ */
 function switchTab(tab){
+  if(isSystemOwner())return;
   // <svg class="ic"><use href="#i-sparkle"/></svg> CHANGE 6: Block tabs for storekeeper
   if(isStorekeeper()&&!STOREKEEPER_ALLOWED_TABS.includes(tab)){
     return; // silently block — no error needed since tabs are hidden
@@ -5797,7 +5995,7 @@ function renderHeadActions(){
   if(S.tab==='PURCHASE'||S.tab==='SALES'){
     const availBranches=S.userBranch?[S.userBranch]:S.branches;
     html+=`<select id="branch-filter" onchange="renderTab()" style="padding:7px 11px;border:1.5px solid var(--border2);border-radius:9px;background:var(--surface2);color:var(--text);font-family:var(--font);font-size:11.5px;cursor:pointer;font-weight:600">
-      <option value=""><svg class="ic"><use href="#i-building"/></svg> All Branches</option>
+      <option value="">All Branches</option>
       ${availBranches.map(b=>`<option value="${esc(b)}">${esc(b)}</option>`).join('')}
     </select>`;
     if(S.userBranch){
@@ -6100,7 +6298,7 @@ function buildExpenseForm(row,mode,idx){
   const defaultBranch=S.userBranch||(isOwnerRole?(S.expenseBranch||(S.branches[0]||'STORE')):'STORE');
   const d=row||{date:nowDt(),reason:'',amt:'',payment:'CASH',branch:defaultBranch};
   const pmOpts=PAYMENT_METHODS.map(m=>`<option value="${m}" ${(d.payment||'CASH')===m?'selected':''}>${m}</option>`).join('');
-  const branchOpts=(isOwner()||isSystemOwner())?[...S.branches.map(b=>`<option value="${esc(b)}" ${(d.branch||defaultBranch)===b?'selected':''}>${esc(b)} (Branch)</option>`),`<option value="STORE" ${(d.branch||defaultBranch)==='STORE'?'selected':''}><svg class="ic"><use href="#i-store"/></svg> Store</option>`].join(''):'';
+  const branchOpts=(isOwner()||isSystemOwner())?[...S.branches.map(b=>`<option value="${esc(b)}" ${(d.branch||defaultBranch)===b?'selected':''}>${esc(b)} (Branch)</option>`),`<option value="STORE" ${(d.branch||defaultBranch)==='STORE'?'selected':''}>Store</option>`].join(''):'';
   const body=document.getElementById(mode==='add'?'add-form-body':'edit-form-body');
   body.innerHTML=`
     <div class="field"><label>Date *</label><input type="text" id="f-date" placeholder="dd-mm-yyyy" value="${d.date||''}"></div>
@@ -7421,6 +7619,8 @@ function doExport(){
   if(_expFormat==='PDF')exportPDF(_expSheet);else exportXL(_expSheet);
 }
 function exportPDF(tab){
+  if(!canExport()){showToast('No export permission','error');return;}
+  if(Date.now()-_reAuthLastAt>=_REAUTH_GRACE){requireReAuth('Confirm data export',()=>exportPDF(tab));return;}
   if(typeof window.jspdf==='undefined'||!window.jspdf.jsPDF){showToast('PDF library not loaded','error');return;}
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({orientation:'landscape',unit:'pt',format:'a4'});
@@ -7471,6 +7671,8 @@ function exportPDF(tab){
 }
 function fmtN(n){return typeof n==='number'?n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):(n||'');}
 function exportXL(tab,opts={}){
+  if(!canExport()){showToast('No export permission','error');return;}
+  if(Date.now()-_reAuthLastAt>=_REAUTH_GRACE){requireReAuth('Confirm data export',()=>exportXL(tab,opts));return;}
   if(typeof XLSX==='undefined'){showToast('XLSX not loaded','error');return;}
   const hideZeroBalance=!!opts.hideZeroBalance;
   let headers=[],data=[];
@@ -8481,3 +8683,10 @@ document.addEventListener('DOMContentLoaded',init);
 })();
 </script>
 </body></html>
+
+
+
+
+
+
+
