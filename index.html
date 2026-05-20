@@ -12,7 +12,7 @@
 <meta name="description" content="POWER-IMS — Inventory Management System with multi-branch, store dispatch, and credit ledger.">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
-<title>POWER-IMS — Inventory Management</title>
+<title>POWER — IMS</title>
 <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
@@ -87,11 +87,12 @@
 [data-theme="light"] .hdr-chip.owner-chip{border-color:rgba(180,83,9,.3)}
 [data-theme="light"] .hdr-chip.store-chip{border-color:rgba(22,163,74,.3)}
 
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
-input,select,textarea{-webkit-user-select:text;user-select:text}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;-webkit-tap-highlight-color:transparent}
+input,select,textarea{-webkit-user-select:text;user-select:text;-webkit-appearance:none;appearance:none}
+button{-webkit-appearance:none;appearance:none}
 html{scroll-behavior:smooth;height:100%}
 body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:13px;
-  padding-bottom:var(--nav-h);-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100vh;
+  padding-bottom:var(--nav-h);-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100dvh;
   font-feature-settings:'cv02','cv03','cv04','cv11'}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -170,8 +171,6 @@ html[data-view="mobile"] .brand-text{display:none}
 #hdr-chip{padding:5px 10px 5px 6px;gap:8px}
 .chip-info{display:flex;flex-direction:column;line-height:1.25}
 .chip-gear{width:14px;height:14px;stroke:var(--text3);flex-shrink:0;transition:stroke .18s,transform .3s cubic-bezier(.34,1.56,.64,1)}
-#hdr-chip:hover .chip-gear{stroke:var(--text);transform:rotate(60deg)}
-.hdr-chip:hover{background:var(--surface3);box-shadow:0 2px 10px rgba(0,0,0,.18)}
 .hdr-chip:active{transform:scale(.97)}
 .hdr-chip.owner-chip{border-color:rgba(245,158,11,.35);background:var(--owner-glass)}
 .hdr-chip.store-chip{border-color:rgba(16,185,129,.35);background:var(--store-glass)}
@@ -186,7 +185,6 @@ html[data-view="mobile"] .brand-text{display:none}
   font-size:11px;font-weight:700;color:#fff;overflow:hidden;flex-shrink:0;
   cursor:pointer;transition:transform .18s;letter-spacing:0
 }
-.hdr-avatar:hover{transform:scale(1.1)}
 .hdr-avatar.owner-avatar{background:var(--owner);box-shadow:0 0 0 2px var(--owner)}
 .hdr-avatar.store-avatar{background:var(--store);box-shadow:0 0 0 2px var(--store)}
 
@@ -197,7 +195,6 @@ html[data-view="mobile"] .brand-text{display:none}
   transition:all .18s;position:relative;flex-shrink:0
 }
 .icon-btn svg{width:17px;height:17px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.icon-btn:hover{background:var(--p-glass);color:var(--p);border-color:rgba(91,138,248,.3);transform:translateY(-1px)}
 .icon-btn.active-icon{background:var(--p-glass);color:var(--p);border-color:rgba(91,138,248,.3)}
 
 .sync-ring{position:absolute;inset:-1px;border-radius:9px;border:2px solid transparent;pointer-events:none}
@@ -269,7 +266,7 @@ html[data-view="mobile"] .brand-text{display:none}
   font-size:12px;font-weight:600;cursor:pointer;border-radius:8px;
   transition:all .14s;white-space:nowrap
 }
-.store-sub-item:hover,.store-sub-item.active{background:var(--store-glass);color:var(--store)}
+.store-sub-item.active{background:var(--store-glass);color:var(--store)}
 
 /* ── Content ── */
 .content{padding:14px;max-width:1400px;margin:0 auto}
@@ -300,7 +297,7 @@ html[data-view="mobile"] .brand-text{display:none}
 .head-actions{display:flex;gap:6px;align-items:center;flex-wrap:wrap}
 
 /* ── Owner / Platform Dashboard ── */
-.owner-screen{min-height:100vh;padding:18px;max-width:1100px;margin:0 auto}
+.owner-screen{min-height:100dvh;padding:18px;max-width:1100px;margin:0 auto}
 /* ── Hero ── */
 .owner-hero{
   background:var(--owner);border-radius:var(--radius-xl);
@@ -569,7 +566,6 @@ html[data-view="mobile"] .brand-text{display:none}
 /* ── Subscription Plan Cards ── */
 .sub-plan-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px}
 .sub-plan-card{border:1.5px solid var(--border2);border-radius:10px;padding:12px 10px;cursor:pointer;transition:all .18s;background:var(--surface2);text-align:center;position:relative}
-.sub-plan-card:hover{border-color:var(--p);background:var(--p-glass)}
 .sub-plan-card.active{border-color:var(--p);background:var(--p-glass);box-shadow:0 0 0 3px var(--p-glow)}
 .sub-plan-chk{position:absolute;top:6px;right:6px;width:16px;height:16px;background:var(--p);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;color:#fff;opacity:0;transition:opacity .14s}
 .sub-plan-card.active .sub-plan-chk{opacity:1}
@@ -592,9 +588,7 @@ html[data-view="mobile"] .brand-text{display:none}
   transition:all .18s;font-family:var(--font);white-space:nowrap;text-decoration:none;
   letter-spacing:-.01em
 }
-.btn:hover{background:var(--p);color:#fff;border-color:var(--p);box-shadow:0 4px 16px var(--p-glow);transform:translateY(-1px)}
 .btn-primary{background:var(--p);color:#fff;border-color:var(--p);box-shadow:0 3px 14px var(--p-glow)}
-.btn-primary:hover{background:var(--p2);border-color:var(--p2);box-shadow:0 6px 20px var(--p-glow)}
 .btn-success{background:var(--success);color:#fff;border-color:var(--success);box-shadow:0 3px 12px rgba(34,197,94,.28)}
 .btn-danger{background:var(--error);color:#fff;border-color:var(--error);box-shadow:0 3px 12px rgba(244,63,94,.28)}
 .btn-owner{background:var(--owner);color:#fff;border:none;box-shadow:0 3px 14px var(--owner-glow)}
@@ -641,7 +635,7 @@ thead th{
   background:var(--surface2);padding:10px 13px;text-align:left;
   border-bottom:1.5px solid var(--border2);font-family:var(--font);
   font-size:11px;font-weight:700;color:var(--text3);letter-spacing:.07em;
-  text-transform:uppercase;white-space:nowrap;user-select:none
+  text-transform:uppercase;white-space:nowrap;user-select:none;
 }
 thead th.num{text-align:right}
 tbody td{padding:12px 13px;border-bottom:1px solid var(--border);vertical-align:middle;color:var(--text)}
@@ -950,7 +944,7 @@ tbody tr:last-child td{border-bottom:none}
   box-shadow:0 48px 120px rgba(0,0,0,.65),0 0 0 1px rgba(255,255,255,.05),
     inset 0 1px 0 rgba(255,255,255,.09);
   overflow:hidden;position:relative;z-index:1;animation:flyInScale .45s cubic-bezier(.22,1,.36,1);
-  max-height:calc(100vh - 40px);display:flex;flex-direction:column
+  max-height:calc(100dvh - 40px);display:flex;flex-direction:column
 }
 .auth-side-panel{display:none}
 /* Subtle dot-grid mesh over the side panel */
@@ -1454,19 +1448,28 @@ tbody td.num,.td-mono{letter-spacing:-.02em}
 /* Input: larger tap target on touch devices */
 @media(pointer:coarse){
   .field input,.field select,.field textarea{min-height:46px;font-size:16px!important}
+  .act-code-wrap input{font-size:16px!important}
   .modal-btn{min-height:50px;font-size:14px!important}
-  .btn:not(.btn-sm):not(.btn-icon){min-height:42px}
-  .table-search-bar input{min-height:42px;font-size:16px!important}
-  .icon-btn{width:40px;height:40px}
+  .btn:not(.btn-sm):not(.btn-icon){min-height:44px}
+  .btn-icon{width:44px!important;height:44px!important}
+  .table-search-bar input{min-height:44px;font-size:16px!important}
+  .icon-btn{width:44px;height:44px}
   .ni-bubble{width:52px;height:34px}
 }
 
-/* Hover-capable devices only — prevents sticky hover on mobile */
+/* Hover-capable devices only — prevents sticky hover on touch */
 @media(hover:hover){
   .nav-item:hover .ni-bubble{background:rgba(255,255,255,.09)}
   .drawer-item:hover{background:var(--surface2);transform:translateX(1px)}
   .drawer-item:hover::after{transform:translateX(3px);opacity:.75}
   .hdr-chip:hover{background:var(--surface3);box-shadow:0 2px 10px rgba(0,0,0,.2)}
+  #hdr-chip:hover .chip-gear{stroke:var(--text);transform:rotate(60deg)}
+  .hdr-avatar:hover{transform:scale(1.1)}
+  .icon-btn:hover{background:var(--p-glass);color:var(--p);border-color:rgba(91,138,248,.3);transform:translateY(-1px)}
+  .store-sub-item:hover{background:var(--store-glass);color:var(--store)}
+  .sub-plan-card:hover{border-color:var(--p);background:var(--p-glass)}
+  .btn:hover{background:var(--p);color:#fff;border-color:var(--p);box-shadow:0 4px 16px var(--p-glow);transform:translateY(-1px)}
+  .btn-primary:hover{background:var(--p2);border-color:var(--p2);box-shadow:0 6px 20px var(--p-glow)}
 }
 
 /* Richer focus rings for keyboard nav */
@@ -2781,24 +2784,24 @@ const LANG={
     approveTitle:'Approve & Dispatch',approvePriceLbl:'Dispatch Price (per unit) *',approveBtn:'Approve & Dispatch',
     subTitle:'Manage Subscription',subPlan:'Plan',subTrial:'Trial',subTrialPrice:'14 days free',subBasic:'Basic',subBasicPrice:'Up to 2 users',subPro:'Pro',subProPrice:'Up to 10 users',subEnterprise:'Enterprise',subEnterprisePrice:'Unlimited users',subRecordPay:'Record Payment',subAmountPaid:'Amount Paid',subAmountPaidPh:'e.g. 500',subActiveUntil:'Active Until',subNote:'Note (optional)',subNotePh:'e.g. Bank transfer ref #123',subSaveBtn:'Save',subPayHistory:'Payment History',
     gateTitle:'Subscription Expired',gateSub:'Your subscription has expired. Please contact the platform administrator to renew your access.',gateContact:'Contact your',gateBold:'POWER-IMS Administrator',gateContactSuf:'to renew your subscription and restore access to the platform.',gateReturn:'<svg class="ic"><use href="#i-arrow-left"/></svg> Return to Login',
-    dashTitle:'<svg class="ic"><use href="#i-crown"/></svg> Platform Dashboard',dashSub:'POWER-IMS — Full visibility over all users on your platform',dashLogout:'Log Out',dashOwners:'Platform Owners',dashPaid:'Paid Active',dashTrial:'On Trial',dashExpired:'Expired/Sus',dashAllUsers:'<svg class="ic"><use href="#i-user"/></svg> All Users',dashAddUser:'<svg class="ic"><use href="#i-plus"/></svg> Add User',dashPending:'<svg class="ic"><use href="#i-clock"/></svg> Pending Access Requests',dashBranches:'<svg class="ic"><use href="#i-building"/></svg> Branches',dashReset:'<svg class="ic"><use href="#i-trash"/></svg> Data Reset Requests',dashNoPending:'No pending requests <svg class="ic"><use href="#i-sparkle"/></svg>',
+    dashTitle:'Platform Dashboard',dashSub:'POWER-IMS — Full visibility over all users on your platform',dashLogout:'Log Out',dashOwners:'Platform Owners',dashPaid:'Paid Active',dashTrial:'On Trial',dashExpired:'Expired/Sus',dashAllUsers:'<svg class="ic"><use href="#i-user"/></svg> All Users',dashAddUser:'<svg class="ic"><use href="#i-plus"/></svg> Add User',dashPending:'<svg class="ic"><use href="#i-clock"/></svg> Pending Access Requests',dashBranches:'<svg class="ic"><use href="#i-building"/></svg> Branches',dashReset:'Data Reset Requests',dashNoPending:'No pending requests',
     btnSave:'Save',btnCancel:'Cancel',btnClose:'Close',btnPrint:'Print',btnExportPdf:'Export PDF (A6)',btnClear:'Clear',
     permFull:'Full',permAddOnly:'Add Only',permRead:'Read Only',permNone:'No Access',
     dateReceived:'Date Received',stockQty:'Stock Qty',unitCost:'Unit Cost',totalValue:'Total Value',purchaseQty:'Purchase Qty',salesQty:'Sales Qty',receivedQty:'Received Qty',dispatchedQty:'Dispatched Qty',storeValue:'Store Value',method:'Method',item:'Item',subtotal:'Subtotal',amountDue:'AMOUNT DUE',
     dateLabel:'Date *',selectItem:'— Select item —',storeItemLbl:'Store Item *',noStoreItems:'No items in store',dispatchQtyLbl:'Quantity *',dispatchPriceLbl:'Dispatch Price (per unit) *',toBranchLbl:'To Branch *',dispatchTotal:'DISPATCH TOTAL',partNoLbl:'Item ID *',partNoPh:'e.g. P001',itemNameLbl:'Item Name *',itemNamePh:'Product name',descLbl:'Description',descPh:'Optional',taxOptions:'TAX OPTIONS',totalAmountLbl:'TOTAL AMOUNT',reasonLbl:'Reason *',reasonPh:'What was this expense for?',amountLbl:'Amount *',
     initBalance:'Initial Cash Balance',totalPurchCash:'Total Purchases — Cash',totalPurchCredit:'Total Purchases — Credit',totalSalesCash:'Total Sales — Cash',totalSalesCredit:'Total Sales — Credit',totalExpenses:'Total Expenses',netProfitLoss:'Net Profit / Loss',cashOnHand:'Cash on Hand',creditPurchTitle:'Pending Purchase on Credit',creditSalesTitle:'Sales on Credit',initBalShort:'Init. Balance',purchCashShort:'Purchase Cash',purchCreditShort:'Purchase Credit',salesCashShort:'Sales Cash',salesCreditShort:'Sales Credit',expensesShort:'Expenses',netPLShort:'Net P/L',allBranches:'ALL BRANCHES',allBranchesBtn:'All Branches',editBalanceHint:'Edit initial balance per branch inline in the table below',
-    storeInventory:'<svg class="ic"><use href="#i-store"/></svg> CENTRAL STORE INVENTORY',storeDispatchHistory:'<svg class="ic"><use href="#i-upload"/></svg> DISPATCH HISTORY (last 30)',storeKeeperMode:'Store Keeper Mode',dispatchLog:'Dispatch Log',noDispatchRange:'No dispatches in range',noStorePending:'No pending requests <svg class="ic"><use href="#i-sparkle"/></svg>',storeStockReceived:'Total Store Stock Received',storeDispatchedBranches:'Total Dispatched to Branches',storeNetValue:'Net Store Value',
+    storeInventory:'CENTRAL STORE INVENTORY',storeDispatchHistory:'DISPATCH HISTORY (last 30)',storeKeeperMode:'Store Keeper Mode',dispatchLog:'Dispatch Log',noDispatchRange:'No dispatches in range',noStorePending:'No pending requests',storeStockReceived:'Total Store Stock Received',storeDispatchedBranches:'Total Dispatched to Branches',storeNetValue:'Net Store Value',
     emptyItems:'No items yet. Click "Add Items" to get started.',emptyRecords:'No records yet.',emptyActivity:'No activity recorded yet.',emptyExpense:'No expenses yet.',emptyStore:'No store stock yet.',emptyStoreBalance:'No store activity yet. Add stock from the Store tab.',emptyRequests:'No requests yet.',emptyOwners:'No owners yet.',
-    toastItemNotFound:'Item not found',toastInsufficientStock:'Insufficient store stock',toastNoPermTab:'No permission for this tab',toastRowDeleted:'Row deleted',toastRecordAdded:'Record added!',toastUpdated:'Updated!',toastItemAdded:'Item added!',toastItemUpdated:'Item updated!',toastPassUpdated:'Password updated!',toastExpenseAdded:'Expense added!',toastStoreTransferNoEdit:'Store transfer rows cannot be edited',toastStoreTransferNoDelete:'Store transfer rows cannot be deleted',toastBalancePdf:'Balance PDF downloaded <svg class="ic"><use href="#i-check"/></svg>',toastResetPending:'A reset request is already pending approval.',toastResetSent:'<svg class="ic"><use href="#i-bell"/></svg> Reset request sent to software owner.',
+    toastItemNotFound:'Item not found',toastInsufficientStock:'Insufficient store stock',toastNoPermTab:'No permission for this tab',toastRowDeleted:'Row deleted',toastRecordAdded:'Record added!',toastUpdated:'Updated!',toastItemAdded:'Item added!',toastItemUpdated:'Item updated!',toastPassUpdated:'Password updated!',toastExpenseAdded:'Expense added!',toastStoreTransferNoEdit:'Store transfer rows cannot be edited',toastStoreTransferNoDelete:'Store transfer rows cannot be deleted',toastBalancePdf:'Balance PDF downloaded',toastResetPending:'A reset request is already pending approval.',toastResetSent:'Reset request sent to software owner.',
     receiptPurchase:'Purchase Receipt',receiptSales:'Sales Receipt',receiptPartNo:'Part No.',receiptItem:'Item',receiptDesc:'Description',receiptQty:'Qty',receiptUnitPrice:'Unit Price',receiptSubtotal:'Subtotal',receiptTotal:'TOTAL',receiptAmountDue:'AMOUNT DUE',receiptThankYou:'POWER-IMS — Thank you!',receiptPrinted:'Printed:',
-    storeReceiptTitle:'<svg class="ic"><use href="#i-package"/></svg> POWER-IMS — STORE',storeReceiptSub:'Dispatch Receipt',storeReceiptId:'Receipt ID',storeReceiptDate:'Date',storeReceiptBranch:'To Branch',storeReceiptPartNo:'Part No.',storeReceiptItem:'Item',storeReceiptQty:'Qty',storeReceiptPrice:'Unit Price',storeReceiptTotal:'Total',storeReceiptBy:'Dispatched by:',storeReceiptPrinted:'Printed:',storeReceiptApproved:'<svg class="ic"><use href="#i-check-circle"/></svg> APPROVED',storeReceiptRejected:'<svg class="ic"><use href="#i-x-circle"/></svg> REJECTED',storeReceiptPending:'<svg class="ic"><use href="#i-clock"/></svg> PENDING',
-    notifPendingUsers:'<svg class="ic"><use href="#i-bell"/></svg> Pending User Requests',notifStoreReceipts:'<svg class="ic"><use href="#i-store"/></svg> Store Receipts',notifBranchRequests:'Branch Store Requests',noStoreReceiptsYet:'No store receipts for your branch yet.',
+    storeReceiptTitle:'POWER-IMS — STORE',storeReceiptSub:'Dispatch Receipt',storeReceiptId:'Receipt ID',storeReceiptDate:'Date',storeReceiptBranch:'To Branch',storeReceiptPartNo:'Part No.',storeReceiptItem:'Item',storeReceiptQty:'Qty',storeReceiptPrice:'Unit Price',storeReceiptTotal:'Total',storeReceiptBy:'Dispatched by:',storeReceiptPrinted:'Printed:',storeReceiptApproved:'APPROVED',storeReceiptRejected:'REJECTED',storeReceiptPending:'PENDING',
+    notifPendingUsers:'Pending User Requests',notifStoreReceipts:'Store Receipts',notifBranchRequests:'Branch Store Requests',noStoreReceiptsYet:'No store receipts for your branch yet.',
     ctxEdit:'Edit Row',ctxDelete:'Delete Row',ctxPrint:'Print Receipt',ctxStoreTransfer:'Store Transfer — read only',ctxBy:'By:',
     storeKeeperLabel:'Store Keeper',
-    totalInventoryValue:'TOTAL INVENTORY VALUE',exportPdfBtn:'<svg class="ic"><use href="#i-file"/></svg> Export PDF',
+    totalInventoryValue:'TOTAL INVENTORY VALUE',exportPdfBtn:'Export PDF',
     back:'Back',syncBtn:'Cloud Sync',storeReceiptsBtn:'Store Receipts',branchReqBtn:'Branch Store Requests',settingsBtn:'Settings',systemOwner:'SYSTEM OWNER',searchPh:'Search…',rows:'rows',
     valUsername:'Please enter username and password',valPassMatch:'Passwords do not match.',valPassLen:'Password must be at least 4 characters.',valUserTaken:'Username already taken. Choose a different username.',valBizName:'Please enter your business/shop name.',valPendingReq:'A request with this username is already pending.',valSelectItem:'Please select or enter an item name',valQtyMin:'Quantity must be at least 1',valPartExists:'Item ID already exists — choose a unique one',valPassCurrent:'Current password incorrect',valPassMin:'Min 4 characters',valPassMatchShort:'Passwords do not match',valUserExists:'Username already exists',valPassRequired:'Password min 4 characters',valUsernameReq:'Please enter username and password required',valDispatchPrice:'Please enter a valid price',
-    confirmSuspendTitle:'Suspend User?',confirmDeleteUserTitle:'Delete User?',confirmDeleteBranchTitle:'Delete Branch?',confirmDeleteOwnerTitle:'Delete Owner?',confirmDeleteOwnerMsg:'This removes their account. Inventory data stays intact.',confirmResetTitle:'<svg class="ic"><use href="#i-alert"/></svg> Request Data Reset',confirmApproveResetTitle:'Approve Reset?',
+    confirmSuspendTitle:'Suspend User?',confirmDeleteUserTitle:'Delete User?',confirmDeleteBranchTitle:'Delete Branch?',confirmDeleteOwnerTitle:'Delete Owner?',confirmDeleteOwnerMsg:'This removes their account. Inventory data stays intact.',confirmResetTitle:'Request Data Reset',confirmApproveResetTitle:'Approve Reset?',
     branchLabel:'Branch:',exportPermLabel:'Export Permission',
     subStatusTrial:'Trial · 14d left',subStatusActive:'Active',subStatusExpired:'Expired',subStatusSuspended:'Suspended',
   },
@@ -2806,7 +2809,7 @@ const LANG={
     date:'ቀን',supplier:'አቅርቦት',customer:'ደንበኛ',branch:'ቅርንጫፍ',partNo:'ቁጥር',itemName:'ዕቃ ስም',desc:'መግለጫ',qty:'ብዛት',unitPrice:'የአንድ ዋጋ',total:'ድምር',payment:'ክፍያ',status:'ሁኔታ',price:'ዋጋ',totals:'ድምሮች',vat:'ተ.እ.ታ (15%)',wh3:'ምዝገባ 3%',vwh:'ተ.እ.ታ WH 7.5%',totalPrice:'ጠቅላላ ዋጋ',cash:'ጥሬ ገንዘብ',credit:'ክሬዲት',reason:'ምክንያት',amount:'መጠን',
     navPurchase:'ግዥ',navSales:'ሽያጭ',navBalance:'ሚዛን',navExpense:'ወጪ',navReport:'ሪፖርት',navItems:'ዕቃዎች',navStore:'ስቶር',navStoreBalance:'ሚዛን',navStoreReport:'ሪፖርት',
     titleItems:'ዕቃዎች ጨምር',subItems:'ክምችት ካታሎጅ ያስተዳድሩ',titlePurchase:'ግዥ',subPurchase:'የግዥ መዝገቦች',titleSales:'ሽያጭ',subSales:'የሽያጭ መዝገቦች',titleBalance:'ሚዛን',subBalance:'የክምችት ደረጃዎች',titleStore:'ስቶር',subStore:'ማዕከላዊ ስቶር ክምችት እና ስርጭት',titleStoreBalance:'የስቶር ሚዛን',subStoreBalance:'የስቶር ክምችት ደረጃ እና ጠቅላላ ዋጋ',titleExpense:'ወጪ',subExpense:'ወጪ ክትትል',titleReport:'ሪፖርት',subReport:'የፋይናንስ ማጠቃለያ',titleStoreReport:'የስቶር ሪፖርት',subStoreReport:'የስቶር ፋይናንስ ማጠቃለያ',
-    settingsTitle:'ቅንብሮች',settingsNav:'አሰሳ',settingsAddItems:'ዕቃዎች ጨምር',settingsAddItemsSub:'ክምችት ካታሎጅ ያስተዳድሩ',settingsStore:'ስቶር',settingsStoreSub:'የስቶር ክምችት ያስተዳድሩ',settingsStoreBalance:'የስቶር ሚዛን',settingsStoreBalanceSub:'የስቶር ክምችት ደረጃ',settingsStoreReport:'የስቶር ሪፖርት',settingsStoreReportSub:'የስቶር ፋይናንስ ማጠቃለያ',settingsStoreExpense:'የስቶር ወጪ',settingsStoreExpenseSub:'የስቶር ወጪዎችን ያስተዳድሩ',settingsExport:'ዳታ ወደ ውጭ ላክ',settingsExportBtn:'ወደ ውጭ ላክ (PDF & Excel)',settingsAccount:'መለያ',settingsChangePass:'የይለፍ ቃል ቀይር',settingsPhoto:'የፕሮፋይል ፎቶ',settingsShopName:'የሱቅ ስም',settingsShopNameSub:'የንግድ ስምዎን ያስተካክሉ',settingsPerms:'የተጠቃሚ ፈቃዶች',settingsPermsSub:'ለባለቤቶች ብቻ',settingsBranches:'ቅርንጫፎችን ያስተዳድሩ',settingsAddUser:'ተጠቃሚ ጨምር',settingsAddUserSub:'ለቅርንጫፍ ተጠቃሚ ፍጠር',settingsReqStore:'ከስቶር ጠይቅ',settingsReqStoreSub:'ለቅርንጫፍዎ ዕቃዎች ጠይቅ',settingsDanger:'አደገኛ ቦታ',settingsResetReq:'የዳታ ዳግም ማስጀመር ጠይቅ',settingsResetReqSub:'የሶፍትዌር ባለቤት ፈቃድ ይፈልጋል',settingsPrefs:'ምርጫዎች',settingsLight:'<svg class="ic"><use href="#i-sun"/></svg> ብርሃን ሁነታ',settingsMobile:'<svg class="ic"><use href="#i-smartphone"/></svg> ሞባይል እይታ',settingsLang:'<svg class="ic"><use href="#i-globe"/></svg> ቋንቋ',settingsLogout:'ውጣ',
+    settingsTitle:'ቅንብሮች',settingsNav:'አሰሳ',settingsAddItems:'ዕቃዎች ጨምር',settingsAddItemsSub:'ክምችት ካታሎጅ ያስተዳድሩ',settingsStore:'ስቶር',settingsStoreSub:'የስቶር ክምችት ያስተዳድሩ',settingsStoreBalance:'የስቶር ሚዛን',settingsStoreBalanceSub:'የስቶር ክምችት ደረጃ',settingsStoreReport:'የስቶር ሪፖርት',settingsStoreReportSub:'የስቶር ፋይናንስ ማጠቃለያ',settingsStoreExpense:'የስቶር ወጪ',settingsStoreExpenseSub:'የስቶር ወጪዎችን ያስተዳድሩ',settingsExport:'ዳታ ወደ ውጭ ላክ',settingsExportBtn:'ወደ ውጭ ላክ (PDF & Excel)',settingsAccount:'መለያ',settingsChangePass:'የይለፍ ቃል ቀይር',settingsPhoto:'የፕሮፋይል ፎቶ',settingsShopName:'የሱቅ ስም',settingsShopNameSub:'የንግድ ስምዎን ያስተካክሉ',settingsPerms:'የተጠቃሚ ፈቃዶች',settingsPermsSub:'ለባለቤቶች ብቻ',settingsBranches:'ቅርንጫፎችን ያስተዳድሩ',settingsAddUser:'ተጠቃሚ ጨምር',settingsAddUserSub:'ለቅርንጫፍ ተጠቃሚ ፍጠር',settingsReqStore:'ከስቶር ጠይቅ',settingsReqStoreSub:'ለቅርንጫፍዎ ዕቃዎች ጠይቅ',settingsDanger:'አደገኛ ቦታ',settingsResetReq:'የዳታ ዳግም ማስጀመር ጠይቅ',settingsResetReqSub:'የሶፍትዌር ባለቤት ፈቃድ ይፈልጋል',settingsPrefs:'ምርጫዎች',settingsLight:'ብርሃን ሁነታ',settingsMobile:'ሞባይል እይታ',settingsLang:'ቋንቋ',settingsLogout:'ውጣ',
     authLogin:'ግባ',authRequest:'መዳረሻ ጠይቅ',authNewBiz:'<svg class="ic"><use href="#i-building"/></svg> አዲስ ንግድ',authEmployee:'<svg class="ic"><use href="#i-user"/></svg> ሠራተኛ',authBizHint:'ንግድዎን ለ14 ቀናት ነፃ ሙከራ ያስመዝግቡ',authBizName:'የንግድ / ሱቅ ስም *',authBizNamePh:'ለምሳ፤ አበበ ጠቅላላ ንግድ',authUsername:'የተጠቃሚ ስም',authUsernamePh:'የተጠቃሚ ስምዎን ያስገቡ',authPassword:'የይለፍ ቃል',authPasswordPh:'የይለፍ ቃልዎን ያስገቡ',authConfirmPass:'የይለፍ ቃሉን ያረጋግጡ',authConfirmPassPh:'የይለፍ ቃሉን እንደገና ያስገቡ',authOwnerUser:'የፕላትፎርም ባለቤት ስም',authOwnerUserSub:'(መለያዎን የሚያስተዳድረው)',authOwnerUserPh:'የፕላትፎርም ባለቤቱን ስም ያስገቡ',authLoginBtn:'<svg class="ic"><use href="#i-lock-key"/></svg> ግባ',authCloudNote:'<svg class="ic"><use href="#i-cloud"/></svg> ሁሉም መሳሪያዎች ላይ ይሳሙናል',authPhotoPh:'ፎቶ ለማከል ጠቅ ያድርጉ (አማራጭ)',
     expTitle:'ሪፖርት ወደ ውጭ ላክ',expSub:'እንደ PDF ወይም Excel አውርድ',expFormat:'ቅርጸት',expPdf:'PDF',expPdfSub:'.pdf ፋይል አውርድ',expExcel:'Excel',expExcelSub:'.xlsx ፋይል አውርድ',expSheet:'ሉህ',expBtnPdf:'PDF አውርድ',expBtnXlsx:'Excel አውርድ',
     addEntryTitle:'ግቤት ጨምር',addEntrySub:'ከዚህ በታች ያለውን ቅጽ ሙሉ',editEntryTitle:'ግቤት አስተካክል',editEntrySub:'ከዚህ በታች ያሉ መስኮችን ያዘምኑ',
@@ -2822,18 +2825,18 @@ const LANG={
     approveTitle:'አፅድቅ እና ላክ',approvePriceLbl:'የስርጭት ዋጋ (በአንድ ክፍል) *',approveBtn:'አፅድቅ እና ላክ',
     subTitle:'ደንብ ያስተዳድሩ',subPlan:'እቅድ',subTrial:'ሙከራ',subTrialPrice:'14 ቀናት ነፃ',subBasic:'መሰረታዊ',subBasicPrice:'እስከ 2 ተጠቃሚዎች',subPro:'ፕሮ',subProPrice:'እስከ 10 ተጠቃሚዎች',subEnterprise:'ድርጅት',subEnterprisePrice:'ያልተወሰነ ተጠቃሚዎች',subRecordPay:'ክፍያ መዝግብ',subAmountPaid:'የተከፈለ መጠን',subAmountPaidPh:'ለምሳ፤ 500',subActiveUntil:'ንቁ እስከ',subNote:'ማስታወሻ (አማራጭ)',subNotePh:'ለምሳ፤ የባንክ ዝውውር ቁጥር #123',subSaveBtn:'አስቀምጥ',subPayHistory:'የክፍያ ታሪክ',
     gateTitle:'ደንቡ ጊዜ አልፎበታል',gateSub:'ደንብዎ ጊዜ አልፎበታል። ለታደሰ መዳረሻ የፕላትፎርም አስተዳዳሪውን ያነጋግሩ።',gateContact:'ያነጋግሩ',gateBold:'POWER-IMS አስተዳዳሪ',gateContactSuf:'ደንብዎን ለማደስ እና ወደ ፕላትፎርሙ ለመዳረሻ።',gateReturn:'<svg class="ic"><use href="#i-arrow-left"/></svg> ወደ ግቤት ተመለስ',
-    dashTitle:'<svg class="ic"><use href="#i-crown"/></svg> የፕላትፎርም ዳሽቦርድ',dashSub:'POWER-IMS — ሁሉም ተጠቃሚዎችዎ ሙሉ እይታ',dashLogout:'ውጣ',dashOwners:'የፕላትፎርም ባለቤቶች',dashPaid:'ተከፍሎ ንቁ',dashTrial:'በሙከራ ላይ',dashExpired:'ጊዜ ያለፈ/ታግዷል',dashAllUsers:'<svg class="ic"><use href="#i-user"/></svg> ሁሉም ተጠቃሚዎች',dashAddUser:'<svg class="ic"><use href="#i-plus"/></svg> ተጠቃሚ ጨምር',dashPending:'<svg class="ic"><use href="#i-clock"/></svg> በሂደት ላይ ያሉ ጥያቄዎች',dashBranches:'<svg class="ic"><use href="#i-building"/></svg> ቅርንጫፎች',dashReset:'<svg class="ic"><use href="#i-trash"/></svg> ዳታ ዳግም ማስጀመር ጥያቄዎች',dashNoPending:'ምንም ጥያቄዎች የሉም <svg class="ic"><use href="#i-sparkle"/></svg>',
+    dashTitle:'የፕላትፎርም ዳሽቦርድ',dashSub:'POWER-IMS — ሁሉም ተጠቃሚዎችዎ ሙሉ እይታ',dashLogout:'ውጣ',dashOwners:'የፕላትፎርም ባለቤቶች',dashPaid:'ተከፍሎ ንቁ',dashTrial:'በሙከራ ላይ',dashExpired:'ጊዜ ያለፈ/ታግዷል',dashAllUsers:'<svg class="ic"><use href="#i-user"/></svg> ሁሉም ተጠቃሚዎች',dashAddUser:'<svg class="ic"><use href="#i-plus"/></svg> ተጠቃሚ ጨምር',dashPending:'<svg class="ic"><use href="#i-clock"/></svg> በሂደት ላይ ያሉ ጥያቄዎች',dashBranches:'<svg class="ic"><use href="#i-building"/></svg> ቅርንጫፎች',dashReset:'<svg class="ic"><use href="#i-trash"/></svg> ዳታ ዳግም ማስጀመር ጥያቄዎች',dashNoPending:'ምንም ጥያቄዎች የሉም <svg class="ic"><use href="#i-sparkle"/></svg>',
     btnSave:'አስቀምጥ',btnCancel:'ሰርዝ',btnClose:'ዝጋ',btnPrint:'<svg class="ic"><use href="#i-printer"/></svg> አትም',btnExportPdf:'PDF አውርድ (A6)',btnClear:'አጽዳ',
     permFull:'ሙሉ',permAddOnly:'መጨመር ብቻ',permRead:'ማንበብ ብቻ',permNone:'መዳረሻ የለም',
     dateReceived:'የተቀበሉበት ቀን',stockQty:'የክምችት ብዛት',unitCost:'የአንድ ዋጋ',totalValue:'ጠቅላላ ዋጋ',purchaseQty:'የግዥ ብዛት',salesQty:'የሽያጭ ብዛት',receivedQty:'የተቀበሉ ብዛት',dispatchedQty:'የተላኩ ብዛት',storeValue:'የስቶር ዋጋ',method:'ዘዴ',item:'ዕቃ',subtotal:'ንዑስ ድምር',amountDue:'ሊከፈል ያለው',
     dateLabel:'ቀን *',selectItem:'— ዕቃ ይምረጡ —',storeItemLbl:'የስቶር ዕቃ *',noStoreItems:'ምንም የስቶር ዕቃዎች የሉም',dispatchQtyLbl:'ብዛት *',dispatchPriceLbl:'የስርጭት ዋጋ (በአንድ ክፍል) *',toBranchLbl:'ወደ ቅርንጫፍ *',dispatchTotal:'የስርጭት ጠቅላላ',partNoLbl:'ቁጥር *',partNoPh:'ለምሳ፤ P001',itemNameLbl:'ዕቃ ስም *',itemNamePh:'የዕቃ ስም',descLbl:'መግለጫ',descPh:'አማራጭ',taxOptions:'የቀረጥ አማራጮች',totalAmountLbl:'ጠቅላላ መጠን',reasonLbl:'ምክንያት *',reasonPh:'ይህ ወጪ ለምን ነበር?',amountLbl:'መጠን *',
     initBalance:'የመጀመሪያ ጥሬ ገንዘብ ሂሳብ',totalPurchCash:'ጠቅላላ ግዥዎች — ጥሬ ገንዘብ',totalPurchCredit:'ጠቅላላ ግዥዎች — ክሬዲት',totalSalesCash:'ጠቅላላ ሽያጭ — ጥሬ ገንዘብ',totalSalesCredit:'ጠቅላላ ሽያጭ — ክሬዲት',totalExpenses:'ጠቅላላ ወጪዎች',netProfitLoss:'ጠቅላላ ትርፍ / ኪሳራ',cashOnHand:'ያለ ጥሬ ገንዘብ',creditPurchTitle:'በሂደት ላይ ክሬዲት ግዥ',creditSalesTitle:'ክሬዲት ሽያጭ',initBalShort:'ቀዳሚ ሂሳብ',purchCashShort:'ግዥ ጥሬ ገንዘብ',purchCreditShort:'ግዥ ክሬዲት',salesCashShort:'ሽያጭ ጥሬ ገንዘብ',salesCreditShort:'ሽያጭ ክሬዲት',expensesShort:'ወጪዎች',netPLShort:'ትርፍ/ኪሳራ',allBranches:'ሁሉም ቅርንጫፎች',allBranchesBtn:'ሁሉም ቅርንጫፎች',editBalanceHint:'ከዚህ በታች ባለው ሠንጠረዥ የቀዳሚ ሂሳቡን ያስተካክሉ',
-    storeInventory:'<svg class="ic"><use href="#i-store"/></svg> ማዕከላዊ ስቶር ክምችት',storeDispatchHistory:'<svg class="ic"><use href="#i-upload"/></svg> የስርጭት ታሪክ (ባለፉ 30)',storeKeeperMode:'ስቶር ጠባቂ ሁነታ',dispatchLog:'የስርጭት መዝገብ',noDispatchRange:'ምንም ስርጭቶች የሉም',noStorePending:'ምንም ጥያቄዎች የሉም <svg class="ic"><use href="#i-sparkle"/></svg>',storeStockReceived:'ጠቅላላ ወደ ስቶር የተቀበሉ',storeDispatchedBranches:'ጠቅላላ ወደ ቅርንጫፍ የተላኩ',storeNetValue:'ጠቅላላ የስቶር ዋጋ',
+    storeInventory:'ማዕከላዊ ስቶር ክምችት',storeDispatchHistory:'<svg class="ic"><use href="#i-upload"/></svg> የስርጭት ታሪክ (ባለፉ 30)',storeKeeperMode:'ስቶር ጠባቂ ሁነታ',dispatchLog:'የስርጭት መዝገብ',noDispatchRange:'ምንም ስርጭቶች የሉም',noStorePending:'ምንም ጥያቄዎች የሉም <svg class="ic"><use href="#i-sparkle"/></svg>',storeStockReceived:'ጠቅላላ ወደ ስቶር የተቀበሉ',storeDispatchedBranches:'ጠቅላላ ወደ ቅርንጫፍ የተላኩ',storeNetValue:'ጠቅላላ የስቶር ዋጋ',
     emptyItems:'ዕቃዎች የሉም። ለመጀመር "ዕቃዎች ጨምር" ጠቅ ያድርጉ።',emptyRecords:'ምንም መዝገቦች የሉም።',emptyActivity:'ምንም ንቅናቄ አልተመዘገበም።',emptyExpense:'ምንም ወጪዎች የሉም።',emptyStore:'ምንም የስቶር ክምችት የለም።',emptyStoreBalance:'ምንም የስቶር ንቅናቄ የለም። ከስቶር ትር ክምችት ይጨምሩ።',emptyRequests:'ምንም ጥያቄዎች የሉም።',emptyOwners:'ምንም ባለቤቶች የሉም።',
     toastItemNotFound:'ዕቃ አልተገኘም',toastInsufficientStock:'በቂ ስቶር ክምችት የለም',toastNoPermTab:'ለዚህ ትር ፈቃድ የለም',toastRowDeleted:'ረድፍ ተሰርዟል',toastRecordAdded:'መዝገብ ታክሏል!',toastUpdated:'ተዘምኗል!',toastItemAdded:'ዕቃ ታክሏል!',toastItemUpdated:'ዕቃ ተዘምኗል!',toastPassUpdated:'የይለፍ ቃሉ ተዘምኗል!',toastExpenseAdded:'ወጪ ታክሏል!',toastStoreTransferNoEdit:'የስቶር ዝውውር ረድፎች ሊስተካከሉ አይችሉም',toastStoreTransferNoDelete:'የስቶር ዝውውር ረድፎች ሊሰረዙ አይችሉም',toastBalancePdf:'የሚዛን PDF ወርዷል <svg class="ic"><use href="#i-check"/></svg>',toastResetPending:'ቀደም ብሎ ያስገቡ ጥያቄ ይጠብቃል።',toastResetSent:'<svg class="ic"><use href="#i-bell"/></svg> ጥያቄ ለሶፍትዌር ባለቤት ተልኳል።',
     receiptPurchase:'የግዥ ደረሰኝ',receiptSales:'የሽያጭ ደረሰኝ',receiptPartNo:'ቁጥር',receiptItem:'ዕቃ',receiptDesc:'መግለጫ',receiptQty:'ብዛት',receiptUnitPrice:'የአንድ ዋጋ',receiptSubtotal:'ንዑስ ድምር',receiptTotal:'ጠቅላላ',receiptAmountDue:'ሊከፈል ያለው',receiptThankYou:'POWER-IMS — እናመሰግናለን!',receiptPrinted:'ታትሞ:',
-    storeReceiptTitle:'<svg class="ic"><use href="#i-package"/></svg> POWER-IMS — ስቶር',storeReceiptSub:'የስርጭት ደረሰኝ',storeReceiptId:'የደረሰኝ ቁጥር',storeReceiptDate:'ቀን',storeReceiptBranch:'ወደ ቅርንጫፍ',storeReceiptPartNo:'ቁጥር',storeReceiptItem:'ዕቃ',storeReceiptQty:'ብዛት',storeReceiptPrice:'የአንድ ዋጋ',storeReceiptTotal:'ጠቅላላ',storeReceiptBy:'የላከው:',storeReceiptPrinted:'ታትሞ:',storeReceiptApproved:'<svg class="ic"><use href="#i-check-circle"/></svg> ጸድቋል',storeReceiptRejected:'<svg class="ic"><use href="#i-x-circle"/></svg> ተቀባይነት አልተሰጠም',storeReceiptPending:'<svg class="ic"><use href="#i-clock"/></svg> በሂደት ላይ',
-    notifPendingUsers:'<svg class="ic"><use href="#i-bell"/></svg> የሚጠባበቁ ጥያቄዎች',notifStoreReceipts:'<svg class="ic"><use href="#i-store"/></svg> የስቶር ደረሰኞች',notifBranchRequests:'<svg class="ic"><use href="#i-cart"/></svg> የቅርንጫፍ ጥያቄዎች',noStoreReceiptsYet:'ለቅርንጫፍዎ ምንም የስቶር ደረሰኞች የሉም።',
+    storeReceiptTitle:'POWER-IMS — ስቶር',storeReceiptSub:'የስርጭት ደረሰኝ',storeReceiptId:'የደረሰኝ ቁጥር',storeReceiptDate:'ቀን',storeReceiptBranch:'ወደ ቅርንጫፍ',storeReceiptPartNo:'ቁጥር',storeReceiptItem:'ዕቃ',storeReceiptQty:'ብዛት',storeReceiptPrice:'የአንድ ዋጋ',storeReceiptTotal:'ጠቅላላ',storeReceiptBy:'የላከው:',storeReceiptPrinted:'ታትሞ:',storeReceiptApproved:'<svg class="ic"><use href="#i-check-circle"/></svg> ጸድቋል',storeReceiptRejected:'<svg class="ic"><use href="#i-x-circle"/></svg> ተቀባይነት አልተሰጠም',storeReceiptPending:'<svg class="ic"><use href="#i-clock"/></svg> በሂደት ላይ',
+    notifPendingUsers:'የሚጠባበቁ ጥያቄዎች',notifStoreReceipts:'<svg class="ic"><use href="#i-store"/></svg> የስቶር ደረሰኞች',notifBranchRequests:'<svg class="ic"><use href="#i-cart"/></svg> የቅርንጫፍ ጥያቄዎች',noStoreReceiptsYet:'ለቅርንጫፍዎ ምንም የስቶር ደረሰኞች የሉም።',
     ctxEdit:'ረድፍ አስተካክል',ctxDelete:'ረድፍ ሰርዝ',ctxPrint:'ደረሰኝ አትም',ctxStoreTransfer:'የስቶር ዝውውር — ማንበብ ብቻ',ctxBy:'የሠራው:',
     storeKeeperLabel:'ስቶር ጠባቂ',
     totalInventoryValue:'ጠቅላላ ክምችት ዋጋ',exportPdfBtn:'<svg class="ic"><use href="#i-file"/></svg> PDF አውርድ',
@@ -5687,8 +5690,18 @@ function translatePage(){
     const k=el.getAttribute('data-i18n');
     const attr=el.getAttribute('data-i18n-attr');
     const val=L(k);
-    if(attr)el.setAttribute(attr,val);
-    else el.textContent=val;
+    if(attr){el.setAttribute(attr,val);return;}
+    const plain=val.replace(/<[^>]+>/g,'').trim();
+    if(el.children.length>0){
+      let found=false;
+      for(let i=el.childNodes.length-1;i>=0;i--){
+        const n=el.childNodes[i];
+        if(n.nodeType===3){n.textContent=' '+plain;found=true;break;}
+      }
+      if(!found)el.appendChild(document.createTextNode(' '+plain));
+    }else{
+      el.textContent=val;
+    }
   });
 }
 function setLang(l){
@@ -6925,6 +6938,31 @@ function payAllCreditForParty(party){
     });
 }
 
+function payAllCreditForPartyType(party,type){
+  if(!party||!type)return;
+  const calcPT=p=>{const b=(p.qty||0)*(p.uPrice||0);return b+(p.vatOn?b*0.15:0);};
+  const calcST=s=>{const b=(s.qty||0)*(s.sPrice||0);return b+(s.vatOn?b*0.15:0)-(s.wh3On?b*0.03:0)-(s.vwhOn?b*0.075:0)-(s.commission||0);};
+  const source=type==='sale'
+    ?S.sales.filter(s=>s.payment==='CREDIT'&&s._cid&&(s.party||'')===party).map(r=>({...r,_amt:calcST(r)}))
+    :S.purchase.filter(p=>p.payment==='CREDIT'&&p._cid&&(p.party||'')===party).map(r=>({...r,_amt:calcPT(r)}));
+  const outstanding=source.filter(r=>getCreditPaidAmt(r._cid)<r._amt-0.001);
+  if(!outstanding.length){showToast('No outstanding balance for '+party+' ('+type+')','warn');return;}
+  const totalRemaining=outstanding.reduce((a,r)=>a+Math.max(0,r._amt-getCreditPaidAmt(r._cid)),0);
+  const label=type==='sale'?'Receivable':'Payable';
+  const actionLabel=type==='sale'?'Collect All':'Pay All';
+  customConfirm(actionLabel+' Outstanding?',
+    `Settle all ${outstanding.length} ${label.toLowerCase()} record(s) for "${party}" — total ${fmt(totalRemaining)}?`,
+    '<svg class="ic"><use href="#i-credit-card"/></svg>',actionLabel,()=>{
+      if(!S.creditPayments)S.creditPayments=[];
+      outstanding.forEach(r=>{
+        const remaining=Math.max(0,r._amt-getCreditPaidAmt(r._cid));
+        if(remaining>0.001)S.creditPayments.push({cid:r._cid,paidAt:new Date().toISOString(),paidBy:S.user,amount:remaining});
+      });
+      saveUserData();renderTab();
+      showToast(`<svg class="ic"><use href="#i-check-circle"/></svg> ${outstanding.length} ${label.toLowerCase()} record(s) settled for ${party}`,'success');
+    });
+}
+
 function renderCreditPage(){
   const calcPT=p=>{const b=(p.qty||0)*(p.uPrice||0);return b+(p.vatOn?b*0.15:0);};
   const calcST=s=>{const b=(s.qty||0)*(s.sPrice||0);return b+(s.vatOn?b*0.15:0)-(s.wh3On?b*0.03:0)-(s.vwhOn?b*0.075:0)-(s.commission||0);};
@@ -7040,19 +7078,34 @@ function renderCreditPage(){
     </div>`;
 
   const partySummary=activeParty?(()=>{
-    const partyAll=all.filter(r=>(r.party||'')===activeParty);
-    const partyTotal=partyAll.reduce((a,r)=>a+r._amt,0);
-    const partyPaid=partyAll.reduce((a,r)=>a+getCreditPaidAmt(r._cid),0);
-    const partyOut=Math.max(0,partyTotal-partyPaid);
-    const hasOut=partyAll.some(r=>getCreditPaidAmt(r._cid)<r._amt-0.001);
-    return`<div style="padding:12px 16px;background:var(--p-glass);border-bottom:1px solid var(--border2);display:flex;align-items:center;gap:20px;flex-wrap:wrap">
-      <div style="font-size:13px;font-weight:700;color:var(--p2)">${esc(activeParty)}</div>
-      <div style="display:flex;gap:18px;font-size:12px;flex-wrap:wrap">
-        <span style="color:var(--text2)">Total <strong class="td-mono" style="color:var(--text)">${fmt(partyTotal)}</strong></span>
-        <span style="color:var(--text2)">Paid <strong class="td-mono num-pos">${fmt(partyPaid)}</strong></span>
-        <span style="color:var(--text2)">Outstanding <strong class="td-mono ${partyOut>0?'num-neg':'num-pos'}">${fmt(partyOut)}</strong></span>
-      </div>
-      ${canMark&&hasOut?`<button type="button" class="btn btn-sm btn-primary" onclick="payAllCreditForParty('${esc(activeParty)}')" style="margin-left:auto;font-size:11px"><svg class="ic"><use href="#i-credit-card"/></svg> Pay All Outstanding</button>`:''}
+    const partySales=all.filter(r=>(r.party||'')===activeParty&&r._type==='sale');
+    const partyPurch=all.filter(r=>(r.party||'')===activeParty&&r._type==='purchase');
+    const hasSales=partySales.length>0,hasPurch=partyPurch.length>0;
+    const salesTot=partySales.reduce((a,r)=>a+r._amt,0);
+    const salesPaid=partySales.reduce((a,r)=>a+getCreditPaidAmt(r._cid),0);
+    const salesOut=Math.max(0,salesTot-salesPaid);
+    const hasSalesOut=partySales.some(r=>getCreditPaidAmt(r._cid)<r._amt-0.001);
+    const purchTot=partyPurch.reduce((a,r)=>a+r._amt,0);
+    const purchPaid=partyPurch.reduce((a,r)=>a+getCreditPaidAmt(r._cid),0);
+    const purchOut=Math.max(0,purchTot-purchPaid);
+    const hasPurchOut=partyPurch.some(r=>getCreditPaidAmt(r._cid)<r._amt-0.001);
+    const salesRow=hasSales?`<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+      <span class="td-badge badge-cash" style="font-size:10px;min-width:82px;text-align:center">RECEIVABLE</span>
+      <span style="color:var(--text2);font-size:12px">Total <strong class="td-mono" style="color:var(--text)">${fmt(salesTot)}</strong></span>
+      <span style="color:var(--text2);font-size:12px">Collected <strong class="td-mono num-pos">${fmt(salesPaid)}</strong></span>
+      <span style="color:var(--text2);font-size:12px">Outstanding <strong class="td-mono ${salesOut>0?'num-neg':'num-pos'}">${fmt(salesOut)}</strong></span>
+      ${canMark&&hasSalesOut?`<button type="button" class="btn btn-sm btn-primary" onclick="payAllCreditForPartyType('${esc(activeParty)}','sale')" style="font-size:11px"><svg class="ic"><use href="#i-credit-card"/></svg> Collect All</button>`:''}
+    </div>`:'';
+    const purchRow=hasPurch?`<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap${hasSales?';margin-top:8px;padding-top:8px;border-top:1px solid var(--border2)':''}">
+      <span class="td-badge badge-credit" style="font-size:10px;min-width:82px;text-align:center">PAYABLE</span>
+      <span style="color:var(--text2);font-size:12px">Total <strong class="td-mono" style="color:var(--text)">${fmt(purchTot)}</strong></span>
+      <span style="color:var(--text2);font-size:12px">Settled <strong class="td-mono num-pos">${fmt(purchPaid)}</strong></span>
+      <span style="color:var(--text2);font-size:12px">Outstanding <strong class="td-mono ${purchOut>0?'num-neg':'num-pos'}">${fmt(purchOut)}</strong></span>
+      ${canMark&&hasPurchOut?`<button type="button" class="btn btn-sm btn-primary" onclick="payAllCreditForPartyType('${esc(activeParty)}','purchase')" style="font-size:11px"><svg class="ic"><use href="#i-credit-card"/></svg> Pay All</button>`:''}
+    </div>`:'';
+    return`<div style="padding:12px 16px;background:var(--p-glass);border-bottom:1px solid var(--border2)">
+      <div style="font-size:13px;font-weight:700;color:var(--p2);margin-bottom:8px">${esc(activeParty)}</div>
+      ${salesRow}${purchRow}
     </div>`;
   })():'';
 
@@ -8488,27 +8541,27 @@ document.addEventListener('DOMContentLoaded',init);
         }
       });
 
-      // Update summary cards
-      const recCard = document.querySelector('.credit-receivable');
-      const payCard = document.querySelector('.credit-payable');
-      
-      if(recCard) {
-        const collectedSpan = recCard.querySelector('.csc-row:nth-child(2) span:last-child');
-        const outstandingSpan = recCard.querySelector('.csc-row:nth-child(3) span:last-child');
-        if(collectedSpan) collectedSpan.textContent = fmt(visibleRecCollected);
-        if(outstandingSpan) {
-          outstandingSpan.textContent = fmt(visibleRecOutstanding);
-          outstandingSpan.className = visibleRecOutstanding > 0 ? 'num-neg td-mono' : 'num-pos td-mono';
+      // Update summary cards only when actively searching
+      if(ql) {
+        const recCard = document.querySelector('.credit-receivable');
+        const payCard = document.querySelector('.credit-payable');
+        if(recCard) {
+          const collectedSpan = recCard.querySelector('.csc-row:nth-child(3) span:last-child');
+          const outstandingSpan = recCard.querySelector('.csc-row:nth-child(4) span:last-child');
+          if(collectedSpan) collectedSpan.textContent = fmt(visibleRecCollected);
+          if(outstandingSpan) {
+            outstandingSpan.textContent = fmt(visibleRecOutstanding);
+            outstandingSpan.className = visibleRecOutstanding > 0 ? 'num-neg td-mono' : 'num-pos td-mono';
+          }
         }
-      }
-      
-      if(payCard) {
-        const settledSpan = payCard.querySelector('.csc-row:nth-child(2) span:last-child');
-        const outstandingSpan = payCard.querySelector('.csc-row:nth-child(3) span:last-child');
-        if(settledSpan) settledSpan.textContent = fmt(visiblePaySettled);
-        if(outstandingSpan) {
-          outstandingSpan.textContent = fmt(visiblePayOutstanding);
-          outstandingSpan.className = visiblePayOutstanding > 0 ? 'num-neg td-mono' : 'num-pos td-mono';
+        if(payCard) {
+          const settledSpan = payCard.querySelector('.csc-row:nth-child(3) span:last-child');
+          const outstandingSpan = payCard.querySelector('.csc-row:nth-child(4) span:last-child');
+          if(settledSpan) settledSpan.textContent = fmt(visiblePaySettled);
+          if(outstandingSpan) {
+            outstandingSpan.textContent = fmt(visiblePayOutstanding);
+            outstandingSpan.className = visiblePayOutstanding > 0 ? 'num-neg td-mono' : 'num-pos td-mono';
+          }
         }
       }
     } else {
@@ -8682,11 +8735,73 @@ document.addEventListener('DOMContentLoaded',init);
   setInterval(update, 600);
 })();
 </script>
+<script>
+(function(){
+  var hdrH=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--hdr-h'))||58;
+
+  function setupSticky(wrap){
+    if(wrap._stickyReady) return;
+    var table=wrap.querySelector('table');
+    if(!table) return;
+    var thead=table.querySelector('thead');
+    if(!thead||!thead.querySelector('th')) return;
+    wrap._stickyReady=true;
+
+    var ghost=document.createElement('div');
+    ghost.style.cssText='position:fixed;overflow:hidden;z-index:50;display:none;pointer-events:none;';
+
+    var gt=document.createElement('table');
+    gt.className=table.className;
+    gt.style.cssText='position:relative;min-width:0;border-collapse:collapse;';
+
+    var gThead=thead.cloneNode(true);
+    [].forEach.call(gThead.querySelectorAll('th'),function(th){
+      th.style.position='static';
+      th.style.top='auto';
+      th.style.zIndex='auto';
+    });
+
+    gt.appendChild(gThead);
+    ghost.appendChild(gt);
+    document.body.appendChild(ghost);
+
+    function sync(){
+      var wRect=wrap.getBoundingClientRect();
+      var tRect=table.getBoundingClientRect();
+      var theadH=thead.offsetHeight;
+      var show=tRect.top<hdrH&&tRect.bottom>hdrH+theadH&&wRect.width>0;
+      if(show){
+        ghost.style.display='';
+        ghost.style.top=hdrH+'px';
+        ghost.style.left=wRect.left+'px';
+        ghost.style.width=wRect.width+'px';
+        ghost.style.height=theadH+'px';
+        gt.style.width=table.offsetWidth+'px';
+        gt.style.marginLeft=(-wrap.scrollLeft)+'px';
+        var ths=thead.querySelectorAll('th');
+        var gths=gThead.querySelectorAll('th');
+        [].forEach.call(ths,function(th,i){
+          if(gths[i]) gths[i].style.width=th.offsetWidth+'px';
+        });
+      } else {
+        ghost.style.display='none';
+      }
+    }
+
+    window.addEventListener('scroll',sync,{passive:true});
+    window.addEventListener('resize',sync,{passive:true});
+    wrap.addEventListener('scroll',sync,{passive:true});
+    if(window.visualViewport) window.visualViewport.addEventListener('resize',sync);
+    if(window.visualViewport) window.visualViewport.addEventListener('scroll',sync);
+  }
+
+  function init(){
+    document.querySelectorAll('.table-wrap,.credit-table-wrap').forEach(setupSticky);
+  }
+
+  setTimeout(init,300);
+  var tc=document.getElementById('tab-content');
+  if(tc) new MutationObserver(function(){setTimeout(init,200);}).observe(tc,{childList:true,subtree:true});
+})();
+</script>
 </body></html>
-
-
-
-
-
-
-
