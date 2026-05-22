@@ -247,6 +247,15 @@ html[data-view="mobile"] .brand-text{display:none}
 .nav-item.store-nav.active{color:var(--store)}
 .nav-item.store-nav.active .ni-bubble{background:rgba(34,197,94,.15);box-shadow:0 2px 12px rgba(34,197,94,.15)}
 
+/* ── Store sub-menu hint dots ── */
+.store-more-dots{
+  font-size:6.5px;letter-spacing:2.5px;color:var(--store);opacity:.5;
+  line-height:1;margin-top:-3px;pointer-events:none;user-select:none;
+}
+@keyframes storeHintPulse{0%,100%{opacity:.3}50%{opacity:.72}}
+.nav-item.store-nav:not(.active) .store-more-dots{animation:storeHintPulse 2.6s ease-in-out infinite}
+.nav-item.store-nav.active .store-more-dots,.nav-item.store-nav.popup-open .store-more-dots{display:none}
+
 .nav-store-combo{display:flex;align-items:stretch}
 .store-sub-menu{
   position:absolute;bottom:calc(100% + 10px);left:50%;transform:translateX(-50%);
@@ -267,6 +276,60 @@ html[data-view="mobile"] .brand-text{display:none}
   transition:all .14s;white-space:nowrap
 }
 .store-sub-item.active{background:var(--store-glass);color:var(--store)}
+
+/* ── Top indicator dot (replaces bubble lift) ── */
+.nav-item{overflow:visible}
+.nav-item::before{content:'';position:absolute;top:3px;left:50%;transform:translateX(-50%) scaleX(0);width:20px;height:3px;border-radius:3px;background:var(--p);transition:transform .28s cubic-bezier(.34,1.56,.64,1);}
+.nav-item.active::before{transform:translateX(-50%) scaleX(1);}
+.nav-item.store-nav.active::before{background:var(--store);}
+.nav-item.active .ni-bubble{transform:none;background:rgba(91,138,248,.1);box-shadow:none;}
+.nav-item.store-nav.active .ni-bubble{background:rgba(34,197,94,.1);box-shadow:none;}
+
+/* ── Section color tint ── */
+.bottom-nav{transition:border-top-color .35s ease,box-shadow .35s ease;}
+
+/* ── Nav badge ── */
+.nav-badge{position:absolute;top:3px;right:4px;min-width:16px;height:16px;background:var(--error);color:#fff;border-radius:99px;font-size:9px;font-weight:800;display:none;align-items:center;justify-content:center;padding:0 4px;pointer-events:none;border:2px solid var(--bg);z-index:1;}
+
+
+/* ── Auth field inline validation ── */
+.auth-input-wrap,.pw-wrap{position:relative;}
+.auth-field-ok .auth-input-wrap input,.auth-field-ok.pw-wrap input{border-color:var(--success)!important;}
+.auth-field-ok .auth-field-icon{color:var(--success)!important;}
+.auth-field-err .auth-input-wrap input,.auth-field-err.pw-wrap input{border-color:var(--error)!important;}
+.auth-field-err .auth-field-icon{color:var(--error)!important;}
+.auth-vi{position:absolute;right:36px;top:50%;transform:translateY(-50%);font-size:13px;pointer-events:none;opacity:0;transition:opacity .18s;}
+.auth-vi.show{opacity:1;}
+@keyframes authShake{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-5px)}40%,80%{transform:translateX(5px)}}
+.auth-shake{animation:authShake .35s ease;}
+
+/* ── Auth language selector ── */
+.auth-lang-sel{display:flex;gap:3px;margin-left:auto;flex-shrink:0;}
+.auth-lang-btn{background:none;border:1px solid var(--border2);border-radius:6px;color:var(--text3);font-size:10px;font-weight:700;padding:3px 7px;cursor:pointer;font-family:var(--font);transition:all .15s;line-height:1.4;}
+.auth-lang-btn.active{background:var(--p-glass);color:var(--p);border-color:rgba(59,130,246,.35);}
+
+/* ── Drawer info cards ── */
+.drawer-info-card{margin:10px 12px 4px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;overflow:hidden;}
+.drawer-session-top{display:flex;align-items:center;gap:12px;padding:14px 16px 10px;}
+.drawer-session-av{width:42px;height:42px;border-radius:50%;background:var(--p);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;color:#fff;flex-shrink:0;}
+.drawer-session-meta{flex:1;min-width:0;}
+.drawer-session-name{font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.drawer-session-role{font-size:10px;color:var(--text3);margin-top:2px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;}
+.drawer-session-detail{padding:0 16px 12px;font-size:11px;color:var(--text3);display:flex;flex-direction:column;gap:3px;}
+.drawer-snap-grid{display:grid;grid-template-columns:1fr 1fr 1fr;border-top:1px solid var(--border);}
+.drawer-snap-cell{padding:10px 6px;text-align:center;}
+.drawer-snap-cell+.drawer-snap-cell{border-left:1px solid var(--border);}
+.drawer-snap-val{font-size:14px;font-weight:800;line-height:1;}
+.drawer-snap-lbl{font-size:9px;color:var(--text3);font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-top:3px;}
+.drawer-sync-row{display:flex;align-items:center;gap:8px;padding:9px 14px;border-top:1px solid var(--border);}
+.drawer-sync-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;transition:background .3s;}
+.drawer-sync-txt{flex:1;font-size:11px;color:var(--text3);}
+.drawer-sync-btn{background:none;border:1px solid var(--border2);border-radius:6px;color:var(--text2);font-size:10px;font-weight:700;padding:3px 9px;cursor:pointer;font-family:var(--font);transition:all .15s;}
+.drawer-sync-btn:hover{background:var(--surface3);}
+.drawer-sync-btn:disabled{opacity:.5;cursor:default;}
+
+/* ── Store long-press sub-menu inside nav ── */
+#nav-store-popup{position:fixed;z-index:700;background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:5px;min-width:148px;box-shadow:0 -8px 28px rgba(0,0,0,.3);animation:flyInUp .18s cubic-bezier(.22,1,.36,1);display:none;}
 
 /* ── Content ── */
 .content{padding:14px;max-width:1400px;margin:0 auto}
@@ -1659,6 +1722,10 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
           <h1>POWER</h1>
           <div class="auth-hdr-subtitle">Inventory Management System</div>
         </div>
+        <div class="auth-lang-sel" id="auth-lang-sel">
+          <button type="button" class="auth-lang-btn active" id="auth-lang-en" onclick="_setAuthLang('en')">EN</button>
+          <button type="button" class="auth-lang-btn" id="auth-lang-am" onclick="_setAuthLang('am')">አማ</button>
+        </div>
       </div>
     <div class="auth-body">
       <div class="auth-mode-hdr">
@@ -1684,8 +1751,8 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
       </div>
       <div class="field" id="auth-shopname-wrap" style="display:none"><label>Business / Shop Name *</label><input id="auth-shopname" placeholder="e.g. Power General Trading" maxlength="80" autocomplete="organization"></div>
       <div class="field" id="auth-phone-wrap" style="display:none"><label>Phone Number</label><input id="auth-phone" type="tel" placeholder="e.g. 0911 234 567" autocomplete="tel" maxlength="40"></div>
-      <div class="field"><label id="auth-user-label">Username</label><div class="auth-input-wrap"><span class="auth-field-icon"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><input id="auth-user" placeholder="Username" autocomplete="off" maxlength="40" spellcheck="false" onkeydown="if(event.key==='Enter')document.getElementById('auth-pass').focus()"></div></div>
-      <div class="field"><label>Password</label><div class="pw-wrap"><span class="auth-field-icon" style="left:10px;position:absolute;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;display:flex;align-items:center"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span><input id="auth-pass" type="password" placeholder="Enter your password" autocomplete="current-password" maxlength="128" style="padding-left:32px" onkeydown="if(event.key==='Enter')submitAuth()"><button type="button" class="pw-toggle" onclick="togglePassVisibility('auth-pass')" tabindex="-1" aria-label="Show/hide password"><svg id="auth-pass-eye" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
+      <div class="field" id="auth-user-field"><label id="auth-user-label">Username</label><div class="auth-input-wrap"><span class="auth-field-icon"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><input id="auth-user" placeholder="Username" autocomplete="off" maxlength="40" spellcheck="false" onkeydown="if(event.key==='Enter')document.getElementById('auth-pass').focus()" oninput="_valAuthUser(this)"><span class="auth-vi" id="auth-user-vi"></span></div></div>
+      <div class="field" id="auth-pass-field"><label>Password</label><div class="pw-wrap" id="auth-pass-wrap"><span class="auth-field-icon" style="left:10px;position:absolute;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;display:flex;align-items:center"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span><input id="auth-pass" type="password" placeholder="Enter your password" autocomplete="current-password" maxlength="128" style="padding-left:32px" onkeydown="if(event.key==='Enter')submitAuth()" oninput="_valAuthPass(this)"><span class="auth-vi" id="auth-pass-vi" style="right:40px"></span><button type="button" class="pw-toggle" onclick="togglePassVisibility('auth-pass')" tabindex="-1" aria-label="Show/hide password"><svg id="auth-pass-eye" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
       <div class="field" id="auth-confirm-wrap" style="display:none"><label>Confirm Password</label><div class="pw-wrap"><span class="auth-field-icon" style="left:10px;position:absolute;top:50%;transform:translateY(-50%);color:var(--text3);pointer-events:none;display:flex;align-items:center"><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span><input id="auth-confirm" type="password" placeholder="Re-enter password" autocomplete="new-password" maxlength="128" style="padding-left:32px"><button type="button" class="pw-toggle" onclick="togglePassVisibility('auth-confirm')" tabindex="-1" aria-label="Show/hide password"><svg id="auth-confirm-eye" xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg></button></div></div>
       <div class="field" id="auth-admin-target-wrap" style="display:none">
         <label>Platform Owner Username <span style="color:var(--text3);font-size:9px">(who manages your account)</span></label>
@@ -1764,6 +1831,36 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
     <button type="button" class="modal-hdr-close" onclick="closeSettings()" style="background:var(--surface3)"><svg class="ic"><use href="#i-x"/></svg></button>
   </div>
   <div class="drawer-body">
+    <!-- Session info + Today's snapshot + Sync status -->
+    <div class="drawer-info-card" id="drawer-info-card" style="display:none">
+      <div class="drawer-session-top">
+        <div class="drawer-session-av" id="dsc-avatar"></div>
+        <div class="drawer-session-meta">
+          <div class="drawer-session-name" id="dsc-name"></div>
+          <div class="drawer-session-role" id="dsc-role"></div>
+        </div>
+      </div>
+      <div class="drawer-session-detail" id="dsc-detail"></div>
+      <div class="drawer-snap-grid" id="dsc-snap" style="display:none">
+        <div class="drawer-snap-cell">
+          <div class="drawer-snap-val" id="snap-sales" style="color:var(--success)">—</div>
+          <div class="drawer-snap-lbl">Sales</div>
+        </div>
+        <div class="drawer-snap-cell">
+          <div class="drawer-snap-val" id="snap-purchase" style="color:var(--p)">—</div>
+          <div class="drawer-snap-lbl">Purchases</div>
+        </div>
+        <div class="drawer-snap-cell">
+          <div class="drawer-snap-val" id="snap-expense" style="color:var(--error)">—</div>
+          <div class="drawer-snap-lbl">Expenses</div>
+        </div>
+      </div>
+      <div class="drawer-sync-row" id="dsc-sync" style="display:none">
+        <div class="drawer-sync-dot" id="dsc-sync-dot"></div>
+        <div class="drawer-sync-txt" id="dsc-sync-txt">Checking…</div>
+        <button type="button" class="drawer-sync-btn" id="dsc-sync-btn" onclick="_syncNow()">Sync</button>
+      </div>
+    </div>
     <div class="drawer-section" data-i18n="settingsNav">Navigation</div>
     <button type="button" class="drawer-item" id="drawer-items-btn" onclick="switchTab('ITEMS');closeSettings()">
       <span class="di-icon" style="background:var(--p-glass);color:var(--p)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
@@ -1876,6 +1973,19 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
       <select class="drawer-select" id="lang-select" onchange="setLang(this.value)">
         <option value="en">🇬🇧 English</option>
         <option value="am">🇪🇹 አማርኛ</option>
+      </select>
+    </div>
+    <div class="drawer-toggle-row">
+      <label style="display:flex;align-items:center;gap:6px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Auto-Logout
+      </label>
+      <select class="drawer-select" id="auto-logout-select" onchange="_setAutoLogout(this.value)">
+        <option value="0">Off</option>
+        <option value="15">15 min</option>
+        <option value="30">30 min</option>
+        <option value="60">1 hr</option>
+        <option value="120">2 hr</option>
       </select>
     </div>
     <div class="drawer-divider"></div>
@@ -2473,6 +2583,22 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
   </div>
 </div>
 
+<!-- ADMIN OVERLAY UNLOCK MODAL (Ctrl+Shift+A) -->
+<div class="modal-overlay" id="admin-unlock-modal">
+  <div class="modal-box narrow">
+    <div class="modal-hdr" style="background:#1e1b4b;border-bottom:1px solid rgba(139,92,246,.25)">
+      <div class="modal-hdr-icon-wrap"><span class="modal-hdr-icon" style="background:rgba(139,92,246,.2);border-color:rgba(139,92,246,.4)"><svg class="ic"><use href="#i-lock-key"/></svg></span></div>
+      <div><h2 style="color:#e8ecf4">Admin Access</h2><p style="color:rgba(255,255,255,.5);font-size:.75rem">Enter the system owner password</p></div>
+      <button type="button" class="modal-hdr-close" onclick="closeModal('admin-unlock-modal')"><svg class="ic"><use href="#i-x"/></svg></button>
+    </div>
+    <div style="padding:20px 18px">
+      <input type="password" id="admin-unlock-pass" placeholder="System owner password" style="width:100%;background:var(--surface2);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:11px 13px;color:var(--text);font-size:14px;outline:none;margin-bottom:10px" onkeydown="if(event.key==='Enter')_doAdminUnlock()">
+      <p id="admin-unlock-err" style="color:var(--error);font-size:12px;min-height:16px;margin-bottom:10px"></p>
+      <button type="button" class="btn btn-owner" style="width:100%;justify-content:center;gap:8px;padding:11px" onclick="_doAdminUnlock()"><svg class="ic"><use href="#i-lock-key"/></svg> Unlock Admin Panel</button>
+    </div>
+  </div>
+</div>
+
 <!-- FORCE PASSWORD RESET MODAL (system owner <svg class="ic"><use href="#i-arrow-right"/></svg> shop owner) -->
 <div class="modal-overlay" id="force-reset-modal">
   <div class="modal-box narrow">
@@ -2705,6 +2831,7 @@ document.addEventListener('input', function(e){
     <span class="ni-label" data-i18n="navReport">Report</span>
   </button>
   <button type="button" class="nav-item" data-tab="CREDIT" onclick="switchTab('CREDIT')" id="nav-CREDIT" style="display:none">
+    <span class="nav-badge" id="nav-credit-badge"></span>
     <span class="ni-bubble"><svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>
     <span class="ni-label">Credit</span>
   </button>
@@ -2712,10 +2839,17 @@ document.addEventListener('input', function(e){
     <span class="ni-bubble"><svg viewBox="0 0 24 24"><path d="m16.5 9.4-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
     <span class="ni-label" data-i18n="navItems">Items</span>
   </button>
-  <button type="button" class="nav-item" data-tab="STORE" onclick="switchTab('STORE')" id="nav-STORE" style="display:none">
+  <button type="button" class="nav-item store-nav" data-tab="STORE" onclick="switchTab('STORE')" id="nav-STORE" style="display:none">
     <span class="ni-bubble"><svg viewBox="0 0 24 24"><path d="M3 9l1-5h16l1 5"/><path d="M3 9h18v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><line x1="9" y1="14" x2="9" y2="18"/><line x1="15" y1="14" x2="15" y2="18"/></svg></span>
     <span class="ni-label" data-i18n="navStore">Store</span>
+    <span class="store-more-dots" aria-hidden="true">• • •</span>
   </button>
+  <!-- Store long-press popup (injected near nav-STORE by JS) -->
+  <div id="nav-store-popup" style="display:none">
+    <button type="button" class="store-sub-item" onclick="_storeNav('STORE')"><svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1-5h16l1 5"/><path d="M3 9h18v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg> Store Items</button>
+    <button type="button" class="store-sub-item" onclick="_storeNav('STOREBALANCE')"><svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg> Balance</button>
+    <button type="button" class="store-sub-item" onclick="_storeNav('STOREREPORT')"><svg viewBox="0 0 24 24" width="14" height="14" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Report</button>
+  </div>
   <button type="button" class="nav-item" data-tab="STOREBALANCE" onclick="switchTab('STOREBALANCE')" id="nav-STOREBALANCE" style="display:none">
     <span class="ni-bubble"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg></span>
     <span class="ni-label" data-i18n="navStoreBalance">Balance</span>
@@ -4828,7 +4962,8 @@ function copySubCode(code){
 }
 
 function exitOwnerDashboard(){
-  if(isSystemOwner())return;
+  if(isSystemOwner()&&!_adminOverlay)return;
+  if(_adminOverlay){_closeAdminOverlay();return;}
   document.getElementById('owner-screen').style.display='none';
   document.getElementById('content').style.display='block';
   document.getElementById('bottom-nav').style.display='flex';
@@ -5163,7 +5298,13 @@ function loadPendingApprovals(){
   S.pendingSignups=_lsGet(`ims_${ownerNS()}_pending`,[]);
   updateNotifBadge();
 }
-function updateNotifBadge(){}
+function updateNotifBadge(){
+  const badge=document.getElementById('nav-credit-badge');
+  if(!badge)return;
+  const n=(S.creditPayments||[]).filter(c=>!c.paid&&!c.settled).length;
+  badge.textContent=n>9?'9+':String(n);
+  badge.style.display=n>0?'flex':'none';
+}
 function openApprovals(){
   renderOwnerDashboard();
   document.getElementById('owner-screen').style.display='block';
@@ -5949,6 +6090,10 @@ function switchTab(tab){
   // Only push a new history entry when the user navigates forward; popstate already moved the pointer
   if(!fromPopState&&typeof history!=='undefined'&&history.pushState){try{history.pushState({tab:tab},'',window.location.href);}catch(e){}}
   window.scrollTo({top:0,behavior:'instant'});
+  // Section color tint on nav border + glow
+  const _tabRGB={PURCHASE:'59,130,246',SALES:'16,185,129',BALANCE:'139,92,246',EXPENSE:'239,68,68',REPORT:'245,158,11',CREDIT:'59,130,246',ITEMS:'245,158,11',STORE:'16,185,129',STOREBALANCE:'16,185,129',STOREREPORT:'16,185,129'};
+  const _navEl=document.getElementById('bottom-nav');
+  if(_navEl){const _rgb=_tabRGB[tab]||'59,130,246';_navEl.style.borderTopColor=`rgba(${_rgb},.25)`;_navEl.style.boxShadow=`0 -2px 24px rgba(${_rgb},.1)`;}
   updateSuggestions();renderTab();
 }
 function updateSuggestions(){
@@ -6024,7 +6169,51 @@ function renderHeadActions(){
 /* ═══════════════════════════════════════════════════════
    ADD / EDIT MODALS
 ═══════════════════════════════════════════════════════ */
+let _addCount=0;
+let _sessionRecords=[];
+function renderSessionTable(){
+  const el=document.getElementById('f-session-table');
+  if(!el||!_sessionRecords.length){if(el)el.innerHTML='';return;}
+  const tab=S.tab;
+  const th=s=>`<th style="padding:5px 8px;text-align:left;font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.05em;white-space:nowrap;background:var(--surface2)">${s}</th>`;
+  const thr=s=>`<th style="padding:5px 8px;text-align:right;font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.05em;white-space:nowrap;background:var(--surface2)">${s}</th>`;
+  const td=s=>`<td style="padding:5px 8px;font-size:11.5px;border-top:1px solid var(--border);white-space:nowrap;max-width:120px;overflow:hidden;text-overflow:ellipsis">${s}</td>`;
+  const tdr=s=>`<td style="padding:5px 8px;font-size:11.5px;border-top:1px solid var(--border);white-space:nowrap;text-align:right;font-family:var(--mono)">${s}</td>`;
+  let cols=[],rows='',grandTotal=0,hasTotal=false;
+  if(tab==='ITEMS'){
+    cols=[th('#'),th('ID'),th('Name'),th('Desc')];
+    rows=_sessionRecords.map((r,i)=>`<tr>${td(i+1)}${td(esc(r.id))}${td(esc(r.name))}${td(esc(r.desc||'—'))}</tr>`).join('');
+  }else if(tab==='PURCHASE'){
+    hasTotal=true;
+    cols=[th('#'),th('Date'),th('Supplier'),th('Item'),thr('Qty'),thr('Unit Price'),thr('Total')];
+    rows=_sessionRecords.map((r,i)=>{const t=r.qty*r.uPrice;grandTotal+=t;return`<tr>${td(i+1)}${td(esc(r.date))}${td(esc(r.party))}${td(esc(r.id))}${tdr(fmtQ(r.qty))}${tdr(fmt(r.uPrice))}${tdr(fmt(t))}</tr>`;}).join('');
+  }else if(tab==='SALES'){
+    hasTotal=true;
+    cols=[th('#'),th('Date'),th('Customer'),th('Item'),thr('Qty'),thr('Unit Price'),thr('Total')];
+    rows=_sessionRecords.map((r,i)=>{const t=r.qty*r.sPrice;grandTotal+=t;return`<tr>${td(i+1)}${td(esc(r.date))}${td(esc(r.party))}${td(esc(r.id))}${tdr(fmtQ(r.qty))}${tdr(fmt(r.sPrice))}${tdr(fmt(t))}</tr>`;}).join('');
+  }else if(tab==='EXPENSE'){
+    hasTotal=true;
+    cols=[th('#'),th('Date'),th('Reason'),th('Payment'),thr('Amount')];
+    rows=_sessionRecords.map((r,i)=>{grandTotal+=r.amt;return`<tr>${td(i+1)}${td(esc(r.date))}${td(esc(r.reason))}${td(esc(r.payment))}${tdr(fmt(r.amt))}</tr>`;}).join('');
+  }else if(tab==='STORE'){
+    hasTotal=true;
+    cols=[th('#'),th('Date'),th('Item'),th('Supplier'),thr('Qty'),thr('Unit Cost'),thr('Total')];
+    rows=_sessionRecords.map((r,i)=>{const t=r.qty*r.cost;grandTotal+=t;return`<tr>${td(i+1)}${td(esc(r.date))}${td(esc(r.itemId))}${td(esc(r.supplier||'—'))}${tdr(fmtQ(r.qty))}${tdr(fmt(r.cost))}${tdr(fmt(t))}</tr>`;}).join('');
+  }
+  const thead=`<tr>${cols.join('')}</tr>`;
+  const tfoot=hasTotal?`<tfoot><tr>
+    <td colspan="${cols.length-1}" style="padding:7px 8px;font-size:10.5px;font-weight:700;color:var(--text3);border-top:2px solid var(--border);text-align:right;letter-spacing:.05em">GRAND TOTAL</td>
+    <td style="padding:7px 8px;font-size:13px;font-weight:800;color:var(--p);border-top:2px solid var(--border);text-align:right;font-family:var(--mono);white-space:nowrap">${fmt(grandTotal)}</td>
+  </tr></tfoot>`:'';
+  el.innerHTML=`<div style="margin-top:14px;border-top:1px solid var(--border);padding-top:10px">
+    <div style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.06em;margin-bottom:6px">ADDED THIS SESSION (${_sessionRecords.length})</div>
+    <div style="overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius-sm)">
+      <table style="width:100%;border-collapse:collapse"><thead>${thead}</thead><tbody>${rows}</tbody>${tfoot}</table>
+    </div></div>`;
+}
 function openAddModal(){
+  _addCount=0;
+  _sessionRecords=[];
   if(S.tab==='ITEMS')buildItemForm(null,'add');
   else if(S.tab==='PURCHASE')buildTxForm(null,'add',true);
   else if(S.tab==='SALES')buildTxForm(null,'add',false);
@@ -6068,7 +6257,10 @@ function buildStoreEntryForm(row,mode,idx){
       <div class="field"><label>Unit Cost</label><input type="number" id="f-cost" value="${d.cost||''}" placeholder="0.00" step="any"></div>
     </div>
     <button type="button" class="modal-btn store-btn" onclick="submitStoreEntryForm('${mode}',${idx??-1})">${mode==='add'?'<svg class="ic"><use href="#i-plus"/></svg> Add to Store':'<svg class="ic"><use href="#i-save"/></svg> Save'}</button>
+    ${mode==='add'?`<button type="button" class="modal-btn" style="margin-top:5px;background:transparent;color:var(--store);border:1.5px solid var(--store)" onclick="submitStoreEntryForm('add',-1,true)"><svg class="ic"><use href="#i-plus"/></svg> Add &amp; Add Another</button>`:''}
     <button type="button" class="modal-btn secondary" onclick="closeModal('${mode==='add'?'add-row-modal':'edit-row-modal'}')" style="margin-top:5px">Cancel</button>
+    <div id="f-add-count" style="text-align:center;font-size:11px;color:var(--success);min-height:16px;margin-top:4px"></div>
+    <div id="f-session-table"></div>
     <div class="modal-error" id="f-error"></div>`;
   if(d.itemId&&mode==='edit'){
     document.getElementById('f-name').value=d.itemName||'';
@@ -6090,7 +6282,7 @@ function _validateDate(dateStr){
   if(dd<1||dd>maxDay)return false;
   return true;
 }
-function submitStoreEntryForm(mode,idx){
+function submitStoreEntryForm(mode,idx,keepOpen=false){
   const date=document.getElementById('f-date').value.trim();
   const itemId=document.getElementById('f-item').value;
   const supplier=document.getElementById('f-supplier').value.trim();
@@ -6114,8 +6306,21 @@ function submitStoreEntryForm(mode,idx){
     S.storeItems[idx]={...S.storeItems[idx],...row};
   }
   saveUserData();renderTab();
-  closeModal(mode==='add'?'add-row-modal':'edit-row-modal');
-  showToast(mode==='add'?L('toastRecordAdded'):L('toastUpdated'),'success');
+  if(keepOpen){
+    _addCount++;
+    _sessionRecords.push({date,itemId,supplier,qty,cost});
+    const c=document.getElementById('f-add-count');if(c)c.textContent=`${_addCount} entr${_addCount>1?'ies':'y'} added`;
+    renderSessionTable();
+    const fi=document.getElementById('f-item');if(fi)fi.value='';
+    const fn=document.getElementById('f-name');if(fn)fn.value='';
+    const fd=document.getElementById('f-desc');if(fd)fd.value='';
+    const fq=document.getElementById('f-qty');if(fq)fq.value='';
+    const fc=document.getElementById('f-cost');if(fc)fc.value='';
+    const fi2=document.getElementById('f-item');if(fi2)fi2.focus();
+  }else{
+    closeModal(mode==='add'?'add-row-modal':'edit-row-modal');
+    showToast(mode==='add'?L('toastRecordAdded'):L('toastUpdated'),'success');
+  }
 }
 
 function openDispatchModal(){
@@ -6179,10 +6384,13 @@ function buildItemForm(row,mode,idx){
     </div>
     <div class="field"><label>Description</label><input id="f-desc" value="${esc(d.desc||'')}" placeholder="Optional"></div>
     <button type="button" class="modal-btn" onclick="submitItemForm('${mode}',${idx??-1})">${mode==='add'?'<svg class="ic"><use href="#i-plus"/></svg> Add Item':'<svg class="ic"><use href="#i-save"/></svg> Save Changes'}</button>
+    ${mode==='add'?`<button type="button" class="modal-btn" style="margin-top:5px;background:transparent;color:var(--p);border:1.5px solid var(--p)" onclick="submitItemForm('add',-1,true)"><svg class="ic"><use href="#i-plus"/></svg> Add &amp; Add Another</button>`:''}
     <button type="button" class="modal-btn secondary" onclick="closeModal('${mode==='add'?'add-row-modal':'edit-row-modal'}')" style="margin-top:5px">Cancel</button>
+    <div id="f-add-count" style="text-align:center;font-size:11px;color:var(--success);min-height:16px;margin-top:4px"></div>
+    <div id="f-session-table"></div>
     <div class="modal-error" id="f-error"></div>`;
 }
-function submitItemForm(mode,idx){
+function submitItemForm(mode,idx,keepOpen=false){
   const id=cap(document.getElementById('f-id').value.trim(),MAX_NAME_LEN);
   const name=cap(document.getElementById('f-name').value.trim(),MAX_NAME_LEN);
   const desc=cap(document.getElementById('f-desc').value.trim(),MAX_NOTE_LEN);
@@ -6191,8 +6399,18 @@ function submitItemForm(mode,idx){
   if(dupIdx!==-1&&(mode==='add'||dupIdx!==idx)){showMsg('f-error','Item ID already exists — choose a unique one');return;}
   if(mode==='add')S.items.push({id,name,desc,_by:S.user,createdAt:new Date().toISOString()});
   else S.items[idx]={...S.items[idx],id,name,desc,_by:S.user};
-  saveUserData();renderTab();closeModal(mode==='add'?'add-row-modal':'edit-row-modal');
-  showToast(mode==='add'?L('toastItemAdded'):L('toastItemUpdated'),'success');updateSuggestions();
+  saveUserData();renderTab();updateSuggestions();
+  if(keepOpen){
+    _addCount++;
+    _sessionRecords.push({id,name,desc});
+    const c=document.getElementById('f-add-count');if(c)c.textContent=`${_addCount} item${_addCount>1?'s':''} added`;
+    renderSessionTable();
+    document.getElementById('f-id').value='';document.getElementById('f-name').value='';document.getElementById('f-desc').value='';
+    document.getElementById('f-id').focus();
+  }else{
+    closeModal(mode==='add'?'add-row-modal':'edit-row-modal');
+    showToast(mode==='add'?L('toastItemAdded'):L('toastItemUpdated'),'success');
+  }
 }
 
 function buildTxForm(row,mode,isP,idx){
@@ -6242,7 +6460,10 @@ function buildTxForm(row,mode,isP,idx){
       </div>
     </div>
     <button type="button" class="modal-btn" onclick="submitTxForm('${mode}',${idx??-1},${isP})">${mode==='add'?`<svg class="ic"><use href="#i-plus"/></svg> Add ${t} Record`:'<svg class="ic"><use href="#i-save"/></svg> Save Changes'}</button>
+    ${mode==='add'?`<button type="button" class="modal-btn" style="margin-top:5px;background:transparent;color:var(--p);border:1.5px solid var(--p)" onclick="submitTxForm('add',-1,${isP},true)"><svg class="ic"><use href="#i-plus"/></svg> Add &amp; Add Another</button>`:''}
     <button type="button" class="modal-btn secondary" onclick="closeModal('${mode==='add'?'add-row-modal':'edit-row-modal'}')" style="margin-top:5px">Cancel</button>
+    <div id="f-add-count" style="text-align:center;font-size:11px;color:var(--success);min-height:16px;margin-top:4px"></div>
+    <div id="f-session-table"></div>
     <div class="modal-error" id="f-error"></div>`;
   if(d.id){const item=S.items.find(m=>m.id===d.id);if(item){document.getElementById('f-name').value=item.name;document.getElementById('f-desc').value=item.desc;}}
   recalcFormTotals(isP);
@@ -6271,7 +6492,7 @@ function recalcFormTotals(isP){
   const txd=document.getElementById('f-tax-display');if(txd)txd.innerHTML=taxHtml||'<span>No tax</span>';
   const td=document.getElementById('f-total-display');if(td)td.textContent=fmt(total);
 }
-function submitTxForm(mode,idx,isP){
+function submitTxForm(mode,idx,isP,keepOpen=false){
   const date=document.getElementById('f-date').value.trim();
   const party=document.getElementById('f-party').value.trim();
   const branch=document.getElementById('f-branch')?.value||S.branches[0];
@@ -6302,8 +6523,23 @@ function submitTxForm(mode,idx,isP){
     if(mode==='add'){row.createdAt=new Date().toISOString();S.sales.push(row);}else S.sales[idx]={...S.sales[idx],...row};
   }
   saveUserData();renderTab();updateSuggestions();
-  closeModal(mode==='add'?'add-row-modal':'edit-row-modal');
-  showToast(mode==='add'?L('toastRecordAdded'):L('toastUpdated'),'success');
+  if(keepOpen){
+    _addCount++;
+    if(isP)_sessionRecords.push({date,party,id:itemId,qty,uPrice:price});
+    else _sessionRecords.push({date,party,id:itemId,qty,sPrice:price});
+    const c=document.getElementById('f-add-count');if(c)c.textContent=`${_addCount} record${_addCount>1?'s':''} added`;
+    renderSessionTable();
+    const fi=document.getElementById('f-id');if(fi)fi.value='';
+    const fn=document.getElementById('f-name');if(fn)fn.value='';
+    const fd=document.getElementById('f-desc');if(fd)fd.value='';
+    const fq=document.getElementById('f-qty');if(fq)fq.value='';
+    const fp=document.getElementById('f-price');if(fp)fp.value='';
+    recalcFormTotals(isP);
+    const fi2=document.getElementById('f-id');if(fi2)fi2.focus();
+  }else{
+    closeModal(mode==='add'?'add-row-modal':'edit-row-modal');
+    showToast(mode==='add'?L('toastRecordAdded'):L('toastUpdated'),'success');
+  }
 }
 
 function buildExpenseForm(row,mode,idx){
@@ -6325,10 +6561,13 @@ function buildExpenseForm(row,mode,idx){
     </div>
     ${(isOwner()||isSystemOwner())?`<div class="field"><label>Type</label><select id="f-expense-branch">${branchOpts}</select></div>`:''}
     <button type="button" class="modal-btn" onclick="submitExpenseForm('${mode}',${idx??-1})">${mode==='add'?'<svg class="ic"><use href="#i-plus"/></svg> Add Expense':'<svg class="ic"><use href="#i-save"/></svg> Save'}</button>
+    ${mode==='add'?`<button type="button" class="modal-btn" style="margin-top:5px;background:transparent;color:var(--p);border:1.5px solid var(--p)" onclick="submitExpenseForm('add',-1,true)"><svg class="ic"><use href="#i-plus"/></svg> Add &amp; Add Another</button>`:''}
     <button type="button" class="modal-btn secondary" onclick="closeModal('${mode==='add'?'add-row-modal':'edit-row-modal'}')" style="margin-top:5px">Cancel</button>
+    <div id="f-add-count" style="text-align:center;font-size:11px;color:var(--success);min-height:16px;margin-top:4px"></div>
+    <div id="f-session-table"></div>
     <div class="modal-error" id="f-error"></div>`;
 }
-function submitExpenseForm(mode,idx){
+function submitExpenseForm(mode,idx,keepOpen=false){
   const date=document.getElementById('f-date').value.trim();
   const reason=cap(document.getElementById('f-reason').value.trim(),MAX_NOTE_LEN);
   const amt=parseFloat(document.getElementById('f-amt').value)||0;
@@ -6340,8 +6579,17 @@ function submitExpenseForm(mode,idx){
   const row={date,reason,amt,payment,branch:expBranch,_by:S.user};
   if(mode==='add'){row.createdAt=new Date().toISOString();S.expense.push(row);}else S.expense[idx]={...S.expense[idx],...row};
   saveUserData();renderTab();
-  closeModal(mode==='add'?'add-row-modal':'edit-row-modal');
-  showToast(mode==='add'?L('toastExpenseAdded'):L('toastUpdated'),'success');
+  if(keepOpen){
+    _addCount++;
+    _sessionRecords.push({date,reason,amt,payment});
+    const c=document.getElementById('f-add-count');if(c)c.textContent=`${_addCount} expense${_addCount>1?'s':''} added`;
+    renderSessionTable();
+    document.getElementById('f-reason').value='';document.getElementById('f-amt').value='';
+    document.getElementById('f-reason').focus();
+  }else{
+    closeModal(mode==='add'?'add-row-modal':'edit-row-modal');
+    showToast(mode==='add'?L('toastExpenseAdded'):L('toastUpdated'),'success');
+  }
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -8805,6 +9053,361 @@ document.addEventListener('DOMContentLoaded',init);
   setTimeout(init,300);
   var tc=document.getElementById('tab-content');
   if(tc) new MutationObserver(function(){setTimeout(init,200);}).observe(tc,{childList:true,subtree:true});
+})();
+</script>
+
+<script>
+/* ═══════════════════════════════════════════════════════
+   FEATURE ENHANCEMENTS
+═══════════════════════════════════════════════════════ */
+
+// ── Auth language selector ──
+function _setAuthLang(l){
+  // Set lang without calling setLang() to avoid renderTab() side-effects on auth screen
+  if(typeof S!=='undefined') S.lang=l;
+  try{ localStorage.setItem('ims__auth_lang',l); }catch(e){}
+  if(typeof translatePage==='function') translatePage();
+  document.querySelectorAll('.auth-lang-btn').forEach(b=>b.classList.toggle('active',b.id==='auth-lang-'+l));
+  // Manually update auth screen elements not covered by translatePage data-i18n
+  var t=(typeof LANG!=='undefined'&&LANG[l])||{};
+  var mode=(typeof authMode!=='undefined'?authMode:'login');
+  var isAm=(l==='am');
+  var ht=document.getElementById('auth-hdr-title');
+  var hg=document.getElementById('auth-hdr-tagline');
+  var tl=document.getElementById('tab-login-btn');
+  var ts=document.getElementById('tab-signup-btn');
+  var al=document.getElementById('auth-user-label');
+  if(ht) ht.textContent=mode==='login'?(isAm?'እንኳን ደህና ተመለሱ':'Welcome back'):(isAm?'ጀምሩ':'Get started');
+  if(hg) hg.textContent=mode==='login'?(isAm?'ወደ መለያዎ ይግቡ':'Sign in to your account'):(isAm?'የንግድ መለያዎን ይፍጠሩ':'Create your business account');
+  if(tl) tl.textContent=t.authLogin||(isAm?'ግባ':'Log In');
+  if(ts) ts.textContent=t.authRequest||(isAm?'መዳረሻ ጠይቅ':'Request Access');
+  if(al&&mode==='login') al.textContent=t.authUsername||(isAm?'የተጠቃሚ ስም':'Username');
+}
+
+// ── Auth inline field validation ──
+function _valAuthUser(inp){
+  const wrap=document.getElementById('auth-user-field');
+  const vi=document.getElementById('auth-user-vi');
+  const v=inp.value.trim();
+  if(!v){wrap.className='field';if(vi){vi.textContent='';vi.className='auth-vi';} return;}
+  if(v.length>=3){
+    wrap.className='field auth-field-ok';
+    if(vi){vi.textContent='✓';vi.style.color='var(--success)';vi.className='auth-vi show';}
+  } else {
+    wrap.className='field auth-field-err';
+    if(vi){vi.textContent='✗';vi.style.color='var(--error)';vi.className='auth-vi show';}
+  }
+}
+function _valAuthPass(inp){
+  const wrap=document.getElementById('auth-pass-field');
+  const vi=document.getElementById('auth-pass-vi');
+  const v=inp.value;
+  if(!v){wrap.className='field';if(vi){vi.textContent='';vi.className='auth-vi';} return;}
+  if(v.length>=4){
+    wrap.className='field auth-field-ok';
+    if(vi){vi.textContent='✓';vi.style.color='var(--success)';vi.className='auth-vi show';}
+  } else {
+    wrap.className='field auth-field-err';
+    if(vi){vi.textContent='✗';vi.style.color='var(--error)';vi.className='auth-vi show';}
+  }
+}
+// Reset validation state on mode switch + re-apply language
+const _origSetAuthMode=typeof setAuthMode==='function'?setAuthMode:null;
+if(_origSetAuthMode) window.setAuthMode=function(m){
+  _origSetAuthMode(m);
+  ['auth-user-field','auth-pass-field'].forEach(id=>{const el=document.getElementById(id);if(el)el.className='field';});
+  ['auth-user-vi','auth-pass-vi'].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent='';el.className='auth-vi';}});
+  var cl=(typeof S!=='undefined'&&S.lang)||localStorage.getItem('ims__auth_lang')||'en';
+  if(cl!=='en'&&typeof _setAuthLang==='function') _setAuthLang(cl);
+};
+
+// ── Loading spinner on submit ──
+(function(){
+  const _origSubmit=typeof submitAuth==='function'?submitAuth:null;
+  if(!_origSubmit)return;
+  window.submitAuth=async function(){
+    const btn=document.getElementById('auth-btn');
+    if(btn&&!btn.disabled){
+      const orig=btn.innerHTML;
+      btn.innerHTML='<svg style="animation:spin .7s linear infinite;display:inline-block" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Signing in…';
+      btn.disabled=true;
+      try{ await _origSubmit(); }finally{
+        setTimeout(()=>{if(btn.disabled){btn.innerHTML=orig;btn.disabled=false;}},3000);
+      }
+    }
+  };
+  const style=document.createElement('style');
+  style.textContent='@keyframes spin{to{transform:rotate(360deg)}}';
+  document.head.appendChild(style);
+})();
+
+
+// ── Swipe to switch tabs ──
+(function(){
+  var _sx=0,_sy=0;
+  var _allTabs=['PURCHASE','SALES','BALANCE','EXPENSE','REPORT','CREDIT','ITEMS'];
+  var _content=document.getElementById('content');
+  if(!_content)return;
+  _content.addEventListener('touchstart',function(e){
+    _sx=e.touches[0].clientX;_sy=e.touches[0].clientY;
+  },{passive:true});
+  _content.addEventListener('touchend',function(e){
+    var dx=e.changedTouches[0].clientX-_sx;
+    var dy=e.changedTouches[0].clientY-_sy;
+    if(Math.abs(dx)<55||Math.abs(dx)<Math.abs(dy)*1.4)return;
+    if(typeof S==='undefined'||typeof switchTab!=='function')return;
+    var visible=_allTabs.filter(function(t){var el=document.getElementById('nav-'+t);return el&&el.style.display!=='none';});
+    var ci=visible.indexOf(S.tab);
+    if(ci===-1)return;
+    if(dx<0&&ci<visible.length-1) switchTab(visible[ci+1]);
+    else if(dx>0&&ci>0) switchTab(visible[ci-1]);
+  },{passive:true});
+})();
+
+// ── Store long-press sub-menu ──
+(function(){
+  var _lpt=null;
+  var _popup=document.getElementById('nav-store-popup');
+  var _storeBtn=document.getElementById('nav-STORE');
+  if(!_storeBtn||!_popup)return;
+  // Position popup above the store button
+  function _showPopup(){
+    if(typeof navigator!=='undefined'&&navigator.vibrate) navigator.vibrate(30);
+    var r=_storeBtn.getBoundingClientRect();
+    _popup.style.display='block';
+    _popup.style.bottom=(window.innerHeight-r.top+8)+'px';
+    _popup.style.left=Math.max(4,r.left-20)+'px';
+    _popup.style.position='fixed';
+    _storeBtn.classList.add('popup-open');
+  }
+  _storeBtn.addEventListener('touchstart',function(e){
+    _lpt=setTimeout(_showPopup,450);
+  },{passive:true});
+  _storeBtn.addEventListener('touchend',function(){clearTimeout(_lpt);},{passive:true});
+  _storeBtn.addEventListener('touchmove',function(){clearTimeout(_lpt);},{passive:true});
+  document.addEventListener('click',function(e){
+    if(_popup.style.display!=='none'&&!e.target.closest('#nav-store-popup')&&!e.target.closest('#nav-STORE')){
+      _popup.style.display='none';
+      _storeBtn.classList.remove('popup-open');
+    }
+  });
+})();
+function _storeNav(tab){
+  document.getElementById('nav-store-popup').style.display='none';
+  document.getElementById('nav-STORE').classList.remove('popup-open');
+  if(typeof switchTab==='function') switchTab(tab);
+}
+
+/* ═══════════════════════════════════════════════════════
+   ADMIN OVERLAY — Ctrl+Shift+A shortcut
+   Opens the sys-admin owner dashboard on top of the current
+   user session without disrupting it. Session is fully
+   restored when the overlay is closed.
+═══════════════════════════════════════════════════════ */
+let _adminOverlay = false;
+let _savedSession = null;
+
+document.addEventListener('keydown', function(e){
+  if(e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a')){
+    e.preventDefault();
+    if(_adminOverlay){ _closeAdminOverlay(); return; }
+    openModal('admin-unlock-modal');
+    const inp = document.getElementById('admin-unlock-pass');
+    inp.value = '';
+    document.getElementById('admin-unlock-err').textContent = '';
+    setTimeout(() => inp.focus(), 60);
+  }
+});
+
+async function _doAdminUnlock(){
+  const p = document.getElementById('admin-unlock-pass').value;
+  const err = document.getElementById('admin-unlock-err');
+  if(!p){ err.textContent = 'Please enter the password.'; return; }
+  err.textContent = 'Checking…';
+  let h;
+  try{ h = await sha256Hex(p); } catch(e){ err.textContent = 'Error checking password.'; return; }
+  if(h !== OWNER_PASSWORD_HASH){ err.textContent = 'Incorrect password.'; document.getElementById('admin-unlock-pass').value = ''; return; }
+  closeModal('admin-unlock-modal');
+  _openAdminOverlay();
+}
+
+function _openAdminOverlay(){
+  _adminOverlay = true;
+  _savedSession = { user: S.user, ownerId: S.ownerId, role: S.role };
+  S.user = OWNER_USERNAME; S.ownerId = '_system_'; S.role = 'system_owner';
+  document.getElementById('owner-screen').style.display = 'block';
+  const nav = document.getElementById('bottom-nav');
+  if(nav) nav.style.display = 'none';
+  if(typeof loadPendingOwnersFromCloud === 'function'){
+    loadPendingOwnersFromCloud().then(() => renderSystemOwnerDashboard()).catch(() => renderSystemOwnerDashboard());
+  } else {
+    renderSystemOwnerDashboard();
+  }
+  const logoutBtn = document.querySelector('#owner-screen .owner-logout-btn');
+  if(logoutBtn){ logoutBtn.innerHTML = '<svg class="ic"><use href="#i-arrow-left"/></svg> Return to Session'; }
+  showToast('Admin overlay active — press Ctrl+Shift+A or click Return to Session to exit', 'success');
+}
+
+function _closeAdminOverlay(){
+  if(!_savedSession) return;
+  _adminOverlay = false;
+  const { user, ownerId, role } = _savedSession;
+  _savedSession = null;
+  S.user = user; S.ownerId = ownerId; S.role = role;
+  document.getElementById('owner-screen').style.display = 'none';
+  document.getElementById('content').style.display = 'block';
+  const nav = document.getElementById('bottom-nav');
+  if(nav) nav.style.display = 'flex';
+  document.getElementById('owner-back-btn').style.display = 'none';
+  document.getElementById('app-header').className = 'app-header';
+  if(typeof loadUserData === 'function') loadUserData();
+  if(typeof renderTab === 'function') renderTab();
+  showToast('Returned to your session', 'success');
+}
+
+/* ═══════════════════════════════════════════════════════
+   SETTINGS DRAWER ENHANCEMENTS
+   Session info card, Today's snapshot, Cloud sync status,
+   Auto-logout timer
+═══════════════════════════════════════════════════════ */
+
+var _sessionStart = Date.now();
+
+function _refreshDrawer(){
+  var card = document.getElementById('drawer-info-card');
+  if(!card || typeof S === 'undefined' || !S.user){ if(card) card.style.display='none'; return; }
+  card.style.display = 'block';
+
+  // Avatar + name + role
+  var av = document.getElementById('dsc-avatar');
+  var nm = document.getElementById('dsc-name');
+  var rl = document.getElementById('dsc-role');
+  var dt = document.getElementById('dsc-detail');
+  if(av){
+    av.textContent = (S.user||'?')[0].toUpperCase();
+    var roleColors = {system_owner:'#1e1b4b',owner:'#7c3aed',manager:'#2563eb',storekeeper:'#0891b2',readonly:'#6b7280'};
+    av.style.background = roleColors[S.role] || '#6b7280';
+    av.style.color = '#fff';
+    av.style.width = '36px'; av.style.height = '36px'; av.style.borderRadius = '50%';
+    av.style.display = 'flex'; av.style.alignItems = 'center'; av.style.justifyContent = 'center';
+    av.style.fontWeight = '700'; av.style.fontSize = '15px';
+  }
+  if(nm) nm.textContent = S.user || '';
+  if(rl){
+    var roleLabels = {system_owner:'System Owner',owner:'Shop Owner',manager:'Manager',storekeeper:'Store Keeper',readonly:'Read Only',user:'User'};
+    rl.textContent = roleLabels[S.role] || S.role || '';
+  }
+  if(dt){
+    var ageMs = Date.now() - _sessionStart;
+    var ageMins = Math.round(ageMs / 60000);
+    if(ageMins < 1) dt.textContent = 'Session just started';
+    else if(ageMins === 1) dt.textContent = 'Session started 1 min ago';
+    else if(ageMins < 60) dt.textContent = 'Session started ' + ageMins + ' mins ago';
+    else dt.textContent = 'Session started ' + Math.round(ageMins/60) + ' hr ago';
+  }
+
+  // Today's snapshot — owners/managers only
+  var snap = document.getElementById('dsc-snap');
+  if(snap && (S.role==='owner'||S.role==='manager'||S.role==='system_owner')){
+    snap.style.display = 'grid';
+    var today = new Date().toISOString().slice(0,10);
+    var flt = function(arr,key){ return (arr||[]).filter(function(r){return (r.date||'').slice(0,10)===today;}).reduce(function(a,r){return a+parseFloat(r[key]||r.total||r.totalPrice||0);},0); };
+    var todaySales = flt(S.sales,'total');
+    var todayPurch = flt(S.purchase,'total');
+    var todayExp = (S.expense||[]).filter(function(r){return (r.date||'').slice(0,10)===today;}).reduce(function(a,r){return a+parseFloat(r.amount||0);},0);
+    var fmt = function(n){ return Number(n).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0}); };
+    var ss = document.getElementById('snap-sales'); if(ss) ss.textContent = fmt(todaySales);
+    var sp = document.getElementById('snap-purchase'); if(sp) sp.textContent = fmt(todayPurch);
+    var se = document.getElementById('snap-expense'); if(se) se.textContent = fmt(todayExp);
+  } else if(snap){
+    snap.style.display = 'none';
+  }
+
+  // Cloud sync status
+  var syncRow = document.getElementById('dsc-sync');
+  var syncDot = document.getElementById('dsc-sync-dot');
+  var syncTxt = document.getElementById('dsc-sync-txt');
+  if(syncRow){
+    syncRow.style.display = 'flex';
+    if(S.db && S.dbConnected){
+      if(syncDot) syncDot.style.background = 'var(--success)';
+      if(syncTxt) syncTxt.textContent = 'Cloud sync active';
+    } else if(S.db){
+      if(syncDot) syncDot.style.background = 'var(--warn)';
+      if(syncTxt) syncTxt.textContent = 'Connecting to cloud…';
+    } else {
+      if(syncDot) syncDot.style.background = 'var(--error)';
+      if(syncTxt) syncTxt.textContent = 'Offline — no cloud';
+    }
+  }
+
+  // Auto-logout select value
+  var alSel = document.getElementById('auto-logout-select');
+  if(alSel){
+    alSel.value = localStorage.getItem('ims__auto_logout') || '0';
+  }
+}
+
+function _syncNow(){
+  var btn = document.getElementById('dsc-sync-btn');
+  var txt = document.getElementById('dsc-sync-txt');
+  if(btn){ btn.disabled = true; btn.textContent = '…'; }
+  if(txt) txt.textContent = 'Syncing…';
+  if(typeof loadRegistryFromCloud === 'function'){
+    loadRegistryFromCloud().then(function(){
+      if(txt) txt.textContent = 'Sync complete!';
+      if(btn){ btn.disabled = false; btn.textContent = 'Sync'; }
+      setTimeout(_refreshDrawer, 1200);
+    }).catch(function(){
+      if(txt) txt.textContent = 'Sync failed';
+      if(btn){ btn.disabled = false; btn.textContent = 'Sync'; }
+    });
+  } else {
+    if(txt) txt.textContent = 'No cloud available';
+    if(btn){ btn.disabled = false; btn.textContent = 'Sync'; }
+  }
+}
+
+// ── Auto-logout timer ──
+var _autoLogoutTimer = null;
+var _autoLogoutMins = 0;
+var _lastActivity = Date.now();
+
+function _setAutoLogout(mins){
+  _autoLogoutMins = parseInt(mins, 10) || 0;
+  try{ localStorage.setItem('ims__auto_logout', String(_autoLogoutMins)); }catch(e){}
+  clearInterval(_autoLogoutTimer);
+  _autoLogoutTimer = null;
+  if(_autoLogoutMins > 0){
+    _autoLogoutTimer = setInterval(function(){
+      if(typeof S === 'undefined' || !S.user) return;
+      if(Date.now() - _lastActivity > _autoLogoutMins * 60000){
+        clearInterval(_autoLogoutTimer);
+        _autoLogoutTimer = null;
+        if(typeof showToast === 'function') showToast('Auto-logged out due to inactivity', 'warn');
+        if(typeof logout === 'function') logout();
+      }
+    }, 30000);
+  }
+}
+
+['click','keydown','touchstart','mousemove','scroll'].forEach(function(ev){
+  document.addEventListener(ev, function(){ _lastActivity = Date.now(); }, {passive:true});
+});
+
+// Restore auto-logout setting on load
+(function(){
+  var saved = localStorage.getItem('ims__auto_logout');
+  if(saved && parseInt(saved,10) > 0) _setAutoLogout(saved);
+})();
+
+// Hook openSettings to refresh drawer
+(function(){
+  var _origOpen = typeof openSettings === 'function' ? openSettings : null;
+  if(_origOpen) window.openSettings = function(){
+    _origOpen();
+    setTimeout(_refreshDrawer, 80);
+  };
 })();
 </script>
 </body></html>
