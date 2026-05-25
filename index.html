@@ -3568,6 +3568,9 @@ const saveRegistry=r=>{
   const now=new Date().toISOString();
   Object.values(r).forEach(v=>{if(v&&typeof v==='object'&&!v.updatedAt)v.updatedAt=now;});
   try{_lsSet('ims_reg',r);}catch(e){console.error('saveRegistry:',e);}
+  // Record when the local registry was last changed so loadRegistryFromCloud
+  // can skip overwriting localStorage when cloud data is older than our local changes.
+  localStorage.setItem('ims_reg_localAt',now);
   // Push registry to cloud so any device can authenticate
   saveRegistryToCloud(r);
 };
@@ -3611,6 +3614,11 @@ async function loadRegistryFromCloud(){
     if(doc.exists&&doc.data().registry){
       const cloudReg=_safeJSON(doc.data().registry,{},'cloud registry');
       const localReg=getRegistry();
+      const cloudDocAt=doc.data().updatedAt||'';
+      const localAt=localStorage.getItem('ims_reg_localAt')||'';
+      // If the local registry was modified more recently than this cloud snapshot
+      // (e.g. an owner was just deleted), don't overwrite local — local wins.
+      if(localAt&&localAt>cloudDocAt){return localReg;}
       // Start from cloud (authoritative) so deletions made on other devices propagate.
       // Keep any local entry that is strictly newer than cloud (offline edits).
       const merged={...cloudReg};
@@ -3941,6 +3949,10 @@ function startRealtimeSync(){
         return;
       }
       const localReg=getRegistry();
+      const localAt=localStorage.getItem('ims_reg_localAt')||'';
+      // Skip if local registry was modified after this cloud snapshot (guards against
+      // a realtime event restoring a just-deleted owner before cloud confirms the delete).
+      if(localAt&&localAt>d.updatedAt)return;
       try{
         // Cloud is authoritative: apply all field changes and propagate deletions
         const merged={...cloudReg};
@@ -4512,7 +4524,6 @@ function restoreOwner(username){
 }
 function deleteOwner(u){
   customConfirm(`Permanently Delete "${u}"?`,'This removes their account and wipes ALL their inventory data from this device. They can re-apply as a new user. This cannot be undone.',_SVG.trash,'Delete Permanently',()=>{
-    requireReAuth(`Confirm permanent deletion of owner "${u}"`,()=>{
     const reg=getRegistry();
     const ownerData=reg[u]||{};
     const ns=ownerData.ownerId||u;
@@ -4563,7 +4574,6 @@ function deleteOwner(u){
 
     showToast(`<svg class="ic"><use href="#i-trash"/></svg> ${u} permanently deleted`,'success');
     renderSystemOwnerDashboard();
-    });
   });
 }
 
