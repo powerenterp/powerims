@@ -42,6 +42,10 @@
   --font:'Inter',system-ui,sans-serif;--display:'Plus Jakarta Sans','Inter',sans-serif;--brand:'Gebuk','Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;
   --nav-h:68px;--hdr-h:58px;
 }
+[data-theme="dark"]{
+  --text:#C2C5D5;--text2:rgba(194,197,213,.70);--text3:rgba(194,197,213,.42);
+  --bg:#0B1020;--bg2:#101524;--surface:#152040;--surface2:#1A2A52;--surface3:#1F3060;
+}
 [data-theme="light"]{
   --bg:#F0F2FA;--bg2:#E8EAF6;--surface:#FFFFFF;--surface2:#F5F6FD;--surface3:#ECEEF8;
   --border:#DDE0EE;--border2:#C8CCE4;
@@ -1840,11 +1844,134 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
 /* Admin layout top spacing */
 .owner-screen{padding:20px 22px 32px!important}
 
+/* Shop-owner mode: ensure sys-only elements stay hidden via CSS safety net */
+#owner-screen.shop-owner-mode .sys-tab-bar{display:none!important}
+#owner-screen.shop-owner-mode #sys-owner-filter-bar{display:none!important}
+
 /* Responsive: ensure tabs wrap gracefully on narrow screens */
 @media(max-width:640px){
   .sys-tab{padding:8px 10px!important;font-size:11px!important;gap:4px!important}
   .owner-hero{padding:20px 20px 18px!important}
   .hero-quick-strip{gap:6px!important}
+}
+
+/* ── Credit aging bands ──────────────────────────────── */
+.aging-badge{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:99px;font-size:9.5px;font-weight:700;white-space:nowrap;margin-left:4px}
+.aging-current{background:rgba(16,185,129,.1);color:var(--success);border:1px solid rgba(16,185,129,.25)}
+.aging-warn{background:rgba(245,158,11,.12);color:var(--warn);border:1px solid rgba(245,158,11,.3)}
+.aging-overdue{background:rgba(244,63,94,.12);color:var(--error);border:1px solid rgba(244,63,94,.3)}
+/* ── Customer credit drawer ───────────────────────────── */
+#cust-credit-drawer{position:fixed;top:0;right:0;bottom:0;width:min(400px,100vw);background:var(--surface);border-left:1px solid var(--border);box-shadow:-8px 0 40px rgba(0,0,0,.28);z-index:500;transform:translateX(100%);transition:transform .32s cubic-bezier(.22,1,.36,1);display:flex;flex-direction:column;overflow:hidden}
+#cust-credit-drawer.open{transform:translateX(0)}
+.cdr-overlay{position:fixed;inset:0;background:rgba(0,0,0,.38);z-index:499;opacity:0;pointer-events:none;transition:opacity .28s}
+.cdr-overlay.open{opacity:1;pointer-events:all}
+.cdr-hdr{display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--border);flex-shrink:0;background:var(--surface2)}
+.cdr-av{width:36px;height:36px;border-radius:50%;background:var(--p);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;flex-shrink:0}
+.cdr-body{flex:1;overflow-y:auto}
+.cdr-sec{padding:8px 14px}
+.cdr-sec-lbl{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.07em;text-transform:uppercase;margin-bottom:5px}
+.cdr-item{padding:8px 10px;border:1px solid var(--border);border-radius:8px;margin-bottom:6px;background:var(--surface2)}
+/* ── Payment schedule modal ───────────────────────────── */
+.sch-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+/* ── Owner quick-actions bar ──────────────────────────── */
+.owner-quick-actions{display:flex;gap:8px;padding:10px 16px;background:var(--surface2);border-bottom:1px solid var(--border);flex-wrap:wrap}
+.oqa-btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:8px;border:1px solid var(--border2);background:var(--surface3);color:var(--text);font-size:12px;font-weight:600;cursor:pointer;transition:background .15s,border-color .15s,color .15s;white-space:nowrap}
+.oqa-btn:hover{background:var(--p-glass);border-color:var(--p);color:var(--p)}
+.oqa-btn.oqa-pri{background:rgba(45,75,138,.12);border-color:rgba(45,75,138,.3);color:var(--p2)}
+.oqa-btn.oqa-pri:hover{background:var(--p);color:#fff;border-color:var(--p)}
+/* ── Subscription progress ────────────────────────────── */
+.sub-prog-wrap{padding:8px 16px 10px;border-bottom:1px solid var(--border);background:var(--surface2)}
+.sub-prog-track{height:5px;background:var(--surface3);border-radius:3px;overflow:hidden;margin:5px 0 3px}
+.sub-prog-fill{height:100%;border-radius:3px;transition:width .4s ease}
+.sub-prog-meta{display:flex;justify-content:space-between;font-size:10px;color:var(--text3)}
+
+/* ── Analytics widgets ─────────────────────────────── */
+.report-stat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:10px;padding:12px 14px 10px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.report-stat-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:10px 14px;display:flex;flex-direction:column;gap:3px}
+.report-stat-label{font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.07em;text-transform:uppercase}
+.report-stat-val{font-size:15px;font-weight:800;font-family:var(--mono);color:var(--text);line-height:1.2}
+.report-stat-row{display:flex;align-items:center;gap:6px;margin-top:3px;flex-wrap:wrap}
+.report-delta{font-size:10px;font-weight:700;padding:1px 7px;border-radius:99px;white-space:nowrap}
+.report-delta.up{background:rgba(52,211,153,.15);color:#34d399}
+.report-delta.dn{background:rgba(244,63,94,.15);color:#f43f5e}
+.report-delta.flat{background:rgba(194,197,213,.12);color:var(--text3)}
+.top5-widget{padding:10px 16px;border-bottom:1px solid var(--border)}
+.top5-row{display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid var(--border2);font-size:12px}
+.top5-row:last-child{border-bottom:none}
+.top5-rank{width:18px;font-size:10px;font-weight:800;color:var(--text3);text-align:center;flex-shrink:0}
+.top5-bar-wrap{width:56px;height:4px;background:var(--surface3);border-radius:2px;overflow:hidden;flex-shrink:0}
+.top5-bar{height:100%;background:var(--p);border-radius:2px}
+
+/* ── Date range preset chips ─────────────────────────── */
+.dr-chips{display:flex;flex-wrap:wrap;gap:6px;padding:10px 16px 6px;background:var(--surface2);border-bottom:1px solid var(--border)}
+.dr-chip{padding:4px 13px;background:var(--surface);border:1px solid var(--border);border-radius:20px;font-size:11.5px;font-weight:500;cursor:pointer;color:var(--text2);transition:background .15s,color .15s,border-color .15s,box-shadow .15s}
+.dr-chip:hover{background:var(--p-glass);border-color:var(--p);color:var(--p)}
+.dr-chip.dr-active{background:var(--p);border-color:var(--p);color:#fff;box-shadow:0 2px 8px var(--p-glow)}
+
+/* ── Forms & Entry enhancements ─────────────────────── */
+.draft-banner{display:flex;align-items:center;gap:8px;background:var(--p-glass);border:1px solid rgba(45,75,138,.25);border-radius:var(--radius-sm);padding:9px 12px;margin-bottom:12px;font-size:12px;color:var(--p)}
+.draft-banner a{color:var(--p);font-weight:600;text-decoration:underline;margin-left:4px}
+.dup-warn{display:none;align-items:flex-start;gap:8px;background:#fff8e6;border:1px solid #f59e0b;border-radius:var(--radius-sm);padding:8px 12px;margin-bottom:10px;font-size:12px;color:#92400e}
+.party-chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:10px}
+.party-chip{padding:3px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;font-size:11px;cursor:pointer;color:var(--text2);transition:background .15s,color .15s,border-color .15s}
+.party-chip:hover{background:var(--p-glass);border-color:var(--p);color:var(--p)}
+
+/* ── FAB ─────────────────────────────────────────────── */
+#fab-add{position:fixed;right:20px;bottom:calc(var(--nav-h) + 18px);width:52px;height:52px;border-radius:50%;background:var(--p);color:#fff;border:none;box-shadow:0 4px 20px var(--p-glow),0 0 0 1.5px rgba(255,255,255,.1);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:110;transition:transform .18s,box-shadow .18s,opacity .15s}
+#fab-add:hover{transform:scale(1.09);box-shadow:0 8px 28px var(--p-glow)}
+#fab-add:active{transform:scale(.94)}
+#fab-add.fab-hidden{opacity:0;pointer-events:none;transform:scale(.7)}
+/* ── Bottom sheet on narrow screens ─────────────────── */
+@media(max-width:540px){
+  .modal-overlay{align-items:flex-end}
+  .modal-overlay .modal-card{position:fixed;bottom:0;left:0;right:0;max-height:92dvh;border-radius:18px 18px 0 0!important;transform:translateY(100%);transition:transform .32s cubic-bezier(.32,.72,0,1);margin:0;max-width:100%;width:100%}
+  .modal-overlay.open .modal-card{transform:translateY(0)}
+}
+/* ── Skeleton shimmer ────────────────────────────────── */
+.skel-wrap{padding:0}
+.skel-row{height:46px;border-radius:var(--radius-sm);margin-bottom:7px;background:linear-gradient(90deg,var(--surface2) 25%,var(--surface3) 50%,var(--surface2) 75%);background-size:200% 100%;animation:skelShimmer 1.5s infinite}
+.skel-row:nth-child(2){animation-delay:.1s}.skel-row:nth-child(3){animation-delay:.2s}.skel-row:nth-child(4){animation-delay:.3s}.skel-row:nth-child(5){animation-delay:.4s}
+@keyframes skelShimmer{0%{background-position:200% 0}100%{background-position:-200% 0}}
+/* ── Empty states ────────────────────────────────────── */
+.empty-state{padding:44px 20px 52px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:10px}
+.empty-state-icon{opacity:.2;color:var(--p)}
+.empty-state-title{font-size:15px;font-weight:700;color:var(--text2)}
+.empty-state-sub{font-size:12px;color:var(--text3);max-width:200px;line-height:1.55}
+.empty-state .modal-btn{margin-top:6px;padding:9px 20px;width:auto;font-size:12.5px}
+/* ── Undo toast ──────────────────────────────────────── */
+.toast-undo-row{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%}
+.toast-undo-btn{flex-shrink:0;padding:3px 12px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.3);border-radius:6px;color:#fff;font-size:11.5px;font-weight:700;cursor:pointer;white-space:nowrap;transition:background .15s}
+.toast-undo-btn:hover{background:rgba(255,255,255,.34)}
+.toast-pb-wrap{height:2px;background:rgba(255,255,255,.2);border-radius:1px;margin-top:5px;overflow:hidden}
+.toast-pb-fill{height:100%;background:rgba(255,255,255,.5);border-radius:1px;width:100%}
+/* ── Inline suspend toggle ───────────────────────────── */
+.sus-tog{position:relative;display:inline-flex;width:36px;height:20px;flex-shrink:0}
+.sus-tog input{opacity:0;width:0;height:0;position:absolute}
+.sus-slider{position:absolute;inset:0;background:var(--error);border-radius:20px;cursor:pointer;transition:.22s}
+.sus-slider::before{content:'';position:absolute;width:14px;height:14px;left:3px;top:3px;background:#fff;border-radius:50%;transition:.22s}
+.sus-tog input:checked+.sus-slider{background:var(--success)}
+.sus-tog input:checked+.sus-slider::before{transform:translateX(16px)}
+/* ── Number micro-animation ──────────────────────────── */
+@keyframes numPop{0%,100%{color:inherit}40%{color:var(--p)}}
+.num-updated{animation:numPop .6s ease-out}
+/* ── Pull-to-refresh ─────────────────────────────────── */
+#ptr-indicator{position:fixed;top:calc(var(--hdr-h) + 4px);left:50%;transform:translateX(-50%);width:34px;height:34px;border-radius:50%;background:var(--surface2);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--p);box-shadow:var(--shadow);opacity:0;transition:opacity .2s;z-index:200;pointer-events:none}
+#ptr-indicator.ptr-vis{opacity:1}
+#ptr-indicator svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+#ptr-indicator.ptr-spin svg{animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* ── Print ───────────────────────────────────────────── */
+@media print{
+  .app-header,.bottom-nav,#fab-add,#ptr-indicator,.btn,.modal-btn,.ctx-menu,
+  .settings-drawer,.modal-overlay,#filter-bar-wrap,.page-card-actions,.hero-quick-strip{display:none!important}
+  body{background:#fff!important;color:#000!important;margin:0;padding:0}
+  table{border-collapse:collapse!important;width:100%!important;page-break-inside:auto}
+  tr{page-break-inside:avoid}
+  th,td{border:1px solid #bbb!important;padding:5px 9px!important;font-size:10pt!important;color:#000!important;background:#fff!important;font-family:Arial,sans-serif!important}
+  thead{display:table-header-group}
+  thead th{background:#f0f0f0!important;font-weight:700!important}
+  .table-wrap{box-shadow:none!important;border:none!important;border-radius:0!important;overflow:visible!important}
+  .summary-row td{background:#f5f5f5!important;font-weight:700!important}
 }
 
 
@@ -1867,6 +1994,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
 </div>
 
 <div class="toast-wrap" id="toast-wrap"></div>
+<div id="ptr-indicator"><svg viewBox="0 0 24 24"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4"/></svg></div>
 <div class="ctx-menu" id="ctx-menu" style="display:none"></div>
 <div id="print-area"></div>
 <div class="print-pg-hdr" id="print-pg-hdr" style="display:none">
@@ -2491,6 +2619,46 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
   </div>
 </div>
 
+<!-- CUSTOMER CREDIT DRAWER -->
+<div class="cdr-overlay" id="cdr-overlay" onclick="closeCustDrawer()"></div>
+<div id="cust-credit-drawer">
+  <div class="cdr-hdr">
+    <div class="cdr-av" id="cdr-av">?</div>
+    <div style="flex:1;min-width:0">
+      <div style="font-weight:700;font-size:13px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" id="cdr-name">—</div>
+      <div style="font-size:11px;color:var(--text3)" id="cdr-sub">—</div>
+    </div>
+    <button type="button" class="modal-hdr-close" onclick="closeCustDrawer()"><svg class="ic"><use href="#i-x"/></svg></button>
+  </div>
+  <div class="cdr-body" id="cdr-body"></div>
+</div>
+
+<!-- PAYMENT SCHEDULE MODAL -->
+<div class="modal-overlay" id="credit-schedule-modal">
+  <div class="modal-box narrow">
+    <div class="modal-hdr">
+      <div class="modal-hdr-icon-wrap"><span class="modal-hdr-icon"><svg class="ic"><use href="#i-calendar"/></svg></span></div>
+      <div><h2>Payment Schedule</h2><p id="sched-subtitle" style="font-size:12px;color:var(--text2)"></p></div>
+      <button type="button" class="modal-hdr-close" onclick="closeModal('credit-schedule-modal')"><svg class="ic"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="modal-body">
+      <div id="sched-summary" style="background:var(--surface2);border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:12px;color:var(--text2);border:1px solid var(--border2)"></div>
+      <div class="sch-grid">
+        <div class="field"><label>Installments *</label><input type="number" id="sched-count" min="2" max="24" value="3" oninput="_updateSchedPreview()"></div>
+        <div class="field"><label>Interval</label><select id="sched-interval" onchange="_updateSchedPreview()"><option value="30">Monthly</option><option value="14">Bi-weekly</option><option value="7">Weekly</option></select></div>
+      </div>
+      <div class="field"><label>First Payment Date</label><input type="text" id="sched-start" placeholder="dd-mm-yyyy" oninput="_updateSchedPreview()"></div>
+      <div class="field"><label>Note <span style="color:var(--text3);font-size:11px">(optional)</span></label><input type="text" id="sched-note" placeholder="e.g. Monthly installment"></div>
+      <div id="sched-preview" style="font-size:11px;color:var(--text3);margin:8px 0;min-height:24px"></div>
+      <div class="modal-error" id="sched-error"></div>
+      <div style="display:flex;gap:10px;margin-top:4px">
+        <button type="button" class="modal-btn secondary" onclick="closeModal('credit-schedule-modal')" style="flex:0 0 auto;padding:11px 20px">Cancel</button>
+        <button type="button" class="modal-btn btn-primary" onclick="saveSchedule()" style="flex:1"><svg class="ic"><use href="#i-check-circle"/></svg> Create Schedule</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- OWNER / PLATFORM DASHBOARD -->
 <div id="owner-screen" style="display: none; position: fixed; inset: 0px; z-index: 300; background: var(--bg); overflow-y: auto; padding-bottom: 20px;">
   <div class="owner-screen">
@@ -2520,10 +2688,12 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
       <div class="hero-quick-strip" id="hero-quick-strip" style="display:none"></div>
     </div>
     <div id="owner-sub-banner"></div>
+    <div id="owner-sub-progress" style="display:none"></div>
+    <div id="owner-quick-actions" style="display:none"></div>
     <div class="owner-stats" id="owner-stats"></div>
 
     <!-- Tab bar (sys-admin mode only) -->
-    <div class="sys-tab-bar" id="sys-tab-bar">
+    <div class="sys-tab-bar" id="sys-tab-bar" style="display:none">
       <button type="button" class="sys-tab active" id="stab-owners" onclick="switchSysTab('owners')"><svg class="ic"><use href="#i-crown"/></svg> Owners <span class="sys-tab-badge" id="stab-owners-badge" style="display:none">0</span></button>
       <button type="button" class="sys-tab" id="stab-pending" onclick="switchSysTab('pending')"><svg class="ic"><use href="#i-clock"/></svg> Pending <span class="sys-tab-badge tb-warn" id="stab-pending-badge" style="display:none">0</span></button>
       <button type="button" class="sys-tab" id="stab-subs" onclick="switchSysTab('subs')"><svg class="ic"><use href="#i-gem"/></svg> Sub Requests <span class="sys-tab-badge tb-warn" id="stab-subs-badge" style="display:none">0</span></button>
@@ -2602,6 +2772,12 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
     <div class="owner-section" id="section-branches" style="display:none">
       <div class="owner-section-hdr"><h3><svg class="ic"><use href="#i-building"/></svg> Branches</h3><button type="button" class="btn" onclick="openBranches()">Manage</button></div>
       <div id="owner-branch-list"></div>
+    </div>
+
+    <!-- Branch comparison (shop-owner mode only) -->
+    <div class="owner-section" id="section-branch-cmp" style="display:none">
+      <div class="owner-section-hdr"><h3><svg class="ic"><use href="#i-bar-chart"/></svg> Branch Performance</h3></div>
+      <div id="owner-branch-cmp" style="padding:0 4px 4px"></div>
     </div>
 
     <!-- Owner Settings (shop-owner mode only) -->
@@ -2968,6 +3144,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
 <datalist id="party-list"></datalist>
 <datalist id="item-list"></datalist>
 <datalist id="branch-dl"></datalist>
+<datalist id="reason-list"></datalist>
 
 <script>
 document.addEventListener('input', function(e){
@@ -3050,6 +3227,7 @@ document.addEventListener('input', function(e){
     <span class="ni-label" data-i18n="navStoreReport">Report</span>
   </button>
 </div>
+<button id="fab-add" class="fab-hidden" onclick="openAddModal()" aria-label="Add new record"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
 
 <script>
 /* ═══════════════════════════════════════════════════════
@@ -3130,33 +3308,50 @@ const LANG={
     confirmSuspendTitle:'Suspend User?',confirmDeleteUserTitle:'Delete User?',confirmDeleteBranchTitle:'Delete Branch?',confirmDeleteOwnerTitle:'Delete Owner?',confirmDeleteOwnerMsg:'This removes their account. Inventory data stays intact.',confirmResetTitle:'Request Data Reset',confirmApproveResetTitle:'Approve Reset?',
     branchLabel:'Branch:',exportPermLabel:'Export Permission',
     subStatusTrial:'Trial · 14d left',subStatusActive:'Active',subStatusExpired:'Expired',subStatusSuspended:'Suspended',
+    purchOnCash:'Purchase on Cash',purchOnCredit:'Purchase on Credit',totalPurchaseLabel:'Total Purchase',
+    salesOnCash:'Sales on Cash',salesOnCredit:'Sales on Credit',totalSalesLabel:'Total Sales',
+    branchExpenses:'Branch Expenses',storeExpenses:'Store Expenses',vatWH:'VAT Withholding 7.5%',commissionLabel:'Commission',
+    allBranchesSummary:'ALL BRANCHES SUMMARY',allBranchesCombined:'COMBINED',vsLastMonth:'vs last month',inRange:'in range',
+    topItemsBySales:'TOP ITEMS BY SALES VALUE',profitLossPerEntry:'Profit / Loss Per Entry',
+    saleTotal:'Sale Total',costOfGoods:'Cost of Goods',profit:'Profit',margin:'Margin',
+    noCreditPurchInRange:'No credit purchases in range',noCreditSalesInRange:'No credit sales in range',
+    fromLabel:'From',toLabel:'To',
+    receivables:'Receivables',payables:'Payables',collected:'Collected',settled:'Settled',outstanding:'Outstanding',
+    creditSaleType:'SALE',creditPurchType:'PURCHASE',creditPaidBadge:'PAID',creditPartialBadge:'PARTIAL',creditOutstandingBadge:'OUTSTANDING',
+    allParties:'All Parties',creditReceivableLabel:'RECEIVABLE',creditPayableLabel:'PAYABLE',
+    collectAll:'Collect All',payAll:'Pay All',balanceLabel:'Balance',addPaymentBtn:'+ Payment',
+    addItem:'Add Item',editItem:'Edit Item',addItemSub:'Fill in the item details below',addAnotherBtn:'Add & Add Another',
+    supplierNamePh:'Supplier name',customerNamePh:'Customer name',itemNameAutoLbl:'Item Name (auto)',descAutoLbl:'Description (auto)',
+    unitPurchPriceLbl:'Unit Purchase Price *',unitSellPriceLbl:'Unit Selling Price *',commissionAmtLbl:'Commission (optional)',noTaxLabel:'No tax',
+    valDateRequired:'Date is required',valDateFormat:'Date must be in dd-mm-yyyy format',
+    valSupplierReq:'Supplier required',valCustomerReq:'Customer required',valQtyRequired:'Quantity required',valPriceRequired:'Price required',
   },
   am:{
-    date:'ቀን',supplier:'አቅርቦት',customer:'ደንበኛ',branch:'ቅርንጫፍ',partNo:'ቁጥር',itemName:'ዕቃ ስም',desc:'መግለጫ',qty:'ብዛት',unitPrice:'የአንድ ዋጋ',total:'ድምር',payment:'ክፍያ',status:'ሁኔታ',price:'ዋጋ',totals:'ድምሮች',vat:'ተ.እ.ታ (15%)',wh3:'ምዝገባ 3%',vwh:'ተ.እ.ታ WH 7.5%',totalPrice:'ጠቅላላ ዋጋ',cash:'ጥሬ ገንዘብ',credit:'ክሬዲት',reason:'ምክንያት',amount:'መጠን',
+    date:'ቀን',supplier:'አቅራቢ',customer:'ደንበኛ',branch:'ቅርንጫፍ',partNo:'ቁጥር',itemName:'ዕቃ ስም',desc:'መግለጫ',qty:'ብዛት',unitPrice:'የአንድ ዋጋ',total:'ድምር',payment:'ክፍያ',status:'ሁኔታ',price:'ዋጋ',totals:'ድምሮች',vat:'ተ.እ.ታ (15%)',wh3:'ቀናሽ ቀረጥ 3%',vwh:'ተ.እ.ታ WH 7.5%',totalPrice:'ጠቅላላ ዋጋ',cash:'ጥሬ ገንዘብ',credit:'ክሬዲት',reason:'ምክንያት',amount:'መጠን',
     navPurchase:'ግዥ',navSales:'ሽያጭ',navBalance:'ሚዛን',navExpense:'ወጪ',navReport:'ሪፖርት',navItems:'ዕቃዎች',navStore:'ስቶር',navStoreBalance:'ሚዛን',navStoreReport:'ሪፖርት',
     titleItems:'ዕቃዎች ጨምር',subItems:'ክምችት ካታሎጅ ያስተዳድሩ',titlePurchase:'ግዥ',subPurchase:'የግዥ መዝገቦች',titleSales:'ሽያጭ',subSales:'የሽያጭ መዝገቦች',titleBalance:'ሚዛን',subBalance:'የክምችት ደረጃዎች',titleStore:'ስቶር',subStore:'ማዕከላዊ ስቶር ክምችት እና ስርጭት',titleStoreBalance:'የስቶር ሚዛን',subStoreBalance:'የስቶር ክምችት ደረጃ እና ጠቅላላ ዋጋ',titleExpense:'ወጪ',subExpense:'ወጪ ክትትል',titleReport:'ሪፖርት',subReport:'የፋይናንስ ማጠቃለያ',titleStoreReport:'የስቶር ሪፖርት',subStoreReport:'የስቶር ፋይናንስ ማጠቃለያ',
-    settingsTitle:'ቅንብሮች',settingsNav:'አሰሳ',settingsAddItems:'ዕቃዎች ጨምር',settingsAddItemsSub:'ክምችት ካታሎጅ ያስተዳድሩ',settingsStore:'ስቶር',settingsStoreSub:'የስቶር ክምችት ያስተዳድሩ',settingsStoreBalance:'የስቶር ሚዛን',settingsStoreBalanceSub:'የስቶር ክምችት ደረጃ',settingsStoreReport:'የስቶር ሪፖርት',settingsStoreReportSub:'የስቶር ፋይናንስ ማጠቃለያ',settingsStoreExpense:'የስቶር ወጪ',settingsStoreExpenseSub:'የስቶር ወጪዎችን ያስተዳድሩ',settingsExport:'ዳታ ወደ ውጭ ላክ',settingsExportBtn:'ወደ ውጭ ላክ (PDF & Excel)',settingsAccount:'መለያ',settingsChangePass:'የይለፍ ቃል ቀይር',settingsPhoto:'የፕሮፋይል ፎቶ',settingsShopName:'የሱቅ ስም',settingsShopNameSub:'የንግድ ስምዎን ያስተካክሉ',settingsPerms:'የተጠቃሚ ፈቃዶች',settingsPermsSub:'ለባለቤቶች ብቻ',settingsBranches:'ቅርንጫፎችን ያስተዳድሩ',settingsAddUser:'ተጠቃሚ ጨምር',settingsAddUserSub:'ለቅርንጫፍ ተጠቃሚ ፍጠር',settingsReqStore:'ከስቶር ጠይቅ',settingsReqStoreSub:'ለቅርንጫፍዎ ዕቃዎች ጠይቅ',settingsDanger:'አደገኛ ቦታ',settingsResetReq:'የዳታ ዳግም ማስጀመር ጠይቅ',settingsResetReqSub:'የሶፍትዌር ባለቤት ፈቃድ ይፈልጋል',settingsPrefs:'ምርጫዎች',settingsLight:'ብርሃን ሁነታ',settingsMobile:'ሞባይል እይታ',settingsLang:'ቋንቋ',settingsLogout:'ውጣ',
-    authLogin:'ግባ',authRequest:'መዳረሻ ጠይቅ',authNewBiz:'<svg class="ic"><use href="#i-building"/></svg> አዲስ ንግድ',authEmployee:'<svg class="ic"><use href="#i-user"/></svg> ሠራተኛ',authBizHint:'ንግድዎን ለ14 ቀናት ነፃ ሙከራ ያስመዝግቡ',authBizName:'የንግድ / ሱቅ ስም *',authBizNamePh:'ለምሳ፤ አበበ ጠቅላላ ንግድ',authUsername:'የተጠቃሚ ስም',authUsernamePh:'የተጠቃሚ ስምዎን ያስገቡ',authPassword:'የይለፍ ቃል',authPasswordPh:'የይለፍ ቃልዎን ያስገቡ',authConfirmPass:'የይለፍ ቃሉን ያረጋግጡ',authConfirmPassPh:'የይለፍ ቃሉን እንደገና ያስገቡ',authOwnerUser:'የፕላትፎርም ባለቤት ስም',authOwnerUserSub:'(መለያዎን የሚያስተዳድረው)',authOwnerUserPh:'የፕላትፎርም ባለቤቱን ስም ያስገቡ',authLoginBtn:'<svg class="ic"><use href="#i-lock-key"/></svg> ግባ',authCloudNote:'<svg class="ic"><use href="#i-cloud"/></svg> ሁሉም መሳሪያዎች ላይ ይሳሙናል',authPhotoPh:'ፎቶ ለማከል ጠቅ ያድርጉ (አማራጭ)',
+    settingsTitle:'ቅንብሮች',settingsNav:'አሰሳ',settingsAddItems:'ዕቃዎች ጨምር',settingsAddItemsSub:'ክምችት ካታሎጅ ያስተዳድሩ',settingsStore:'ስቶር',settingsStoreSub:'የስቶር ክምችት ያስተዳድሩ',settingsStoreBalance:'የስቶር ሚዛን',settingsStoreBalanceSub:'የስቶር ክምችት ደረጃ',settingsStoreReport:'የስቶር ሪፖርት',settingsStoreReportSub:'የስቶር ፋይናንስ ማጠቃለያ',settingsStoreExpense:'የስቶር ወጪ',settingsStoreExpenseSub:'የስቶር ወጪዎችን ያስተዳድሩ',settingsExport:'ዳታ ወደ ውጭ ላክ',settingsExportBtn:'ወደ ውጭ ላክ (PDF & Excel)',settingsAccount:'መለያ',settingsChangePass:'የይለፍ ቃል ቀይር',settingsPhoto:'የፕሮፋይል ፎቶ',settingsShopName:'የሱቅ ስም',settingsShopNameSub:'የንግድ ስምዎን ያስተካክሉ',settingsPerms:'የተጠቃሚ ፈቃዶች',settingsPermsSub:'ለባለቤቶች ብቻ',settingsBranches:'ቅርንጫፎችን ያስተዳድሩ',settingsAddUser:'ተጠቃሚ ጨምር',settingsAddUserSub:'ለቅርንጫፍ ተጠቃሚ ፍጠር',settingsReqStore:'ከስቶር ጠይቅ',settingsReqStoreSub:'ለቅርንጫፍዎ ዕቃዎች ጠይቅ',settingsDanger:'የአደጋ ዞን',settingsResetReq:'የዳታ ዳግም ማስጀመር ጠይቅ',settingsResetReqSub:'የሶፍትዌር ባለቤት ፈቃድ ይፈልጋል',settingsPrefs:'ምርጫዎች',settingsLight:'ብርሃን ሁነታ',settingsMobile:'ሞባይል እይታ',settingsLang:'ቋንቋ',settingsLogout:'ውጣ',
+    authLogin:'ግባ',authRequest:'መዳረሻ ጠይቅ',authNewBiz:'<svg class="ic"><use href="#i-building"/></svg> አዲስ ንግድ',authEmployee:'<svg class="ic"><use href="#i-user"/></svg> ሠራተኛ',authBizHint:'ንግድዎን ለ14 ቀናት ነፃ ሙከራ ያስመዝግቡ',authBizName:'የንግድ / ሱቅ ስም *',authBizNamePh:'ለምሳ፤ አበበ ጠቅላላ ንግድ',authUsername:'የተጠቃሚ ስም',authUsernamePh:'የተጠቃሚ ስምዎን ያስገቡ',authPassword:'የይለፍ ቃል',authPasswordPh:'የይለፍ ቃልዎን ያስገቡ',authConfirmPass:'የይለፍ ቃሉን ያረጋግጡ',authConfirmPassPh:'የይለፍ ቃሉን እንደገና ያስገቡ',authOwnerUser:'የፕላትፎርም ባለቤት ስም',authOwnerUserSub:'(መለያዎን የሚያስተዳድረው)',authOwnerUserPh:'የፕላትፎርም ባለቤቱን ስም ያስገቡ',authLoginBtn:'<svg class="ic"><use href="#i-lock-key"/></svg> ግባ',authCloudNote:'<svg class="ic"><use href="#i-cloud"/></svg> ሁሉም መሳሪያዎች ላይ ያዘምናሉ',authPhotoPh:'ፎቶ ለማከል ጠቅ ያድርጉ (አማራጭ)',
     expTitle:'ሪፖርት ወደ ውጭ ላክ',expSub:'እንደ PDF ወይም Excel አውርድ',expFormat:'ቅርጸት',expPdf:'PDF',expPdfSub:'.pdf ፋይል አውርድ',expExcel:'Excel',expExcelSub:'.xlsx ፋይል አውርድ',expSheet:'ሉህ',expBtnPdf:'PDF አውርድ',expBtnXlsx:'Excel አውርድ',
     addEntryTitle:'ግቤት ጨምር',addEntrySub:'ከዚህ በታች ያለውን ቅጽ ሙሉ',editEntryTitle:'ግቤት አስተካክል',editEntrySub:'ከዚህ በታች ያሉ መስኮችን ያዘምኑ',
     shopNameTitle:'የሱቅ ስም',shopNameLabel:'የንግድ / ሱቅ ስም',shopNamePh:'ለምሳ፤ አበበ ጠቅላላ ንግድ',
     changePassTitle:'የይለፍ ቃል ቀይር',changePassCurrent:'የአሁኑ የይለፍ ቃል',changePassNew:'አዲስ የይለፍ ቃል',changePassConfirm:'አዲሱን ያረጋግጡ',changePassBtn:'የይለፍ ቃሉን አስቀምጥ',
     photoTitle:'የፕሮፋይል ፎቶ',photoPh:'ፎቶ ለመምረጥ ጠቅ ያድርጉ',photoBtn:'ፎቶ አስቀምጥ',
     permsTitle:'የተጠቃሚ ፈቃዶች',permsSub:'ለእያንዳንዱ ተጠቃሚ መዳረሻ ቆጣጠሩ',
-    addUserTitle:'ተጠቃሚ ጨምር',addUserSub:'ስር መለያዎ ተጠቃሚ ፍጠር',addUsernameLbl:'የተጠቃሚ ስም *',addUsernamePh:'ስም ያስገቡ',addPassLbl:'የይለፍ ቃል *',addPassPh:'የይለፍ ቃል ያስቀምጡ',addRoleLbl:'ሚና *',roleUser:'<svg class="ic"><use href="#i-user"/></svg> መደበኛ ተጠቃሚ',roleStorekeeper:'<svg class="ic"><use href="#i-store"/></svg> ስቶር ጠባቂ',addBranchLbl:'የተወሰነ ቅርንጫፍ *',addUserBtn:'ተጠቃሚ ፍጠር',
-    editUserTitle:'ተጠቃሚ አስተካክል',editUserSub:'የተጠቃሚ ዝርዝሮችን ያዘምኑ',editUserPassSub:'(ባዶ ትቶ ቢሰዱ ያለው ይቆያል)',editUserPassPh:'አዲስ የይለፍ ቃል ያስገቡ (አማራጭ)',editUserBtn:'ለውጦቹን አስቀምጥ',
+    addUserTitle:'ተጠቃሚ ጨምር',addUserSub:'በመለያዎ ስር ተጠቃሚ ፍጠር',addUsernameLbl:'የተጠቃሚ ስም *',addUsernamePh:'ስም ያስገቡ',addPassLbl:'የይለፍ ቃል *',addPassPh:'የይለፍ ቃል ያስቀምጡ',addRoleLbl:'ሚና *',roleUser:'<svg class="ic"><use href="#i-user"/></svg> መደበኛ ተጠቃሚ',roleStorekeeper:'<svg class="ic"><use href="#i-store"/></svg> ስቶር ጠባቂ',addBranchLbl:'የተወሰነ ቅርንጫፍ *',addUserBtn:'ተጠቃሚ ፍጠር',
+    editUserTitle:'ተጠቃሚ አስተካክል',editUserSub:'የተጠቃሚ ዝርዝሮችን ያዘምኑ',editUserPassSub:'(ባዶ ቢተው ያለው ይቆያል)',editUserPassPh:'አዲስ የይለፍ ቃል ያስገቡ (አማራጭ)',editUserBtn:'ለውጦቹን አስቀምጥ',
     reqStoreTitle:'ከስቶር ጠይቅ',reqStoreSub:'ለቅርንጫፍ አቅርቦቶች ጥያቄ ያስገቡ',reqCatalogLbl:'ከካታሎጅ ዕቃ',reqCatalogPh:'— ዕቃ ይምረጡ (አማራጭ) —',reqNameLbl:'ወይም ዕቃ ስም ያስገቡ *',reqNamePh:'ዕቃው ከዝርዝሩ ካልተገኘ ስሙን ያስገቡ',reqQtyLbl:'ብዛት *',reqQtyPh:'ለምሳ፤ 5',reqNoteLbl:'ማስታወሻ / ምክንያት',reqNotePh:'አማራጭ ምክንያት…',reqSubmitBtn:'ጥያቄ ያስገቡ',
     branchTitle:'ቅርንጫፎችን ያስተዳድሩ',branchPh:'አዲስ ቅርንጫፍ ስም…',branchAdd:'+ ጨምር',
     confirmDelete:'ሰርዝ?',confirmUndone:'ይህ ድርጊት ሊቀለበስ አይችልም።',confirmDeleteBtn:'ሰርዝ',
     approveTitle:'አፅድቅ እና ላክ',approvePriceLbl:'የስርጭት ዋጋ (በአንድ ክፍል) *',approveBtn:'አፅድቅ እና ላክ',
     subTitle:'ደንብ ያስተዳድሩ',subPlan:'እቅድ',subTrial:'ሙከራ',subTrialPrice:'14 ቀናት ነፃ',subBasic:'መሰረታዊ',subBasicPrice:'እስከ 2 ተጠቃሚዎች',subPro:'ፕሮ',subProPrice:'እስከ 10 ተጠቃሚዎች',subEnterprise:'ድርጅት',subEnterprisePrice:'ያልተወሰነ ተጠቃሚዎች',subRecordPay:'ክፍያ መዝግብ',subAmountPaid:'የተከፈለ መጠን',subAmountPaidPh:'ለምሳ፤ 500',subActiveUntil:'ንቁ እስከ',subNote:'ማስታወሻ (አማራጭ)',subNotePh:'ለምሳ፤ የባንክ ዝውውር ቁጥር #123',subSaveBtn:'አስቀምጥ',subPayHistory:'የክፍያ ታሪክ',
-    gateTitle:'ደንቡ ጊዜ አልፎበታል',gateSub:'ደንብዎ ጊዜ አልፎበታል። ለታደሰ መዳረሻ የፕላትፎርም አስተዳዳሪውን ያነጋግሩ።',gateContact:'ያነጋግሩ',gateBold:'POWER-IMS አስተዳዳሪ',gateContactSuf:'ደንብዎን ለማደስ እና ወደ ፕላትፎርሙ ለመዳረሻ።',gateReturn:'<svg class="ic"><use href="#i-arrow-left"/></svg> ወደ ግቤት ተመለስ',
+    gateTitle:'ደንቡ ጊዜ አልፎበታል',gateSub:'ደንብዎ ጊዜ አልፎበታል። ለታደሰ መዳረሻ የፕላትፎርም አስተዳዳሪውን ያነጋግሩ።',gateContact:'ያነጋግሩ',gateBold:'POWER-IMS አስተዳዳሪ',gateContactSuf:'ደንብዎን ለማደስ እና ወደ ፕላትፎርሙ ለመዳረሻ።',gateReturn:'<svg class="ic"><use href="#i-arrow-left"/></svg> ወደ መግቢያ ተመለስ',
     dashTitle:'የፕላትፎርም ዳሽቦርድ',dashSub:'POWER-IMS — ሁሉም ተጠቃሚዎችዎ ሙሉ እይታ',dashLogout:'ውጣ',dashOwners:'የፕላትፎርም ባለቤቶች',dashPaid:'ተከፍሎ ንቁ',dashTrial:'በሙከራ ላይ',dashExpired:'ጊዜ ያለፈ/ታግዷል',dashAllUsers:'<svg class="ic"><use href="#i-user"/></svg> ሁሉም ተጠቃሚዎች',dashAddUser:'<svg class="ic"><use href="#i-plus"/></svg> ተጠቃሚ ጨምር',dashPending:'<svg class="ic"><use href="#i-clock"/></svg> በሂደት ላይ ያሉ ጥያቄዎች',dashBranches:'<svg class="ic"><use href="#i-building"/></svg> ቅርንጫፎች',dashReset:'<svg class="ic"><use href="#i-trash"/></svg> ዳታ ዳግም ማስጀመር ጥያቄዎች',dashNoPending:'ምንም ጥያቄዎች የሉም <svg class="ic"><use href="#i-sparkle"/></svg>',
     btnSave:'አስቀምጥ',btnCancel:'ሰርዝ',btnClose:'ዝጋ',btnPrint:'<svg class="ic"><use href="#i-printer"/></svg> አትም',btnExportPdf:'PDF አውርድ (A6)',btnClear:'አጽዳ',
     permFull:'ሙሉ',permAddOnly:'መጨመር ብቻ',permRead:'ማንበብ ብቻ',permNone:'መዳረሻ የለም',
     dateReceived:'የተቀበሉበት ቀን',stockQty:'የክምችት ብዛት',unitCost:'የአንድ ዋጋ',totalValue:'ጠቅላላ ዋጋ',purchaseQty:'የግዥ ብዛት',salesQty:'የሽያጭ ብዛት',receivedQty:'የተቀበሉ ብዛት',dispatchedQty:'የተላኩ ብዛት',storeValue:'የስቶር ዋጋ',method:'ዘዴ',item:'ዕቃ',subtotal:'ንዑስ ድምር',amountDue:'ሊከፈል ያለው',
     dateLabel:'ቀን *',selectItem:'— ዕቃ ይምረጡ —',storeItemLbl:'የስቶር ዕቃ *',noStoreItems:'ምንም የስቶር ዕቃዎች የሉም',dispatchQtyLbl:'ብዛት *',dispatchPriceLbl:'የስርጭት ዋጋ (በአንድ ክፍል) *',toBranchLbl:'ወደ ቅርንጫፍ *',dispatchTotal:'የስርጭት ጠቅላላ',partNoLbl:'ቁጥር *',partNoPh:'ለምሳ፤ P001',itemNameLbl:'ዕቃ ስም *',itemNamePh:'የዕቃ ስም',descLbl:'መግለጫ',descPh:'አማራጭ',taxOptions:'የቀረጥ አማራጮች',totalAmountLbl:'ጠቅላላ መጠን',reasonLbl:'ምክንያት *',reasonPh:'ይህ ወጪ ለምን ነበር?',amountLbl:'መጠን *',
-    initBalance:'የመጀመሪያ ጥሬ ገንዘብ ሂሳብ',totalPurchCash:'ጠቅላላ ግዥዎች — ጥሬ ገንዘብ',totalPurchCredit:'ጠቅላላ ግዥዎች — ክሬዲት',totalSalesCash:'ጠቅላላ ሽያጭ — ጥሬ ገንዘብ',totalSalesCredit:'ጠቅላላ ሽያጭ — ክሬዲት',totalExpenses:'ጠቅላላ ወጪዎች',netProfitLoss:'ጠቅላላ ትርፍ / ኪሳራ',cashOnHand:'ያለ ጥሬ ገንዘብ',creditPurchTitle:'በሂደት ላይ ክሬዲት ግዥ',creditSalesTitle:'ክሬዲት ሽያጭ',initBalShort:'ቀዳሚ ሂሳብ',purchCashShort:'ግዥ ጥሬ ገንዘብ',purchCreditShort:'ግዥ ክሬዲት',salesCashShort:'ሽያጭ ጥሬ ገንዘብ',salesCreditShort:'ሽያጭ ክሬዲት',expensesShort:'ወጪዎች',netPLShort:'ትርፍ/ኪሳራ',allBranches:'ሁሉም ቅርንጫፎች',allBranchesBtn:'ሁሉም ቅርንጫፎች',editBalanceHint:'ከዚህ በታች ባለው ሠንጠረዥ የቀዳሚ ሂሳቡን ያስተካክሉ',
+    initBalance:'የመጀመሪያ ጥሬ ገንዘብ ሂሳብ',totalPurchCash:'ጠቅላላ ግዥዎች — ጥሬ ገንዘብ',totalPurchCredit:'ጠቅላላ ግዥዎች — ክሬዲት',totalSalesCash:'ጠቅላላ ሽያጭ — ጥሬ ገንዘብ',totalSalesCredit:'ጠቅላላ ሽያጭ — ክሬዲት',totalExpenses:'ጠቅላላ ወጪዎች',netProfitLoss:'ጠቅላላ ትርፍ / ኪሳራ',cashOnHand:'በእጅ ያለ ጥሬ ገንዘብ',creditPurchTitle:'ክሬዲት ግዥ — በሂደት ላይ',creditSalesTitle:'ክሬዲት ሽያጭ',initBalShort:'ቀዳሚ ሂሳብ',purchCashShort:'ግዥ ጥሬ ገንዘብ',purchCreditShort:'ግዥ ክሬዲት',salesCashShort:'ሽያጭ ጥሬ ገንዘብ',salesCreditShort:'ሽያጭ ክሬዲት',expensesShort:'ወጪዎች',netPLShort:'ትርፍ/ኪሳራ',allBranches:'ሁሉም ቅርንጫፎች',allBranchesBtn:'ሁሉም ቅርንጫፎች',editBalanceHint:'ከዚህ በታች ባለው ሠንጠረዥ የቀዳሚ ሂሳቡን ያስተካክሉ',
     storeInventory:'ማዕከላዊ ስቶር ክምችት',storeDispatchHistory:'<svg class="ic"><use href="#i-upload"/></svg> የስርጭት ታሪክ (ባለፉ 30)',storeKeeperMode:'ስቶር ጠባቂ ሁነታ',dispatchLog:'የስርጭት መዝገብ',noDispatchRange:'ምንም ስርጭቶች የሉም',noStorePending:'ምንም ጥያቄዎች የሉም <svg class="ic"><use href="#i-sparkle"/></svg>',storeStockReceived:'ጠቅላላ ወደ ስቶር የተቀበሉ',storeDispatchedBranches:'ጠቅላላ ወደ ቅርንጫፍ የተላኩ',storeNetValue:'ጠቅላላ የስቶር ዋጋ',
     emptyItems:'ዕቃዎች የሉም። ለመጀመር "ዕቃዎች ጨምር" ጠቅ ያድርጉ።',emptyRecords:'ምንም መዝገቦች የሉም።',emptyActivity:'ምንም ንቅናቄ አልተመዘገበም።',emptyExpense:'ምንም ወጪዎች የሉም።',emptyStore:'ምንም የስቶር ክምችት የለም።',emptyStoreBalance:'ምንም የስቶር ንቅናቄ የለም። ከስቶር ትር ክምችት ይጨምሩ።',emptyRequests:'ምንም ጥያቄዎች የሉም።',emptyOwners:'ምንም ባለቤቶች የሉም።',
     toastItemNotFound:'ዕቃ አልተገኘም',toastInsufficientStock:'በቂ ስቶር ክምችት የለም',toastNoPermTab:'ለዚህ ትር ፈቃድ የለም',toastRowDeleted:'ረድፍ ተሰርዟል',toastRecordAdded:'መዝገብ ታክሏል!',toastUpdated:'ተዘምኗል!',toastItemAdded:'ዕቃ ታክሏል!',toastItemUpdated:'ዕቃ ተዘምኗል!',toastPassUpdated:'የይለፍ ቃሉ ተዘምኗል!',toastExpenseAdded:'ወጪ ታክሏል!',toastStoreTransferNoEdit:'የስቶር ዝውውር ረድፎች ሊስተካከሉ አይችሉም',toastStoreTransferNoDelete:'የስቶር ዝውውር ረድፎች ሊሰረዙ አይችሉም',toastBalancePdf:'የሚዛን PDF ወርዷል <svg class="ic"><use href="#i-check"/></svg>',toastResetPending:'ቀደም ብሎ ያስገቡ ጥያቄ ይጠብቃል።',toastResetSent:'<svg class="ic"><use href="#i-bell"/></svg> ጥያቄ ለሶፍትዌር ባለቤት ተልኳል።',
@@ -3166,11 +3361,28 @@ const LANG={
     ctxEdit:'ረድፍ አስተካክል',ctxDelete:'ረድፍ ሰርዝ',ctxPrint:'ደረሰኝ አትም',ctxStoreTransfer:'የስቶር ዝውውር — ማንበብ ብቻ',ctxBy:'የሠራው:',
     storeKeeperLabel:'ስቶር ጠባቂ',
     totalInventoryValue:'ጠቅላላ ክምችት ዋጋ',exportPdfBtn:'<svg class="ic"><use href="#i-file"/></svg> PDF አውርድ',
-    back:'ተመለስ',syncBtn:'የደመና ዝምጥ',storeReceiptsBtn:'የስቶር ደረሰኞች',branchReqBtn:'የቅርንጫፍ ጥያቄዎች',settingsBtn:'ቅንብሮች',systemOwner:'ሲስተም ባለቤት',searchPh:'ፈልግ…',rows:'ረድፎች',
+    back:'ተመለስ',syncBtn:'የደመና ዝምጥ',storeReceiptsBtn:'የስቶር ደረሰኞች',branchReqBtn:'የቅርንጫፍ ጥያቄዎች',settingsBtn:'ቅንብሮች',systemOwner:'የስርዓቱ ባለቤት',searchPh:'ፈልግ…',rows:'ረድፎች',
     valUsername:'የተጠቃሚ ስም እና የይለፍ ቃል ያስገቡ',valPassMatch:'የይለፍ ቃሎቹ አይዛመዱም።',valPassLen:'የይለፍ ቃሉ ቢያንስ 4 ቁምፊዎች መሆን አለበት።',valUserTaken:'ይህ ስም ቀድሞ ተወስዷል። ሌላ ይምረጡ።',valBizName:'የንግድ/ሱቅ ስም ያስገቡ።',valPendingReq:'ቀደም ብሎ ባቀረቡት ስም ጥያቄ አለ።',valSelectItem:'ዕቃ ይምረጡ ወይም ስም ያስገቡ',valQtyMin:'ብዛቱ ቢያንስ 1 መሆን አለበት',valPartExists:'ቁጥሩ ቀድሞ አለ — ሌላ ይምረጡ',valPassCurrent:'አሁኑ የይለፍ ቃሉ ትክክል አይደለም',valPassMin:'ቢያንስ 4 ቁምፊዎች',valPassMatchShort:'የይለፍ ቃሎቹ አይዛመዱም',valUserExists:'ስሙ ቀድሞ አለ',valPassRequired:'የይለፍ ቃሉ ቢያንስ 4 ቁምፊዎች',valUsernameReq:'የተጠቃሚ ስም እና የይለፍ ቃል ያስገቡ',valDispatchPrice:'ትክክለኛ ዋጋ ያስገቡ',
     confirmSuspendTitle:'ተጠቃሚ ታግድ?',confirmDeleteUserTitle:'ተጠቃሚ ሰርዝ?',confirmDeleteBranchTitle:'ቅርንጫፍ ሰርዝ?',confirmDeleteOwnerTitle:'ባለቤት ሰርዝ?',confirmDeleteOwnerMsg:'መለያቸው ይሰረዛል። የክምችት ዳታ ይቆያል።',confirmResetTitle:'<svg class="ic"><use href="#i-alert"/></svg> ዳታ ዳግም ማስጀመር ጠይቅ',confirmApproveResetTitle:'ዳግም ማስጀመር ይፈቀድ?',
     branchLabel:'ቅርንጫፍ:',exportPermLabel:'የወደ ውጭ ፈቃድ',
     subStatusTrial:'ሙከራ · 14 ቀናት',subStatusActive:'ንቁ',subStatusExpired:'ጊዜ አልፏል',subStatusSuspended:'ታግዷል',
+    purchOnCash:'የጥሬ ገንዘብ ግዥ',purchOnCredit:'የክሬዲት ግዥ',totalPurchaseLabel:'ጠቅላላ ግዥ',
+    salesOnCash:'የጥሬ ገንዘብ ሽያጭ',salesOnCredit:'የክሬዲት ሽያጭ',totalSalesLabel:'ጠቅላላ ሽያጭ',
+    branchExpenses:'የቅርንጫፍ ወጪ',storeExpenses:'የስቶር ወጪ',vatWH:'ተ.እ.ታ ምዝ 7.5%',commissionLabel:'ኮሚሽን',
+    allBranchesSummary:'የሁሉም ቅርንጫፎች ማጠቃለያ',allBranchesCombined:'ድምር',vsLastMonth:'ካለፈው ወር አንጻር',inRange:'በተመረጠው ጊዜ',
+    topItemsBySales:'ምርጥ ዕቃዎች በሽያጭ ዋጋ',profitLossPerEntry:'ትርፍ / ኪሳራ በእያንዳንዱ ሽያጭ',
+    saleTotal:'የሽያጭ ጠቅላላ',costOfGoods:'የዕቃ ዋጋ',profit:'ትርፍ',margin:'ህዳግ',
+    noCreditPurchInRange:'ምንም የክሬዲት ግዥዎች አልተገኙም',noCreditSalesInRange:'ምንም የክሬዲት ሽያጭ አልተገኙም',
+    fromLabel:'ከ',toLabel:'እስከ',
+    receivables:'ሊሰበሰቡ',payables:'ሊከፈሉ',collected:'የተሰበሰበ',settled:'የተከፈለ',outstanding:'ያልተከፈለ',
+    creditSaleType:'ሽያጭ',creditPurchType:'ግዥ',creditPaidBadge:'ተከፍሏል',creditPartialBadge:'በከፊል',creditOutstandingBadge:'ያልተከፈለ',
+    allParties:'ሁሉም ወገኖች',creditReceivableLabel:'ሊሰበሰብ',creditPayableLabel:'ሊከፈል',
+    collectAll:'ሁሉንም ሰብስብ',payAll:'ሁሉንም ክፈል',balanceLabel:'ቀሪ',addPaymentBtn:'+ ክፍያ ጨምር',
+    addItem:'ዕቃ ጨምር',editItem:'ዕቃ አስተካክል',addItemSub:'ከዚህ በታች ያሉ ዝርዝሮቹን ሙሉ',addAnotherBtn:'ጨምር እና ሌላ ጨምር',
+    supplierNamePh:'የአቅራቢ ስም',customerNamePh:'የደንበኛ ስም',itemNameAutoLbl:'ዕቃ ስም (ራስ-ሙላ)',descAutoLbl:'መግለጫ (ራስ-ሙላ)',
+    unitPurchPriceLbl:'የግዥ ዋጋ (በአንድ ክፍል) *',unitSellPriceLbl:'የሽያጭ ዋጋ (በአንድ ክፍል) *',commissionAmtLbl:'ኮሚሽን (አማራጭ)',noTaxLabel:'ቀረጥ የለም',
+    valDateRequired:'ቀን ያስገቡ',valDateFormat:'ቀኑ dd-mm-yyyy ቅርጸት ይኑርዎ',
+    valSupplierReq:'አቅራቢ ያስገቡ',valCustomerReq:'ደንበኛ ያስገቡ',valQtyRequired:'ብዛቱን ያስገቡ',valPriceRequired:'ዋጋ ያስገቡ',
   }
 };
 const L=k=>(LANG[S.lang]||LANG.en)[k]||k;
@@ -3213,7 +3425,7 @@ const S={
   branchReceipts:[],
   beginBal:0,reportRange:{from:'',to:''},
   branchBeginBal:{},reportBranch:'',expenseBranch:'',
-  perms:{},exportPerms:{},rowEditPerms:{},pendingSignups:[],
+  perms:{},exportPerms:{},rowEditPerms:{},deletePerms:{},permAuditLog:[],pendingSignups:[],
   branches:['Main'],
   userBranch:null,
   db:null,dbConnected:false,_unsubscribe:null,
@@ -3310,11 +3522,35 @@ function showToast(msg,type='',dur=2800){
   const d=document.createElement('div');d.className=`toast ${type}`;
   const iconMap={success:'check-circle',error:'x-circle',warn:'alert',info:'bell'};
   const iconName=iconMap[type]||'bell';
-  // Strip leading emoji+space pattern from message to avoid duplicate icon
   msg=String(msg).replace(/^[\u{1F000}-\u{1FFFF}\u{2190}-\u{27FF}]\uFE0F?\s*/u,'');
   d.innerHTML=`<svg class="ic toast-ic"><use href="#i-${iconName}"/></svg><span class="toast-msg">${msg.replace(/</g,'&lt;')}</span>`;
   w.appendChild(d);
   setTimeout(()=>{d.style.opacity='0';d.style.transform='translateY(10px)';d.style.transition='all .3s';setTimeout(()=>d.remove(),300)},dur);
+}
+function showUndoToast(msg,undoFn,dur=5000){
+  const w=document.getElementById('toast-wrap');
+  const d=document.createElement('div');
+  d.className='toast success';
+  d.style.cssText='flex-direction:column;align-items:stretch;min-width:220px;max-width:320px';
+  d.innerHTML=`<div class="toast-undo-row"><span style="display:flex;align-items:center;gap:8px"><svg class="ic toast-ic"><use href="#i-check-circle"/></svg>${String(msg).replace(/</g,'&lt;')}</span><button class="toast-undo-btn">Undo</button></div><div class="toast-pb-wrap"><div class="toast-pb-fill"></div></div>`;
+  w.appendChild(d);
+  const dismiss=()=>{d.style.opacity='0';d.style.transform='translateY(10px)';d.style.transition='all .3s';setTimeout(()=>d.remove(),300);};
+  let tid=setTimeout(dismiss,dur);
+  d.querySelector('.toast-undo-btn').onclick=()=>{clearTimeout(tid);undoFn();dismiss();};
+  const pb=d.querySelector('.toast-pb-fill');
+  if(pb){pb.style.transition=`width ${dur}ms linear`;setTimeout(()=>{pb.style.width='0';},50);}
+}
+/* empty-state helper \u2014 inline SVG paths, optional CTA */
+const _ES={
+  pkg:'<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/>',
+  cart:'<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>',
+  trend:'<polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/>',
+  receipt:'<path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1-2-1z"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/>',
+  store:'<path d="M3 9l1-5h16l1 5"/><path d="M3 9h18v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><line x1="9" y1="14" x2="9" y2="18"/><line x1="15" y1="14" x2="15" y2="18"/>'
+};
+function _emptyState(svgPaths,title,sub,actionFn=''){
+  const btn=actionFn?`<button type="button" class="modal-btn" onclick="${actionFn}"><svg class="ic"><use href="#i-plus"/></svg> Add Now</button>`:'';
+  return`<div class="empty-state"><svg class="empty-state-icon" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">${svgPaths}</svg><div class="empty-state-title">${title}</div><div class="empty-state-sub">${sub}</div>${btn}</div>`;
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -3375,11 +3611,13 @@ async function loadRegistryFromCloud(){
     if(doc.exists&&doc.data().registry){
       const cloudReg=_safeJSON(doc.data().registry,{},'cloud registry');
       const localReg=getRegistry();
-      const merged={...localReg};
-      Object.keys(cloudReg).forEach(u=>{
-        const cloudT=cloudReg[u]?.updatedAt||'';
-        const localT=merged[u]?.updatedAt||'';
-        if(!merged[u]||cloudT>localT){merged[u]=cloudReg[u];}
+      // Start from cloud (authoritative) so deletions made on other devices propagate.
+      // Keep any local entry that is strictly newer than cloud (offline edits).
+      const merged={...cloudReg};
+      Object.keys(localReg).forEach(u=>{
+        const localT=localReg[u]?.updatedAt||'';
+        const cloudT=merged[u]?.updatedAt||'';
+        if(localT>cloudT){merged[u]=localReg[u];}
       });
       try{_lsSet('ims_reg',merged);}catch(e){console.error('merged save:',e);}
       return merged;
@@ -3437,9 +3675,12 @@ function loadUserData(){
   S.perms=_lsGet(`ims_${ns}_perms`,{});
   S.exportPerms=_lsGet(`ims_${ns}_exportperms`,{});
   S.rowEditPerms=_lsGet(`ims_${ns}_rowEditPerms`,{});
+  S.deletePerms=_lsGet(`ims_${ns}_deletePerms`,{});
+  S.permAuditLog=_lsGet(`ims_${ns}_permAuditLog`,[]);
   S.pendingSignups=_lsGet(`ims_${ns}_pending`,[]);
   S.branches=_lsGet(`ims_${ns}_branches`,['Main']);
   S.creditPayments=_lsGet(`ims_${ns}_creditPayments`,[]);
+  S.creditSchedule=_lsGet(`ims_${ns}_creditSchedule`,[]);
   S.deletedUsers=_lsGet(`ims_${ns}_deletedUsers`,[]);
   
   // Backfill _cid for existing CREDIT records that pre-date this feature
@@ -3471,9 +3712,12 @@ function saveUserData(){
   _lsSet(`ims_${ns}_perms`,S.perms);
   _lsSet(`ims_${ns}_exportperms`,S.exportPerms);
   _lsSet(`ims_${ns}_rowEditPerms`,S.rowEditPerms||{});
+  _lsSet(`ims_${ns}_deletePerms`,S.deletePerms||{});
+  _lsSet(`ims_${ns}_permAuditLog`,(S.permAuditLog||[]).slice(-500));
   _lsSet(`ims_${ns}_pending`,S.pendingSignups);
   _lsSet(`ims_${ns}_branches`,S.branches);
   _lsSet(`ims_${ns}_creditPayments`,S.creditPayments||[]);
+  _lsSet(`ims_${ns}_creditSchedule`,S.creditSchedule||[]);
   _lsSet(`ims_${ns}_deletedUsers`,S.deletedUsers||[]);
   syncToCloud();
 }
@@ -3580,7 +3824,8 @@ function syncToCloud(){
       storeItems:JSON.stringify(S.storeItems),storeDispatches:JSON.stringify(S.storeDispatches),
       beginBal:S.beginBal,branchBeginBal:JSON.stringify(S.branchBeginBal||{}),
       perms:JSON.stringify(S.perms),
-      exportPerms:JSON.stringify(S.exportPerms),branches:JSON.stringify(S.branches),
+      exportPerms:JSON.stringify(S.exportPerms),deletePerms:JSON.stringify(S.deletePerms||{}),
+      permAuditLog:JSON.stringify((S.permAuditLog||[]).slice(-200)),branches:JSON.stringify(S.branches),
       registry:JSON.stringify(getRegistry()),
       storereqs:JSON.stringify(typeof loadStoreRequests==='function'?loadStoreRequests():[]),
       creditPayments:JSON.stringify(S.creditPayments||[]),
@@ -3641,6 +3886,8 @@ function applyCloudSnapshot(ns,d){
   if(d.branchBeginBal!==undefined)_lsSet(`ims_${ns}_branchBeginBal`,d.branchBeginBal);
   if(d.perms!==undefined)_lsSet(`ims_${ns}_perms`,d.perms);
   if(d.exportPerms!==undefined)_lsSet(`ims_${ns}_exportperms`,d.exportPerms);
+  if(d.deletePerms!==undefined)_lsSet(`ims_${ns}_deletePerms`,d.deletePerms);
+  if(d.permAuditLog!==undefined)_lsSet(`ims_${ns}_permAuditLog`,d.permAuditLog);
   if(d.pending!==undefined)_lsSet(`ims_${ns}_pending`,d.pending);
   if(d.branches!==undefined)_lsSet(`ims_${ns}_branches`,d.branches);
   if(d.storereqs!==undefined)_lsSet(`ims_${ns}_storereqs`,d.storereqs);
@@ -4361,9 +4608,9 @@ function _setOwnerDashMode(mode){
   // Tab bar + tabbed sections only for sys-admin; shop-owner gets flat sections
   const tabBar=document.getElementById('sys-tab-bar');
   const sysSecs=document.querySelectorAll('.sys-sec');
-  const shopSecs=['section-owner-settings','section-branches','section-danger-zone'];
+  const shopSecs=['section-owner-settings','section-branches','section-branch-cmp','section-danger-zone'];
   const sysOnlyPlain=['section-email-settings'];
-  if(tabBar)tabBar.style.display=mode==='sys-admin'?'':'none';
+  if(tabBar)tabBar.style.display=mode==='sys-admin'?'flex':'none';
   if(mode==='sys-admin'){
     // sections are controlled by switchSysTab — don't touch them here
   } else {
@@ -4902,7 +5149,42 @@ function exportReportPDF(){
       y=_plTable(tot,'Combined Total',y);
     }
   }else{
-    y=_plTable(_reportCalc(activeBranch),branchLabel||'Report',y);
+    const _sc=_reportCalc(activeBranch);
+    y=_plTable(_sc,branchLabel||'Report',y);
+    // Top 5 items
+    const _pig={};
+    _sc.entryPL.forEach(e=>{const k=e.id||e.name||'?';if(!_pig[k])_pig[k]={name:e.name||e.id||'?',qty:0,val:0,profit:0};_pig[k].qty+=parseFloat(e.qty)||0;_pig[k].val+=e.saleAmt||0;_pig[k].profit+=e.profit||0;});
+    const _pt5=Object.values(_pig).sort((a,b)=>b.val-a.val).slice(0,5);
+    if(_pt5.length){
+      if(y>230){doc.addPage();y=18;}
+      doc.setFont('helvetica','bold');doc.setFontSize(9.5);doc.setTextColor(...DARK);
+      doc.text('TOP 5 ITEMS BY SALES VALUE',M,y);y+=3;
+      doc.autoTable({startY:y,head:[['#','Item','Qty','Sales Total','Profit']],
+        body:_pt5.map((it,i)=>[`#${i+1}`,it.name,fmtQ(it.qty),f(it.val),f(it.profit)]),
+        margin:{left:M,right:M},styles:{fontSize:8,cellPadding:3,textColor:DARK},
+        headStyles:{fillColor:NAVY,textColor:255,fontStyle:'bold',fontSize:8},
+        alternateRowStyles:{fillColor:[248,250,255]},
+        columnStyles:{2:{halign:'right'},3:{halign:'right',fontStyle:'bold'},4:{halign:'right',fontStyle:'bold'}},
+        didParseCell:(d)=>{if(d.section==='body'&&d.column.index===4){d.cell.styles.textColor=_pt5[d.row.index]?.profit>=0?GREEN:RED;}}
+      });
+      y=doc.lastAutoTable.finalY+8;
+    }
+    // P/L entries with margin
+    if(_sc.entryPL.length){
+      if(y>200){doc.addPage();y=18;}
+      doc.setFont('helvetica','bold');doc.setFontSize(9.5);doc.setTextColor(...DARK);
+      doc.text('PROFIT / LOSS PER ENTRY',M,y);y+=3;
+      doc.autoTable({startY:y,
+        head:[['Date','Party','Item','Qty','Sale','COGS','Profit','Margin%']],
+        body:_sc.entryPL.map(e=>{const mg=e.saleAmt>0.001?(e.profit/e.saleAmt*100).toFixed(1)+'%':'—';return[(e.date||'').slice(0,10),e.party||'—',e.name||'—',fmtQ(e.qty||0),f(e.saleAmt),f(e.cogs),f(e.profit),mg];}),
+        margin:{left:M,right:M},styles:{fontSize:7,cellPadding:2.5,textColor:DARK},
+        headStyles:{fillColor:NAVY,textColor:255,fontStyle:'bold',fontSize:7},
+        alternateRowStyles:{fillColor:[248,250,255]},
+        columnStyles:{3:{halign:'right'},4:{halign:'right'},5:{halign:'right'},6:{halign:'right',fontStyle:'bold'},7:{halign:'right'}},
+        didParseCell:(d)=>{if(d.section==='body'&&d.column.index===6){d.cell.styles.textColor=_sc.entryPL[d.row.index]?.profit>=0?GREEN:RED;}}
+      });
+      y=doc.lastAutoTable.finalY+8;
+    }
   }
 
   // Per-page footer
@@ -5316,6 +5598,22 @@ function renderOwnerDashboard(){
     const pills=[subPill,pendPill].filter(Boolean).join('');
     oqs.innerHTML=pills;oqs.style.display=pills?'flex':'none';
   }
+  // ── Subscription progress bar ──
+  const spEl=document.getElementById('owner-sub-progress');
+  if(spEl&&ss.daysLeft!=null&&ss.status!=='suspended'){
+    const totalDays=ownerEntry?.paidUntil?Math.ceil((new Date(ownerEntry.paidUntil)-new Date(ownerEntry.trialStart||ownerEntry.paidUntil))/86400000):(ownerEntry?.trialDays||14);
+    const daysLeft=ss.daysLeft||0;
+    const usedPct=Math.min(100,Math.max(0,totalDays>0?(1-daysLeft/totalDays)*100:100));
+    const barClr=usedPct>80?'var(--error)':usedPct>55?'var(--warn)':'var(--success)';
+    spEl.style.display='';
+    spEl.innerHTML=`<div class="sub-prog-wrap"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;font-weight:600;color:var(--text2)">${ss.label}</span><span style="font-size:10px;color:var(--text3)">${daysLeft}d remaining</span></div><div class="sub-prog-track"><div class="sub-prog-fill" style="width:${usedPct.toFixed(1)}%;background:${barClr}"></div></div><div class="sub-prog-meta"><span>${Math.round(usedPct)}% used</span><span>${ss.status==='trial'?'Trial':'Active'}</span></div></div>`;
+  }else if(spEl){spEl.style.display='none';}
+  // ── Quick-actions bar ──
+  const qaEl=document.getElementById('owner-quick-actions');
+  if(qaEl){
+    qaEl.style.display='';
+    qaEl.innerHTML=`<div class="owner-quick-actions"><button type="button" class="oqa-btn oqa-pri" onclick="openAddUserModal()"><svg class="ic"><use href="#i-user"/></svg> Add User</button><button type="button" class="oqa-btn" onclick="document.getElementById('section-branches')?.scrollIntoView({behavior:'smooth'})"><svg class="ic"><use href="#i-building"/></svg> Add Branch</button><button type="button" class="oqa-btn" onclick="exportXL('PURCHASE')"><svg class="ic"><use href="#i-file"/></svg> Export Data</button><button type="button" class="oqa-btn" onclick="renderOwnerDashboard()"><svg class="ic"><use href="#i-refresh"/></svg> Refresh</button></div>`;
+  }
   document.getElementById('user-list-body').innerHTML=myUsers.length?myUsers.map((u,i)=>{
     const r=reg[u];
     const roleClass=r.role==='storekeeper'?'storekeeper':r.role==='manager'?'manager':r.role==='readonly'?'readonly':'regular';
@@ -5325,11 +5623,11 @@ function renderOwnerDashboard(){
       <div class="user-avatar">${u[0].toUpperCase()}</div>
       <div class="user-info">
         <div class="user-name">${esc(u)} <span class="role-badge ${roleClass}">${roleLabel}</span></div>
-        <div class="user-meta"><svg class="ic" style="width:10px;height:10px;opacity:.55;vertical-align:-1px"><use href="#i-building"/></svg> ${esc(r.branch||'—')} &nbsp;<span class="user-status ${statusClass}" style="padding:1px 7px;font-size:9.5px">${r.status==='suspended'?'Suspended':'Active'}</span></div>
+        <div class="user-meta"><svg class="ic" style="width:10px;height:10px;opacity:.55;vertical-align:-1px"><use href="#i-building"/></svg> ${esc(r.branch||'—')} &nbsp;<span class="user-status ${statusClass}" style="padding:1px 7px;font-size:9.5px">${r.status==='suspended'?'Suspended':'Active'}</span> &nbsp;<svg class="ic" style="width:10px;height:10px;opacity:.45;vertical-align:-1px"><use href="#i-clock"/></svg> <span style="font-size:9.5px;color:var(--text3)">${r.lastLogin?_timeAgo(r.lastLogin):'never'}</span></div>
       </div>
       <div style="display:flex;gap:4px;align-items:center;flex-shrink:0">
         <button type="button" class="btn btn-sm" onclick="openEditUserModal('${u}')" title="Edit user"><svg class="ic"><use href="#i-pencil"/></svg></button>
-        ${r.status!=='suspended'?`<button type="button" class="btn btn-sm btn-danger" onclick="suspendMyUser('${u}')" title="Suspend"><svg class="ic"><use href="#i-ban"/></svg></button>`:`<button type="button" class="btn btn-sm btn-success" onclick="unsuspendMyUser('${u}')" title="Restore"><svg class="ic"><use href="#i-check-circle"/></svg></button>`}
+        <label class="sus-tog" title="${r.status==='suspended'?'Click to restore access':'Click to suspend'}"><input type="checkbox" ${r.status!=='suspended'?'checked':''} onchange="toggleSuspendUser('${u}',this.checked)"><span class="sus-slider"></span></label>
         <button type="button" class="btn btn-sm" onclick="deleteMyUser('${u}')" style="color:var(--error)" title="Delete user"><svg class="ic"><use href="#i-trash"/></svg></button>
         <button type="button" class="btn btn-sm" onclick="openActivityLog('${u}')" title="View activity log"><svg class="ic"><use href="#i-clock"/></svg></button>
         <button type="button" class="btn btn-sm" onclick="forceLogoutUser('${u}')" style="color:var(--warn)" title="Force logout"><svg class="ic"><use href="#i-door"/></svg></button>
@@ -5356,6 +5654,28 @@ function renderOwnerDashboard(){
       </div>
     </div>`).join(''):`<div style="padding:24px;text-align:center;color:var(--text3)">No pending requests <svg class="ic"><use href="#i-sparkle"/></svg></div>`;
   document.getElementById('owner-branch-list').innerHTML=S.branches.length?S.branches.map(b=>{const bc=Object.keys(reg).filter(u=>reg[u].branch===b).length;return`<div class="oc-wrap" style="padding:14px 20px;display:flex;align-items:center;justify-content:space-between"><span style="font-weight:600;display:flex;align-items:center;gap:8px"><svg class="ic"><use href="#i-building"/></svg> ${esc(b)}</span><span style="font-size:11px;font-weight:700;padding:2px 10px;border-radius:99px;background:var(--surface2);border:1px solid var(--border);color:var(--text3)">${bc} ${bc===1?'user':'users'}</span></div>`;}).join(''):`<div style="padding:28px;text-align:center;color:var(--text3)"><svg class="ic"><use href="#i-building"/></svg> No branches yet.</div>`;
+  // Branch performance comparison table
+  const cmpEl=document.getElementById('owner-branch-cmp');
+  const secCmp=document.getElementById('section-branch-cmp');
+  if(cmpEl&&secCmp){
+    if(S.branches.length){
+      secCmp.style.display='';
+      const _th=s=>`<th style="padding:7px 10px;font-size:10px;font-weight:700;color:var(--text3);text-align:right;border-bottom:1px solid var(--border);white-space:nowrap;background:var(--surface2)">${s}</th>`;
+      const _thL=s=>`<th style="padding:7px 10px;font-size:10px;font-weight:700;color:var(--text3);text-align:left;border-bottom:1px solid var(--border);background:var(--surface2)">${s}</th>`;
+      const _td=(s,mono=false)=>`<td style="padding:6px 10px;font-size:11.5px;border-top:1px solid var(--border);text-align:right${mono?';font-family:var(--mono)':''}">  ${s}</td>`;
+      const _tdL=s=>`<td style="padding:6px 10px;font-size:11.5px;border-top:1px solid var(--border)">${s}</td>`;
+      const brows=S.branches.map(b=>{
+        const bsales=S.sales.filter(r=>r.branch===b);
+        const bpurch=S.purchase.filter(r=>r.branch===b);
+        const sT=bsales.reduce((a,r)=>a+(parseFloat(r.qty||0)*parseFloat(r.sPrice||0)),0);
+        const pT=bpurch.reduce((a,r)=>a+(parseFloat(r.qty||0)*parseFloat(r.uPrice||0)),0);
+        return`<tr>${_tdL(esc(b))}${_td(bsales.length)}${_td(fmt(sT),true)}${_td(bpurch.length)}${_td(fmt(pT),true)}</tr>`;
+      }).join('');
+      cmpEl.innerHTML=`<div style="overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius-sm)"><table style="width:100%;border-collapse:collapse"><thead><tr>${_thL('Branch')}${_th('Sales')}${_th('Sales Total')}${_th('Purchases')}${_th('Purch. Total')}</tr></thead><tbody>${brows}</tbody></table></div>`;
+    }else{
+      secCmp.style.display='none';
+    }
+  }
 }
 
 async function approveMyUser(i){
@@ -5390,16 +5710,17 @@ function denyMyUser(i){
   showToast(`<svg class="ic"><use href="#i-x-circle"/></svg> ${name} denied`,'error');updateNotifBadge();renderOwnerDashboard();
 }
 function suspendMyUser(u){
-  customConfirm('Suspend User?',`${u} will lose access.`,_SVG.ban,'Suspend',()=>{
-    const reg=getRegistry();if(reg[u])reg[u].status='suspended';saveRegistry(reg);
-    showToast(`${u} suspended`,'warn');renderOwnerDashboard();
-  });
+  const reg=getRegistry();if(reg[u])reg[u].status='suspended';saveRegistry(reg);
+  showToast(`${u} suspended`,'warn');renderOwnerDashboard();
 }
 function unsuspendMyUser(u){
-  customConfirm('Restore Access?',`"${u}" will regain full access.`,_SVG.check,'Restore',()=>{
-    const reg=getRegistry();if(reg[u])reg[u].status='active';saveRegistry(reg);
-    showToast(`${u} reactivated`,'success');renderOwnerDashboard();
-  });
+  const reg=getRegistry();if(reg[u])reg[u].status='active';saveRegistry(reg);
+  showToast(`${u} reactivated`,'success');renderOwnerDashboard();
+}
+function toggleSuspendUser(u,active){
+  const reg=getRegistry();if(reg[u])reg[u].status=active?'active':'suspended';saveRegistry(reg);
+  showToast(active?`${u} reactivated`:`${u} suspended`,active?'success':'warn');
+  renderOwnerDashboard();
 }
 function deleteMyUser(u){
   customConfirm('Delete User?',`Remove "${u}" permanently? They will never be able to rejoin this account.`,_SVG.trash,'Delete',()=>{
@@ -5493,19 +5814,21 @@ const isUser=()=>S.role==='user';
 const getPerm=tab=>{
   if(isOwner())return'full';
   if(isSystemOwner())return'none';
-  if(isManager())return'full';
+  if(isManager())return S.perms[S.user]?.[tab]??'full';
   if(isReadOnly())return'read';
   if(isStorekeeper()){
     if(STOREKEEPER_ALLOWED_TABS.includes(tab))return'full';
-    if(tab==='ITEMS')return'read';
+    if(tab==='ITEMS')return S.perms[S.user]?.ITEMS??'read';
     return'none';
   }
   return S.perms[S.user]?.[tab]??'full';
 };
-const canWrite=tab=>!isReadOnly()&&['full','add_only'].includes(getPerm(tab));
+const canWrite=tab=>['full','add_only'].includes(getPerm(tab));
 const canRead=tab=>getPerm(tab)!=='none';
-const canExport=()=>isOwner()||isManager()||(S.exportPerms[S.user]??true);
-const canEditRow=()=>isOwner()||isManager()||(S.rowEditPerms[S.user]===true);
+// managers default to true; regular/readonly users default to false for export
+const canExport=()=>isOwner()||(S.exportPerms[S.user]??(isManager()));
+const canEditRow=()=>isOwner()||(S.rowEditPerms[S.user]??true);
+const canDeleteRow=()=>isOwner()||(S.deletePerms[S.user]??true);
 
 // User join date filtering: new users only see data created after they joined
 function getUserJoinDate(){
@@ -5607,12 +5930,123 @@ function loadPendingApprovals(){
   S.pendingSignups=_lsGet(`ims_${ownerNS()}_pending`,[]);
   updateNotifBadge();
 }
+function _creditAgeDays(dateStr){
+  const dm=String(dateStr||'').match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+  if(!dm)return 0;
+  const et=toEthiopianDate(new Date());
+  const toOrd=(y,m,d)=>y*365+m*30+d;
+  return Math.max(0,toOrd(et.year,et.month,et.day)-toOrd(+dm[3],+dm[2],+dm[1]));
+}
+function _agingBadge(days){
+  if(days<=30)return`<span class="aging-badge aging-current">${days}d</span>`;
+  if(days<=60)return`<span class="aging-badge aging-warn">${days}d overdue</span>`;
+  return`<span class="aging-badge aging-overdue">${days}d overdue</span>`;
+}
 function updateNotifBadge(){
   const badge=document.getElementById('nav-credit-badge');
   if(!badge)return;
-  const n=(S.creditPayments||[]).filter(c=>!c.paid&&!c.settled).length;
+  const calcST=s=>{const b=(s.qty||0)*(s.sPrice||0);return b+(s.vatOn?b*.15:0)-(s.wh3On?b*.03:0)-(s.vwhOn?b*.075:0)-(s.commission||0);};
+  const calcPT=p=>{const b=(p.qty||0)*(p.uPrice||0);return b+(p.vatOn?b*.15:0);};
+  const overdue=[
+    ...S.sales.filter(s=>s.payment==='CREDIT'&&s._cid).map(s=>({_cid:s._cid,_amt:calcST(s),date:s.date})),
+    ...(S.purchase||[]).filter(p=>p.payment==='CREDIT'&&p._cid).map(p=>({_cid:p._cid,_amt:calcPT(p),date:p.date}))
+  ].filter(r=>getCreditPaidAmt(r._cid)<r._amt-0.001&&_creditAgeDays(r.date)>=31);
+  const n=overdue.length;
   badge.textContent=n>9?'9+':String(n);
   badge.style.display=n>0?'flex':'none';
+}
+/* ── Customer credit drawer ─────────────────────────── */
+let _cdrParty='';
+function openCustDrawer(party){
+  _cdrParty=party;
+  const calcST=s=>{const b=(s.qty||0)*(s.sPrice||0);return b+(s.vatOn?b*.15:0)-(s.wh3On?b*.03:0)-(s.vwhOn?b*.075:0)-(s.commission||0);};
+  const calcPT=p=>{const b=(p.qty||0)*(p.uPrice||0);return b+(p.vatOn?b*.15:0);};
+  const aSales=S.sales.filter(s=>s.payment==='CREDIT'&&s._cid&&(s.party||'')==party);
+  const aPurch=S.purchase.filter(p=>p.payment==='CREDIT'&&p._cid&&(p.party||'')==party);
+  const totS=aSales.reduce((a,s)=>a+calcST(s),0),paidS=aSales.reduce((a,s)=>a+getCreditPaidAmt(s._cid),0);
+  const totP=aPurch.reduce((a,p)=>a+calcPT(p),0),paidP=aPurch.reduce((a,p)=>a+getCreditPaidAmt(p._cid),0);
+  document.getElementById('cdr-av').textContent=(party[0]||'?').toUpperCase();
+  document.getElementById('cdr-name').textContent=party;
+  document.getElementById('cdr-sub').textContent=`${aSales.length} credit sale(s) · ${aPurch.length} credit purchase(s)`;
+  const _cItem=(r,amt)=>{
+    const paid=getCreditPaidAmt(r._cid),rem=Math.max(0,amt-paid),isPaid=paid>=amt-0.001,days=_creditAgeDays(r.date);
+    const schd=(S.creditSchedule||[]).filter(s=>s.cid===r._cid&&!s.paid);
+    return`<div class="cdr-item"${!isPaid&&days>30?` style="border-color:var(--error)"`:''}><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px"><div><span style="font-size:11.5px;font-weight:600">${esc(r.name||r.id||'—')}</span><span style="font-size:10px;color:var(--text3);margin-left:6px">${(r.date||'').slice(0,10)}</span></div><span style="font-family:var(--mono);font-size:12px;font-weight:700">${fmt(amt)}</span></div><div style="display:flex;align-items:center;gap:6px;margin-top:5px;flex-wrap:wrap">${isPaid?'<span class="td-badge badge-cash" style="font-size:9px">PAID</span>':_agingBadge(days)}${!isPaid?`<span style="font-size:10px;color:var(--text3)">Bal: <strong class="td-mono" style="color:var(--error)">${fmt(rem)}</strong></span>`:''}${canWrite('CREDIT')&&!isPaid?`<button type="button" class="btn btn-sm" onclick="openCreditPayModal('${r._cid}',${amt})" style="font-size:9px;padding:2px 7px">+ Pay</button><button type="button" class="btn btn-sm" onclick="openScheduleModal('${r._cid}',${amt})" style="font-size:9px;padding:2px 7px;opacity:.75"><svg class="ic" style="width:10px;height:10px"><use href="#i-calendar"/></svg> Sched</button>`:''}${schd.length?`<span class="aging-badge aging-warn">${schd.length} scheduled</span>`:''}</div></div>`;
+  };
+  const schedItems=(S.creditSchedule||[]).filter(s=>s.party===party&&!s.paid);
+  const schedHtml=schedItems.length?`<div class="cdr-sec" style="border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:4px"><div class="cdr-sec-lbl" style="color:var(--warn)">Scheduled Installments (${schedItems.length})</div>${schedItems.map(s=>`<div class="cdr-item" style="border-color:rgba(245,158,11,.4)"><div style="display:flex;justify-content:space-between"><span style="font-size:11px;font-weight:600">Due ${s.dueDate}</span><span style="font-family:var(--mono);font-size:12px;font-weight:700">${fmt(s.amount)}</span></div>${s.note?`<div style="font-size:10px;color:var(--text3);margin-top:2px">${esc(s.note)}</div>`:''}${canWrite('CREDIT')?`<button type="button" class="btn btn-sm btn-primary" onclick="applyScheduledPayment('${s.id}')" style="font-size:9.5px;padding:3px 9px;margin-top:6px">Apply Payment</button>`:''}</div>`).join('')}</div>`:'';
+  document.getElementById('cdr-body').innerHTML=`<div style="padding:12px 16px;background:var(--surface2);border-bottom:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:10px;text-align:center"><div><div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Receivable</div><div style="font-size:16px;font-weight:800;font-family:var(--mono)">${fmt(totS)}</div><div style="font-size:10px;color:var(--text3)">Collected: ${fmt(paidS)}</div></div><div><div style="font-size:10px;color:var(--text3);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px">Payable</div><div style="font-size:16px;font-weight:800;font-family:var(--mono)">${fmt(totP)}</div><div style="font-size:10px;color:var(--text3)">Settled: ${fmt(paidP)}</div></div></div>${schedHtml}${aSales.length?`<div class="cdr-sec" style="padding-top:10px"><div class="cdr-sec-lbl">Sales Credits</div>${aSales.map(r=>_cItem(r,calcST(r))).join('')}</div>`:''}${aPurch.length?`<div class="cdr-sec" style="padding-top:6px"><div class="cdr-sec-lbl">Purchase Credits</div>${aPurch.map(r=>_cItem(r,calcPT(r))).join('')}</div>`:''}`;
+  document.getElementById('cdr-overlay').classList.add('open');
+  document.getElementById('cust-credit-drawer').classList.add('open');
+}
+function closeCustDrawer(){
+  document.getElementById('cdr-overlay').classList.remove('open');
+  document.getElementById('cust-credit-drawer').classList.remove('open');
+  _cdrParty='';
+}
+/* ── Payment schedule ──────────────────────────────────── */
+let _schedCid='',_schedAmt=0;
+function openScheduleModal(cid,totalAmt){
+  _schedCid=cid;_schedAmt=totalAmt;
+  const paid=getCreditPaidAmt(cid),rem=Math.max(0,totalAmt-paid);
+  document.getElementById('sched-subtitle').textContent=`Total: ${fmt(totalAmt)} · Remaining: ${fmt(rem)}`;
+  document.getElementById('sched-summary').innerHTML=`Remaining balance: <strong class="td-mono" style="color:var(--error)">${fmt(rem)}</strong>`;
+  document.getElementById('sched-start').value=nowDt();
+  document.getElementById('sched-count').value='3';
+  document.getElementById('sched-note').value='';
+  document.getElementById('sched-error').textContent='';
+  _updateSchedPreview();
+  openModal('credit-schedule-modal');
+}
+function _updateSchedPreview(){
+  const count=parseInt(document.getElementById('sched-count')?.value)||3;
+  const interval=parseInt(document.getElementById('sched-interval')?.value)||30;
+  const start=document.getElementById('sched-start')?.value||'';
+  const dm=start.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+  if(!_schedCid||count<2||!dm){document.getElementById('sched-preview').innerHTML='';return;}
+  const paid=getCreditPaidAmt(_schedCid),rem=Math.max(0,_schedAmt-paid);
+  const each=rem/count;
+  let day=+dm[1],mon=+dm[2],yr=+dm[3];
+  const dates=[];
+  for(let i=0;i<count;i++){
+    dates.push(`${String(day).padStart(2,'0')}-${String(mon).padStart(2,'0')}-${yr}`);
+    day+=interval;while(day>30){day-=30;mon++;}while(mon>13){mon-=13;yr++;}
+  }
+  document.getElementById('sched-preview').innerHTML=`<strong>${count}</strong> × <strong>${fmt(each)}</strong>:&nbsp;${dates.map((d,i)=>`<span style="margin-right:6px">#${i+1}: ${d}</span>`).join('')}`;
+}
+function saveSchedule(){
+  const count=parseInt(document.getElementById('sched-count')?.value)||0;
+  const interval=parseInt(document.getElementById('sched-interval')?.value)||30;
+  const start=document.getElementById('sched-start')?.value||'';
+  const note=document.getElementById('sched-note')?.value.trim()||'';
+  if(count<2||count>24){document.getElementById('sched-error').textContent='Enter 2–24 installments';return;}
+  const dm=start.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+  if(!dm){document.getElementById('sched-error').textContent='Enter a valid start date (dd-mm-yyyy)';return;}
+  const paid=getCreditPaidAmt(_schedCid),rem=Math.max(0,_schedAmt-paid);
+  if(rem<0.01){document.getElementById('sched-error').textContent='Already fully paid';return;}
+  const each=Math.round(rem/count*100)/100;
+  const txn=[...S.sales,...S.purchase].find(r=>r._cid===_schedCid);
+  const party=txn?.party||'';
+  if(!S.creditSchedule)S.creditSchedule=[];
+  let day=+dm[1],mon=+dm[2],yr=+dm[3];
+  for(let i=0;i<count;i++){
+    const dueDate=`${String(day).padStart(2,'0')}-${String(mon).padStart(2,'0')}-${yr}`;
+    S.creditSchedule.push({id:`sch_${Date.now()}_${i}`,cid:_schedCid,party,amount:each,dueDate,note:note||(i===0?'First installment':`Installment #${i+1}`),paid:false});
+    day+=interval;while(day>30){day-=30;mon++;}while(mon>13){mon-=13;yr++;}
+  }
+  saveUserData();closeModal('credit-schedule-modal');
+  showToast(`${count} installments scheduled`,'success');renderTab();
+}
+function applyScheduledPayment(schedId){
+  if(!S.creditSchedule)return;
+  const sch=S.creditSchedule.find(s=>s.id===schedId);
+  if(!sch)return;
+  sch.paid=true;
+  if(!S.creditPayments)S.creditPayments=[];
+  S.creditPayments.push({cid:sch.cid,amount:sch.amount,paidAt:new Date().toISOString(),paidBy:S.user,note:sch.note+' (scheduled)'});
+  saveUserData();renderTab();updateNotifBadge();
+  if(_cdrParty)openCustDrawer(_cdrParty);
+  showToast(`Payment of ${fmt(sch.amount)} applied`,'success');
 }
 function openApprovals(){
   renderOwnerDashboard();
@@ -6211,9 +6645,53 @@ function showUI(){
   document.getElementById('content').style.display='block';
   document.getElementById('bottom-nav').style.display='flex';
   document.getElementById('owner-screen').style.display='none';
+  setTimeout(_updateFAB,100);
 }
 function openModal(id){document.getElementById(id).classList.add('open');}
-function closeModal(id){document.getElementById(id).classList.remove('open');}
+let _noDraftSave=false;
+function closeModal(id){
+  if(id==='add-row-modal'&&!_noDraftSave)_draftSave();
+  _noDraftSave=false;
+  document.getElementById(id).classList.remove('open');
+}
+function _draftKey(){return`ims_draft_${ownerNS()}_${S&&S.tab||''}`;}
+function _draftSave(){
+  if(!S||!S.tab)return;
+  const flds={};
+  ['f-date','f-party','f-branch','f-id','f-qty','f-price','f-payment','f-reason','f-amt','f-expense-branch','f-supplier','f-item','f-cost','f-commission'].forEach(id=>{
+    const el=document.getElementById(id);if(el)flds[id]=el.value;
+  });
+  ['f-vat','f-wh3','f-vwh'].forEach(id=>{const el=document.getElementById(id);if(el)flds[id]=el.checked;});
+  const meaningful=!!(
+    (flds['f-party']&&flds['f-party'].trim())||
+    (flds['f-reason']&&flds['f-reason'].trim())||
+    (S.tab==='ITEMS'&&flds['f-id']&&flds['f-id'].trim())||
+    (S.tab==='STORE'&&flds['f-item'])||
+    (flds['f-qty']&&parseFloat(flds['f-qty'])>0)||
+    (flds['f-amt']&&parseFloat(flds['f-amt'])>0)
+  );
+  if(meaningful)localStorage.setItem(_draftKey(),JSON.stringify({tab:S.tab,flds}));
+  else localStorage.removeItem(_draftKey());
+}
+function _draftLoad(){try{const r=localStorage.getItem(_draftKey());return r?JSON.parse(r):null;}catch(e){return null;}}
+function _draftClear(){if(S&&S.tab)localStorage.removeItem(_draftKey());}
+let _partyChipData=[],_reasonChipData=[];
+function _setPartyChip(fieldId,i){const el=document.getElementById(fieldId);if(el)el.value=_partyChipData[i]||'';}
+function _setReasonChip(i){const el=document.getElementById('f-reason');if(el)el.value=_reasonChipData[i]||'';}
+function _buildPartyChips(fieldId){
+  const freq={};[...S.purchase,...S.sales].forEach(r=>{if(r.party)freq[r.party]=(freq[r.party]||0)+1;});
+  const top=Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,6).map(([p])=>p);
+  _partyChipData=top;
+  if(!top.length)return'';
+  return`<div class="party-chips">${top.map((p,i)=>`<span class="party-chip" onclick="_setPartyChip('${fieldId}',${i})">${esc(p)}</span>`).join('')}</div>`;
+}
+function _buildReasonChips(){
+  const freq={};S.expense.forEach(r=>{if(r.reason)freq[r.reason]=(freq[r.reason]||0)+1;});
+  const top=Object.entries(freq).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([r])=>r);
+  _reasonChipData=top;
+  if(!top.length)return'';
+  return`<div style="margin-bottom:10px"><div style="font-size:10px;color:var(--text3);font-weight:700;letter-spacing:.05em;margin-bottom:5px">RECENT REASONS</div><div class="party-chips">${top.map((r,i)=>`<span class="party-chip" onclick="_setReasonChip(${i})">${esc(r)}</span>`).join('')}</div></div>`;
+}
 window.addEventListener('beforeprint',function(){
   const shopName=S&&S.ownerId?getRegistry()[S.ownerId]?.shopName||'Power IMS':'Power IMS';
   const title=document.getElementById('page-title')?.textContent||'';
@@ -6320,12 +6798,15 @@ function showCtxMenu(e,idx,listType){
   e.preventDefault();_ctxRow={idx,listType};
   const list=getList(listType);const row=list[idx];
   const isStoreTransfer=row&&row.payment==='STORE TRANSFER';
-  const editable=!isStoreTransfer&&canEditRow();
+  const editAllowed=!isStoreTransfer&&canEditRow();
+  const deleteAllowed=!isStoreTransfer&&canDeleteRow();
   const rw=canWrite(S.tab);
   const menu=document.getElementById('ctx-menu');
   let html='';
-  if(rw&&editable){
+  if(rw&&editAllowed){
     html+=`<div class="ctx-item" onclick="openEditModal(${idx},'${listType}')"><span class="ctx-icon"><svg class="ic"><use href="#i-pencil"/></svg></span>${L('ctxEdit')}</div>`;
+  }
+  if(rw&&deleteAllowed){
     html+=`<div class="ctx-item danger" onclick="deleteRow(${idx},'${listType}')"><span class="ctx-icon"><svg class="ic"><use href="#i-trash"/></svg></span>${L('ctxDelete')}</div>`;
   }
   if(isStoreTransfer){html+=`<div class="ctx-item" style="cursor:default;color:var(--text3)"><span class="ctx-icon"><svg class="ic"><use href="#i-lock"/></svg></span>${L('ctxStoreTransfer')}</div>`;}
@@ -6352,9 +6833,12 @@ function deleteRow(idx,listType){
   hideCtxMenu();
   const list=getList(listType);const row=list[idx];
   if(row&&row.payment==='STORE TRANSFER'){showToast(L('toastStoreTransferNoDelete'),'error');return;}
-  const label=row.itemId||row.id||row.reason||row.name||'this row';
-  customConfirm(L('confirmDelete'),`"${label}" will be removed.`,_SVG.trash,L('confirmDeleteBtn'),()=>{
-    list.splice(idx,1);saveUserData();renderTab();showToast(L('toastRowDeleted'),'success');
+  const label=row.itemId||row.id||row.reason||row.name||'record';
+  list.splice(idx,1);saveUserData();renderTab();
+  showUndoToast(`"${label}" deleted`,()=>{
+    getList(listType).splice(idx,0,row);
+    saveUserData();renderTab();
+    showToast('Undo successful','success');
   });
 }
 
@@ -6365,6 +6849,33 @@ function deleteRow(idx,listType){
 /* ═══════════════════════════════════════════════════════
    TAB SWITCHING
 ═══════════════════════════════════════════════════════ */
+const _FAB_TABS=new Set(['PURCHASE','SALES','ITEMS','EXPENSE','STORE']);
+function _updateFAB(){
+  const btn=document.getElementById('fab-add');
+  if(btn)btn.classList.toggle('fab-hidden',!_FAB_TABS.has(S&&S.tab||''));
+}
+/* ── Pull-to-refresh ─── */
+let _ptrY0=0,_ptrD=0,_ptrOn=false;
+document.addEventListener('touchstart',e=>{
+  if(window.scrollY<2&&document.getElementById('bottom-nav')?.style.display!=='none'){_ptrY0=e.touches[0].clientY;_ptrOn=true;}
+},{passive:true});
+document.addEventListener('touchmove',e=>{
+  if(!_ptrOn)return;
+  _ptrD=e.touches[0].clientY-_ptrY0;
+  if(_ptrD>20){const el=document.getElementById('ptr-indicator');if(el){el.classList.add('ptr-vis');el.style.transform=`translateX(-50%) rotate(${Math.min(_ptrD*2,350)}deg)`;}}
+},{passive:true});
+document.addEventListener('touchend',()=>{
+  if(_ptrOn&&_ptrD>80){
+    const el=document.getElementById('ptr-indicator');
+    if(el){el.style.transform='translateX(-50%)';el.classList.add('ptr-spin');}
+    renderTab();
+    setTimeout(()=>{const el2=document.getElementById('ptr-indicator');if(el2){el2.classList.remove('ptr-vis','ptr-spin');el2.style.transform='translateX(-50%)';}},900);
+  }else{
+    const el=document.getElementById('ptr-indicator');
+    if(el){el.classList.remove('ptr-vis');el.style.transform='translateX(-50%)';}
+  }
+  _ptrOn=false;_ptrD=0;
+});
 function switchTab(tab){
   if(isSystemOwner())return;
   // <svg class="ic"><use href="#i-sparkle"/></svg> CHANGE 6: Block tabs for storekeeper
@@ -6396,12 +6907,16 @@ function switchTab(tab){
   const _tabRGB={PURCHASE:'129,140,248',SALES:'52,211,153',BALANCE:'192,132,252',EXPENSE:'244,63,94',REPORT:'245,158,11',CREDIT:'129,140,248',ITEMS:'245,158,11',STORE:'52,211,153',STOREBALANCE:'52,211,153',STOREREPORT:'52,211,153'};
   const _navEl=document.getElementById('bottom-nav');
   if(_navEl){const _rgb=_tabRGB[tab]||'59,130,246';_navEl.style.borderTopColor=`rgba(${_rgb},.25)`;_navEl.style.boxShadow=`0 -2px 24px rgba(${_rgb},.1)`;}
-  updateSuggestions();renderTab();
+  _drPreset='all';updateSuggestions();renderTab();_updateFAB();
 }
 function updateSuggestions(){
-  const parties=S.tab==='PURCHASE'?[...new Set(S.purchase.map(r=>r.party))]:[...new Set(S.sales.map(r=>r.party))];
-  document.getElementById('party-list').innerHTML=parties.filter(Boolean).map(p=>`<option value="${esc(p)}">`).join('');
+  const freq={};[...S.purchase,...S.sales].forEach(r=>{if(r.party)freq[r.party]=(freq[r.party]||0)+1;});
+  const allParties=[...new Set([...S.purchase,...S.sales].map(r=>r.party).filter(Boolean))];
+  const sortedParties=allParties.sort((a,b)=>(freq[b]||0)-(freq[a]||0));
+  document.getElementById('party-list').innerHTML=sortedParties.map(p=>`<option value="${esc(p)}">`).join('');
   document.getElementById('item-list').innerHTML=S.items.filter(m=>m.id).map(m=>`<option value="${esc(m.id)}">${esc(m.name)}${m.desc?' · '+esc(m.desc):''}</option>`).join('');
+  const reasons=[...new Set(S.expense.map(r=>r.reason).filter(Boolean))];
+  const rl=document.getElementById('reason-list');if(rl)rl.innerHTML=reasons.map(r=>`<option value="${esc(r)}">`).join('');
   updateBranchDL();
 }
 // Initialize navigation history and browser back button support
@@ -6514,8 +7029,7 @@ function renderSessionTable(){
     </div></div>`;
 }
 function openAddModal(){
-  _addCount=0;
-  _sessionRecords=[];
+  _addCount=0;_sessionRecords=[];
   if(S.tab==='ITEMS')buildItemForm(null,'add');
   else if(S.tab==='PURCHASE')buildTxForm(null,'add',true);
   else if(S.tab==='SALES')buildTxForm(null,'add',false);
@@ -6523,6 +7037,22 @@ function openAddModal(){
   else if(S.tab==='EXPENSE')buildExpenseForm(null,'add');
   const hdr=document.getElementById('add-form-hdr');
   hdr.className='modal-hdr'+(S.tab==='STORE'?' store-hdr':'');
+  const draft=_draftLoad();
+  if(draft&&draft.tab===S.tab&&draft.flds){
+    Object.entries(draft.flds).forEach(([id,val])=>{
+      const el=document.getElementById(id);if(!el)return;
+      if(typeof val==='boolean')el.checked=val;else el.value=val;
+    });
+    if(S.tab==='PURCHASE'||S.tab==='SALES'){autoFillItem();recalcFormTotals(S.tab==='PURCHASE');}
+    if(S.tab==='STORE')autoFillStoreItem();
+    const body=document.getElementById('add-form-body');
+    if(body){
+      const banner=document.createElement('div');
+      banner.className='draft-banner';
+      banner.innerHTML=`<svg class="ic" style="flex-shrink:0"><use href="#i-alert"/></svg> Draft restored &mdash; <a href="#" onclick="event.preventDefault();_draftClear();openAddModal()">Clear draft</a>`;
+      body.insertBefore(banner,body.firstChild);
+    }
+  }
   openModal('add-row-modal');
 }
 function openEditModal(idx,listType){
@@ -6554,6 +7084,7 @@ function buildStoreEntryForm(row,mode,idx){
       <div class="field"><label>Description (auto)</label><input id="f-desc" readonly style="background:var(--surface3);cursor:not-allowed"></div>
     </div>
     <div class="field"><label>Supplier</label><input id="f-supplier" value="${esc(d.supplier||'')}" placeholder="Supplier name" list="party-list"></div>
+    ${_buildPartyChips('f-supplier')}
     <div class="field-row">
       <div class="field"><label>Quantity *</label><input type="number" id="f-qty" value="${d.qty||''}" placeholder="0" min="0" step="any"></div>
       <div class="field"><label>Unit Cost</label><input type="number" id="f-cost" value="${d.cost||''}" placeholder="0.00" step="any"></div>
@@ -6590,10 +7121,10 @@ function submitStoreEntryForm(mode,idx,keepOpen=false){
   const supplier=document.getElementById('f-supplier').value.trim();
   const qty=parseFloat(document.getElementById('f-qty').value)||0;
   const cost=parseFloat(document.getElementById('f-cost').value)||0;
-  if(!date){showMsg('f-error','Date is required');return;}
-  if(!_validateDate(date)){showMsg('f-error','Date must be in dd-mm-yyyy format');return;}
+  if(!date){showMsg('f-error',L('valDateRequired'));return;}
+  if(!_validateDate(date)){showMsg('f-error',L('valDateFormat'));return;}
   if(!itemId){showMsg('f-error','Please select an item from catalog');return;}
-  if(!qty){showMsg('f-error','Quantity required');return;}
+  if(!qty){showMsg('f-error',L('valQtyRequired'));return;}
   const item=S.items.find(m=>m.id===itemId)||{name:'',desc:''};
   const row={date,itemId,itemName:item.name,itemDesc:item.desc,supplier,qty,cost,_by:S.user};
   if(mode==='add'){
@@ -6609,9 +7140,11 @@ function submitStoreEntryForm(mode,idx,keepOpen=false){
   }
   saveUserData();renderTab();
   if(keepOpen){
+    _draftClear();
     _addCount++;
     _sessionRecords.push({date,itemId,supplier,qty,cost});
-    const c=document.getElementById('f-add-count');if(c)c.textContent=`${_addCount} entr${_addCount>1?'ies':'y'} added`;
+    const _stTotal=_sessionRecords.reduce((s,r)=>s+(r.qty*(r.cost||0)),0);
+    const c=document.getElementById('f-add-count');if(c)c.textContent=`${_addCount} entr${_addCount>1?'ies':'y'} added · Total: ${fmt(_stTotal)}`;
     renderSessionTable();
     const fi=document.getElementById('f-item');if(fi)fi.value='';
     const fn=document.getElementById('f-name');if(fn)fn.value='';
@@ -6620,6 +7153,7 @@ function submitStoreEntryForm(mode,idx,keepOpen=false){
     const fc=document.getElementById('f-cost');if(fc)fc.value='';
     const fi2=document.getElementById('f-item');if(fi2)fi2.focus();
   }else{
+    _noDraftSave=true;
     closeModal(mode==='add'?'add-row-modal':'edit-row-modal');
     showToast(mode==='add'?L('toastRecordAdded'):L('toastUpdated'),'success');
   }
@@ -6663,8 +7197,8 @@ function submitDispatch(){
   const price=parseFloat(document.getElementById('disp-price')?.value)||0;
   const branch=document.getElementById('disp-branch')?.value;
   if(!itemId){showMsg('f-error','Select an item');return;}
-  if(!qty){showMsg('f-error','Quantity required');return;}
-  if(!price){showMsg('f-error','Price required');return;}
+  if(!qty){showMsg('f-error',L('valQtyRequired'));return;}
+  if(!price){showMsg('f-error',L('valPriceRequired'));return;}
   if(!branch){showMsg('f-error','Select a branch');return;}
   const idx=S.storeItems.findIndex(s=>s.itemId===itemId);
   if(idx<0){showMsg('f-error','Item not found in store');return;}
@@ -6675,19 +7209,20 @@ function submitDispatch(){
 
 function buildItemForm(row,mode,idx){
   document.getElementById('add-form-icon').innerHTML=_ti('<path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/><rect x="9" y="3" width="6" height="4" rx="1"/><line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/>');
-  document.getElementById('add-form-title').textContent=mode==='add'?'Add Item':'Edit Item';
-  document.getElementById('add-form-sub').textContent='Fill in the item details below';
+  document.getElementById('add-form-title').textContent=mode==='add'?L('addItem'):L('editItem');
+  document.getElementById('add-form-sub').textContent=L('addItemSub');
   const d=row||{id:'',name:'',desc:''};
   const body=document.getElementById(mode==='add'?'add-form-body':'edit-form-body');
   body.innerHTML=`
     <div class="field-row">
-      <div class="field"><label>Item ID *</label><input id="f-id" value="${esc(d.id)}" placeholder="e.g. P001"></div>
-      <div class="field"><label>Item Name *</label><input id="f-name" value="${esc(d.name)}" placeholder="Product name"></div>
+      <div class="field"><label>${L('partNoLbl')}</label><input id="f-id" value="${esc(d.id)}" placeholder="e.g. P001"></div>
+      <div class="field"><label>${L('itemNameLbl')}</label><input id="f-name" value="${esc(d.name)}" placeholder="${L('itemNamePh')}"></div>
     </div>
-    <div class="field"><label>Description</label><input id="f-desc" value="${esc(d.desc||'')}" placeholder="Optional"></div>
-    <button type="button" class="modal-btn" onclick="submitItemForm('${mode}',${idx??-1})">${mode==='add'?'<svg class="ic"><use href="#i-plus"/></svg> Add Item':'<svg class="ic"><use href="#i-save"/></svg> Save Changes'}</button>
-    ${mode==='add'?`<button type="button" class="modal-btn" style="margin-top:5px;background:transparent;color:var(--p);border:1.5px solid var(--p)" onclick="submitItemForm('add',-1,true)"><svg class="ic"><use href="#i-plus"/></svg> Add &amp; Add Another</button>`:''}
-    <button type="button" class="modal-btn secondary" onclick="closeModal('${mode==='add'?'add-row-modal':'edit-row-modal'}')" style="margin-top:5px">Cancel</button>
+    <div class="field"><label>${L('descLbl')}</label><input id="f-desc" value="${esc(d.desc||'')}" placeholder="${L('descPh')}"></div>
+    <div id="f-dup-warn" class="dup-warn"><svg class="ic" style="flex-shrink:0"><use href="#i-alert"/></svg><span id="f-dup-msg"></span></div>
+    <button type="button" class="modal-btn" onclick="submitItemForm('${mode}',${idx??-1})">${mode==='add'?`<svg class="ic"><use href="#i-plus"/></svg> ${L('addItem')}`:`<svg class="ic"><use href="#i-save"/></svg> ${L('editUserBtn')}`}</button>
+    ${mode==='add'?`<button type="button" class="modal-btn" style="margin-top:5px;background:transparent;color:var(--p);border:1.5px solid var(--p)" onclick="submitItemForm('add',-1,true)"><svg class="ic"><use href="#i-plus"/></svg> ${L('addAnotherBtn')}</button>`:''}
+    <button type="button" class="modal-btn secondary" onclick="closeModal('${mode==='add'?'add-row-modal':'edit-row-modal'}')" style="margin-top:5px">${L('btnCancel')}</button>
     <div id="f-add-count" style="text-align:center;font-size:11px;color:var(--success);min-height:16px;margin-top:4px"></div>
     <div id="f-session-table"></div>
     <div class="modal-error" id="f-error"></div>`;
@@ -6699,10 +7234,21 @@ function submitItemForm(mode,idx,keepOpen=false){
   if(!id||!name){showMsg('f-error','Item ID and Name are required');return;}
   const dupIdx=S.items.findIndex(m=>m.id.toLowerCase()===id.toLowerCase());
   if(dupIdx!==-1&&(mode==='add'||dupIdx!==idx)){showMsg('f-error','Item ID already exists — choose a unique one');return;}
+  const nameDupIdx=S.items.findIndex(m=>m.name.toLowerCase()===name.toLowerCase());
+  if(nameDupIdx!==-1&&(mode==='add'||nameDupIdx!==idx)){
+    const dw=document.getElementById('f-dup-warn');
+    if(dw&&dw.style.display!=='flex'){
+      dw.style.display='flex';
+      const dm=document.getElementById('f-dup-msg');
+      if(dm)dm.innerHTML=`Item named <strong>${esc(S.items[nameDupIdx].name)}</strong> already exists (ID: ${esc(S.items[nameDupIdx].id)}). Click submit again to add anyway.`;
+      return;
+    }
+  }
   if(mode==='add')S.items.push({id,name,desc,_by:S.user,createdAt:new Date().toISOString()});
   else S.items[idx]={...S.items[idx],id,name,desc,_by:S.user};
   saveUserData();renderTab();updateSuggestions();
   if(keepOpen){
+    _draftClear();
     _addCount++;
     _sessionRecords.push({id,name,desc});
     const c=document.getElementById('f-add-count');if(c)c.textContent=`${_addCount} item${_addCount>1?'s':''} added`;
@@ -6710,6 +7256,7 @@ function submitItemForm(mode,idx,keepOpen=false){
     document.getElementById('f-id').value='';document.getElementById('f-name').value='';document.getElementById('f-desc').value='';
     document.getElementById('f-id').focus();
   }else{
+    _noDraftSave=true;
     closeModal(mode==='add'?'add-row-modal':'edit-row-modal');
     showToast(mode==='add'?L('toastItemAdded'):L('toastItemUpdated'),'success');
   }
@@ -6731,23 +7278,24 @@ function buildTxForm(row,mode,isP,idx){
   const body=document.getElementById(mode==='add'?'add-form-body':'edit-form-body');
   body.innerHTML=`
     <div class="field-row">
-      <div class="field"><label>Date & Time *</label><input type="text" id="f-date" placeholder="dd-mm-yyyy" value="${d.date||''}"></div>
-      <div class="field"><label>${isP?L('supplier'):L('customer')} *</label><input id="f-party" list="party-list" value="${esc(d.party||'')}" placeholder="${isP?'Supplier name':'Customer name'}"></div>
+      <div class="field"><label>${L('dateLabel')}</label><input type="text" id="f-date" placeholder="dd-mm-yyyy" value="${d.date||''}"></div>
+      <div class="field"><label>${isP?L('supplier'):L('customer')} *</label><input id="f-party" list="party-list" value="${esc(d.party||'')}" placeholder="${isP?L('supplierNamePh'):L('customerNamePh')}"></div>
     </div>
-    <div class="field"><label>Branch</label><select id="f-branch">${branchOpts}</select></div>
-    <div class="field"><label>Item ID *</label><select id="f-id" onchange="autoFillItem()"><option value="">— Select item —</option>${itemOpts}</select></div>
+    ${_buildPartyChips('f-party')}
+    <div class="field"><label>${L('branch')}</label><select id="f-branch">${branchOpts}</select></div>
+    <div class="field"><label>${L('partNoLbl')}</label><select id="f-id" onchange="autoFillItem()"><option value="">— ${L('selectItem')} —</option>${itemOpts}</select></div>
     <div class="field-row">
-      <div class="field"><label>Item Name (auto)</label><input id="f-name" readonly style="background:var(--surface3);cursor:not-allowed"></div>
-      <div class="field"><label>Description (auto)</label><input id="f-desc" readonly style="background:var(--surface3);cursor:not-allowed"></div>
+      <div class="field"><label>${L('itemNameAutoLbl')}</label><input id="f-name" readonly style="background:var(--surface3);cursor:not-allowed"></div>
+      <div class="field"><label>${L('descAutoLbl')}</label><input id="f-desc" readonly style="background:var(--surface3);cursor:not-allowed"></div>
     </div>
     <div class="field-row">
-      <div class="field"><label>Qty *</label><input type="number" id="f-qty" value="${qty}" placeholder="0" min="0" step="any" oninput="recalcFormTotals(${isP})"></div>
-      <div class="field"><label>${isP?'Unit Purchase Price *':'Unit Selling Price *'}</label><input type="number" id="f-price" value="${price}" placeholder="0.00" step="any" oninput="recalcFormTotals(${isP})"></div>
+      <div class="field"><label>${L('dispatchQtyLbl')}</label><input type="number" id="f-qty" value="${qty}" placeholder="0" min="0" step="any" oninput="recalcFormTotals(${isP})"></div>
+      <div class="field"><label>${isP?L('unitPurchPriceLbl'):L('unitSellPriceLbl')}</label><input type="number" id="f-price" value="${price}" placeholder="0.00" step="any" oninput="recalcFormTotals(${isP})"></div>
     </div>
-    <div class="field"><label>Payment Method</label><select id="f-payment">${pmOpts}</select></div>
-    ${!isP?`<div class="field"><label>Commission Amount (optional)</label><input type="number" id="f-commission" value="${d.commission||''}" placeholder="0.00" step="any" min="0" oninput="recalcFormTotals(false)"></div>`:''}
+    <div class="field"><label>${L('method')}</label><select id="f-payment">${pmOpts}</select></div>
+    ${!isP?`<div class="field"><label>${L('commissionAmtLbl')}</label><input type="number" id="f-commission" value="${d.commission||''}" placeholder="0.00" step="any" min="0" oninput="recalcFormTotals(false)"></div>`:''}
     <div style="padding:12px;background:var(--surface2);border-radius:var(--radius-sm);margin-bottom:12px;border:1px solid var(--border)">
-      <div style="font-size:10.5px;font-weight:700;color:var(--text3);margin-bottom:10px">TAX OPTIONS</div>
+      <div style="font-size:10.5px;font-weight:700;color:var(--text3);margin-bottom:10px">${L('taxOptions')}</div>
       <div style="display:flex;flex-wrap:wrap;gap:14px">
         <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:12.5px;font-weight:600"><input type="checkbox" id="f-vat" ${vatChk?'checked':''} style="width:15px;height:15px;accent-color:var(--p)" onchange="recalcFormTotals(${isP})">${L('vat')}</label>
         ${!isP?`<label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:12.5px;font-weight:600"><input type="checkbox" id="f-wh3" ${wh3Chk?'checked':''} style="width:15px;height:15px;accent-color:var(--p)" onchange="recalcFormTotals(false)">${L('wh3')}</label>
@@ -6757,13 +7305,14 @@ function buildTxForm(row,mode,isP,idx){
     </div>
     <div style="padding:12px;background:var(--p-glass);border-radius:var(--radius-sm);margin-bottom:14px;border:1px solid rgba(45,75,138,.2)">
       <div style="display:flex;justify-content:space-between;align-items:center">
-        <span style="font-size:11px;font-weight:700;color:var(--text3)">TOTAL AMOUNT</span>
+        <span style="font-size:11px;font-weight:700;color:var(--text3)">${L('totalAmountLbl')}</span>
         <span id="f-total-display" style="font-family:var(--mono);font-size:1.1rem;font-weight:800;color:var(--p)">0.00</span>
       </div>
     </div>
-    <button type="button" class="modal-btn" onclick="submitTxForm('${mode}',${idx??-1},${isP})">${mode==='add'?`<svg class="ic"><use href="#i-plus"/></svg> Add ${t} Record`:'<svg class="ic"><use href="#i-save"/></svg> Save Changes'}</button>
-    ${mode==='add'?`<button type="button" class="modal-btn" style="margin-top:5px;background:transparent;color:var(--p);border:1.5px solid var(--p)" onclick="submitTxForm('add',-1,${isP},true)"><svg class="ic"><use href="#i-plus"/></svg> Add &amp; Add Another</button>`:''}
-    <button type="button" class="modal-btn secondary" onclick="closeModal('${mode==='add'?'add-row-modal':'edit-row-modal'}')" style="margin-top:5px">Cancel</button>
+    <div id="f-dup-warn" class="dup-warn"><svg class="ic" style="flex-shrink:0"><use href="#i-alert"/></svg><span id="f-dup-msg"></span></div>
+    <button type="button" class="modal-btn" onclick="submitTxForm('${mode}',${idx??-1},${isP})">${mode==='add'?`<svg class="ic"><use href="#i-plus"/></svg> ${isP?L('navPurchase'):L('navSales')} ${L('addEntryTitle')}`:`<svg class="ic"><use href="#i-save"/></svg> ${L('editUserBtn')}`}</button>
+    ${mode==='add'?`<button type="button" class="modal-btn" style="margin-top:5px;background:transparent;color:var(--p);border:1.5px solid var(--p)" onclick="submitTxForm('add',-1,${isP},true)"><svg class="ic"><use href="#i-plus"/></svg> ${L('addAnotherBtn')}</button>`:''}
+    <button type="button" class="modal-btn secondary" onclick="closeModal('${mode==='add'?'add-row-modal':'edit-row-modal'}')" style="margin-top:5px">${L('btnCancel')}</button>
     <div id="f-add-count" style="text-align:center;font-size:11px;color:var(--success);min-height:16px;margin-top:4px"></div>
     <div id="f-session-table"></div>
     <div class="modal-error" id="f-error"></div>`;
@@ -6783,15 +7332,15 @@ function recalcFormTotals(isP){
   const base=qty*price;let total=base;
   let taxHtml='';
   const vatEl=document.getElementById('f-vat');
-  if(vatEl?.checked){const v=base*0.15;total+=v;taxHtml+=`<span style="margin-right:12px">VAT: +${fmt(v)}</span>`;}
+  if(vatEl?.checked){const v=base*0.15;total+=v;taxHtml+=`<span style="margin-right:12px">${L('vat')}: +${fmt(v)}</span>`;}
   if(!isP){
     const wh3El=document.getElementById('f-wh3');const vwhEl=document.getElementById('f-vwh');
-    if(wh3El?.checked){const v=base*0.03;total-=v;taxHtml+=`<span style="margin-right:12px">WH 3%: -${fmt(v)}</span>`;}
-    if(vwhEl?.checked){const v=base*0.075;total-=v;taxHtml+=`<span style="margin-right:12px">VAT WH 7.5%: -${fmt(v)}</span>`;}
+    if(wh3El?.checked){const v=base*0.03;total-=v;taxHtml+=`<span style="margin-right:12px">${L('wh3')}: -${fmt(v)}</span>`;}
+    if(vwhEl?.checked){const v=base*0.075;total-=v;taxHtml+=`<span style="margin-right:12px">${L('vwh')}: -${fmt(v)}</span>`;}
     const commEl=document.getElementById('f-commission');const commV=parseFloat(commEl?.value)||0;
-    if(commV>0){total-=commV;taxHtml+=`<span>Commission: -${fmt(commV)}</span>`;}
+    if(commV>0){total-=commV;taxHtml+=`<span>${L('commissionLabel')}: -${fmt(commV)}</span>`;}
   }
-  const txd=document.getElementById('f-tax-display');if(txd)txd.innerHTML=taxHtml||'<span>No tax</span>';
+  const txd=document.getElementById('f-tax-display');if(txd)txd.innerHTML=taxHtml||`<span>${L('noTaxLabel')}</span>`;
   const td=document.getElementById('f-total-display');if(td)td.textContent=fmt(total);
 }
 function submitTxForm(mode,idx,isP,keepOpen=false){
@@ -6802,12 +7351,25 @@ function submitTxForm(mode,idx,isP,keepOpen=false){
   const qty=parseFloat(document.getElementById('f-qty').value)||0;
   const price=parseFloat(document.getElementById('f-price').value)||0;
   const payment=document.getElementById('f-payment')?.value||'CASH';
-  if(!date){showMsg('f-error','Date is required');return;}
-  if(!_validateDate(date)){showMsg('f-error','Date must be in dd-mm-yyyy format');return;}
-  if(!party){showMsg('f-error',isP?'Supplier required':'Customer required');return;}
+  if(!date){showMsg('f-error',L('valDateRequired'));return;}
+  if(!_validateDate(date)){showMsg('f-error',L('valDateFormat'));return;}
+  if(!party){showMsg('f-error',isP?L('valSupplierReq'):L('valCustomerReq'));return;}
   if(!itemId){showMsg('f-error','Please select an item');return;}
-  if(!qty){showMsg('f-error','Quantity required');return;}
-  if(!price){showMsg('f-error','Price required');return;}
+  if(!qty){showMsg('f-error',L('valQtyRequired'));return;}
+  if(!price){showMsg('f-error',L('valPriceRequired'));return;}
+  if(mode==='add'){
+    const txList=isP?S.purchase:S.sales;
+    const dupTx=txList.findIndex(r=>r.party===party&&r.id===itemId&&r.date===date);
+    if(dupTx!==-1){
+      const dw=document.getElementById('f-dup-warn');
+      if(dw&&dw.style.display!=='flex'){
+        dw.style.display='flex';
+        const dm=document.getElementById('f-dup-msg');
+        if(dm)dm.textContent=`A ${isP?'purchase':'sale'} with the same ${isP?'supplier':'customer'}, item, and date already exists. Submit again to add anyway.`;
+        return;
+      }
+    }
+  }
   const item=S.items.find(m=>m.id===itemId)||{name:'',desc:''};
   const _cid=payment==='CREDIT'?`cr_${isP?'p':'s'}_${Date.now()}_${Math.random().toString(36).slice(2,7)}`:undefined;
   if(isP){
@@ -6826,10 +7388,12 @@ function submitTxForm(mode,idx,isP,keepOpen=false){
   }
   saveUserData();renderTab();updateSuggestions();
   if(keepOpen){
+    _draftClear();
     _addCount++;
     if(isP)_sessionRecords.push({date,party,id:itemId,qty,uPrice:price});
     else _sessionRecords.push({date,party,id:itemId,qty,sPrice:price});
-    const c=document.getElementById('f-add-count');if(c)c.textContent=`${_addCount} record${_addCount>1?'s':''} added`;
+    const _txTotal=_sessionRecords.reduce((s,r)=>s+(r.qty*(isP?r.uPrice||0:r.sPrice||0)),0);
+    const c=document.getElementById('f-add-count');if(c)c.textContent=`${_addCount} record${_addCount>1?'s':''} added · Total: ${fmt(_txTotal)}`;
     renderSessionTable();
     const fi=document.getElementById('f-id');if(fi)fi.value='';
     const fn=document.getElementById('f-name');if(fn)fn.value='';
@@ -6839,6 +7403,7 @@ function submitTxForm(mode,idx,isP,keepOpen=false){
     recalcFormTotals(isP);
     const fi2=document.getElementById('f-id');if(fi2)fi2.focus();
   }else{
+    _noDraftSave=true;
     closeModal(mode==='add'?'add-row-modal':'edit-row-modal');
     showToast(mode==='add'?L('toastRecordAdded'):L('toastUpdated'),'success');
   }
@@ -6856,12 +7421,14 @@ function buildExpenseForm(row,mode,idx){
   const body=document.getElementById(mode==='add'?'add-form-body':'edit-form-body');
   body.innerHTML=`
     <div class="field"><label>Date *</label><input type="text" id="f-date" placeholder="dd-mm-yyyy" value="${d.date||''}"></div>
-    <div class="field"><label>Reason *</label><input id="f-reason" value="${esc(d.reason||'')}" placeholder="What was this expense for?"></div>
+    <div class="field"><label>Reason *</label><input id="f-reason" value="${esc(d.reason||'')}" placeholder="What was this expense for?" list="reason-list"></div>
+    ${_buildReasonChips()}
     <div class="field-row">
       <div class="field"><label>Amount *</label><input type="number" id="f-amt" value="${d.amt||''}" placeholder="0.00" step="any"></div>
       <div class="field"><label>Payment</label><select id="f-payment">${pmOpts}</select></div>
     </div>
     ${(isOwner()||isSystemOwner())?`<div class="field"><label>Type</label><select id="f-expense-branch">${branchOpts}</select></div>`:''}
+    <div id="f-dup-warn" class="dup-warn"><svg class="ic" style="flex-shrink:0"><use href="#i-alert"/></svg><span id="f-dup-msg"></span></div>
     <button type="button" class="modal-btn" onclick="submitExpenseForm('${mode}',${idx??-1})">${mode==='add'?'<svg class="ic"><use href="#i-plus"/></svg> Add Expense':'<svg class="ic"><use href="#i-save"/></svg> Save'}</button>
     ${mode==='add'?`<button type="button" class="modal-btn" style="margin-top:5px;background:transparent;color:var(--p);border:1.5px solid var(--p)" onclick="submitExpenseForm('add',-1,true)"><svg class="ic"><use href="#i-plus"/></svg> Add &amp; Add Another</button>`:''}
     <button type="button" class="modal-btn secondary" onclick="closeModal('${mode==='add'?'add-row-modal':'edit-row-modal'}')" style="margin-top:5px">Cancel</button>
@@ -6874,21 +7441,36 @@ function submitExpenseForm(mode,idx,keepOpen=false){
   const reason=cap(document.getElementById('f-reason').value.trim(),MAX_NOTE_LEN);
   const amt=parseFloat(document.getElementById('f-amt').value)||0;
   const payment=document.getElementById('f-payment').value;
-  if(!date){showMsg('f-error','Date is required');return;}
-  if(!_validateDate(date)){showMsg('f-error','Date must be in dd-mm-yyyy format');return;}
+  if(!date){showMsg('f-error',L('valDateRequired'));return;}
+  if(!_validateDate(date)){showMsg('f-error',L('valDateFormat'));return;}
   if(!reason||!amt){showMsg('f-error','All fields required');return;}
+  if(mode==='add'){
+    const dupExp=S.expense.findIndex(r=>r.reason===reason&&r.date===date);
+    if(dupExp!==-1){
+      const dw=document.getElementById('f-dup-warn');
+      if(dw&&dw.style.display!=='flex'){
+        dw.style.display='flex';
+        const dm=document.getElementById('f-dup-msg');
+        if(dm)dm.textContent=`An expense with this reason and date already exists. Submit again to add anyway.`;
+        return;
+      }
+    }
+  }
   const expBranch=document.getElementById('f-expense-branch')?.value||(S.userBranch||'STORE');
   const row={date,reason,amt,payment,branch:expBranch,_by:S.user};
   if(mode==='add'){row.createdAt=new Date().toISOString();S.expense.push(row);}else S.expense[idx]={...S.expense[idx],...row};
   saveUserData();renderTab();
   if(keepOpen){
+    _draftClear();
     _addCount++;
     _sessionRecords.push({date,reason,amt,payment});
-    const c=document.getElementById('f-add-count');if(c)c.textContent=`${_addCount} expense${_addCount>1?'s':''} added`;
+    const _exTotal=_sessionRecords.reduce((s,r)=>s+(r.amt||0),0);
+    const c=document.getElementById('f-add-count');if(c)c.textContent=`${_addCount} expense${_addCount>1?'s':''} added · Total: ${fmt(_exTotal)}`;
     renderSessionTable();
     document.getElementById('f-reason').value='';document.getElementById('f-amt').value='';
     document.getElementById('f-reason').focus();
   }else{
+    _noDraftSave=true;
     closeModal(mode==='add'?'add-row-modal':'edit-row-modal');
     showToast(mode==='add'?L('toastExpenseAdded'):L('toastUpdated'),'success');
   }
@@ -6909,7 +7491,7 @@ function renderItems(){
             <td style="font-weight:600" data-label="Item Name">${esc(row.name)}</td>
             <td style="color:var(--text3)" data-label="Description">${esc(row.desc)}</td>
           </tr>`;}).join('')}
-        ${!S.items.filter(r=>r.id||r.name).filter(r=>shouldUserSeeData(r)).length?`<tr><td colspan="3" style="text-align:center;color:var(--text3);padding:32px">${L('emptyItems')}</td></tr>`:''}
+        ${!S.items.filter(r=>r.id||r.name).filter(r=>shouldUserSeeData(r)).length?`<tr><td colspan="3">${_emptyState(_ES.pkg,'No items yet','Add your catalog to start tracking stock and transactions','openAddModal()')}</td></tr>`:''}
       </tbody>
     </table>
   </div>`;
@@ -6923,7 +7505,7 @@ function renderTx(){
   const list=isP?S.purchase:S.sales;
   const branchF=document.getElementById('branch-filter')?.value||'';
   const effectiveBranchF=S.userBranch?S.userBranch:branchF;
-  const visible=list.filter(r=>r.id||r.name||r.party||r.qty).filter(r=>!effectiveBranchF||r.branch===effectiveBranchF).filter(r=>shouldUserSeeData(r)).slice().sort(_dateSort);
+  const visible=list.filter(r=>r.id||r.name||r.party||r.qty).filter(r=>!effectiveBranchF||r.branch===effectiveBranchF).filter(r=>shouldUserSeeData(r)).filter(r=>_drPass(r)).slice().sort(_dateSort);
   let totQty=0,totVal=0,totComm=0;
   const rows=visible.map(row=>{
     const i=list.indexOf(row);
@@ -6958,11 +7540,11 @@ function renderTx(){
   const commColHdr=!isP?`<th class="num">Commission</th>`:'';
   const colCount=isP?11:12;
   const cols=`<th>${L('date')}</th><th>${isP?L('supplier'):L('customer')}</th><th>${L('branch')}</th><th>${L('partNo')}</th><th>${L('itemName')}</th><th>${L('desc')}</th><th class="num">${L('qty')}</th><th class="num">${isP?L('unitPrice'):L('price')}</th><th>${L('vat').split(' ')[0]}</th><th class="num">${L('totalPrice')}</th>${commColHdr}<th>${L('payment')}</th>`;
-  document.getElementById('tab-content').innerHTML=`<div class="table-wrap">
+  document.getElementById('tab-content').innerHTML=`${_drChipStrip()}<div class="table-wrap">
     <table>
       <thead><tr>${cols}</tr></thead>
       <tbody>
-        ${rows||`<tr><td colspan="${colCount}" style="text-align:center;color:var(--text3);padding:32px">${L('emptyRecords')}</td></tr>`}
+        ${rows||`<tr><td colspan="${colCount}">${_emptyState(isP?_ES.cart:_ES.trend,isP?'No purchases yet':'No sales yet',isP?'Record your first purchase to get started':'Record your first sale to get started','openAddModal()')}</td></tr>`}
         ${visible.length?`<tr class="summary-row">
           <td colspan="6" data-label="">${L('totals').toUpperCase()}</td>
           <td class="num td-mono" data-label="Qty">${fmtQ(totQty)}</td>
@@ -7023,7 +7605,7 @@ function renderBalance(){
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
       <span style="font-family:var(--mono);font-size:1.05rem;font-weight:800;color:var(--success)">${fmt(totalV)}</span>
       <button type="button" class="btn btn-sm no-print" onclick="exportBalancePDF()" style="background:var(--error);color:#E4E6F5;border-color:var(--error)">${L('exportPdfBtn')}</button>
-      <button type="button" class="btn btn-sm no-print" onclick="exportXL('BALANCE',{hideZeroBalance:${hideZeros}})" style="background:var(--success);color:#E4E6F5;border-color:var(--success)"><svg class="ic"><use href="#i-file"/></svg> Export Excel</button>
+      <button type="button" class="btn btn-sm no-print" onclick="exportXL('BALANCE',{hideZeroBalance:${hideZeros}})" style="background:var(--success);color:#E4E6F5;border-color:var(--success)"><svg class="ic"><use href="#i-file"/></svg> ${L('expBtnXlsx')}</button>
     </div>
     ${hideZeros&&hiddenCount?`<div style="width:100%;font-size:11px;color:var(--text3);margin-top:6px">${hiddenCount} zero-balance item${hiddenCount===1?'':'s'} hidden</div>`:''}
   </div>`;
@@ -7284,8 +7866,8 @@ function renderStoreReport(){
   </tr>`).join('');
   document.getElementById('tab-content').innerHTML=`
     <div class="date-bar no-print">
-      <label>From: <input type="text" placeholder="dd-mm-yyyy" value="${S.storeReportRange.from}" onchange="S.storeReportRange.from=this.value;renderTab()"></label>
-      <label>To: <input type="text" placeholder="dd-mm-yyyy" value="${S.storeReportRange.to}" onchange="S.storeReportRange.to=this.value;renderTab()"></label>
+      <label>${L('fromLabel')}: <input type="text" placeholder="dd-mm-yyyy" value="${S.storeReportRange.from}" onchange="S.storeReportRange.from=this.value;renderTab()"></label>
+      <label>${L('toLabel')}: <input type="text" placeholder="dd-mm-yyyy" value="${S.storeReportRange.to}" onchange="S.storeReportRange.to=this.value;renderTab()"></label>
       <button type="button" class="btn btn-sm" onclick="S.storeReportRange.from='';S.storeReportRange.to='';renderTab()">${L('btnClear')}</button>
       <button type="button" class="btn btn-sm no-print" onclick="printStoreReport()" style="margin-left:auto">${L('btnPrint')}</button>
     </div>
@@ -7391,7 +7973,7 @@ function renderStore(){
     <div class="table-wrap">
       <table>
         <thead><tr><th>${L('partNo')}</th><th>${L('itemName')}</th><th>${L('desc')}</th><th>${L('supplier')}</th><th>${L('dateReceived')}</th><th class="num">${L('stockQty')}</th><th class="num">${L('unitCost')}</th><th class="num">${L('totalValue')}</th></tr></thead>
-        <tbody>${storeRows||`<tr><td colspan="8" style="text-align:center;color:var(--text3);padding:28px">${L('emptyStore')}</td></tr>`}</tbody>
+        <tbody>${storeRows||`<tr><td colspan="8">${_emptyState(_ES.store,'No store stock yet','Add stock to the store first','openAddModal()')}</td></tr>`}</tbody>
       </table>
     </div>
     ${dispatches.length?`
@@ -7570,13 +8152,14 @@ function renderCreditPage(){
     const isFullyPaid=paidAmt>=row._amt-0.001;
     const isPartial=paidAmt>0.001&&!isFullyPaid;
     const payments=(S.creditPayments||[]).filter(p=>p.cid===row._cid);
+    const ageDays=_creditAgeDays(row.date);
     const typeLabel=row._type==='sale'?
-      `<span class="td-badge badge-cash" style="font-size:9px">SALE</span>`:
-      `<span class="td-badge badge-credit" style="font-size:9px">PURCHASE</span>`;
+      `<span class="td-badge badge-cash" style="font-size:9px">${L('creditSaleType')}</span>`:
+      `<span class="td-badge badge-credit" style="font-size:9px">${L('creditPurchType')}</span>`;
     const statusBadge=isFullyPaid?
-      `<span class="td-badge badge-paid"><svg class="ic"><use href="#i-check-circle"/></svg> PAID</span>`:
-      isPartial?`<span class="td-badge" style="background:rgba(45,75,138,.14);color:var(--p2);border:1px solid rgba(45,75,138,.25);font-size:9px"><svg class="ic"><use href="#i-zap"/></svg> PARTIAL</span>`:
-      `<span class="td-badge badge-outstanding"><svg class="ic"><use href="#i-clock"/></svg> OUTSTANDING</span>`;
+      `<span class="td-badge badge-paid"><svg class="ic"><use href="#i-check-circle"/></svg> ${L('creditPaidBadge')}</span>`:
+      isPartial?`<span class="td-badge" style="background:rgba(45,75,138,.14);color:var(--p2);border:1px solid rgba(45,75,138,.25);font-size:9px"><svg class="ic"><use href="#i-zap"/></svg> ${L('creditPartialBadge')}</span>`:
+      `<span class="td-badge badge-outstanding"><svg class="ic"><use href="#i-clock"/></svg> ${L('creditOutstandingBadge')}</span>`+(!isFullyPaid?_agingBadge(ageDays):'');
     const payHistHtml=payments.length?`<div style="margin-top:4px;font-size:9px;color:var(--text3);line-height:1.7">`+
       payments.map((p,i)=>`<span style="display:inline-flex;align-items:center;gap:4px;margin-right:6px">
         <span class="td-mono num-pos">+${fmt(p.amount||0)}</span>
@@ -7585,15 +8168,16 @@ function renderCreditPage(){
         ${canMark?`<button type="button" onclick="removeCreditPayment('${row._cid}',${i})" style="background:none;border:none;cursor:pointer;color:var(--error);font-size:9px;padding:0 2px;line-height:1" title="Remove this payment"><svg class="ic"><use href="#i-x"/></svg></button>`:''}
       </span>`).join('')+
       `</div>`:'';
-    const remainingLabel=isFullyPaid?'':`<div style="font-size:10px;color:${isPartial?'var(--warn)':'var(--text3)'};margin-top:2px">${isPartial?`Balance: ${fmt(remaining)}`:'—'}</div>`;
+    const remainingLabel=isFullyPaid?'':`<div style="font-size:10px;color:${isPartial?'var(--warn)':'var(--text3)'};margin-top:2px">${isPartial?`${L('balanceLabel')}: ${fmt(remaining)}`:'—'}</div>`;
     const actionBtn=canMark?`<div style="display:flex;flex-direction:column;gap:4px">
-      ${!isFullyPaid?`<button type="button" class="btn btn-sm btn-primary" onclick="openCreditPayModal('${row._cid}',${row._amt})" style="font-size:10px;padding:3px 8px">+ Payment</button>`:''}
-      ${payments.length?`<button type="button" class="btn btn-sm" onclick="clearCreditPayments('${row._cid}')" style="font-size:10px;padding:3px 8px;opacity:.6"><svg class="ic"><use href="#i-trash"/></svg> Clear</button>`:''}
+      ${!isFullyPaid?`<button type="button" class="btn btn-sm btn-primary" onclick="openCreditPayModal('${row._cid}',${row._amt})" style="font-size:10px;padding:3px 8px">${L('addPaymentBtn')}</button>`:''}
+      ${!isFullyPaid?`<button type="button" class="btn btn-sm" onclick="openScheduleModal('${row._cid}',${row._amt})" style="font-size:10px;padding:3px 8px"><svg class="ic" style="width:11px;height:11px"><use href="#i-calendar"/></svg> Schedule</button>`:''}
+      ${payments.length?`<button type="button" class="btn btn-sm" onclick="clearCreditPayments('${row._cid}')" style="font-size:10px;padding:3px 8px;opacity:.6"><svg class="ic"><use href="#i-trash"/></svg> ${L('btnClear')}</button>`:''}
     </div>`:'';
     return`<tr style="${isFullyPaid?'opacity:.6':''}">
       <td class="td-mono" data-label="Date" style="font-size:11px">${(row.date||'').replace('T',' ')}</td>
       <td data-label="Type">${typeLabel}</td>
-      <td data-label="Party" style="font-weight:600">${esc(row.party||'—')}</td>
+      <td data-label="Party" style="font-weight:600"><button type="button" style="background:none;border:none;padding:0;color:var(--p2);font-weight:600;font-size:inherit;cursor:pointer;text-decoration:underline;text-underline-offset:2px" onclick="openCustDrawer('${esc(row.party||'')}')">${esc(row.party||'—')}</button></td>
       <td data-label="Branch"><span class="td-badge badge-other" style="font-size:10px">${esc(row.branch||'Main')}</span></td>
       <td class="td-mono" data-label="Part No." style="font-size:11px">${esc(row.id||'—')}</td>
       <td data-label="Item">${esc(row.name||'—')}</td>
@@ -7617,16 +8201,16 @@ function renderCreditPage(){
   const summaryCards=`
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 16px;background:var(--surface2);border-bottom:1px solid var(--border)">
       <div class="credit-summary-card credit-receivable">
-        <div class="csc-label"><svg class="ic"><use href="#i-money"/></svg> Receivables</div>
+        <div class="csc-label"><svg class="ic"><use href="#i-money"/></svg> ${L('receivables')}</div>
         <div class="csc-total">${fmt(totalRec)}</div>
-        <div class="csc-row"><span>Collected</span><span class="num-pos td-mono">${fmt(collectedRec)}</span></div>
-        <div class="csc-row"><span>Outstanding</span><span class="${outstandingRec>0?'num-neg':'num-pos'} td-mono">${fmt(outstandingRec)}</span></div>
+        <div class="csc-row"><span>${L('collected')}</span><span class="num-pos td-mono">${fmt(collectedRec)}</span></div>
+        <div class="csc-row"><span>${L('outstanding')}</span><span class="${outstandingRec>0?'num-neg':'num-pos'} td-mono">${fmt(outstandingRec)}</span></div>
       </div>
       <div class="credit-summary-card credit-payable">
-        <div class="csc-label"><svg class="ic"><use href="#i-cart"/></svg> Payables</div>
+        <div class="csc-label"><svg class="ic"><use href="#i-cart"/></svg> ${L('payables')}</div>
         <div class="csc-total">${fmt(totalPay)}</div>
-        <div class="csc-row"><span>Settled</span><span class="num-pos td-mono">${fmt(settledPay)}</span></div>
-        <div class="csc-row"><span>Outstanding</span><span class="${outstandingPay>0?'num-neg':'num-pos'} td-mono">${fmt(outstandingPay)}</span></div>
+        <div class="csc-row"><span>${L('settled')}</span><span class="num-pos td-mono">${fmt(settledPay)}</span></div>
+        <div class="csc-row"><span>${L('outstanding')}</span><span class="${outstandingPay>0?'num-neg':'num-pos'} td-mono">${fmt(outstandingPay)}</span></div>
       </div>
     </div>`;
 
@@ -7643,18 +8227,18 @@ function renderCreditPage(){
     const purchOut=Math.max(0,purchTot-purchPaid);
     const hasPurchOut=partyPurch.some(r=>getCreditPaidAmt(r._cid)<r._amt-0.001);
     const salesRow=hasSales?`<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
-      <span class="td-badge badge-cash" style="font-size:10px;min-width:82px;text-align:center">RECEIVABLE</span>
-      <span style="color:var(--text2);font-size:12px">Total <strong class="td-mono" style="color:var(--text)">${fmt(salesTot)}</strong></span>
-      <span style="color:var(--text2);font-size:12px">Collected <strong class="td-mono num-pos">${fmt(salesPaid)}</strong></span>
-      <span style="color:var(--text2);font-size:12px">Outstanding <strong class="td-mono ${salesOut>0?'num-neg':'num-pos'}">${fmt(salesOut)}</strong></span>
-      ${canMark&&hasSalesOut?`<button type="button" class="btn btn-sm btn-primary" onclick="payAllCreditForPartyType('${esc(activeParty)}','sale')" style="font-size:11px"><svg class="ic"><use href="#i-credit-card"/></svg> Collect All</button>`:''}
+      <span class="td-badge badge-cash" style="font-size:10px;min-width:82px;text-align:center">${L('creditReceivableLabel')}</span>
+      <span style="color:var(--text2);font-size:12px">${L('total')} <strong class="td-mono" style="color:var(--text)">${fmt(salesTot)}</strong></span>
+      <span style="color:var(--text2);font-size:12px">${L('collected')} <strong class="td-mono num-pos">${fmt(salesPaid)}</strong></span>
+      <span style="color:var(--text2);font-size:12px">${L('outstanding')} <strong class="td-mono ${salesOut>0?'num-neg':'num-pos'}">${fmt(salesOut)}</strong></span>
+      ${canMark&&hasSalesOut?`<button type="button" class="btn btn-sm btn-primary" onclick="payAllCreditForPartyType('${esc(activeParty)}','sale')" style="font-size:11px"><svg class="ic"><use href="#i-credit-card"/></svg> ${L('collectAll')}</button>`:''}
     </div>`:'';
     const purchRow=hasPurch?`<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap${hasSales?';margin-top:8px;padding-top:8px;border-top:1px solid var(--border2)':''}">
-      <span class="td-badge badge-credit" style="font-size:10px;min-width:82px;text-align:center">PAYABLE</span>
-      <span style="color:var(--text2);font-size:12px">Total <strong class="td-mono" style="color:var(--text)">${fmt(purchTot)}</strong></span>
-      <span style="color:var(--text2);font-size:12px">Settled <strong class="td-mono num-pos">${fmt(purchPaid)}</strong></span>
-      <span style="color:var(--text2);font-size:12px">Outstanding <strong class="td-mono ${purchOut>0?'num-neg':'num-pos'}">${fmt(purchOut)}</strong></span>
-      ${canMark&&hasPurchOut?`<button type="button" class="btn btn-sm btn-primary" onclick="payAllCreditForPartyType('${esc(activeParty)}','purchase')" style="font-size:11px"><svg class="ic"><use href="#i-credit-card"/></svg> Pay All</button>`:''}
+      <span class="td-badge badge-credit" style="font-size:10px;min-width:82px;text-align:center">${L('creditPayableLabel')}</span>
+      <span style="color:var(--text2);font-size:12px">${L('total')} <strong class="td-mono" style="color:var(--text)">${fmt(purchTot)}</strong></span>
+      <span style="color:var(--text2);font-size:12px">${L('settled')} <strong class="td-mono num-pos">${fmt(purchPaid)}</strong></span>
+      <span style="color:var(--text2);font-size:12px">${L('outstanding')} <strong class="td-mono ${purchOut>0?'num-neg':'num-pos'}">${fmt(purchOut)}</strong></span>
+      ${canMark&&hasPurchOut?`<button type="button" class="btn btn-sm btn-primary" onclick="payAllCreditForPartyType('${esc(activeParty)}','purchase')" style="font-size:11px"><svg class="ic"><use href="#i-credit-card"/></svg> ${L('payAll')}</button>`:''}
     </div>`:'';
     return`<div style="padding:12px 16px;background:var(--p-glass);border-bottom:1px solid var(--border2)">
       <div style="font-size:13px;font-weight:700;color:var(--p2);margin-bottom:8px">${esc(activeParty)}</div>
@@ -7662,19 +8246,19 @@ function renderCreditPage(){
     </div>`;
   })():'';
 
-  const partyOpts='<option value="">All Parties</option>'+filteredParties.map(p=>`<option value="${esc(p)}"${activeParty===p?' selected':''}>${esc(p)}</option>`).join('');
+  const partyOpts=`<option value="">${L('allParties')}</option>`+filteredParties.map(p=>`<option value="${esc(p)}"${activeParty===p?' selected':''}>${esc(p)}</option>`).join('');
   const filterBar=`
     <div style="display:flex;gap:8px;padding:10px 16px;background:var(--surface2);border-bottom:1px solid var(--border);flex-wrap:wrap;align-items:center">
-      <button type="button" class="btn btn-sm${activeFilter==='outstanding'?' btn-primary':''}" onclick="S.creditFilter='outstanding';renderTab()"><svg class="ic"><use href="#i-clock"/></svg> Outstanding (${numOutstandingAll})</button>
-      <button type="button" class="btn btn-sm${activeFilter==='sales'?' btn-primary':''}" onclick="S.creditFilter='sales';renderTab()"><svg class="ic"><use href="#i-money"/></svg> Sales (${numOutstandingSales})</button>
-      <button type="button" class="btn btn-sm${activeFilter==='purchases'?' btn-primary':''}" onclick="S.creditFilter='purchases';renderTab()"><svg class="ic"><use href="#i-cart"/></svg> Purchases (${numOutstandingPurch})</button>
-      <button type="button" class="btn btn-sm${activeFilter==='paid'?' btn-primary':''}" onclick="S.creditFilter='paid';renderTab()" style="${activeFilter==='paid'?'':'background:rgba(34,197,94,.1);color:var(--success);border-color:rgba(34,197,94,.3)'}"><svg class="ic"><use href="#i-check-circle"/></svg> Paid (${numPaidAll})</button>
+      <button type="button" class="btn btn-sm${activeFilter==='outstanding'?' btn-primary':''}" onclick="S.creditFilter='outstanding';renderTab()"><svg class="ic"><use href="#i-clock"/></svg> ${L('creditOutstandingBadge')} (${numOutstandingAll})</button>
+      <button type="button" class="btn btn-sm${activeFilter==='sales'?' btn-primary':''}" onclick="S.creditFilter='sales';renderTab()"><svg class="ic"><use href="#i-money"/></svg> ${L('navSales')} (${numOutstandingSales})</button>
+      <button type="button" class="btn btn-sm${activeFilter==='purchases'?' btn-primary':''}" onclick="S.creditFilter='purchases';renderTab()"><svg class="ic"><use href="#i-cart"/></svg> ${L('navPurchase')} (${numOutstandingPurch})</button>
+      <button type="button" class="btn btn-sm${activeFilter==='paid'?' btn-primary':''}" onclick="S.creditFilter='paid';renderTab()" style="${activeFilter==='paid'?'':'background:rgba(34,197,94,.1);color:var(--success);border-color:rgba(34,197,94,.3)'}"><svg class="ic"><use href="#i-check-circle"/></svg> ${L('creditPaidBadge')} (${numPaidAll})</button>
       <select onchange="S.creditPartyFilter=this.value;renderTab()" style="height:30px;padding:0 8px;border-radius:8px;border:1px solid var(--border2);background:var(--surface3);color:var(--text);font-size:12px;cursor:pointer;max-width:160px">${partyOpts}</select>
       ${activeParty?`<button type="button" class="btn btn-sm" onclick="S.creditPartyFilter='';renderTab()" style="opacity:.7" title="Clear party filter"><svg class="ic"><use href="#i-x"/></svg> ${esc(activeParty)}</button>`:''}
       <div style="display:flex;gap:8px;margin-left:auto">
         <span style="font-size:10px;color:var(--text3);align-self:center">${filtered.length} record(s)</span>
         <button type="button" class="btn btn-sm no-print" onclick="exportCreditPDF()" style="background:var(--error);color:#E4E6F5;border-color:var(--error)"><svg class="ic"><use href="#i-file"/></svg> Export PDF</button>
-        <button type="button" class="btn btn-sm no-print" onclick="exportXL('CREDIT')" style="background:var(--success);color:#E4E6F5;border-color:var(--success)"><svg class="ic"><use href="#i-file"/></svg> Export Excel</button>
+        <button type="button" class="btn btn-sm no-print" onclick="exportXL('CREDIT')" style="background:var(--success);color:#E4E6F5;border-color:var(--success)"><svg class="ic"><use href="#i-file"/></svg> ${L('expBtnXlsx')}</button>
       </div>
     </div>`;
 
@@ -7694,13 +8278,13 @@ function renderExpense(){
   const isOwnerRole=isOwner()||isSystemOwner();
   const activeCtx=S.userBranch||(isOwnerRole?(S.expenseBranch||(S.branches[0]||'STORE')):'STORE');
   const allRows=S.expense.filter(r=>r.reason||r.amt).filter(r=>shouldUserSeeData(r));
-  const rows=(activeCtx==='STORE'?allRows.filter(r=>!r.branch||r.branch==='STORE'):allRows.filter(r=>r.branch===activeCtx)).slice().sort(_dateSort);
+  const rows=(activeCtx==='STORE'?allRows.filter(r=>!r.branch||r.branch==='STORE'):allRows.filter(r=>r.branch===activeCtx)).filter(r=>_drPass(r)).slice().sort(_dateSort);
   const total=rows.reduce((a,b)=>a+(parseFloat(b.amt)||0),0);
   const tabsHtml=isOwnerRole?`<div style="display:flex;flex-wrap:wrap;gap:6px;padding:10px 16px;background:var(--surface2);border-bottom:1px solid var(--border)">
     ${S.branches.map(b=>`<button type="button" class="btn btn-sm${activeCtx===b?' btn-primary':''}" onclick="S.expenseBranch='${esc(b)}';renderTab()"><svg class="ic"><use href="#i-building"/></svg> ${esc(b)}</button>`).join('')}
     <button type="button" class="btn btn-sm${activeCtx==='STORE'?' btn-primary':''}" onclick="S.expenseBranch='STORE';renderTab()"><svg class="ic"><use href="#i-store"/></svg> Store</button>
   </div>`:'';
-  document.getElementById('tab-content').innerHTML=`${tabsHtml}<div class="table-wrap">
+  document.getElementById('tab-content').innerHTML=`${_drChipStrip()}${tabsHtml}<div class="table-wrap">
     <table>
       <thead><tr><th>${L('date')}</th><th>${L('reason')}</th><th class="num">${L('amount')}</th><th>${L('payment')}</th></tr></thead>
       <tbody>
@@ -7712,7 +8296,7 @@ function renderExpense(){
             <td data-label="Payment"><span class="td-badge ${row.payment==='CASH'?'badge-cash':row.payment==='CREDIT'?'badge-credit':'badge-other'}">${row.payment||'CASH'}</span></td>
           </tr>`;}).join('')}
         ${rows.length?`<tr class="summary-row"><td colspan="2">${L('totals').toUpperCase()}</td><td class="num td-mono ${colorClass(-total)}">${fmt(total)}</td><td></td></tr>`:''}
-        ${!rows.length?`<tr><td colspan="4" style="text-align:center;color:var(--text3);padding:32px">${L('emptyExpense')}</td></tr>`:''}
+        ${!rows.length?`<tr><td colspan="4">${_emptyState(_ES.receipt,'No expenses yet','Start tracking your business expenses','openAddModal()')}</td></tr>`:''}
       </tbody>
     </table>
   </div>`;
@@ -7790,14 +8374,14 @@ function renderReport(){
   const branchTabsHtml=showBranchTabs?`<div style="display:flex;flex-wrap:wrap;gap:6px;padding:10px 16px;background:var(--surface2);border-bottom:1px solid var(--border)">
     <button type="button" class="btn btn-sm${activeBranch===''?' btn-primary':''}" onclick="S.reportBranch='';renderTab()"><svg class="ic"><use href="#i-globe"/></svg> ${L('allBranchesBtn')}</button>
     ${S.branches.map(b=>`<button type="button" class="btn btn-sm${activeBranch===b?' btn-primary':''}" onclick="S.reportBranch='${esc(b)}';renderTab()">${esc(b)}</button>`).join('')}
-    <button type="button" class="btn btn-sm${activeBranch==='STORE'?' btn-primary':''}" onclick="S.reportBranch='STORE';renderTab()"><svg class="ic"><use href="#i-store"/></svg> Store</button>
+    <button type="button" class="btn btn-sm${activeBranch==='STORE'?' btn-primary':''}" onclick="S.reportBranch='STORE';renderTab()"><svg class="ic"><use href="#i-store"/></svg> ${L('navStore')}</button>
   </div>`:'';
 
   const datebar=`<div class="date-bar no-print">
-    <label>From: <input type="text" placeholder="dd-mm-yyyy" value="${S.reportRange.from}" onchange="S.reportRange.from=this.value;renderTab()"></label>
-    <label>To: <input type="text" placeholder="dd-mm-yyyy" value="${S.reportRange.to}" onchange="S.reportRange.to=this.value;renderTab()"></label>
+    <label>${L('fromLabel')}: <input type="text" placeholder="dd-mm-yyyy" value="${S.reportRange.from}" onchange="S.reportRange.from=this.value;renderTab()"></label>
+    <label>${L('toLabel')}: <input type="text" placeholder="dd-mm-yyyy" value="${S.reportRange.to}" onchange="S.reportRange.to=this.value;renderTab()"></label>
     <button type="button" class="btn btn-sm" onclick="S.reportRange.from='';S.reportRange.to='';renderTab()">${L('btnClear')}</button>
-    <button type="button" class="btn btn-sm no-print" onclick="exportReportPDF()" style="margin-left:auto;background:var(--error);color:#E4E6F5;border-color:var(--error)"><svg class="ic"><use href="#i-file"/></svg> Export PDF</button>
+    <button type="button" class="btn btn-sm no-print" onclick="exportReportPDF()" style="margin-left:auto;background:var(--error);color:#E4E6F5;border-color:var(--error)"><svg class="ic"><use href="#i-file"/></svg> ${L('exportPdfBtn').replace(/<[^>]+>/g,'').trim()}</button>
     <button type="button" class="btn btn-sm no-print" onclick="printReport()">${L('btnPrint')}</button>
   </div>`;
 
@@ -7818,17 +8402,17 @@ function _renderAllBranchesReport(branchTabsHtml,datebar){
     const c=_reportCalc(b);
     const rows=[
       {l:L('initBalance'),v:c.initBal,edit:true},
-      {l:'Purchase on Cash',v:c.tPC,neg:true},
-      {l:'Purchase on Credit',v:c.tPCr,neg:true},
-      {l:'Total Purchase',v:c.tPC+c.tPCr,neg:true},
-      {l:'Sales on Cash',v:c.tSC,pos:true},
-      {l:'Sales on Credit',v:c.tSCrOut,pos:true},
-      {l:'Total Sales',v:c.tSC+c.tSCr,pos:true},
-      {l:`${esc(b)} Expenses`,v:c.tE,neg:true},
+      {l:L('purchOnCash'),v:c.tPC,neg:true},
+      {l:L('purchOnCredit'),v:c.tPCr,neg:true},
+      {l:L('totalPurchaseLabel'),v:c.tPC+c.tPCr,neg:true},
+      {l:L('salesOnCash'),v:c.tSC,pos:true},
+      {l:L('salesOnCredit'),v:c.tSCrOut,pos:true},
+      {l:L('totalSalesLabel'),v:c.tSC+c.tSCr,pos:true},
+      {l:`${esc(b)} ${L('branchExpenses')}`,v:c.tE,neg:true},
       {l:L('netProfitLoss'),v:c.net,total:true},
-      {l:'VAT Withholding 7.5%',v:c.tVwh},
-      {l:'Withholding 3%',v:c.tWh3},
-      {l:'Commission',v:c.tComm},
+      {l:L('vatWH'),v:c.tVwh},
+      {l:L('wh3'),v:c.tWh3},
+      {l:L('commissionLabel'),v:c.tComm},
       {l:L('cashOnHand'),v:c.coh,total:true},
     ];
     return`<div style="margin:12px 14px;border-radius:14px;overflow:hidden;border:1px solid var(--border);background:var(--surface)">
@@ -7846,22 +8430,22 @@ function _renderAllBranchesReport(branchTabsHtml,datebar){
   tot.coh-=tot.tStoreE;
   const totRows=[
     {l:L('initBalance'),v:tot.ib},
-    {l:'Sales on Cash',v:tot.tSC,pos:true},
-    {l:'Sales on Credit',v:tot.tSCrOut,pos:true},
-    {l:'Purchase on Cash',v:tot.tPC,neg:true},
-    {l:'Purchase in Credit',v:tot.tPCr,neg:true},
-    {l:'Total Purchase',v:tot.tPC+tot.tPCr,neg:true},
-    {l:'Branch Expenses',v:tot.tE,neg:true},
-    {l:'Store Expenses',v:tot.tStoreE,neg:true},
+    {l:L('salesOnCash'),v:tot.tSC,pos:true},
+    {l:L('salesOnCredit'),v:tot.tSCrOut,pos:true},
+    {l:L('purchOnCash'),v:tot.tPC,neg:true},
+    {l:L('purchOnCredit'),v:tot.tPCr,neg:true},
+    {l:L('totalPurchaseLabel'),v:tot.tPC+tot.tPCr,neg:true},
+    {l:L('branchExpenses'),v:tot.tE,neg:true},
+    {l:L('storeExpenses'),v:tot.tStoreE,neg:true},
     {l:L('netProfitLoss'),v:tot.net,total:true},
-    {l:'VAT Withholding 7.5%',v:tot.tVwh},
-    {l:'Withholding 3%',v:tot.tWh3},
-    {l:'Commission',v:tot.tComm},
+    {l:L('vatWH'),v:tot.tVwh},
+    {l:L('wh3'),v:tot.tWh3},
+    {l:L('commissionLabel'),v:tot.tComm},
     {l:L('cashOnHand'),v:tot.coh,total:true},
   ];
   const totCard=`<div style="margin:12px 14px 20px;border-radius:14px;overflow:hidden;border:1.5px solid var(--success);background:var(--surface)">
     <div style="padding:10px 16px;background:rgba(16,185,129,.1);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
-      <span style="font-size:13px;font-weight:800;color:var(--success)">${L('allBranches').toUpperCase()} — COMBINED</span>
+      <span style="font-size:13px;font-weight:800;color:var(--success)">${L('allBranches').toUpperCase()} — ${L('allBranchesCombined')}</span>
     </div>
     ${rr(totRows,'')}
   </div>`;
@@ -7869,7 +8453,7 @@ function _renderAllBranchesReport(branchTabsHtml,datebar){
   document.getElementById('tab-content').innerHTML=`
     ${branchTabsHtml}${datebar}
     <div style="padding:10px 14px;background:var(--surface2);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px">
-      <span style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.08em">ALL BRANCHES SUMMARY</span>
+      <span style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.08em">${L('allBranchesSummary')}</span>
       ${isOwner()?`<span style="font-size:10px;color:var(--text3)">${L('editBalanceHint')}</span>`:''}
     </div>
     <div style="padding-bottom:8px">
@@ -7878,22 +8462,45 @@ function _renderAllBranchesReport(branchTabsHtml,datebar){
   document.getElementById('extras').innerHTML='';
 }
 
+function _sparkline(vals,w=60,h=22){
+  if(!vals||vals.length<2)return'';
+  const min=Math.min(...vals),max=Math.max(...vals),range=max-min||1;
+  const pts=vals.map((v,i)=>`${((i/(vals.length-1))*w).toFixed(1)},${(h-((v-min)/range)*(h-4)-2).toFixed(1)}`).join(' ');
+  const lx=w,ly=(h-((vals[vals.length-1]-min)/range)*(h-4)-2).toFixed(1);
+  const clr=vals[vals.length-1]>=vals[0]?'#34d399':'#f43f5e';
+  return`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="overflow:visible;flex-shrink:0"><polyline points="${pts}" fill="none" stroke="${clr}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/><circle cx="${lx}" cy="${ly}" r="2.5" fill="${clr}"/></svg>`;
+}
+function _monthBuckets(records,valFn,n=8){
+  const et=toEthiopianDate(new Date());
+  const keys=[];
+  for(let i=n-1;i>=0;i--){let m=et.month-i,y=et.year;while(m<=0){m+=13;y--;}keys.push(`${y}-${String(m).padStart(2,'0')}`);}
+  const buckets=new Array(n).fill(0);
+  records.forEach(r=>{const dm=String(r.date||'').match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);if(!dm)return;const k=`${dm[3]}-${String(dm[2]).padStart(2,'0')}`;const idx=keys.indexOf(k);if(idx>=0)buckets[idx]+=valFn(r);});
+  return buckets;
+}
+function _delta(curr,prev){
+  if(!prev&&prev!==0)return'';
+  if(Math.abs(prev)<0.01)return prev===curr?'':`<span class="report-delta ${curr>0?'up':'dn'}">new</span>`;
+  const pct=((curr-prev)/Math.abs(prev))*100;
+  const cls=pct>0.5?'up':pct<-0.5?'dn':'flat';
+  return`<span class="report-delta ${cls}">${pct>0?'+':''}${pct.toFixed(1)}%</span>`;
+}
 function _renderSingleBranchReport(branch,branchTabsHtml,datebar){
   const c=_reportCalc(branch);
   const {PR,SR,ER}=c;
   const label=branch?`(${branch})`:'';
   const reportData=[
     {l:`${L('initBalance')}${label?` — ${label}`:''}`,v:c.initBal,edit:true,branch},
-    {l:`Sales on Cash${label?` ${label}`:''}`,v:c.tSC,pos:true},
-    {l:`Sales on Credit${label?` ${label}`:''}`,v:c.tSCrOut,pos:true},
-    {l:`Purchase on Cash${label?` ${label}`:''}`,v:c.tPC,neg:true},
-    {l:`Purchase in Credit${label?` ${label}`:''}`,v:c.tPCr,neg:true},
-    {l:`Total Purchase${label?` ${label}`:''}`,v:c.tPC+c.tPCr,neg:true},
-    {l:branch==='STORE'?'Store Expenses':'Branch Expenses',v:c.tE,neg:true},
+    {l:`${L('salesOnCash')}${label?` ${label}`:''}`,v:c.tSC,pos:true},
+    {l:`${L('salesOnCredit')}${label?` ${label}`:''}`,v:c.tSCrOut,pos:true},
+    {l:`${L('purchOnCash')}${label?` ${label}`:''}`,v:c.tPC,neg:true},
+    {l:`${L('purchOnCredit')}${label?` ${label}`:''}`,v:c.tPCr,neg:true},
+    {l:`${L('totalPurchaseLabel')}${label?` ${label}`:''}`,v:c.tPC+c.tPCr,neg:true},
+    {l:branch==='STORE'?L('storeExpenses'):L('branchExpenses'),v:c.tE,neg:true},
     {l:L('netProfitLoss'),v:c.net,total:true},
-    {l:'VAT Withholding 7.5%',v:c.tVwh},
-    {l:'Withholding 3%',v:c.tWh3},
-    {l:'Commission',v:c.tComm},
+    {l:L('vatWH'),v:c.tVwh},
+    {l:L('wh3'),v:c.tWh3},
+    {l:L('commissionLabel'),v:c.tComm},
     {l:L('cashOnHand'),v:c.coh,total:true},
   ];
   const rr=rows=>rows.map(r=>`<div class="${r.total?'report-row report-total-row':'report-row'}">
@@ -7909,17 +8516,44 @@ function _renderSingleBranchReport(branch,branchTabsHtml,datebar){
     <td class="num">${fmtQ(parseFloat(r.qty)||0)}</td>
     <td class="num">${fmt(tot)}</td>
     <td>${_creditBadge(r._cid,tot)}</td>
-  </tr>`;}  ).join(''):`<tr><td colspan="7" class="credit-empty">No credit purchases in range</td></tr>`;
+  </tr>`;}  ).join(''):`<tr><td colspan="7" class="credit-empty">${L('noCreditPurchInRange')}</td></tr>`;
   const csRows=creditSales.length?creditSales.map(s=>{const b=(s.qty||0)*(s.sPrice||0);const v=s.vatOn?b*0.15:0;const wh=(s.wh3On?b*0.03:0)+(s.vwhOn?b*0.075:0);const tot=b+v-wh;return`<tr>
     <td>${(s.date||'').slice(0,10)}</td><td>${esc(s.party||'—')}</td><td>${esc(s.name||'—')}</td>
     <td style="color:var(--text3)">${esc(s.desc||'—')}</td>
     <td class="num">${fmtQ(parseFloat(s.qty)||0)}</td>
     <td class="num">${fmt(tot)}</td>
     <td>${_creditBadge(s._cid,tot)}</td>
-  </tr>`;}).join(''):`<tr><td colspan="7" class="credit-empty">No credit sales in range</td></tr>`;
+  </tr>`;}).join(''):`<tr><td colspan="7" class="credit-empty">${L('noCreditSalesInRange')}</td></tr>`;
   const creditTotalP=creditPurchases.reduce((a,r)=>a+(parseFloat(r.qty)||0)*(parseFloat(r.uPrice)||0),0);
   const creditTotalS=creditSales.reduce((a,s)=>{const b=(s.qty||0)*(s.sPrice||0);return a+b+(s.vatOn?b*0.15:0)-(s.wh3On?b*0.03:0)-(s.vwhOn?b*0.075:0);},0);
-  const plRows=c.entryPL.map(e=>`<tr>
+  // ── Analytics: sparklines, period-comparison, top-5 ──────
+  const _aS=branch?S.sales.filter(s=>s.branch===branch):S.sales;
+  const _aP=branch?S.purchase.filter(p=>p.branch===branch):S.purchase;
+  const _sBkts=_monthBuckets(_aS,r=>(parseFloat(r.qty)||0)*(parseFloat(r.sPrice)||0));
+  const _pBkts=_monthBuckets(_aP,r=>(parseFloat(r.qty)||0)*(parseFloat(r.uPrice)||0));
+  const _nBkts=_sBkts.map((s,i)=>s-_pBkts[i]);
+  const _et=toEthiopianDate(new Date());
+  const _pm=_et.month>1?{month:_et.month-1,year:_et.year}:{month:13,year:_et.year-1};
+  const _inM=(r,mo,yr)=>{const dm=String(r.date||'').match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);return dm&&+dm[2]===mo&&+dm[3]===yr;};
+  const _noR=!S.reportRange.from&&!S.reportRange.to;
+  const _cS=_noR?_aS.filter(r=>_inM(r,_et.month,_et.year)).reduce((a,r)=>a+(parseFloat(r.qty)||0)*(parseFloat(r.sPrice)||0),0):c.tSC+c.tSCr;
+  const _pS=_noR?_aS.filter(r=>_inM(r,_pm.month,_pm.year)).reduce((a,r)=>a+(parseFloat(r.qty)||0)*(parseFloat(r.sPrice)||0),0):0;
+  const _cN=_noR?_cS-_aP.filter(r=>_inM(r,_et.month,_et.year)).reduce((a,r)=>a+(parseFloat(r.qty)||0)*(parseFloat(r.uPrice)||0),0):c.net;
+  const _pN=_noR?_pS-_aP.filter(r=>_inM(r,_pm.month,_pm.year)).reduce((a,r)=>a+(parseFloat(r.qty)||0)*(parseFloat(r.uPrice)||0),0):0;
+  const _pLbl=_noR?L('vsLastMonth'):L('inRange');
+  const _statGrid=`<div class="report-stat-grid no-print">
+    <div class="report-stat-card"><div class="report-stat-label">${L('totalSalesLabel')}</div><div class="report-stat-val">${fmt(c.tSC+c.tSCr)}</div><div class="report-stat-row">${_sparkline(_sBkts)}${_noR?_delta(_cS,_pS):''}<span style="font-size:10px;color:var(--text3)">${_pLbl}</span></div></div>
+    <div class="report-stat-card"><div class="report-stat-label">${L('totalPurchaseLabel')}</div><div class="report-stat-val">${fmt(c.tPC+c.tPCr)}</div><div class="report-stat-row">${_sparkline(_pBkts)}</div></div>
+    <div class="report-stat-card"><div class="report-stat-label">${L('netPLShort')}</div><div class="report-stat-val ${c.net>=0?'num-pos':'num-neg'}">${fmt(c.net)}</div><div class="report-stat-row">${_sparkline(_nBkts)}${_noR?_delta(_cN,_pN):''}<span style="font-size:10px;color:var(--text3)">${_pLbl}</span></div></div>
+    <div class="report-stat-card"><div class="report-stat-label">${L('cashOnHand')}</div><div class="report-stat-val ${c.coh>=0?'num-pos':'num-neg'}">${fmt(c.coh)}</div><div class="report-stat-row"><span style="font-size:10px;color:var(--text3)">${fmt(c.tE)} ${L('expensesShort')}</span></div></div>
+  </div>`;
+  const _ig={};
+  c.entryPL.forEach(e=>{const k=e.id||e.name||'?';if(!_ig[k])_ig[k]={name:esc(e.name||e.id||'?'),qty:0,val:0,profit:0};_ig[k].qty+=parseFloat(e.qty)||0;_ig[k].val+=e.saleAmt||0;_ig[k].profit+=e.profit||0;});
+  const _t5=Object.values(_ig).sort((a,b)=>b.val-a.val).slice(0,5);
+  const _mV=_t5[0]?.val||1;
+  const _top5=_t5.length?`<div class="top5-widget no-print"><div style="font-size:10px;font-weight:700;color:var(--text3);letter-spacing:.08em;margin-bottom:6px">${L('topItemsBySales')}</div>${_t5.map((it,i)=>`<div class="top5-row"><span class="top5-rank">#${i+1}</span><span style="flex:2;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500">${it.name}</span><span style="font-family:var(--mono);font-size:11px;color:var(--text2);min-width:72px;text-align:right">${fmt(it.val)}</span><div class="top5-bar-wrap"><div class="top5-bar" style="width:${(it.val/_mV*100).toFixed(0)}%"></div></div><span style="font-family:var(--mono);font-size:10px;min-width:50px;text-align:right;${it.profit>=0?'color:var(--success)':'color:var(--error)'}">${it.profit>=0?'+':''}${fmt(it.profit)}</span></div>`).join('')}</div>`:'';
+
+  const plRows=c.entryPL.map(e=>{const mg=e.saleAmt>0.001?e.profit/e.saleAmt*100:null;return`<tr>
     <td>${(e.date||'').slice(0,10)}</td>
     <td>${esc(e.party||'—')}</td>
     <td>${esc(e.name||'—')}</td>
@@ -7928,28 +8562,32 @@ function _renderSingleBranchReport(branch,branchTabsHtml,datebar){
     <td class="num">${fmt(e.saleAmt)}</td>
     <td class="num">${fmt(e.cogs)}</td>
     <td class="num ${e.profit>=0?'num-pos':'num-neg'}">${fmt(e.profit)}</td>
-  </tr>`).join('')||`<tr><td colspan="8" class="credit-empty">No sales in range</td></tr>`;
+    <td class="num ${mg===null?'':mg>=0?'num-pos':'num-neg'}" style="font-size:11px">${mg===null?'—':mg.toFixed(1)+'%'}</td>
+  </tr>`;}).join('')||`<tr><td colspan="9" class="credit-empty">No sales in range</td></tr>`;
   const plTotProfit=c.entryPL.reduce((a,e)=>a+e.profit,0);
   document.getElementById('tab-content').innerHTML=`
     ${branchTabsHtml}${datebar}
+    ${_statGrid}
     ${rr(reportData)}
+    ${_top5}
     <div class="credit-section" style="margin-top:16px">
       <div class="credit-section-hdr">
         <div class="credit-section-hdr-icon sales"><svg class="ic"><use href="#i-bar-chart"/></svg></div>
-        <span class="credit-section-title">Profit / Loss Per Entry</span>
-        <span class="credit-section-count sales">${c.entryPL.length} entries · Net ${fmt(plTotProfit-c.tE)}</span>
+        <span class="credit-section-title">${L('profitLossPerEntry')}</span>
+        <span class="credit-section-count sales">${c.entryPL.length} · Net ${fmt(plTotProfit-c.tE)}</span>
       </div>
       <div class="credit-table-wrap"><table class="credit-table">
-        <thead><tr><th>${L('date')}</th><th>${L('customer')}</th><th>${L('item')}</th><th>${L('desc')}</th><th class="num">${L('qty')}</th><th class="num">Sale Total</th><th class="num">Cost of Goods</th><th class="num">Profit</th></tr></thead>
+        <thead><tr><th>${L('date')}</th><th>${L('customer')}</th><th>${L('item')}</th><th>${L('desc')}</th><th class="num">${L('qty')}</th><th class="num">${L('saleTotal')}</th><th class="num">${L('costOfGoods')}</th><th class="num">${L('profit')}</th><th class="num">${L('margin')}</th></tr></thead>
         <tbody>${plRows}
           <tr class="summary-row">
-            <td colspan="5">TOTALS</td>
+            <td colspan="5">${L('totals').toUpperCase()}</td>
             <td class="num">${fmt(c.totalSales)}</td>
             <td class="num">${fmt(c.totalPurchases)}</td>
             <td class="num ${plTotProfit>=0?'num-pos':'num-neg'}">${fmt(plTotProfit)}</td>
+            <td class="num ${plTotProfit>=0?'num-pos':'num-neg'}" style="font-size:11px">${c.totalSales>0.001?(plTotProfit/c.totalSales*100).toFixed(1)+'%':'—'}</td>
           </tr>
           <tr style="background:var(--surface2)">
-            <td colspan="7" style="font-weight:700;font-size:12px">Net Profit / Loss (after ${branch==='STORE'?'store':'branch'} expenses ${fmt(c.tE)})</td>
+            <td colspan="8" style="font-weight:700;font-size:12px">${L('netProfitLoss')} (${branch==='STORE'?L('storeExpenses'):L('branchExpenses')} ${fmt(c.tE)})</td>
             <td class="num ${c.net>=0?'num-pos':'num-neg'}" style="font-weight:700">${fmt(c.net)}</td>
           </tr>
         </tbody>
@@ -8100,44 +8738,86 @@ const PERM_LABELS={full:'Full',add_only:'Add',read:'Read',none:'None'};
 
 function openPermissions(){_renderPermBody();openModal('perm-modal');}
 
+function _logPermChange(forUser,detail){
+  if(!S.permAuditLog)S.permAuditLog=[];
+  S.permAuditLog.push({ts:new Date().toISOString(),by:S.user||S.ownerId||'owner',for:forUser,detail});
+  if(S.permAuditLog.length>500)S.permAuditLog=S.permAuditLog.slice(-500);
+}
+
 function _renderPermBody(){
   const reg=getRegistry();
-  const users=Object.keys(reg).filter(u=>u!==S.user&&reg[u].ownerId===S.ownerId&&reg[u].role==='user');
+  const CONFIGURABLE_ROLES=['user','manager','storekeeper','readonly'];
+  const users=Object.keys(reg).filter(u=>u!==S.user&&reg[u].ownerId===S.ownerId&&CONFIGURABLE_ROLES.includes(reg[u].role));
   const body=document.getElementById('perm-body');
   if(!users.length){
-    body.innerHTML='<p style="color:var(--text3)">No regular users under your account yet.</p><button type="button" class="modal-btn secondary" onclick="closeModal(\'perm-modal\')" style="margin-top:14px">Close</button>';
+    body.innerHTML='<p style="color:var(--text3)">No users under your account yet.</p><button type="button" class="modal-btn secondary" onclick="closeModal(\'perm-modal\')" style="margin-top:14px">Close</button>';
     return;
   }
-  body.innerHTML=users.map(u=>{
-    const up=S.perms[u]||{};const ep=S.exportPerms[u]??true;const rp=S.rowEditPerms[u]??true;
-    const groupsHtml=PERM_TAB_GROUPS.map(g=>`
-      <div class="perm-group">
-        <div class="perm-group-label">${g.label}</div>
-        ${g.tabs.map(t=>{
-          const cur=up[t]||'full';
-          return`<div class="perm-tab-row">
-            <span class="perm-tab-label"><span>${PERM_TAB_ICON[t]||''}</span>${t}</span>
-            <div class="perm-chips">${PERM_OPTS.map(o=>`<button type="button" class="perm-chip ppc-${o.v}${cur===o.v?' active':''}" onclick="setUserPermUI('${u}','${t}','${o.v}',this)">${PERM_LABELS[o.v]}</button>`).join('')}</div>
-          </div>`;
-        }).join('')}
-      </div>`).join('');
+  const ROLE_BADGE={
+    manager:'<span class="role-badge manager" style="font-size:9px;padding:2px 7px;margin-left:5px">Manager</span>',
+    storekeeper:'<span class="role-badge storekeeper" style="font-size:9px;padding:2px 7px;margin-left:5px">Storekeeper</span>',
+    readonly:'<span class="role-badge readonly" style="font-size:9px;padding:2px 7px;margin-left:5px">Read Only</span>',
+    user:''
+  };
+  const cards=users.map(u=>{
+    const role=reg[u]?.role||'user';
+    const up=S.perms[u]||{};
+    const ep=S.exportPerms[u]??(role==='manager');
+    const rp=S.rowEditPerms[u]??true;
+    const dp=S.deletePerms[u]??true;
+    const isStoreKpr=role==='storekeeper';
+    const isRO=role==='readonly';
+    let tabsHtml;
+    if(isStoreKpr){
+      const cur=up['ITEMS']??'read';
+      tabsHtml=`<div class="perm-group">
+        <div class="perm-group-label">Configurable Tab <span style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0">(other tabs are fixed by storekeeper role)</span></div>
+        <div class="perm-tab-row">
+          <span class="perm-tab-label"><span>${PERM_TAB_ICON['ITEMS']||''}</span>ITEMS</span>
+          <div class="perm-chips">${PERM_OPTS.map(o=>`<button type="button" class="perm-chip ppc-${o.v}${cur===o.v?' active':''}" onclick="setUserPermUI('${u}','ITEMS','${o.v}',this)">${PERM_LABELS[o.v]}</button>`).join('')}</div>
+        </div>
+      </div>`;
+    } else if(isRO){
+      tabsHtml=`<div class="perm-group"><div class="perm-group-label" style="color:var(--text3)">Tab access is read-only for this role — configure export and row permissions below.</div></div>`;
+    } else {
+      tabsHtml=PERM_TAB_GROUPS.map(g=>`
+        <div class="perm-group">
+          <div class="perm-group-label">${g.label}</div>
+          ${g.tabs.map(t=>{
+            const cur=up[t]||'full';
+            return`<div class="perm-tab-row">
+              <span class="perm-tab-label"><span>${PERM_TAB_ICON[t]||''}</span>${t}</span>
+              <div class="perm-chips">${PERM_OPTS.map(o=>`<button type="button" class="perm-chip ppc-${o.v}${cur===o.v?' active':''}" onclick="setUserPermUI('${u}','${t}','${o.v}',this)">${PERM_LABELS[o.v]}</button>`).join('')}</div>
+            </div>`;
+          }).join('')}
+        </div>`).join('');
+    }
     return`<div class="perm-user-card">
       <div class="perm-user-hdr">
         <div class="perm-avatar-sm">${u[0].toUpperCase()}</div>
         <div class="perm-user-info">
-          <div class="perm-username-text">${esc(u)}</div>
+          <div class="perm-username-text">${esc(u)}${ROLE_BADGE[role]||''}</div>
           <div class="perm-user-meta">Branch: ${esc(reg[u]?.branch||'None')}</div>
         </div>
-        <div class="perm-quick-set">
+        ${(!isStoreKpr&&!isRO)?`<div class="perm-quick-set">
           <span style="font-size:9px;color:var(--text3);margin-right:3px">Set all:</span>
           ${['full','add_only','read','none'].map(v=>`<button type="button" class="perm-preset-btn perm-preset-${v}" onclick="setAllPerms('${u}','${v}')">${PERM_LABELS[v]}</button>`).join('')}
-        </div>
+        </div>`:''}
       </div>
-      ${groupsHtml}
+      ${tabsHtml}
       <div class="perm-perm-row"><label data-i18n="exportPermLabel">Export Permission</label><label class="toggle-sw"><input type="checkbox" ${ep?'checked':''} onchange="setExportPerm('${u}',this.checked)"><span></span></label></div>
-      <div class="perm-perm-row"><label>Can Edit / Delete Rows</label><label class="toggle-sw"><input type="checkbox" ${rp?'checked':''} onchange="setRowEditPerm('${u}',this.checked)"><span></span></label></div>
+      <div class="perm-perm-row"><label>Can Edit Rows</label><label class="toggle-sw"><input type="checkbox" ${rp?'checked':''} onchange="setRowEditPerm('${u}',this.checked)"><span></span></label></div>
+      <div class="perm-perm-row"><label>Can Delete Rows</label><label class="toggle-sw"><input type="checkbox" ${dp?'checked':''} onchange="setDeletePerm('${u}',this.checked)"><span></span></label></div>
     </div>`;
-  }).join('')+`<button type="button" class="modal-btn secondary" onclick="closeModal('perm-modal')" style="margin-top:4px">Close</button>`;
+  }).join('');
+  const auditEntries=(S.permAuditLog||[]).slice(-20).reverse();
+  const auditHtml=`<div style="margin-top:16px;margin-bottom:4px">
+    <div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3);margin-bottom:8px">Permission Change Log</div>
+    ${auditEntries.length?auditEntries.map(e=>`<div style="font-size:11px;color:var(--text2);padding:6px 10px;background:var(--surface2);border-radius:7px;margin-bottom:4px;border:1px solid var(--border)">
+      <span style="color:var(--text3);font-size:10px">${new Date(e.ts).toLocaleString()}</span> &mdash; <strong>${esc(e.by)}</strong> &rarr; <strong>${esc(e.for)}</strong>: ${esc(e.detail)}
+    </div>`).join(''):`<div style="font-size:11px;color:var(--text3);padding:4px 0">No changes recorded yet.</div>`}
+  </div>`;
+  body.innerHTML=cards+auditHtml+`<button type="button" class="modal-btn secondary" onclick="closeModal('perm-modal')" style="margin-top:4px">Close</button>`;
 }
 
 function setUserPermUI(u,tab,v,btn){
@@ -8147,18 +8827,21 @@ function setUserPermUI(u,tab,v,btn){
   const row=btn.closest('.perm-tab-row');
   row.querySelectorAll('.perm-chip').forEach(c=>c.classList.remove('active'));
   btn.classList.add('active');
+  _logPermChange(u,`${tab} → ${PERM_LABELS[v]}`);
   showToast(`${tab}: ${PERM_LABELS[v]} for ${u}`,'success');
 }
 function setAllPerms(u,v){
   if(!S.perms[u])S.perms[u]={};
   PERM_TABS.forEach(t=>{S.perms[u][t]=v;});
   saveUserData();
+  _logPermChange(u,`all tabs → ${PERM_LABELS[v]}`);
   _renderPermBody();
   showToast(`All permissions <svg class="ic"><use href="#i-arrow-right"/></svg> ${PERM_LABELS[v]} for ${u}`,'success');
 }
 function setUserPerm(u,tab,v){if(!S.perms[u])S.perms[u]={};S.perms[u][tab]=v;saveUserData();}
-function setExportPerm(u,v){S.exportPerms[u]=v;saveUserData();showToast(`Export ${v?'enabled':'disabled'} for ${u}`,'success');}
-function setRowEditPerm(u,v){if(!S.rowEditPerms)S.rowEditPerms={};S.rowEditPerms[u]=v;saveUserData();showToast(`Row edit/delete ${v?'enabled':'disabled'} for ${u}`,'success');}
+function setExportPerm(u,v){S.exportPerms[u]=v;saveUserData();_logPermChange(u,`export → ${v?'on':'off'}`);showToast(`Export ${v?'enabled':'disabled'} for ${u}`,'success');}
+function setRowEditPerm(u,v){if(!S.rowEditPerms)S.rowEditPerms={};S.rowEditPerms[u]=v;saveUserData();_logPermChange(u,`row edit → ${v?'on':'off'}`);showToast(`Row edit ${v?'enabled':'disabled'} for ${u}`,'success');}
+function setDeletePerm(u,v){if(!S.deletePerms)S.deletePerms={};S.deletePerms[u]=v;saveUserData();_logPermChange(u,`row delete → ${v?'on':'off'}`);showToast(`Row delete ${v?'enabled':'disabled'} for ${u}`,'success');}
 
 /* ═══════════════════════════════════════════════════════
    BRANCHES
@@ -8523,6 +9206,39 @@ function _dateSort(a,b){
   const parseDate=d=>{if(!d)return new Date(0);const p=d.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);return p?new Date(p[3],p[2]-1,p[1]):new Date(d);};
   return parseDate(b.date||'').getTime()-parseDate(a.date||'').getTime();
 }
+
+/* ── Date range preset chips ─────────────────────────── */
+let _drPreset='all';
+function _setDrPreset(k){_drPreset=k;renderTab();}
+function _drChipStrip(){
+  const chips=[['all','All Time'],['today','Today'],['week','This Week'],['month','This Month'],['30','Last 30 Days']];
+  return`<div class="dr-chips">${chips.map(([k,l])=>`<button type="button" class="dr-chip${_drPreset===k?' dr-active':''}" onclick="_setDrPreset('${k}')">${l}</button>`).join('')}</div>`;
+}
+function _drPass(record){
+  if(_drPreset==='all')return true;
+  const m=String(record.date||'').match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+  if(!m)return true;
+  const rDay=parseInt(m[1],10),rMon=parseInt(m[2],10),rYear=parseInt(m[3],10);
+  const et=toEthiopianDate(new Date());
+  const tDay=et.day,tMon=et.month,tYear=et.year;
+  if(_drPreset==='today')return rYear===tYear&&rMon===tMon&&rDay===tDay;
+  if(_drPreset==='month')return rYear===tYear&&rMon===tMon;
+  if(_drPreset==='week'){
+    // Ethiopian DOW: compute days-since-epoch for Ethiopian date values (treat as ordinal)
+    const toOrd=(y,mo,d)=>y*365+mo*30+d;
+    const todayOrd=toOrd(tYear,tMon,tDay);
+    const recOrd=toOrd(rYear,rMon,rDay);
+    return recOrd<=todayOrd&&todayOrd-recOrd<7;
+  }
+  if(_drPreset==='30'){
+    const toOrd=(y,mo,d)=>y*365+mo*30+d;
+    const todayOrd=toOrd(tYear,tMon,tDay);
+    const recOrd=toOrd(rYear,rMon,rDay);
+    return recOrd<=todayOrd&&todayOrd-recOrd<30;
+  }
+  return true;
+}
+
 function _lookupItem(id){return(id!=null&&String(id).trim())?S.items.find(it=>String(it.id).trim()===String(id).trim())||null:null;}
 function _parseBool(v){if(v===true||v===1)return true;if(!v||v===false||v===0)return false;const s=String(v).trim().toLowerCase();return s==='yes'||s==='true'||s==='y'||s==='1'||parseFloat(s)>0;}
 function _normPayment(v){const s=String(v||'').trim().toUpperCase();if(s==='CREDIT'||s==='CR'||s==='CREDIT NOTE')return 'CREDIT';if(s==='STORE TRANSFER'||s==='TRANSFER')return 'STORE TRANSFER';return 'CASH';}
@@ -8695,6 +9411,8 @@ function backupData(){
     branchBeginBal:S.branchBeginBal||{},
     perms:S.perms,
     exportPerms:S.exportPerms,
+    deletePerms:S.deletePerms||{},
+    permAuditLog:(S.permAuditLog||[]).slice(-200),
     branches:S.branches,
     creditPayments:S.creditPayments||[],
     deletedUsers:S.deletedUsers||[],
@@ -8742,6 +9460,8 @@ function _applyRestore(data){
   S.branchBeginBal=data.branchBeginBal||{};
   S.perms=data.perms||{};
   S.exportPerms=data.exportPerms||{};
+  S.deletePerms=data.deletePerms||{};
+  S.permAuditLog=data.permAuditLog||[];
   S.branches=data.branches||['Main'];
   S.creditPayments=data.creditPayments||[];
   S.deletedUsers=data.deletedUsers||[];
@@ -8855,7 +9575,7 @@ async function init(){
       if(savedUser===OWNER_USERNAME&&savedRole==='system_owner'){
         S.user=savedUser;S.ownerId=savedOwner;S.role=savedRole;
         loggedIn=true;doLoginSystemOwner();
-        loadRegistryFromCloud().catch(()=>{});
+        loadRegistryFromCloud().then(()=>{if(isSystemOwner())renderSystemOwnerDashboard();}).catch(()=>{});
         return;
       }
       ensureDefaults();
