@@ -3824,11 +3824,11 @@ function syncToCloud(){
       storeItems:JSON.stringify(S.storeItems),storeDispatches:JSON.stringify(S.storeDispatches),
       beginBal:S.beginBal,branchBeginBal:JSON.stringify(S.branchBeginBal||{}),
       perms:JSON.stringify(S.perms),
-      exportPerms:JSON.stringify(S.exportPerms),deletePerms:JSON.stringify(S.deletePerms||{}),
+      exportPerms:JSON.stringify(S.exportPerms),rowEditPerms:JSON.stringify(S.rowEditPerms||{}),deletePerms:JSON.stringify(S.deletePerms||{}),
       permAuditLog:JSON.stringify((S.permAuditLog||[]).slice(-200)),branches:JSON.stringify(S.branches),
       registry:JSON.stringify(getRegistry()),
       storereqs:JSON.stringify(typeof loadStoreRequests==='function'?loadStoreRequests():[]),
-      creditPayments:JSON.stringify(S.creditPayments||[]),
+      creditPayments:JSON.stringify(S.creditPayments||[]),creditSchedule:JSON.stringify(S.creditSchedule||[]),
       deletedUsers:JSON.stringify(S.deletedUsers||[]),
       updatedAt:now
     };
@@ -3886,12 +3886,14 @@ function applyCloudSnapshot(ns,d){
   if(d.branchBeginBal!==undefined)_lsSet(`ims_${ns}_branchBeginBal`,d.branchBeginBal);
   if(d.perms!==undefined)_lsSet(`ims_${ns}_perms`,d.perms);
   if(d.exportPerms!==undefined)_lsSet(`ims_${ns}_exportperms`,d.exportPerms);
+  if(d.rowEditPerms!==undefined)_lsSet(`ims_${ns}_rowEditPerms`,d.rowEditPerms);
   if(d.deletePerms!==undefined)_lsSet(`ims_${ns}_deletePerms`,d.deletePerms);
   if(d.permAuditLog!==undefined)_lsSet(`ims_${ns}_permAuditLog`,d.permAuditLog);
   if(d.pending!==undefined)_lsSet(`ims_${ns}_pending`,d.pending);
   if(d.branches!==undefined)_lsSet(`ims_${ns}_branches`,d.branches);
   if(d.storereqs!==undefined)_lsSet(`ims_${ns}_storereqs`,d.storereqs);
   if(d.creditPayments!==undefined)_lsSet(`ims_${ns}_creditPayments`,d.creditPayments);
+  if(d.creditSchedule!==undefined)_lsSet(`ims_${ns}_creditSchedule`,d.creditSchedule);
   if(d.deletedUsers!==undefined)_lsSet(`ims_${ns}_deletedUsers`,d.deletedUsers);
   const branches=d.branches?_safeJSON(d.branches,['Main'],'cloud branches'):['Main'];
   branches.forEach(b=>{if(d[`br_${b}`]!==undefined)_lsSet(`ims_${ns}_branchreceipts_${b}`,d[`br_${b}`]);});
@@ -3940,13 +3942,14 @@ function startRealtimeSync(){
       }
       const localReg=getRegistry();
       try{
-        Object.keys(cloudReg).forEach(u=>{
-          if(cloudReg[u]?.password!==localReg[u]?.password){
-            localReg[u]=cloudReg[u];
-          }
+        // Cloud is authoritative: apply all field changes and propagate deletions
+        const merged={...cloudReg};
+        Object.keys(localReg).forEach(u=>{
+          const localT=localReg[u]?.updatedAt||'';
+          const cloudT=merged[u]?.updatedAt||'';
+          if(localT>cloudT){merged[u]=localReg[u];}
         });
-        Object.keys(localReg).forEach(u=>{if(!cloudReg[u])delete localReg[u];});
-        _lsSet('ims_reg',localReg);
+        _lsSet('ims_reg',merged);
       }catch(e){console.warn('registry snapshot apply:',e);}
     },err=>console.warn('[registry listener error]',err));
   }
@@ -4434,7 +4437,7 @@ function doLoginSystemOwner(){
   document.getElementById('drawer-hdr').className='drawer-hdr owner-drawer-hdr';
   initSupabase();
   hideLoader();
-  loadPendingOwnersFromCloud().then(()=>renderSystemOwnerDashboard());
+  Promise.all([loadRegistryFromCloud(),loadPendingOwnersFromCloud()]).then(()=>renderSystemOwnerDashboard());
 }
 
 async function loadPendingOwnersFromCloud(){
