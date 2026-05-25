@@ -4422,6 +4422,47 @@ function selectSubPlan(plan){
 /* ═══════════════════════════════════════════════════════
    SYSTEM OWNER (platform admin)
 ═══════════════════════════════════════════════════════ */
+let _sysRenderDebounce=null;
+function _debouncedSysRender(){
+  clearTimeout(_sysRenderDebounce);
+  _sysRenderDebounce=setTimeout(()=>{if(isSystemOwner())renderSystemOwnerDashboard();},250);
+}
+
+function startSysAdminRealtimeSync(){
+  if(!S.db)return;
+  (S._sysUnsubs||[]).forEach(fn=>{try{fn();}catch(e){}});
+  S._sysUnsubs=[];
+  const col='power_ims5';
+
+  const listen=(docId,applyFn)=>{
+    const unsub=S.db.collection(col).doc(docId).onSnapshot(doc=>{
+      if(!doc.exists||!doc.data())return;
+      applyFn(doc.data());
+      _debouncedSysRender();
+    },err=>console.warn('sysadmin listener ['+docId+']:',err));
+    S._sysUnsubs.push(unsub);
+  };
+
+  listen('_global_registry',d=>{
+    const cloudReg=_safeJSON(d.registry,{},'sysadmin reg snap');
+    const localAt=localStorage.getItem('ims_reg_localAt')||'';
+    if(localAt&&d.updatedAt&&localAt>d.updatedAt)return;
+    if(Object.keys(cloudReg).length>0)_lsSet('ims_reg',cloudReg);
+  });
+  listen('_pending_owners',d=>{
+    if(d.pending)_lsSet('ims_pending_owners',_safeJSON(d.pending,[],'sysadmin pending snap'));
+  });
+  listen('_banned_owners',d=>{
+    if(d.banned)_lsSet('ims_banned_owners',_safeJSON(d.banned,[],'sysadmin banned snap'));
+  });
+  listen('_reset_requests',d=>{
+    if(d.requests)_lsSet('ims_reset_requests',_safeJSON(d.requests,[],'sysadmin reset snap'));
+  });
+  listen('_sub_requests',d=>{
+    if(d.requests)_lsSet('ims_sub_requests',_safeJSON(d.requests,[],'sysadmin sub snap'));
+  });
+}
+
 function doLoginSystemOwner(){
   S.user=OWNER_USERNAME;S.ownerId='_system_';S.role='system_owner';
   localStorage.setItem('ims_currentUser',OWNER_USERNAME);
@@ -4448,6 +4489,7 @@ function doLoginSystemOwner(){
   document.getElementById('owner-back-btn').style.display='none';
   document.getElementById('drawer-hdr').className='drawer-hdr owner-drawer-hdr';
   initSupabase();
+  startSysAdminRealtimeSync();
   hideLoader();
   Promise.all([loadRegistryFromCloud(),loadPendingOwnersFromCloud()]).then(()=>renderSystemOwnerDashboard());
 }
@@ -4523,7 +4565,7 @@ function restoreOwner(username){
   });
 }
 function deleteOwner(u){
-  customConfirm(`Permanently Delete "${u}"?`,'This removes their account and wipes ALL their inventory data from this device. They can re-apply as a new user. This cannot be undone.',_SVG.trash,'Delete Permanently',()=>{
+  customConfirm(`Permanently Delete "${u}"?`,'This removes their account and wipes ALL their inventory data from this device and the cloud. They can re-apply as a new user. This cannot be undone.',_SVG.trash,'Delete Permanently',()=>{
     const reg=getRegistry();
     const ownerData=reg[u]||{};
     const ns=ownerData.ownerId||u;
@@ -4557,19 +4599,22 @@ function deleteOwner(u){
     const subReqs=getSubRequests().filter(x=>x.username!==u&&x.ownerId!==ns);
     _lsSet(SUB_REQ_KEY,subReqs);
 
-    // 7. Sync all changes to cloud
+    // 7. Wipe from cloud — re-init connection if needed
+    if(!S.db)initSupabase();
     if(S.db){
       const db=S.db;
       const col='power_ims5';
-      // Delete owner's main data document
-      db.collection(col).doc(ns).delete().catch(err=>console.warn('cloud delete owner doc:',err));
-      // Update registry in cloud
+      const now=new Date().toISOString();
+      db.collection(col).doc(ns).delete()
+        .then(()=>showToast(`<svg class="ic"><use href="#i-cloud"/></svg> ${u} wiped from cloud`,'success'))
+        .catch(err=>{console.warn('cloud delete owner doc:',err);showToast('<svg class="ic"><use href="#i-alert"/></svg> Cloud delete failed — data removed locally only','warn');});
       saveRegistryToCloud(getRegistry(),true);
-      // Update the four shared system lists
-      db.collection(col).doc('_pending_owners').set({pending:JSON.stringify(pendingOwners),updatedAt:new Date().toISOString()},{merge:true}).catch(err=>console.warn('cloud pending_owners sync:',err));
-      db.collection(col).doc('_banned_owners').set({banned:JSON.stringify(banned),updatedAt:new Date().toISOString()},{merge:true}).catch(err=>console.warn('cloud banned_owners sync:',err));
-      db.collection(col).doc('_reset_requests').set({requests:JSON.stringify(resetReqs),updatedAt:new Date().toISOString()},{merge:true}).catch(err=>console.warn('cloud reset_requests sync:',err));
-      db.collection(col).doc('_sub_requests').set({requests:JSON.stringify(subReqs),updatedAt:new Date().toISOString()},{merge:true}).catch(err=>console.warn('cloud sub_requests sync:',err));
+      db.collection(col).doc('_pending_owners').set({pending:JSON.stringify(pendingOwners),updatedAt:now},{merge:true}).catch(err=>console.warn('cloud pending_owners sync:',err));
+      db.collection(col).doc('_banned_owners').set({banned:JSON.stringify(banned),updatedAt:now},{merge:true}).catch(err=>console.warn('cloud banned_owners sync:',err));
+      db.collection(col).doc('_reset_requests').set({requests:JSON.stringify(resetReqs),updatedAt:now},{merge:true}).catch(err=>console.warn('cloud reset_requests sync:',err));
+      db.collection(col).doc('_sub_requests').set({requests:JSON.stringify(subReqs),updatedAt:now},{merge:true}).catch(err=>console.warn('cloud sub_requests sync:',err));
+    }else{
+      showToast('<svg class="ic"><use href="#i-alert"/></svg> No cloud connection — data removed locally only','warn');
     }
 
     showToast(`<svg class="ic"><use href="#i-trash"/></svg> ${u} permanently deleted`,'success');
@@ -6759,6 +6804,7 @@ function hideMsg(id){const el=document.getElementById(id);el.className=el.classN
 function logout(){
   if(S._unsubscribe){S._unsubscribe();S._unsubscribe=null;}
   if(S._registryUnsubscribe){S._registryUnsubscribe();S._registryUnsubscribe=null;}
+  (S._sysUnsubs||[]).forEach(fn=>{try{fn();}catch(e){}});S._sysUnsubs=[];
   if(S._onlinePingInterval){clearInterval(S._onlinePingInterval);S._onlinePingInterval=null;}
   S.navHistory=[];
   _lastWrittenAt='';
