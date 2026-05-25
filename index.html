@@ -1,6 +1,4 @@
 <!DOCTYPE html><html lang="en"><head>
-
-
 <meta charset="UTF-8">
 <!-- Accessibility: removed maximum-scale=1.0 + user-scalable=no so users can pinch-zoom (WCAG 1.4.4) -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
@@ -89,7 +87,7 @@ input,select,textarea{-webkit-user-select:text;user-select:text;-webkit-appearan
 button{-webkit-appearance:none;appearance:none}
 html{scroll-behavior:smooth;height:100%}
 body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:13px;transition:background .3s,color .3s;
-  padding-bottom:var(--nav-h);-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100dvh;
+  padding-bottom:calc(var(--nav-h) + env(safe-area-inset-bottom));-webkit-font-smoothing:antialiased;overflow-x:hidden;min-height:100dvh;
   font-feature-settings:'cv02','cv03','cv04','cv11'}
 ::-webkit-scrollbar{width:5px;height:5px}
 ::-webkit-scrollbar-track{background:transparent}
@@ -232,19 +230,20 @@ html[data-view="mobile"] .brand-text{display:none}
 .nav-item svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;
   stroke-linecap:round;stroke-linejoin:round;transition:transform .2s cubic-bezier(.34,1.56,.64,1);flex-shrink:0}
 .nav-item .ni-icon{line-height:1;font-size:20px;transition:transform .2s cubic-bezier(.34,1.56,.64,1)}
-.nav-item .ni-label{font-size:10px;font-weight:600;letter-spacing:.02em;white-space:nowrap;line-height:1;transition:color .18s}
+.nav-item .ni-label{font-size:10px;font-weight:600;letter-spacing:.02em;white-space:nowrap;line-height:1;opacity:0;transition:opacity .18s,color .18s}
+.nav-item.active .ni-label{opacity:1}
 .nav-item:hover{color:var(--text2)}
 .nav-item:hover .ni-bubble{background:var(--p-glass)}
 .nav-item.active{color:var(--p)}
 .nav-item.active .ni-bubble{background:var(--p-glass);box-shadow:0 2px 16px var(--p-glow)}
-.nav-item.active svg{transform:scale(1.1)}
+.nav-item.active svg{transform:scale(1.1);fill:currentColor;fill-opacity:.12}
 .nav-item.active .ni-icon{transform:scale(1.1)}
-.nav-item.store-nav.active{color:var(--store)}
-.nav-item.store-nav.active .ni-bubble{background:var(--store-glass);box-shadow:0 2px 14px var(--store-glow)}
+.nav-item.store-nav.active{color:var(--p)}
+.nav-item.store-nav.active .ni-bubble{background:var(--p-glass);box-shadow:0 2px 14px var(--p-glow)}
 
 /* ── Store sub-menu hint dots ── */
 .store-more-dots{
-  font-size:6.5px;letter-spacing:2.5px;color:var(--store);opacity:.5;
+  font-size:6.5px;letter-spacing:2.5px;color:var(--text3);opacity:.5;
   line-height:1;margin-top:-3px;pointer-events:none;user-select:none;
 }
 @keyframes storeHintPulse{0%,100%{opacity:.3}50%{opacity:.72}}
@@ -321,8 +320,8 @@ html[data-view="mobile"] .brand-text{display:none}
 #nav-store-popup{position:fixed;z-index:700;background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:5px;min-width:148px;box-shadow:0 -8px 28px rgba(0,0,0,.3);animation:flyInUp .18s cubic-bezier(.22,1,.36,1);display:none;}
 
 /* ── Content ── */
-.content{padding:16px;max-width:1400px;margin:0 auto}
-@media(min-width:768px){.content{padding:22px 26px}}
+.content{padding:16px;padding-bottom:calc(16px + env(safe-area-inset-bottom));max-width:1400px;margin:0 auto}
+@media(min-width:768px){.content{padding:22px 26px;padding-bottom:calc(26px + env(safe-area-inset-bottom))}}
 
 .page-card{
   background:var(--surface);border-radius:var(--radius-xl);
@@ -517,8 +516,8 @@ html[data-view="mobile"] .brand-text{display:none}
 .sf-chip.sf-expired.active{background:rgba(239,68,68,.12);color:var(--error);border-color:rgba(239,68,68,.4)}
 .sf-chip.sf-sus.active{background:rgba(45,75,138,.12);color:#2D4B8A;border-color:rgba(45,75,138,.4)}
 /* Owner cards */
-.oc-wrap{border-bottom:1px solid var(--border);transition:background .14s}
-.oc-wrap:hover{background:var(--surface2)}
+.oc-wrap{border-bottom:1px solid var(--border);transition:background .14s,box-shadow .14s;cursor:pointer}
+.oc-wrap:hover{background:var(--surface2);box-shadow:inset 3px 0 0 var(--p)}
 .oc-wrap:last-child{border-bottom:none}
 .oc-top{display:flex;align-items:flex-start;gap:12px;padding:14px 18px}
 .oc-avatar{
@@ -532,9 +531,10 @@ html[data-view="mobile"] .brand-text{display:none}
 .oc-detail{font-size:10.5px;color:var(--text3);margin-top:4px;display:flex;gap:10px;flex-wrap:wrap;align-items:center}
 .oc-actions{display:flex;gap:4px;align-items:center;flex-shrink:0;flex-wrap:wrap;justify-content:flex-end}
 .oc-ext-row{
-  display:flex;align-items:center;gap:6px;padding:8px 18px 11px;
+  display:none;align-items:center;gap:6px;padding:8px 18px 11px;
   border-top:1px solid var(--border);flex-wrap:wrap;background:var(--surface2)
 }
+.oc-wrap:hover .oc-ext-row,.oc-wrap.ext-urgent .oc-ext-row{display:flex}
 .oc-ext-lbl{font-size:9.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;flex-shrink:0;padding-right:2px}
 .oc-ext-btn{
   padding:3px 10px;border-radius:6px;border:1px solid var(--border2);
@@ -1259,7 +1259,7 @@ tbody tr:last-child td{border-bottom:none}
 html[data-card="1"] .table-wrap{overflow-x:visible!important}
 html[data-card="1"] table{min-width:0!important;display:block!important;border:none}
 html[data-card="1"] thead{display:none!important}
-html[data-card="1"] tbody{display:flex!important;flex-direction:column;gap:9px;padding:12px;border:none}
+html[data-card="1"] tbody{display:flex!important;flex-direction:column;gap:9px;padding:12px;padding-bottom:calc(12px + var(--nav-h) + env(safe-area-inset-bottom));border:none}
 html[data-card="1"] tbody tr{display:block!important;background:var(--surface2);border-radius:var(--radius);border:1px solid var(--border2);overflow:hidden;box-shadow:0 1px 8px rgba(0,0,0,.12);animation:flyInUp .28s cubic-bezier(.22,1,.36,1) both}
 html[data-card="1"] tbody tr:hover td{background:transparent!important}
 html[data-card="1"] tbody td{display:flex!important;justify-content:space-between;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border);font-size:12.5px;text-align:right}
@@ -1571,10 +1571,29 @@ tbody tr:nth-child(even) td{background:rgba(255,255,255,.013)}
 
 /* Toast: slightly taller for icon+text breathing room */
 .toast{padding:10px 18px;font-size:12.5px;gap:8px}
+.toast-close{background:none;border:none;color:inherit;opacity:.65;cursor:pointer;padding:0 0 0 6px;display:flex;align-items:center;flex-shrink:0;line-height:1}
+.toast-close:hover{opacity:1}
+
+/* Table overflow scroll hint — fading shadow on right edge */
+.table-wrap{position:relative}
+.table-wrap::after{content:'';position:absolute;top:0;right:0;width:28px;height:100%;
+  background:linear-gradient(to right,transparent,var(--bg));pointer-events:none;
+  opacity:0;transition:opacity .2s}
+.table-wrap.has-overflow::after{opacity:1}
+
+/* Subscription progress bar: urgency pulse when ≤5 days */
+@keyframes sub-urgency{0%,100%{opacity:1}50%{opacity:.5}}
+.sub-prog-urgent .sub-prog-fill{animation:sub-urgency 1.2s ease-in-out infinite}
+.sub-prog-urgent .sub-prog-track{box-shadow:0 0 0 2px rgba(244,63,94,.4)}
+
+/* FAB safe zone: landscape phones */
+@media(max-height:500px) and (orientation:landscape){
+  #fab-add{bottom:calc(var(--nav-h) + 8px)!important}
+}
 
 /* ── Scroll FAB ── */
 .scroll-fab{
-  position:fixed;right:16px;bottom:calc(var(--nav-h) + 14px);z-index:390;
+  position:fixed;right:16px;bottom:calc(var(--nav-h) + 18px + 52px + 10px);z-index:390;
   width:40px;height:40px;border-radius:12px;border:none;cursor:pointer;
   background:var(--surface2);color:var(--text2);
   box-shadow:0 4px 18px rgba(0,0,0,.38),0 0 0 1px var(--border2);
@@ -1595,7 +1614,7 @@ tbody tr:nth-child(even) td{background:rgba(255,255,255,.013)}
 .scroll-fab:active{transform:scale(.92) translateY(0)!important;transition:transform .08s ease!important}
 .scroll-fab svg{transition:transform .22s cubic-bezier(.34,1.56,.64,1)}
 .scroll-fab.at-bottom svg{transform:rotate(180deg)}
-@media(min-width:768px){.scroll-fab{right:22px;bottom:calc(var(--nav-h) + 18px)}}
+@media(min-width:768px){.scroll-fab{right:22px;bottom:calc(var(--nav-h) + 18px + 52px + 10px)}}
 
 /* ─── SVG ICON SYSTEM ─── */
 .ic{width:1em;height:1em;display:inline-block;vertical-align:-.15em;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -1661,6 +1680,10 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
 .hero-quick-pill.hqp-warn{background:rgba(245,158,11,.18);border-color:rgba(245,158,11,.35);color:#fcd34d}
 .hero-quick-pill.hqp-err{background:rgba(244,63,94,.18);border-color:rgba(244,63,94,.3);color:#fca5a5}
 .hero-quick-pill.hqp-ok{background:rgba(34,197,94,.14);border-color:rgba(34,197,94,.28);color:#86efac}
+.sys-live-badge{display:none;align-items:center;gap:5px;font-size:10px;font-weight:600;color:var(--success);padding:3px 10px;background:rgba(16,185,129,.12);border:1px solid rgba(16,185,129,.28);border-radius:99px;white-space:nowrap}
+.sys-live-badge.show{display:flex}
+.sys-live-dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex-shrink:0;animation:livePulse 2s ease infinite}
+@keyframes livePulse{0%,100%{opacity:1}50%{opacity:.25}}
 
 /* Stats cards — richer look */
 .owner-stat{
@@ -2673,6 +2696,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
           <p id="owner-dash-sub"></p>
         </div>
         <div class="owner-hero-btns">
+          <span class="sys-live-badge" id="sys-live-badge"><span class="sys-live-dot"></span><span id="sys-live-text">Live</span></span>
           <button type="button" class="owner-refresh-btn" onclick="isSystemOwner()?(loadPendingOwnersFromCloud&&loadPendingOwnersFromCloud().then(()=>renderSystemOwnerDashboard())):renderOwnerDashboard()" title="Sync latest data from cloud">
             <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
             Refresh
@@ -2708,7 +2732,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
         <button type="button" class="btn btn-sm" style="background:rgba(45,75,138,.12);color:rgba(45,75,138,1);border-color:rgba(45,75,138,.3)" id="owner-add-user-btn" onclick="openAddUserModal()">+ Add User</button>
       </div>
       <div class="sys-filter-bar" id="sys-owner-filter-bar">
-        <input class="sys-search" type="text" id="sys-owner-search" placeholder="Search by name, shop, email…" oninput="renderSystemOwnerDashboard()">
+        <input class="sys-search" type="text" id="sys-owner-search" placeholder="Search by name, shop, email…" oninput="_renderSysOwnerList()">
         <button type="button" class="sf-chip active" id="sf-all"      onclick="setSysFilter('all')">All</button>
         <button type="button" class="sf-chip sf-trial"   id="sf-trial"  onclick="setSysFilter('trial')">Trial</button>
         <button type="button" class="sf-chip active"     id="sf-active" onclick="setSysFilter('active')" style="display:none">Active</button>
@@ -2768,11 +2792,6 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
       <div id="banned-owner-list"></div>
     </div>
 
-    <!-- Branches (shop-owner mode only, hidden for sys-admin) -->
-    <div class="owner-section" id="section-branches" style="display:none">
-      <div class="owner-section-hdr"><h3><svg class="ic"><use href="#i-building"/></svg> Branches</h3><button type="button" class="btn" onclick="openBranches()">Manage</button></div>
-      <div id="owner-branch-list"></div>
-    </div>
 
     <!-- Branch comparison (shop-owner mode only) -->
     <div class="owner-section" id="section-branch-cmp" style="display:none">
@@ -2802,13 +2821,6 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
           <div style="display:flex;align-items:center;gap:12px">
             <span style="width:32px;height:32px;border-radius:8px;background:rgba(6,182,212,.12);color:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span>
             <div><div style="font-weight:600;font-size:13px">User Permissions</div><div style="font-size:11px;color:var(--text2)">Set access levels per user</div></div>
-          </div>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text3)"><polyline points="9 18 15 12 9 6"/></svg>
-        </div>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border:1px solid var(--border);border-radius:10px;background:var(--surface2);cursor:pointer" onclick="openBranches()">
-          <div style="display:flex;align-items:center;gap:12px">
-            <span style="width:32px;height:32px;border-radius:8px;background:rgba(16,185,129,.12);color:var(--success);display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 0 1-9 9"/></svg></span>
-            <div><div style="font-weight:600;font-size:13px">Manage Branches</div><div style="font-size:11px;color:var(--text2)">Add, edit or remove branches</div></div>
           </div>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text3)"><polyline points="9 18 15 12 9 6"/></svg>
         </div>
@@ -2848,6 +2860,14 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
         </div>
       </div>
     </div>
+
+    <!-- ── Manage Single Owner Panel ── -->
+    <div id="manage-owner-panel" style="display:none;animation:fadeInUp .18s ease">
+      <div class="owner-section" style="padding:0;overflow:hidden;border-radius:14px">
+        <div id="mop-content"></div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -3404,7 +3424,6 @@ const SUPABASE_KEY='sb_publishable_5EtdaQZdXOwdRUC9a5dr_A_0Nnl3A8w';
 const OWNER_USERNAME = 'Mb';
 // SHA-256 hash of the original system-owner password.
 // To rotate: in console run
-//   crypto.subtle.digest('SHA-256', new TextEncoder().encode('newPass')).then(b=>console.log([...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join('')))
 const OWNER_PASSWORD_HASH = '6d6e1059500ddb11aefec9d93e6847aab619cc084be4a20d11ffa1e58ec4a137';
 
 
@@ -3487,8 +3506,23 @@ const cap=(s,n)=>String(s==null?'':s).slice(0,n);
 const RL_KEY='ims_login_attempts';
 const RL_MAX=8;          // attempts allowed
 const RL_WINDOW=15*60*1000; // 15 min
-function _rlGet(){try{return _lsGet(RL_KEY,{});}catch(e){return{};}}
-function _rlSave(d){try{_lsSet(RL_KEY,d);}catch(e){}}
+function _rlGet(){
+  // Merge localStorage (persists across tabs) with sessionStorage (survives localStorage.clear())
+  const ls=_lsGet(RL_KEY,{});
+  let ss={};try{ss=JSON.parse(sessionStorage.getItem(RL_KEY)||'{}');}catch(e){}
+  const merged={};
+  [...new Set([...Object.keys(ls),...Object.keys(ss)])].forEach(u=>{
+    const le=ls[u],se=ss[u];
+    if(!le)merged[u]=se;
+    else if(!se)merged[u]=le;
+    else merged[u]=le.count>=se.count?le:se;
+  });
+  return merged;
+}
+function _rlSave(d){
+  try{_lsSet(RL_KEY,d);}catch(e){}
+  try{sessionStorage.setItem(RL_KEY,JSON.stringify(d));}catch(e){}
+}
 function checkLoginRateLimit(username){
   const d=_rlGet();const now=Date.now();const e=d[username];
   if(!e)return{allowed:true};
@@ -3523,9 +3557,11 @@ function showToast(msg,type='',dur=2800){
   const iconMap={success:'check-circle',error:'x-circle',warn:'alert',info:'bell'};
   const iconName=iconMap[type]||'bell';
   msg=String(msg).replace(/^[\u{1F000}-\u{1FFFF}\u{2190}-\u{27FF}]\uFE0F?\s*/u,'');
-  d.innerHTML=`<svg class="ic toast-ic"><use href="#i-${iconName}"/></svg><span class="toast-msg">${msg.replace(/</g,'&lt;')}</span>`;
+  d.innerHTML=`<svg class="ic toast-ic"><use href="#i-${iconName}"/></svg><span class="toast-msg">${msg.replace(/</g,'&lt;')}</span><button class="toast-close" aria-label="Dismiss" onclick="this.closest('.toast').remove()"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>`;
   w.appendChild(d);
-  setTimeout(()=>{d.style.opacity='0';d.style.transform='translateY(10px)';d.style.transition='all .3s';setTimeout(()=>d.remove(),300)},dur);
+  const dismiss=()=>{d.style.opacity='0';d.style.transform='translateY(10px)';d.style.transition='all .3s';setTimeout(()=>d.remove(),300)};
+  const tid=setTimeout(dismiss,dur);
+  d.querySelector('.toast-close').addEventListener('click',()=>clearTimeout(tid),{once:true});
 }
 function showUndoToast(msg,undoFn,dur=5000){
   const w=document.getElementById('toast-wrap');
@@ -3560,14 +3596,14 @@ function _emptyState(svgPaths,title,sub,actionFn=''){
 ═══════════════════════════════════════════════════════ */
 const getRegistry=()=>{
   try{return _lsGet('ims_reg',{});}
-  catch(e){console.error('getRegistry parse failed:',e);return{};}
+  catch(e){return{};}
 };
 const saveRegistry=r=>{
   // Stamp every entry that's missing updatedAt so the merge logic in
   // loadRegistryFromCloud has something to compare against.
   const now=new Date().toISOString();
   Object.values(r).forEach(v=>{if(v&&typeof v==='object'&&!v.updatedAt)v.updatedAt=now;});
-  try{_lsSet('ims_reg',r);}catch(e){console.error('saveRegistry:',e);}
+  try{_lsSet('ims_reg',r);}catch(e){}
   // Record when the local registry was last changed so loadRegistryFromCloud
   // can skip overwriting localStorage when cloud data is older than our local changes.
   localStorage.setItem('ims_reg_localAt',now);
@@ -3602,9 +3638,9 @@ function saveRegistryToCloud(reg,forceImmediate){
     const save=()=>S.db.collection('power_ims5').doc('_global_registry').set({
       registry:JSON.stringify(reg),
       updatedAt:new Date().toISOString()
-    },{merge:true}).catch(err=>console.warn('[registry cloud save]',err));
+    },{merge:true}).catch(()=>{});
     if(forceImmediate){save();}else{setTimeout(save,100);}
-  }catch(e){console.warn('[registry cloud save threw]',e);}
+  }catch(e){}
 }
 
 async function loadRegistryFromCloud(){
@@ -3627,10 +3663,10 @@ async function loadRegistryFromCloud(){
         const cloudT=merged[u]?.updatedAt||'';
         if(localT>cloudT){merged[u]=localReg[u];}
       });
-      try{_lsSet('ims_reg',merged);}catch(e){console.error('merged save:',e);}
+      try{_lsSet('ims_reg',merged);}catch(e){}
       return merged;
     }
-  }catch(e){console.warn('loadRegistryFromCloud:',e);}
+  }catch(e){}
   return getRegistry();
 }
 
@@ -3652,14 +3688,13 @@ const lsKey=k=>`ims_${ownerNS()}_${k}`;
 function _safeJSON(str,fallback,where){
   if(str==null)return fallback;
   try{return JSON.parse(str);}
-  catch(e){console.warn(`Corrupt JSON for ${where||'unknown'} — using fallback. Raw value will be replaced on next save.`,e);return fallback;}
+  catch(e){return fallback;}
 }
 function _lsGet(key,fallback){return _safeJSON(localStorage.getItem(key),fallback,key);}
 function _lsSet(key,value){
   try{localStorage.setItem(key,typeof value==='string'?value:JSON.stringify(value));}
   catch(e){
     // QuotaExceededError is the most likely cause; surface it to the user.
-    console.error(`localStorage write failed for ${key}:`,e);
     if(typeof showToast==='function')showToast('<svg class="ic"><use href="#i-save"/></svg> Storage full — could not save.','error');
   }
 }
@@ -3690,7 +3725,6 @@ function loadUserData(){
   S.creditPayments=_lsGet(`ims_${ns}_creditPayments`,[]);
   S.creditSchedule=_lsGet(`ims_${ns}_creditSchedule`,[]);
   S.deletedUsers=_lsGet(`ims_${ns}_deletedUsers`,[]);
-  
   // Backfill _cid for existing CREDIT records that pre-date this feature
   let _cidChanged=false;
   const _mkCid=prefix=>`cr_${prefix}_${Date.now()}_${Math.random().toString(36).slice(2,7)}`;
@@ -3706,6 +3740,7 @@ function loadUserData(){
 }
 
 function saveUserData(){
+  _invalidateCpCache();
   const ns=ownerNS();
   localStorage.setItem(`ims_${ns}_localAt`,new Date().toISOString());
   _lsSet(`ims_${ns}_items`,S.items);
@@ -3745,7 +3780,7 @@ async function loadFromCloud(ns){
     const d=doc.data();
     if(d.updatedAt)_lastWrittenAt=d.updatedAt;
     applyCloudSnapshot(ns,d);
-  }catch(e){console.warn('loadFromCloud:',e);}
+  }catch(e){}
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -3785,7 +3820,7 @@ function _createSupabaseCompat(client){
                 .then(({data,error})=>{
                   if(error){if(errCallback)errCallback(error);return;}
                   callback({exists:!!data,data(){return data?data.data:null;}});
-                }).catch(err=>{if(errCallback)errCallback(err);else console.error(err);});
+                }).catch(err=>{if(errCallback)errCallback(err);});
               const channel=client.channel(`${table}:${id}`)
                 .on('postgres_changes',{event:'*',schema:'public',table,filter:`id=eq.${id}`},payload=>{
                   const row=payload.new;
@@ -3806,7 +3841,6 @@ function _createSupabaseCompat(client){
 function initSupabase(){
   try{
     if(typeof supabase==='undefined'||typeof supabase.createClient!=='function'){
-      console.warn('Supabase SDK not loaded yet — sync disabled.');
       setSyncRing(false);return false;
     }
     const client=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
@@ -3814,15 +3848,17 @@ function initSupabase(){
     if(S_isOnline){setSyncRing(true);}else{setSyncRing(false);}
     return true;
   }catch(e){
-    console.error('initSupabase:',e);
     setSyncRing(false);return false;
   }
 }
 
+let _syncInFlight=false;
 function syncToCloud(){
   if(!S.dbConnected||!S.db||!S_isOnline)return;
   clearTimeout(_syncT);
   _syncT=setTimeout(()=>{
+    if(_syncInFlight){syncToCloud();return;} // reschedule when prior write lands
+    _syncInFlight=true;
     const ns=ownerNS();
     const now=new Date().toISOString();
     _lastWrittenAt=now;
@@ -3844,8 +3880,8 @@ function syncToCloud(){
       payload[`br_${b}`]=JSON.stringify(loadBranchReceipts(b));
     });
     S.db.collection('power_ims5').doc(ns).set(payload,{merge:true})
-      .then(()=>{S_pendingSync=false;setSyncRing(true);localStorage.setItem(`ims_${ns}_syncedAt`,now);})
-      .catch(err=>{S_pendingSync=true;console.warn('[POWER-IMS] syncToCloud:',err);setSyncRing(false);});
+      .then(()=>{_syncInFlight=false;S_pendingSync=false;setSyncRing(true);localStorage.setItem(`ims_${ns}_syncedAt`,now);_updateOfflineQueueBadge();})
+      .catch(err=>{_syncInFlight=false;S_pendingSync=true;setSyncRing(false);});
   },1200);
 }
 let S_isOnline=navigator.onLine;
@@ -3912,30 +3948,33 @@ function applyCloudSnapshot(ns,d){
 }
 
 function startRealtimeSync(){
-  if(S._unsubscribe){try{S._unsubscribe();}catch(e){console.warn('unsubscribe:',e);}S._unsubscribe=null;}
+  if(S._unsubscribe){try{S._unsubscribe();}catch(e){}S._unsubscribe=null;}
   const ns=ownerNS();
   if(!S.db||!ns||ns==='_system_')return;
   // Restore last-synced timestamp so page reloads don't lose the guard
   if(!_lastWrittenAt)_lastWrittenAt=localStorage.getItem(`ims_${ns}_syncedAt`)||'';
   S._unsubscribe=S.db.collection('power_ims5').doc(ns).onSnapshot(doc=>{
-    if(!doc.exists)return;
-    const d=doc.data();
-    if(!d||!d.updatedAt||d.updatedAt===_lastWrittenAt)return;
-    // If local data was modified after the last successful cloud sync,
-    // there are unsynced offline changes — push them up instead of pulling down
-    const localAt=localStorage.getItem(`ims_${ns}_localAt`)||'';
-    const syncedAt=localStorage.getItem(`ims_${ns}_syncedAt`)||_lastWrittenAt;
-    if(localAt&&localAt>syncedAt){
+    try{
+      if(!doc.exists)return;
+      const d=doc.data();
+      if(!d||!d.updatedAt||d.updatedAt===_lastWrittenAt)return;
+      // If local data was modified after the last successful cloud sync,
+      // there are unsynced offline changes — push them up instead of pulling down
+      const localAt=localStorage.getItem(`ims_${ns}_localAt`)||'';
+      const syncedAt=localStorage.getItem(`ims_${ns}_syncedAt`)||_lastWrittenAt;
+      if(localAt&&localAt>syncedAt){
+        _lastWrittenAt=d.updatedAt;
+        syncToCloud();
+        return;
+      }
       _lastWrittenAt=d.updatedAt;
-      syncToCloud();
-      return;
-    }
-    _lastWrittenAt=d.updatedAt;
-    applyCloudSnapshot(ns,d);
-    loadUserData();renderTab();
-    if(isOwner())loadPendingApprovals();
-    updateNotifBadge();updateStoreNotifBadge();updateRequestBadge();
-  },err=>console.warn('realtime sync error:',err));
+      applyCloudSnapshot(ns,d);
+      _invalidateCpCache();
+      loadUserData();renderTab();
+      if(isOwner())loadPendingApprovals();
+      updateNotifBadge();updateStoreNotifBadge();updateRequestBadge();
+    }catch(e){}
+  },()=>{});
   if(S._registryUnsubscribe){try{S._registryUnsubscribe();}catch(e){}S._registryUnsubscribe=null;}
   if(S.db){
     S._registryUnsubscribe=S.db.collection('power_ims5').doc('_global_registry').onSnapshot(doc=>{
@@ -3962,8 +4001,8 @@ function startRealtimeSync(){
           if(localT>cloudT){merged[u]=localReg[u];}
         });
         _lsSet('ims_reg',merged);
-      }catch(e){console.warn('registry snapshot apply:',e);}
-    },err=>console.warn('[registry listener error]',err));
+      }catch(e){}
+    },()=>{});
   }
 }
 
@@ -4183,7 +4222,7 @@ async function submitAuth(){
         pending.push({username:u,password:pwdHash,shopName,requestedAt:new Date().toISOString()});
         _lsSet('ims_pending_owners',pending);
         if(S.db){
-          S.db.collection('power_ims5').doc('_pending_owners').set({pending:JSON.stringify(pending),updatedAt:new Date().toISOString()},{merge:true}).catch(err=>console.error('pending sync:',err));
+          S.db.collection('power_ims5').doc('_pending_owners').set({pending:JSON.stringify(pending),updatedAt:new Date().toISOString()},{merge:true}).catch(()=>{});
         }
         showMsg('auth-success','<svg class="ic"><use href="#i-check-circle"/></svg> Your registration is pending administrator approval.','success');
       }else{
@@ -4200,13 +4239,12 @@ async function submitAuth(){
   pending.push({username:u,password:pwdHash,role:'user',ownerId:ns,requestedAt:new Date().toISOString(),phone:phone||null});
         _lsSet(`ims_${ns}_pending`,pending);
         if(S.db){
-          S.db.collection('power_ims5').doc(ns).set({pending:JSON.stringify(pending)},{merge:true}).catch(err=>console.error('user pending sync:',err));
+          S.db.collection('power_ims5').doc(ns).set({pending:JSON.stringify(pending)},{merge:true}).catch(()=>{});
         }
         showMsg('auth-success','<svg class="ic"><use href="#i-check-circle"/></svg> Request sent! Your platform owner will approve your account.','success');
       }
     }
   }catch(e){
-    console.error('submitAuth:',e);
     showMsg('auth-error','Something went wrong. Please try again.');
   }finally{
     btn.innerHTML=origText;
@@ -4240,7 +4278,6 @@ async function doLogin(u,ownerId,role){
     }
   }
   loadUserData();loadPrefs();
-  
   // UI setup
   document.getElementById('user-label').textContent=u;
   const roleLabel=role==='owner'?'Owner':role==='manager'?'Manager':role==='readonly'?'Read Only':role==='storekeeper'?'Store Keeper':role==='user'?'User'+(S.userBranch?` — ${S.userBranch}`:''):'User';
@@ -4286,7 +4323,7 @@ async function doLogin(u,ownerId,role){
         cr.forEach(c=>{const li=mg.findIndex(l=>l.id===c.id);if(li===-1)mg.push(c);else if(c.status!=='pending')mg[li]=c;});
         _lsSet(SUB_REQ_KEY,mg);
       }
-    }).catch(err=>console.warn('sub_requests sync:',err));
+    }).catch(()=>{});
   }
   updateStoreNotifBadge();
   updateRequestBadge();
@@ -4300,7 +4337,6 @@ async function doLogin(u,ownerId,role){
   }
   switchTab(startTab);
   }catch(e){
-    console.error('doLogin error (non-fatal):', e);
     // Credentials were correct — try to show the app anyway
     try{showUI();}catch(_){}
     try{switchTab('ITEMS');}catch(_){}
@@ -4423,9 +4459,13 @@ function selectSubPlan(plan){
    SYSTEM OWNER (platform admin)
 ═══════════════════════════════════════════════════════ */
 let _sysRenderDebounce=null;
+let _sysLastSync='';
 function _debouncedSysRender(){
   clearTimeout(_sysRenderDebounce);
-  _sysRenderDebounce=setTimeout(()=>{if(isSystemOwner())renderSystemOwnerDashboard();},250);
+  _sysRenderDebounce=setTimeout(()=>{
+    _sysLastSync=new Date().toISOString();
+    if(isSystemOwner())renderSystemOwnerDashboard();
+  },250);
 }
 
 function startSysAdminRealtimeSync(){
@@ -4439,7 +4479,7 @@ function startSysAdminRealtimeSync(){
       if(!doc.exists||!doc.data())return;
       applyFn(doc.data());
       _debouncedSysRender();
-    },err=>console.warn('sysadmin listener ['+docId+']:',err));
+    },()=>{});
     S._sysUnsubs.push(unsub);
   };
 
@@ -4505,7 +4545,7 @@ async function loadPendingOwnersFromCloud(){
       cloud.forEach(c=>{if(!merged.find(l=>l.username===c.username))merged.push(c);});
       _lsSet('ims_pending_owners',merged);
     }
-  }catch(e){console.warn('pending_owners fetch:',e);}
+  }catch(e){}
   try{
     const rdoc=await S.db.collection('power_ims5').doc('_reset_requests').get();
     if(rdoc.exists&&rdoc.data().requests){
@@ -4518,7 +4558,7 @@ async function loadPendingOwnersFromCloud(){
       });
       _lsSet('ims_reset_requests',merged);
     }
-  }catch(e){console.warn('reset_requests fetch:',e);}
+  }catch(e){}
   try{
     const bdoc=await S.db.collection('power_ims5').doc('_banned_owners').get();
     if(bdoc.exists&&bdoc.data().banned){
@@ -4528,7 +4568,7 @@ async function loadPendingOwnersFromCloud(){
       cloudBanned.forEach(c=>{if(!merged.find(l=>l.username===c.username))merged.push(c);});
       _lsSet(BANNED_LS_KEY,merged);
     }
-  }catch(e){console.warn('banned_owners fetch:',e);}
+  }catch(e){}
   try{
     const srdoc=await S.db.collection('power_ims5').doc('_sub_requests').get();
     if(srdoc.exists&&srdoc.data().requests){
@@ -4541,14 +4581,14 @@ async function loadPendingOwnersFromCloud(){
       });
       _lsSet(SUB_REQ_KEY,merged);
     }
-  }catch(e){console.warn('sub_requests fetch:',e);}
+  }catch(e){}
 }
 
 const BANNED_LS_KEY='ims_banned_owners';
 function getBannedOwners(){return _lsGet(BANNED_LS_KEY,[]);}
 function saveBannedOwners(list){
   _lsSet(BANNED_LS_KEY,list);
-  if(S.db)S.db.collection('power_ims5').doc('_banned_owners').set({banned:JSON.stringify(list),updatedAt:new Date().toISOString()},{merge:true}).catch(err=>console.warn('banned cloud sync:',err));
+  if(S.db)S.db.collection('power_ims5').doc('_banned_owners').set({banned:JSON.stringify(list),updatedAt:new Date().toISOString()},{merge:true}).catch(()=>{});
 }
 function restoreOwner(username){
   const banned=getBannedOwners();
@@ -4607,12 +4647,12 @@ function deleteOwner(u){
       const now=new Date().toISOString();
       db.collection(col).doc(ns).delete()
         .then(()=>showToast(`<svg class="ic"><use href="#i-cloud"/></svg> ${u} wiped from cloud`,'success'))
-        .catch(err=>{console.warn('cloud delete owner doc:',err);showToast('<svg class="ic"><use href="#i-alert"/></svg> Cloud delete failed — data removed locally only','warn');});
+        .catch(err=>{showToast('<svg class="ic"><use href="#i-alert"/></svg> Cloud delete failed — data removed locally only','warn');});
       saveRegistryToCloud(getRegistry(),true);
-      db.collection(col).doc('_pending_owners').set({pending:JSON.stringify(pendingOwners),updatedAt:now},{merge:true}).catch(err=>console.warn('cloud pending_owners sync:',err));
-      db.collection(col).doc('_banned_owners').set({banned:JSON.stringify(banned),updatedAt:now},{merge:true}).catch(err=>console.warn('cloud banned_owners sync:',err));
-      db.collection(col).doc('_reset_requests').set({requests:JSON.stringify(resetReqs),updatedAt:now},{merge:true}).catch(err=>console.warn('cloud reset_requests sync:',err));
-      db.collection(col).doc('_sub_requests').set({requests:JSON.stringify(subReqs),updatedAt:now},{merge:true}).catch(err=>console.warn('cloud sub_requests sync:',err));
+      db.collection(col).doc('_pending_owners').set({pending:JSON.stringify(pendingOwners),updatedAt:now},{merge:true}).catch(()=>{});
+      db.collection(col).doc('_banned_owners').set({banned:JSON.stringify(banned),updatedAt:now},{merge:true}).catch(()=>{});
+      db.collection(col).doc('_reset_requests').set({requests:JSON.stringify(resetReqs),updatedAt:now},{merge:true}).catch(()=>{});
+      db.collection(col).doc('_sub_requests').set({requests:JSON.stringify(subReqs),updatedAt:now},{merge:true}).catch(()=>{});
     }else{
       showToast('<svg class="ic"><use href="#i-alert"/></svg> No cloud connection — data removed locally only','warn');
     }
@@ -4666,7 +4706,7 @@ function _setOwnerDashMode(mode){
   // Tab bar + tabbed sections only for sys-admin; shop-owner gets flat sections
   const tabBar=document.getElementById('sys-tab-bar');
   const sysSecs=document.querySelectorAll('.sys-sec');
-  const shopSecs=['section-owner-settings','section-branches','section-branch-cmp','section-danger-zone'];
+  const shopSecs=['section-owner-settings','section-branch-cmp','section-danger-zone'];
   const sysOnlyPlain=['section-email-settings'];
   if(tabBar)tabBar.style.display=mode==='sys-admin'?'flex':'none';
   if(mode==='sys-admin'){
@@ -4690,16 +4730,16 @@ function _setOwnerDashMode(mode){
   backBtns.forEach(b=>b.style.display=mode==='sys-admin'?'none':'');
 }
 
-let _sysTab='owners',_sysFilter='all';
+const _sysState={tab:'owners',filter:'all'};
 function switchSysTab(tab){
-  _sysTab=tab;
+  _sysState.tab=tab;
   document.querySelectorAll('.sys-tab').forEach(b=>b.classList.remove('active'));
   document.querySelectorAll('.sys-sec').forEach(s=>s.classList.remove('active'));
   const tb=document.getElementById('stab-'+tab);if(tb)tb.classList.add('active');
   const sec=document.getElementById('sys-sec-'+tab);if(sec)sec.classList.add('active');
 }
 function setSysFilter(f){
-  _sysFilter=f;
+  _sysState.filter=f;
   ['all','trial','active','expired','suspended'].forEach(x=>{
     const el=document.getElementById('sf-'+x);if(el)el.classList.toggle('active',x===f);
   });
@@ -4714,6 +4754,10 @@ function extendOwnerSub(u,days){
   r.sub=r.sub||'basic';
   (r.payHistory=r.payHistory||[]).push({date:today,plan:r.sub,until:r.paidUntil,note:`+${days}d extension by system owner`,amount:0});
   saveRegistry(reg);
+  if(S.db){
+    S.db.collection('power_ims5').doc('_global_registry').set({registry:JSON.stringify(reg),updatedAt:new Date().toISOString()},{merge:true})
+      .catch(()=>showToast('<svg class="ic"><use href="#i-alert"/></svg> Cloud save failed — change saved locally only','warn'));
+  }
   showToast(`+${days}d added for ${u} <svg class="ic"><use href="#i-arrow-right"/></svg> until ${r.paidUntil}`,'success');
   renderSystemOwnerDashboard();
 }
@@ -4906,15 +4950,17 @@ function _getOwnerActivity(ns){
 function _renderSysOwnerList(){
   const reg=getRegistry();
   const q=(document.getElementById('sys-owner-search')||{}).value||'';
-  const filter=_sysFilter;
+  const filter=_sysState.filter;
   let owners=Object.keys(reg).filter(u=>reg[u].role==='owner');
+  // Cache sub status once per owner — used for filter, sort, and card rendering
+  const ssCache=Object.fromEntries(owners.map(u=>[u,getSubStatus(reg[u])]));
   if(q){
     const ql=q.toLowerCase();
     owners=owners.filter(u=>{const r=reg[u];return u.toLowerCase().includes(ql)||(r.shopName||'').toLowerCase().includes(ql)||(r.email||'').toLowerCase().includes(ql);});
   }
-  if(filter!=='all') owners=owners.filter(u=>getSubStatus(reg[u]).status===filter);
+  if(filter!=='all') owners=owners.filter(u=>ssCache[u].status===filter);
   owners.sort((a,b)=>{
-    const sa=getSubStatus(reg[a]),sb=getSubStatus(reg[b]);
+    const sa=ssCache[a],sb=ssCache[b];
     const rank={expired:0,suspended:1,trial:2,active:3};
     if(rank[sa.status]!==rank[sb.status])return rank[sa.status]-rank[sb.status];
     return sa.daysLeft-sb.daysLeft;
@@ -4922,14 +4968,12 @@ function _renderSysOwnerList(){
   const body=document.getElementById('user-list-body');if(!body)return;
   if(!owners.length){body.innerHTML=`<div class="sys-empty"><div class="sys-empty-icon">${q||filter!=='all'?'<svg class="ic"><use href="#i-search"/></svg>':'<svg class="ic"><use href="#i-crown"/></svg>'}</div><strong style="color:var(--text2);font-size:14px">${q||filter!=='all'?'No results found':'No owners registered yet'}</strong><span style="font-size:12px">${q||filter!=='all'?'Try a different search or filter.':'Approved registrations will appear here.'}</span></div>`;return;}
   body.innerHTML=owners.map((u,i)=>{
-    const r=reg[u],ss=getSubStatus(r),online=isUserOnline(r);
+    const r=reg[u],ss=ssCache[u],online=isUserOnline(r);
     const userCount=Object.keys(reg).filter(k=>reg[k].ownerId===u&&k!==u).length;
-    const act=_getOwnerActivity(u);
     const urgBorder=ss.daysLeft<=3&&ss.status!=='expired'&&ss.status!=='suspended'?'border-left:3px solid var(--warn);':'';
-    const avatarColor=ss.status==='suspended'?'background:#2D4B8A':ss.status==='expired'?'background:var(--error)':ss.status==='active'?'background:var(--success)':'background:var(--owner)';
-    return`<div class="oc-wrap" style="${urgBorder}animation-delay:${i*.05}s" data-u="${u}">
+    const avatarColor=ss.status==='suspended'?'background:#64748b':ss.status==='expired'?'background:var(--error)':ss.status==='active'?'background:var(--success)':'background:var(--warn)';
+    return`<div class="oc-wrap" style="${urgBorder}animation-delay:${i*.05}s" data-u="${u}" onclick="openManageOwner('${esc(u)}')">
       <div class="oc-top">
-        <input type="checkbox" class="oc-check" ${_bulkSelected.has(u)?'checked':''} onclick="_toggleBulkSelect('${esc(u)}')" title="Select" />
         <div class="oc-avatar" style="${avatarColor}">${u[0].toUpperCase()}</div>
         <div class="oc-main">
           <div class="oc-name">
@@ -4941,52 +4985,95 @@ function _renderSysOwnerList(){
           </div>
           <div class="oc-detail">
             ${r.email?`<span><svg class="ic"><use href="#i-mail"/></svg> ${esc(r.email)}</span>`:''}
-            ${r.phone?`<span><svg class="ic"><use href="#i-phone"/></svg> ${esc(r.phone)}</span>`:''}
             <span><svg class="ic"><use href="#i-users"/></svg> ${userCount} user${userCount!==1?'s':''}</span>
-            ${r.paidUntil?`<span>Until ${r.paidUntil}</span>`:''}
-          </div>
-          <div class="oc-activity">
-            ${r.lastLogin?`<span><svg class="ic"><use href="#i-clock"/></svg> Last login: ${_timeAgo(r.lastLogin)}</span>`:'<span><svg class="ic"><use href="#i-clock"/></svg> Never logged in</span>'}
-            ${r.loginCount?`<span>↗ ${r.loginCount} login${r.loginCount!==1?'s':''}</span>`:''}
+            ${r.paidUntil?`<span><svg class="ic"><use href="#i-calendar"/></svg> Until ${r.paidUntil}</span>`:''}
           </div>
         </div>
-        <div class="oc-actions">
-          <button type="button" class="btn btn-sm" onclick="openSubModal('${esc(u)}')" title="Manage subscription"><svg class="ic"><use href="#i-gem"/></svg></button>
-          <button type="button" class="btn btn-sm" onclick="openForceResetModal('${esc(u)}')" title="Reset password"><svg class="ic"><use href="#i-key"/></svg></button>
-          ${ss.status!=='suspended'
-            ?`<button type="button" class="btn btn-sm btn-danger" onclick="suspendUser('${esc(u)}')" title="Suspend"><svg class="ic"><use href="#i-ban"/></svg></button>`
-            :`<button type="button" class="btn btn-sm btn-success" onclick="unsuspendUser('${esc(u)}')" title="Restore"><svg class="ic"><use href="#i-check-circle"/></svg></button>`}
-          <button type="button" class="btn btn-sm" onclick="deleteOwner('${esc(u)}')" style="color:var(--error)" title="Delete permanently"><svg class="ic"><use href="#i-trash"/></svg></button>
-        </div>
-      </div>
-      <div class="oc-summary-row">
-        <span class="oc-ext-lbl">Data:</span>
-        <span class="oc-sum-stat"><svg class="ic"><use href="#i-package"/></svg> <span class="oc-sum-val">${act.items}</span> items</span>
-        <span class="oc-sum-stat"><svg class="ic"><use href="#i-cart"/></svg> <span class="oc-sum-val">${act.purchases}</span> purchases</span>
-        <span class="oc-sum-stat"><svg class="ic"><use href="#i-money"/></svg> <span class="oc-sum-val">${act.sales}</span> sales</span>
-        ${act.lastChange?`<span class="oc-sum-stat"><svg class="ic"><use href="#i-clock"/></svg> Last change: <span class="oc-sum-val">${_timeAgo(act.lastChange)}</span></span>`:'<span class="oc-sum-stat" style="color:var(--text3);font-style:italic">No data yet</span>'}
-        <span class="oc-sum-stat" style="margin-left:auto"><svg class="ic"><use href="#i-save"/></svg> <span class="oc-sum-val">${act.kb} KB</span></span>
-      </div>
-      <div class="oc-ext-row">
-        <span class="oc-ext-lbl">Quick extend:</span>
-        <button type="button" class="oc-ext-btn" onclick="extendOwnerSub('${esc(u)}',7)">+7 days</button>
-        <button type="button" class="oc-ext-btn" onclick="extendOwnerSub('${esc(u)}',30)">+30 days</button>
-        <button type="button" class="oc-ext-btn" onclick="extendOwnerSub('${esc(u)}',90)">+90 days</button>
-        <button type="button" class="oc-ext-btn" onclick="extendOwnerSub('${esc(u)}',365)">+1 year</button>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text3);flex-shrink:0"><polyline points="9 18 15 12 9 6"/></svg>
       </div>
     </div>`;
   }).join('');
 }
 
-function renderSystemOwnerDashboard(){
-  _setOwnerDashMode('sys-admin');
-  document.getElementById('owner-dash-title').textContent='System Administration';
-  document.getElementById('owner-dash-sub').textContent='Software-level control over all platform owners';
-  const badgeEl=document.getElementById('owner-hero-badge-text');if(badgeEl)badgeEl.textContent='POWER-IMS · System Owner';
+// ── Card builders (#15) ──────────────────────────────────────────────
+function _buildPendingCard(p,i){
+  return`<div class="pc-card" style="animation-delay:${i*.06}s">
+    <div class="pc-top">
+      <div class="pc-avatar" style="background:var(--owner)">${p.username[0].toUpperCase()}</div>
+      <div style="flex:1;min-width:0">
+        <div class="user-name">${esc(p.username)}${p.shopName&&p.shopName!==p.username?` <span style="font-weight:400;font-size:11px;color:var(--text3)">— ${esc(p.shopName)}</span>`:''}</div>
+        <div class="pc-meta">
+          ${p.email?`<span><svg class="ic"><use href="#i-mail"/></svg> ${esc(p.email)}</span>`:''}
+          ${p.phone?`<span><svg class="ic"><use href="#i-phone"/></svg> ${esc(p.phone)}</span>`:''}
+          <span><svg class="ic"><use href="#i-clock"/></svg> ${_timeAgo(p.requestedAt)}</span>
+        </div>
+      </div>
+    </div>
+    <div class="pc-actions">
+      <button type="button" class="btn btn-sm btn-success" onclick="openApprovePaymentModal('${esc(p.username)}')"><svg class="ic"><use href="#i-check-circle"/></svg> Approve</button>
+      <button type="button" class="btn btn-sm btn-danger" onclick="denyOwner('${esc(p.username)}')"><svg class="ic"><use href="#i-x-circle"/></svg> Deny</button>
+    </div>
+  </div>`;
+}
 
-  // ── Stats ──
-  const reg=getRegistry();
-  const owners=Object.keys(reg).filter(u=>reg[u].role==='owner');
+function _buildSubReqCard(q,i){
+  const dur=SUB_DURATIONS[q.plan]||{label:q.plan,icon:'<svg class="ic"><use href="#i-calendar"/></svg>'};
+  const statusColor=q.status==='pending'?'var(--warn)':q.status==='code_ready'?'var(--success)':q.status==='activated'?'var(--p)':'var(--text3)';
+  const statusLabel=q.status==='pending'?'<svg class="ic"><use href="#i-clock"/></svg> Pending':q.status==='code_ready'?'<svg class="ic"><use href="#i-check-circle"/></svg> Code Ready':q.status==='activated'?'<svg class="ic"><use href="#i-gem"/></svg> Activated':'';
+  const codeBox=q.status==='code_ready'?`<div class="gen-code-box">
+    <div style="font-size:10px;color:var(--text3);margin-bottom:4px">Send this code to <strong>${esc(q.username)}</strong></div>
+    <div class="gen-code-val">${q.code}</div>
+    <div style="font-size:10px;color:var(--text3);margin-bottom:8px">Activates until <strong>${q.paidUntil}</strong></div>
+    <button type="button" class="btn btn-sm btn-owner" onclick="copySubCode('${q.code}')"><svg class="ic"><use href="#i-clipboard"/></svg> Copy Code</button>
+  </div>`:'';
+  const activatedInfo=q.status==='activated'?`<div style="font-size:10px;color:var(--p);margin-top:4px">Activated ${(q.activatedAt||'').slice(0,10)} · Until ${q.paidUntil||'—'}</div>`:'';
+  return`<div class="sr-card" style="animation-delay:${i*.04}s">
+    <div class="sr-top">
+      <div class="pc-avatar" style="background:var(--owner)">${q.username[0].toUpperCase()}</div>
+      <div class="sr-info">
+        <div class="user-name">${esc(q.username)}${q.shopName&&q.shopName!==q.username?` <span style="font-size:11px;font-weight:400;color:var(--text3)">— ${esc(q.shopName)}</span>`:''} <span style="font-size:10px;color:${statusColor};font-weight:700">${statusLabel}</span></div>
+        <div class="pc-meta">${dur.icon} ${dur.label} · Requested ${_timeAgo(q.requestedAt)}</div>
+        ${activatedInfo}
+      </div>
+      ${q.status==='pending'?`<button type="button" class="btn btn-sm btn-owner" onclick="generateSubCode('${q.id}')" style="white-space:nowrap;flex-shrink:0"><svg class="ic"><use href="#i-key"/></svg> Generate Code</button>`:''}
+    </div>
+    ${codeBox}
+  </div>`;
+}
+
+function _buildResetCard(r,i){
+  const statusColor=r.status==='pending'?'var(--warn)':r.status==='approved'?'var(--success)':'var(--error)';
+  const statusIcon=r.status==='pending'?'<svg class="ic"><use href="#i-clock"/></svg>':r.status==='approved'?'<svg class="ic"><use href="#i-check-circle"/></svg>':'<svg class="ic"><use href="#i-x-circle"/></svg>';
+  return`<div class="pc-card" style="animation-delay:${i*.06}s;border-left:3px solid ${statusColor}">
+    <div class="pc-top">
+      <div class="pc-avatar" style="background:rgba(239,68,68,.2);color:var(--error);font-size:18px"><svg class="ic"><use href="#i-trash"/></svg></div>
+      <div style="flex:1;min-width:0">
+        <div class="user-name">${esc(r.ownerUsername)} <span style="font-size:10px;color:${statusColor};font-weight:700">${statusIcon} ${r.status.toUpperCase()}</span></div>
+        <div class="pc-meta"><span>Requested ${_timeAgo(r.requestedAt)}</span>${r.respondedAt?`<span>Responded ${_timeAgo(r.respondedAt)}</span>`:''}</div>
+      </div>
+      ${r.status==='pending'?`<div style="display:flex;gap:4px;flex-shrink:0">
+        <button type="button" class="btn btn-sm btn-success" onclick="approveDataReset('${esc(r.requestedAt)}')"><svg class="ic"><use href="#i-check-circle"/></svg> Approve</button>
+        <button type="button" class="btn btn-sm btn-danger" onclick="denyDataReset('${esc(r.requestedAt)}')"><svg class="ic"><use href="#i-x-circle"/></svg> Deny</button>
+      </div>`:''}
+    </div>
+  </div>`;
+}
+
+function _buildBannedCard(b,i){
+  return`<div class="pc-card" style="animation-delay:${i*.06}s;border-left:3px solid var(--error)">
+    <div class="pc-top">
+      <div class="pc-avatar" style="background:rgba(239,68,68,.18);color:var(--error)">${b.username[0].toUpperCase()}</div>
+      <div style="flex:1;min-width:0">
+        <div class="user-name">${esc(b.username)}${b.shopName?` <span style="font-weight:400;font-size:11px;color:var(--text3)">— ${esc(b.shopName)}</span>`:''} <span style="font-size:9px;background:rgba(239,68,68,.15);color:var(--error);padding:1px 7px;border-radius:99px;font-weight:700">BANNED</span></div>
+        <div class="pc-meta">${b.email?`<span><svg class="ic"><use href="#i-mail"/></svg> ${esc(b.email)}</span>`:''}${b.bannedAt?`<span>Banned ${_timeAgo(b.bannedAt)}</span>`:''}</div>
+      </div>
+      <button type="button" class="btn btn-sm btn-success" onclick="restoreOwner('${esc(b.username)}')" style="flex-shrink:0"><svg class="ic"><use href="#i-check-circle"/></svg> Restore</button>
+    </div>
+  </div>`;
+}
+
+// ── Section renderers (#14) ──────────────────────────────────────────
+function _renderSysStats(owners,reg,pendingOwners,bannedOwners,pendingSubReqs,pendingResets){
   const ssList=owners.map(u=>getSubStatus(reg[u]));
   const paidCount=ssList.filter(s=>s.status==='active').length;
   const trialCount=ssList.filter(s=>s.status==='trial').length;
@@ -4994,13 +5081,7 @@ function renderSystemOwnerDashboard(){
   const susCount=ssList.filter(s=>s.status==='suspended').length;
   const expiringSoon=ssList.filter(s=>(s.status==='active'||s.status==='trial')&&s.daysLeft<=5).length;
   const onlineCount=owners.filter(u=>isUserOnline(reg[u])).length;
-  const pendingOwners=_lsGet('ims_pending_owners',[]);
-  const bannedOwners=getBannedOwners();
-  const subReqs=getSubRequests();
-  const pendingSubReqs=subReqs.filter(q=>q.status==='pending').length;
-  const resetReqs=_getResetRequests();
-  const pendingResets=resetReqs.filter(r=>r.status==='pending').length;
-  const _st=(icon,val,lbl,vc='',bc='',delta='')=>`<div class="owner-stat" style="border-left-color:${bc||'var(--border2)'};border-left-width:4px"><div class="stat-icon-box" style="${bc?`background:${bc}20;border-color:${bc}35;color:${bc}`:''}"><span class="stat-icon">${icon}</span></div><div class="stat-body"><div class="stat-val" style="${vc?`color:${vc}`:'color:var(--text)'}">${val}</div><div class="stat-lbl">${lbl}</div>${delta?`<div class="stat-delta ${delta.cls}">${delta.txt}</div>`:''}</div></div>`;
+  const _st=(icon,val,lbl,vc='',bc='')=>`<div class="owner-stat" style="border-left-color:${bc||'var(--border2)'};border-left-width:4px"><div class="stat-icon-box" style="${bc?`background:${bc}20;border-color:${bc}35;color:${bc}`:''}"><span class="stat-icon">${icon}</span></div><div class="stat-body"><div class="stat-val" style="${vc?`color:${vc}`:'color:var(--text)'}">${val}</div><div class="stat-lbl">${lbl}</div></div></div>`;
   document.getElementById('owner-stats').innerHTML=
     _st('<svg class="ic"><use href="#i-crown"/></svg>',owners.length,'Total Owners','','rgba(45,75,138,1)')+
     _st('<svg class="ic"><use href="#i-check-circle"/></svg>',paidCount,'Paid Active','var(--success)','var(--success)')+
@@ -5008,120 +5089,201 @@ function renderSystemOwnerDashboard(){
     _st('<svg class="ic"><use href="#i-circle-green"/></svg>',onlineCount,'Online Now','','rgba(45,75,138,.7)')+
     _st('<svg class="ic"><use href="#i-circle-red"/></svg>',expiredCount+susCount,'Expired / Sus.','var(--error)','var(--error)')+
     (expiringSoon?_st('<svg class="ic"><use href="#i-alert"/></svg>',expiringSoon,'Expiring ≤5d','var(--warn)','var(--warn)'):'');
+  return{paidCount,expiringSoon};
+}
 
-  // ── Tab badges ──
+function _renderSysTabBadges(owners,pendingOwners,bannedOwners,pendingSubReqs,pendingResets){
   const _tb=(id,n,cls='')=>{const el=document.getElementById(id);if(!el)return;el.textContent=n;el.style.display=n>0?'flex':'none';if(cls)el.className='sys-tab-badge '+cls;};
   _tb('stab-owners-badge',owners.length);
   _tb('stab-pending-badge',pendingOwners.length,'tb-warn');
   _tb('stab-subs-badge',pendingSubReqs,'tb-warn');
   _tb('stab-resets-badge',pendingResets,'tb-err');
   _tb('stab-banned-badge',bannedOwners.length,'tb-err');
+}
 
-  // ── Hero quick-strip pills ──
+function _renderSysHeroPills(owners,paidCount,pendingOwners,expiringSoon,pendingSubReqs,pendingResets){
   const qs=document.getElementById('hero-quick-strip');
-  if(qs){
-    const _pill=(icon,txt,cls='')=>`<span class="hero-quick-pill${cls?' '+cls:''}">${icon} ${txt}</span>`;
-    const pills=[
-      _pill('<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>',owners.length+' owners'),
-      paidCount?_pill('<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',paidCount+' paid active','hqp-ok'):'',
-      pendingOwners.length?_pill('<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',pendingOwners.length+' pending approval','hqp-warn'):'',
-      expiringSoon?_pill('<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',expiringSoon+' expiring ≤5d','hqp-warn'):'',
-      (pendingSubReqs+pendingResets)>0?_pill('<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',(pendingSubReqs+pendingResets)+' action required','hqp-err'):'',
-    ].filter(Boolean).join('');
-    qs.innerHTML=pills;
-    qs.style.display=pills?'flex':'none';
-  }
+  if(!qs)return;
+  const _pill=(icon,txt,cls='')=>`<span class="hero-quick-pill${cls?' '+cls:''}">${icon} ${txt}</span>`;
+  const pills=[
+    _pill('<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>',owners.length+' owners'),
+    paidCount?_pill('<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>',paidCount+' paid active','hqp-ok'):'',
+    pendingOwners.length?_pill('<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',pendingOwners.length+' pending approval','hqp-warn'):'',
+    expiringSoon?_pill('<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>',expiringSoon+' expiring ≤5d','hqp-warn'):'',
+    (pendingSubReqs+pendingResets)>0?_pill('<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>',(pendingSubReqs+pendingResets)+' action required','hqp-err'):'',
+  ].filter(Boolean).join('');
+  qs.innerHTML=pills;
+  qs.style.display=pills?'flex':'none';
+}
 
-  // ── Owners list (via shared helper so search/filter work live) ──
-  _renderSysOwnerList();
-
-  // ── Pending ──
+function _renderSysPending(pendingOwners){
   document.getElementById('pending-count').textContent=pendingOwners.length;
-  document.getElementById('pending-user-list').innerHTML=pendingOwners.length?[...pendingOwners].reverse().map((p,i)=>{
-    const ago=_timeAgo(p.requestedAt);
-    return`<div class="pc-card" style="animation-delay:${i*.06}s">
-      <div class="pc-top">
-        <div class="pc-avatar" style="background:var(--owner)">${p.username[0].toUpperCase()}</div>
-        <div style="flex:1;min-width:0">
-          <div class="user-name">${esc(p.username)}${p.shopName&&p.shopName!==p.username?` <span style="font-weight:400;font-size:11px;color:var(--text3)">— ${esc(p.shopName)}</span>`:''}</div>
-          <div class="pc-meta">
-            ${p.email?`<span><svg class="ic"><use href="#i-mail"/></svg> ${esc(p.email)}</span>`:''}
-            ${p.phone?`<span><svg class="ic"><use href="#i-phone"/></svg> ${esc(p.phone)}</span>`:''}
-            <span><svg class="ic"><use href="#i-clock"/></svg> ${ago}</span>
-          </div>
-        </div>
-      </div>
-      <div class="pc-actions">
-        <button type="button" class="btn btn-sm btn-success" onclick="openApprovePaymentModal('${esc(p.username)}')"><svg class="ic"><use href="#i-check-circle"/></svg> Approve</button>
-        <button type="button" class="btn btn-sm btn-danger" onclick="denyOwner('${esc(p.username)}')"><svg class="ic"><use href="#i-x-circle"/></svg> Deny</button>
-      </div>
-    </div>`;
-  }).join(''):`<div class="sys-empty"><div class="sys-empty-icon"><svg class="ic"><use href="#i-sparkle"/></svg></div><strong style="color:var(--text2);font-size:14px">No pending requests</strong><span style="font-size:12px">New registrations awaiting approval will appear here.</span></div>`;
+  document.getElementById('pending-user-list').innerHTML=pendingOwners.length
+    ?[...pendingOwners].reverse().map(_buildPendingCard).join('')
+    :`<div class="sys-empty"><div class="sys-empty-icon"><svg class="ic"><use href="#i-sparkle"/></svg></div><strong style="color:var(--text2);font-size:14px">No pending requests</strong><span style="font-size:12px">New registrations awaiting approval will appear here.</span></div>`;
+}
 
-  // ── Sub requests ──
+function _renderSysSubReqs(subReqs,pendingSubReqs){
   document.getElementById('sub-req-count').textContent=subReqs.length;
-  document.getElementById('sub-req-list').innerHTML=subReqs.length?[...subReqs].reverse().map((q,i)=>{
-    const dur=SUB_DURATIONS[q.plan]||{label:q.plan,icon:'<svg class="ic"><use href="#i-calendar"/></svg>'};
-    const statusColor=q.status==='pending'?'var(--warn)':q.status==='code_ready'?'var(--success)':q.status==='activated'?'var(--p)':'var(--text3)';
-    const statusLabel=q.status==='pending'?'<svg class="ic"><use href="#i-clock"/></svg> Pending':q.status==='code_ready'?'<svg class="ic"><use href="#i-check-circle"/></svg> Code Ready':q.status==='activated'?'<svg class="ic"><use href="#i-gem"/></svg> Activated':'';
-    const codeBox=q.status==='code_ready'?`<div class="gen-code-box">
-      <div style="font-size:10px;color:var(--text3);margin-bottom:4px">Send this code to <strong>${esc(q.username)}</strong></div>
-      <div class="gen-code-val">${q.code}</div>
-      <div style="font-size:10px;color:var(--text3);margin-bottom:8px">Activates until <strong>${q.paidUntil}</strong></div>
-      <button type="button" class="btn btn-sm btn-owner" onclick="copySubCode('${q.code}')"><svg class="ic"><use href="#i-clipboard"/></svg> Copy Code</button>
-    </div>`:'';
-    const activatedInfo=q.status==='activated'?`<div style="font-size:10px;color:var(--p);margin-top:4px">Activated ${(q.activatedAt||'').slice(0,10)} · Until ${q.paidUntil||'—'}</div>`:'';
-    return`<div class="sr-card" style="animation-delay:${i*.04}s">
-      <div class="sr-top">
-        <div class="pc-avatar" style="background:var(--owner)">${q.username[0].toUpperCase()}</div>
-        <div class="sr-info">
-          <div class="user-name">${esc(q.username)}${q.shopName&&q.shopName!==q.username?` <span style="font-size:11px;font-weight:400;color:var(--text3)">— ${esc(q.shopName)}</span>`:''} <span style="font-size:10px;color:${statusColor};font-weight:700">${statusLabel}</span></div>
-          <div class="pc-meta">${dur.icon} ${dur.label} · Requested ${_timeAgo(q.requestedAt)}</div>
-          ${activatedInfo}
-        </div>
-        ${q.status==='pending'?`<button type="button" class="btn btn-sm btn-owner" onclick="generateSubCode('${q.id}')" style="white-space:nowrap;flex-shrink:0"><svg class="ic"><use href="#i-key"/></svg> Generate Code</button>`:''}
-      </div>
-      ${codeBox}
-    </div>`;
-  }).join(''):`<div class="sys-empty"><div class="sys-empty-icon"><svg class="ic"><use href="#i-gem"/></svg></div><strong style="color:var(--text2);font-size:14px">No subscription requests</strong><span style="font-size:12px">Plan upgrade requests from shop owners will appear here.</span></div>`;
+  document.getElementById('sub-req-list').innerHTML=subReqs.length
+    ?[...subReqs].reverse().map(_buildSubReqCard).join('')
+    :`<div class="sys-empty"><div class="sys-empty-icon"><svg class="ic"><use href="#i-gem"/></svg></div><strong style="color:var(--text2);font-size:14px">No subscription requests</strong><span style="font-size:12px">Plan upgrade requests from shop owners will appear here.</span></div>`;
+}
 
-  // ── Reset requests ──
+function _renderSysResets(resetReqs,pendingResets){
   document.getElementById('reset-req-count').textContent=pendingResets;
-  document.getElementById('reset-request-list').innerHTML=resetReqs.length?resetReqs.map((r,i)=>{
-    const statusColor=r.status==='pending'?'var(--warn)':r.status==='approved'?'var(--success)':'var(--error)';
-    const statusIcon=r.status==='pending'?'<svg class="ic"><use href="#i-clock"/></svg>':r.status==='approved'?'<svg class="ic"><use href="#i-check-circle"/></svg>':'<svg class="ic"><use href="#i-x-circle"/></svg>';
-    return`<div class="pc-card" style="animation-delay:${i*.06}s;border-left:3px solid ${statusColor}">
-      <div class="pc-top">
-        <div class="pc-avatar" style="background:rgba(239,68,68,.2);color:var(--error);font-size:18px"><svg class="ic"><use href="#i-trash"/></svg></div>
-        <div style="flex:1;min-width:0">
-          <div class="user-name">${esc(r.ownerUsername)} <span style="font-size:10px;color:${statusColor};font-weight:700">${statusIcon} ${r.status.toUpperCase()}</span></div>
-          <div class="pc-meta"><span>Requested ${_timeAgo(r.requestedAt)}</span>${r.respondedAt?`<span>Responded ${_timeAgo(r.respondedAt)}</span>`:''}</div>
-        </div>
-        ${r.status==='pending'?`<div style="display:flex;gap:4px;flex-shrink:0">
-          <button type="button" class="btn btn-sm btn-success" onclick="approveDataReset('${esc(r.requestedAt)}')"><svg class="ic"><use href="#i-check-circle"/></svg> Approve</button>
-          <button type="button" class="btn btn-sm btn-danger" onclick="denyDataReset('${esc(r.requestedAt)}')"><svg class="ic"><use href="#i-x-circle"/></svg> Deny</button>
-        </div>`:''}
-      </div>
-    </div>`;
-  }).join(''):`<div class="sys-empty"><div class="sys-empty-icon"><svg class="ic"><use href="#i-trash"/></svg></div><strong style="color:var(--text2);font-size:14px">No reset requests</strong><span style="font-size:12px">Data reset requests from shop owners will appear here.</span></div>`;
+  document.getElementById('reset-request-list').innerHTML=resetReqs.length
+    ?resetReqs.map(_buildResetCard).join('')
+    :`<div class="sys-empty"><div class="sys-empty-icon"><svg class="ic"><use href="#i-trash"/></svg></div><strong style="color:var(--text2);font-size:14px">No reset requests</strong><span style="font-size:12px">Data reset requests from shop owners will appear here.</span></div>`;
+}
 
-  // ── Banned ──
+function _renderSysBanned(bannedOwners){
   document.getElementById('banned-count').textContent=bannedOwners.length;
-  document.getElementById('banned-owner-list').innerHTML=bannedOwners.length?bannedOwners.map((b,i)=>`
-    <div class="pc-card" style="animation-delay:${i*.06}s;border-left:3px solid var(--error)">
-      <div class="pc-top">
-        <div class="pc-avatar" style="background:rgba(239,68,68,.18);color:var(--error)">${b.username[0].toUpperCase()}</div>
-        <div style="flex:1;min-width:0">
-          <div class="user-name">${esc(b.username)}${b.shopName?` <span style="font-weight:400;font-size:11px;color:var(--text3)">— ${esc(b.shopName)}</span>`:''} <span style="font-size:9px;background:rgba(239,68,68,.15);color:var(--error);padding:1px 7px;border-radius:99px;font-weight:700">BANNED</span></div>
-          <div class="pc-meta">${b.email?`<span><svg class="ic"><use href="#i-mail"/></svg> ${esc(b.email)}</span>`:''}${b.bannedAt?`<span>Banned ${_timeAgo(b.bannedAt)}</span>`:''}</div>
-        </div>
-        <button type="button" class="btn btn-sm btn-success" onclick="restoreOwner('${esc(b.username)}')" style="flex-shrink:0"><svg class="ic"><use href="#i-check-circle"/></svg> Restore</button>
-      </div>
-    </div>`).join(''):`<div class="sys-empty"><div class="sys-empty-icon"><svg class="ic"><use href="#i-check-circle"/></svg></div><strong style="color:var(--text2);font-size:14px">No banned accounts</strong><span style="font-size:12px">All owners are in good standing.</span></div>`;
+  document.getElementById('banned-owner-list').innerHTML=bannedOwners.length
+    ?bannedOwners.map(_buildBannedCard).join('')
+    :`<div class="sys-empty"><div class="sys-empty-icon"><svg class="ic"><use href="#i-check-circle"/></svg></div><strong style="color:var(--text2);font-size:14px">No banned accounts</strong><span style="font-size:12px">All owners are in good standing.</span></div>`;
+}
 
+// ── Manage Single Owner Panel ─────────────────────────────────────────
+let _mopOwner=null;
+
+function openManageOwner(u){
+  _mopOwner=u;
+  _renderMopContent(u);
+  // hide all main-dashboard content
+  document.querySelectorAll('#sys-tab-bar,.sys-sec,.owner-section,#owner-stats,.owner-stats,#hero-quick-strip,#owner-sub-banner,#owner-sub-progress,#owner-quick-actions').forEach(el=>{
+    if(!el.closest('#manage-owner-panel'))el.style.display='none';
+  });
+  document.getElementById('manage-owner-panel').style.display='';
+  document.getElementById('owner-screen').scrollTop=0;
+}
+
+function closeManageOwner(){
+  _mopOwner=null;
+  document.getElementById('manage-owner-panel').style.display='none';
+  renderSystemOwnerDashboard();
+}
+
+function _renderMopContent(u){
+  const reg=getRegistry();
+  const r=reg[u];
+  if(!r){closeManageOwner();return;}
+  const ss=getSubStatus(r);
+  const online=isUserOnline(r);
+  const act=_getOwnerActivity(u);
+  const users=Object.keys(reg).filter(k=>reg[k].ownerId===u&&k!==u);
+  const isSus=ss.status==='suspended';
+  const avatarBg=isSus?'#64748b':ss.status==='expired'?'var(--error)':ss.status==='active'?'var(--success)':'var(--warn)';
+
+  document.getElementById('mop-content').innerHTML=`
+    <div style="display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--surface2);border-bottom:1px solid var(--border)">
+      <button type="button" onclick="closeManageOwner()" style="display:flex;align-items:center;gap:5px;padding:6px 12px;border:1px solid var(--border);border-radius:8px;background:var(--surface);color:var(--text2);font-size:12px;cursor:pointer;font-family:var(--font)" onmouseover="this.style.background='var(--surface3)'" onmouseout="this.style.background='var(--surface)'"><svg class="ic"><use href="#i-arrow-left"/></svg> All Owners</button>
+      <span style="font-size:13px;font-weight:700;color:var(--text);flex:1">Manage Owner</span>
+      <span class="sub-badge sub-${ss.variant}">${ss.label}</span>
+    </div>
+
+    <div style="padding:18px 18px 14px;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:14px">
+      <div style="width:50px;height:50px;border-radius:13px;background:${avatarBg};display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;color:#fff;flex-shrink:0">${u[0].toUpperCase()}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:15px;font-weight:800;color:var(--text);display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+          ${esc(u)}
+          ${online?'<span style="font-size:9px;background:rgba(16,185,129,.15);color:var(--success);padding:2px 8px;border-radius:99px;font-weight:700">● ONLINE</span>':''}
+          ${r.forcePassReset?'<span class="force-reset-badge"><svg class="ic"><use href="#i-alert"/></svg> Pass Reset</span>':''}
+        </div>
+        ${r.shopName&&r.shopName!==u?`<div style="font-size:12px;color:var(--text2);margin-top:2px">${esc(r.shopName)}</div>`:''}
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:8px;font-size:11.5px;color:var(--text2)">
+          ${r.email?`<span><svg class="ic"><use href="#i-mail"/></svg> ${esc(r.email)}</span>`:''}
+          ${r.phone?`<span><svg class="ic"><use href="#i-phone"/></svg> ${esc(r.phone)}</span>`:''}
+          <span><svg class="ic"><use href="#i-users"/></svg> ${users.length} user${users.length!==1?'s':''}</span>
+          ${r.lastLogin?`<span><svg class="ic"><use href="#i-clock"/></svg> Last login: ${_timeAgo(r.lastLogin)}</span>`:''}
+        </div>
+      </div>
+    </div>
+
+    <div style="padding:12px 18px;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:8px">
+      <div style="display:flex;align-items:center;gap:6px;padding:7px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;font-size:12px"><svg class="ic" style="color:var(--p)"><use href="#i-package"/></svg> <strong>${act.items}</strong>&nbsp;items</div>
+      <div style="display:flex;align-items:center;gap:6px;padding:7px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;font-size:12px"><svg class="ic" style="color:var(--success)"><use href="#i-cart"/></svg> <strong>${act.purchases}</strong>&nbsp;purchases</div>
+      <div style="display:flex;align-items:center;gap:6px;padding:7px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;font-size:12px"><svg class="ic" style="color:var(--warn)"><use href="#i-money"/></svg> <strong>${act.sales}</strong>&nbsp;sales</div>
+      <div style="display:flex;align-items:center;gap:6px;padding:7px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;font-size:12px"><svg class="ic" style="color:var(--text2)"><use href="#i-save"/></svg> <strong>${act.kb}&nbsp;KB</strong></div>
+    </div>
+
+    <div style="padding:14px 18px;border-bottom:1px solid var(--border)">
+      <div style="font-size:11.5px;font-weight:700;color:var(--text2);margin-bottom:10px;display:flex;align-items:center;gap:6px"><svg class="ic"><use href="#i-gem"/></svg> Subscription</div>
+      <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:10px">
+        <span style="font-size:12.5px;color:var(--text2)">Paid until: <strong style="color:var(--text)">${r.paidUntil||'—'}</strong></span>
+        <button type="button" class="btn btn-sm" onclick="openSubModal('${esc(u)}')" style="margin-left:auto"><svg class="ic"><use href="#i-gem"/></svg> Manage Plan</button>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
+        <span style="font-size:11px;color:var(--text3)">Quick extend:</span>
+        <button type="button" class="oc-ext-btn" onclick="extendOwnerSub('${esc(u)}',7);openManageOwner('${esc(u)}')">+7 days</button>
+        <button type="button" class="oc-ext-btn" onclick="extendOwnerSub('${esc(u)}',30);openManageOwner('${esc(u)}')">+30 days</button>
+        <button type="button" class="oc-ext-btn" onclick="extendOwnerSub('${esc(u)}',90);openManageOwner('${esc(u)}')">+90 days</button>
+        <button type="button" class="oc-ext-btn" onclick="extendOwnerSub('${esc(u)}',365);openManageOwner('${esc(u)}')">+1 year</button>
+      </div>
+    </div>
+
+    <div style="padding:14px 18px;border-bottom:1px solid var(--border)">
+      <div style="font-size:11.5px;font-weight:700;color:var(--text2);margin-bottom:10px;display:flex;align-items:center;gap:6px"><svg class="ic"><use href="#i-key"/></svg> Actions</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <button type="button" class="btn btn-sm" onclick="openForceResetModal('${esc(u)}')"><svg class="ic"><use href="#i-key"/></svg> Force Password Reset</button>
+        ${isSus
+          ?`<button type="button" class="btn btn-sm btn-success" onclick="unsuspendUser('${esc(u)}')"><svg class="ic"><use href="#i-check-circle"/></svg> Unsuspend</button>`
+          :`<button type="button" class="btn btn-sm btn-danger" onclick="suspendUser('${esc(u)}')"><svg class="ic"><use href="#i-ban"/></svg> Suspend</button>`}
+        <button type="button" class="btn btn-sm" onclick="deleteOwner('${esc(u)}')" style="color:var(--error);border-color:rgba(239,68,68,.3)"><svg class="ic"><use href="#i-trash"/></svg> Delete Owner</button>
+      </div>
+    </div>
+
+    <div style="padding:14px 18px">
+      <div style="font-size:11.5px;font-weight:700;color:var(--text2);margin-bottom:10px;display:flex;align-items:center;gap:6px"><svg class="ic"><use href="#i-users"/></svg> Users under this owner (${users.length})</div>
+      ${users.length?users.map(uk=>{
+        const ur=reg[uk];
+        return`<div style="display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--border);border-radius:9px;background:var(--surface2);margin-bottom:6px">
+          <div style="width:30px;height:30px;border-radius:8px;background:rgba(45,75,138,.14);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:var(--p);flex-shrink:0">${uk[0].toUpperCase()}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:12.5px;font-weight:700;color:var(--text)">${esc(uk)}</div>
+            <div style="font-size:11px;color:var(--text3)">${ur.role||'user'}${ur.branch?' · '+esc(ur.branch):''}</div>
+          </div>
+          <button type="button" class="btn btn-sm" onclick="openForceResetModal('${esc(uk)}')" title="Reset password"><svg class="ic"><use href="#i-key"/></svg></button>
+        </div>`;
+      }).join(''):`<div style="font-size:12px;color:var(--text3);padding:6px 0">No sub-users yet.</div>`}
+    </div>`;
+}
+
+// ── Orchestrator ─────────────────────────────────────────────────────
+function renderSystemOwnerDashboard(){
+  _setOwnerDashMode('sys-admin');
+  document.getElementById('owner-dash-title').textContent='System Administration';
+  document.getElementById('owner-dash-sub').textContent='Software-level control over all platform owners';
+  const badgeEl=document.getElementById('owner-hero-badge-text');if(badgeEl)badgeEl.textContent='POWER-IMS · System Owner';
+
+  const reg=getRegistry();
+  const owners=Object.keys(reg).filter(u=>reg[u].role==='owner');
+  const pendingOwners=_lsGet('ims_pending_owners',[]);
+  const bannedOwners=getBannedOwners();
+  const subReqs=getSubRequests();
+  const pendingSubReqs=subReqs.filter(q=>q.status==='pending').length;
+  const resetReqs=_getResetRequests();
+  const pendingResets=resetReqs.filter(r=>r.status==='pending').length;
+
+  const{paidCount,expiringSoon}=_renderSysStats(owners,reg,pendingOwners,bannedOwners,pendingSubReqs,pendingResets);
+  _renderSysTabBadges(owners,pendingOwners,bannedOwners,pendingSubReqs,pendingResets);
+  _renderSysHeroPills(owners,paidCount,pendingOwners,expiringSoon,pendingSubReqs,pendingResets);
+  _renderSysOwnerList();
+  _renderSysPending(pendingOwners);
+  _renderSysSubReqs(subReqs,pendingSubReqs);
+  _renderSysResets(resetReqs,pendingResets);
+  _renderSysBanned(bannedOwners);
   updateEmailConfigStatus();
-  // Restore active tab
-  switchSysTab(_sysTab);
+  const liveBadge=document.getElementById('sys-live-badge');
+  if(liveBadge){
+    if(_sysLastSync){
+      liveBadge.className='sys-live-badge show';
+      document.getElementById('sys-live-text').textContent='Live · '+_timeAgo(_sysLastSync);
+    }else{
+      liveBadge.className='sys-live-badge';
+    }
+  }
+  switchSysTab(_sysState.tab);
 }
 
 function exportReportPDF(){
@@ -5279,7 +5441,7 @@ async function approveOwner(username){
   saveRegistry(reg);
   const updated=pending.filter(x=>x.username!==username);
   _lsSet('ims_pending_owners',updated);
-  if(S.db)S.db.collection('power_ims5').doc('_pending_owners').set({pending:JSON.stringify(updated),updatedAt:new Date().toISOString()},{merge:true}).catch(err=>console.error('approve sync:',err));
+  if(S.db)S.db.collection('power_ims5').doc('_pending_owners').set({pending:JSON.stringify(updated),updatedAt:new Date().toISOString()},{merge:true}).catch(()=>{});
   showToast(`<svg class="ic"><use href="#i-check-circle"/></svg> ${p.username} approved — 14-day trial started!`,'success');renderSystemOwnerDashboard();
 }
 function denyOwner(username){
@@ -5293,7 +5455,7 @@ function denyOwner(username){
       const list=_lsGet('ims_pending_owners',[]);
       const updated=list.filter(x=>x.username!==username);
       _lsSet('ims_pending_owners',updated);
-      if(S.db)S.db.collection('power_ims5').doc('_pending_owners').set({pending:JSON.stringify(updated),updatedAt:new Date().toISOString()},{merge:true}).catch(err=>console.warn('pending list cloud sync:',err));
+      if(S.db)S.db.collection('power_ims5').doc('_pending_owners').set({pending:JSON.stringify(updated),updatedAt:new Date().toISOString()},{merge:true}).catch(()=>{});
       showToast(`<svg class="ic"><use href="#i-x-circle"/></svg> ${name} denied — they may re-apply`,'warn');renderSystemOwnerDashboard();
     }
   );
@@ -5367,7 +5529,7 @@ async function confirmApproveOwnerPaid(){
   saveRegistry(reg);
   const updated=pending.filter(x=>x.username!==_apvUsername);
   _lsSet('ims_pending_owners',updated);
-  if(S.db)S.db.collection('power_ims5').doc('_pending_owners').set({pending:JSON.stringify(updated),updatedAt:new Date().toISOString()},{merge:true}).catch(err=>console.error('approve sync:',err));
+  if(S.db)S.db.collection('power_ims5').doc('_pending_owners').set({pending:JSON.stringify(updated),updatedAt:new Date().toISOString()},{merge:true}).catch(()=>{});
   closeModal('approve-payment-modal');
   showToast(`<svg class="ic"><use href="#i-check-circle"/></svg> ${p.username} approved — active until ${paidUntil}!`,'success');
   renderSystemOwnerDashboard();
@@ -5380,13 +5542,13 @@ function confirmApproveOwnerTrial(){
 
 function suspendUser(u){
   customConfirm('Suspend Owner?',`"${u}" will immediately lose access to their account and all users under them will be locked out.`,_SVG.ban,'Suspend',()=>{
-    const reg=getRegistry();if(reg[u])reg[u].status='suspended';saveRegistry(reg);
+    const reg=getRegistry();if(reg[u])reg[u].status='suspended';saveRegistry(reg);saveRegistryToCloud(reg,true);
     showToast(`${u} suspended`,'warn');renderSystemOwnerDashboard();
   });
 }
 function unsuspendUser(u){
   customConfirm('Restore Access?',`"${u}" and their users will regain full access immediately.`,_SVG.check,'Restore',()=>{
-    const reg=getRegistry();if(reg[u])reg[u].status='active';saveRegistry(reg);
+    const reg=getRegistry();if(reg[u])reg[u].status='active';saveRegistry(reg);saveRegistryToCloud(reg,true);
     showToast(`${u} reactivated`,'success');renderSystemOwnerDashboard();
   });
 }
@@ -5440,7 +5602,7 @@ const SUB_REQ_KEY='ims_sub_requests';
 function getSubRequests(){return _lsGet(SUB_REQ_KEY,[]);}
 function saveSubRequests(list){
   _lsSet(SUB_REQ_KEY,list);
-  if(S.db)S.db.collection('power_ims5').doc('_sub_requests').set({requests:JSON.stringify(list),updatedAt:new Date().toISOString()},{merge:true}).catch(err=>console.warn('sub_requests cloud sync:',err));
+  if(S.db)S.db.collection('power_ims5').doc('_sub_requests').set({requests:JSON.stringify(list),updatedAt:new Date().toISOString()},{merge:true}).catch(()=>{});
 }
 
 let _selfSubPlan='monthly';
@@ -5548,12 +5710,23 @@ function cancelSubRequest(reqId){
   showToast('Request cancelled','warn');renderOwnerSubModal();
 }
 
+const _SUB_ACT_KEY='ims_sub_act_attempts';
+const _SUB_ACT_MAX=5;
+const _SUB_ACT_WINDOW=30*60*1000;
+function _subActAttempts(){try{return JSON.parse(localStorage.getItem(_SUB_ACT_KEY)||'{"count":0,"first":0}');}catch(e){return{count:0,first:0};}}
+function _subActRecord(){const d=_subActAttempts();const now=Date.now();if(now-d.first>_SUB_ACT_WINDOW){d.count=1;d.first=now;}else{d.count++;}try{localStorage.setItem(_SUB_ACT_KEY,JSON.stringify(d));}catch(e){}}
 function activateSubCode(){
   hideMsg('sub-act-error');hideMsg('sub-act-success');
+  const actD=_subActAttempts();const now=Date.now();
+  if(actD.count>=_SUB_ACT_MAX&&now-actD.first<_SUB_ACT_WINDOW){
+    const mins=Math.ceil((_SUB_ACT_WINDOW-(now-actD.first))/60000);
+    showMsg('sub-act-error',`Too many attempts. Try again in ${mins} min.`);return;
+  }
   const code=(document.getElementById('sub-act-code')?.value||'').trim();
   if(code.length!==8||!/^\d{8}$/.test(code)){showMsg('sub-act-error','Enter a valid 8-digit code.');return;}
   const reqs=getSubRequests();
   const idx=reqs.findIndex(q=>q.username===S.ownerId&&q.code===code&&q.status==='code_ready');
+  _subActRecord();
   if(idx===-1){showMsg('sub-act-error','Code not found or already used.');return;}
   const req=reqs[idx];
   // Apply paidUntil to registry
@@ -5663,14 +5836,16 @@ function renderOwnerDashboard(){
     const daysLeft=ss.daysLeft||0;
     const usedPct=Math.min(100,Math.max(0,totalDays>0?(1-daysLeft/totalDays)*100:100));
     const barClr=usedPct>80?'var(--error)':usedPct>55?'var(--warn)':'var(--success)';
+    const urgentCls=daysLeft<=5?' sub-prog-urgent':'';
+    const urgentLabel=daysLeft<=5?` <span style="color:var(--error);font-weight:700;font-size:10px">⚠ ${daysLeft}d left!</span>`:'';
     spEl.style.display='';
-    spEl.innerHTML=`<div class="sub-prog-wrap"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;font-weight:600;color:var(--text2)">${ss.label}</span><span style="font-size:10px;color:var(--text3)">${daysLeft}d remaining</span></div><div class="sub-prog-track"><div class="sub-prog-fill" style="width:${usedPct.toFixed(1)}%;background:${barClr}"></div></div><div class="sub-prog-meta"><span>${Math.round(usedPct)}% used</span><span>${ss.status==='trial'?'Trial':'Active'}</span></div></div>`;
+    spEl.innerHTML=`<div class="sub-prog-wrap${urgentCls}"><div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:11px;font-weight:600;color:var(--text2)">${ss.label}${urgentLabel}</span><span style="font-size:10px;color:${daysLeft<=5?'var(--error)':'var(--text3)'}">${daysLeft}d remaining</span></div><div class="sub-prog-track"><div class="sub-prog-fill" style="width:${usedPct.toFixed(1)}%;background:${barClr}"></div></div><div class="sub-prog-meta"><span>${Math.round(usedPct)}% used</span><span>${ss.status==='trial'?'Trial':'Active'}</span></div></div>`;
   }else if(spEl){spEl.style.display='none';}
   // ── Quick-actions bar ──
   const qaEl=document.getElementById('owner-quick-actions');
   if(qaEl){
     qaEl.style.display='';
-    qaEl.innerHTML=`<div class="owner-quick-actions"><button type="button" class="oqa-btn oqa-pri" onclick="openAddUserModal()"><svg class="ic"><use href="#i-user"/></svg> Add User</button><button type="button" class="oqa-btn" onclick="document.getElementById('section-branches')?.scrollIntoView({behavior:'smooth'})"><svg class="ic"><use href="#i-building"/></svg> Add Branch</button><button type="button" class="oqa-btn" onclick="exportXL('PURCHASE')"><svg class="ic"><use href="#i-file"/></svg> Export Data</button><button type="button" class="oqa-btn" onclick="renderOwnerDashboard()"><svg class="ic"><use href="#i-refresh"/></svg> Refresh</button></div>`;
+    qaEl.innerHTML=`<div class="owner-quick-actions"><button type="button" class="oqa-btn oqa-pri" onclick="openAddUserModal()"><svg class="ic"><use href="#i-user"/></svg> Add User</button><button type="button" class="oqa-btn" onclick="document.getElementById('section-branches')?.scrollIntoView({behavior:'smooth'})"><svg class="ic"><use href="#i-building"/></svg> Add Branch</button><button type="button" class="oqa-btn" onclick="renderOwnerDashboard()"><svg class="ic"><use href="#i-refresh"/></svg> Refresh</button></div>`;
   }
   document.getElementById('user-list-body').innerHTML=myUsers.length?myUsers.map((u,i)=>{
     const r=reg[u];
@@ -5716,8 +5891,8 @@ function renderOwnerDashboard(){
   const cmpEl=document.getElementById('owner-branch-cmp');
   const secCmp=document.getElementById('section-branch-cmp');
   if(cmpEl&&secCmp){
+    secCmp.style.display='';
     if(S.branches.length){
-      secCmp.style.display='';
       const _th=s=>`<th style="padding:7px 10px;font-size:10px;font-weight:700;color:var(--text3);text-align:right;border-bottom:1px solid var(--border);white-space:nowrap;background:var(--surface2)">${s}</th>`;
       const _thL=s=>`<th style="padding:7px 10px;font-size:10px;font-weight:700;color:var(--text3);text-align:left;border-bottom:1px solid var(--border);background:var(--surface2)">${s}</th>`;
       const _td=(s,mono=false)=>`<td style="padding:6px 10px;font-size:11.5px;border-top:1px solid var(--border);text-align:right${mono?';font-family:var(--mono)':''}">  ${s}</td>`;
@@ -5731,7 +5906,7 @@ function renderOwnerDashboard(){
       }).join('');
       cmpEl.innerHTML=`<div style="overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius-sm)"><table style="width:100%;border-collapse:collapse"><thead><tr>${_thL('Branch')}${_th('Sales')}${_th('Sales Total')}${_th('Purchases')}${_th('Purch. Total')}</tr></thead><tbody>${brows}</tbody></table></div>`;
     }else{
-      secCmp.style.display='none';
+      cmpEl.innerHTML=`<div style="padding:28px;text-align:center;color:var(--text3)"><svg class="ic" style="width:20px;height:20px;opacity:.35;display:block;margin:0 auto 8px"><use href="#i-bar-chart"/></svg>No branch data yet.</div>`;
     }
   }
 }
@@ -6177,7 +6352,7 @@ function openStoreReceipts(){
           Date: ${(r.date||'').replace('T',' ')} | Branch: ${esc(r.toBranch)}
         </div>
         ${r.status==='pending'?`<div class="receipt-actions">
-          <button type="button" class="apv-btn approve" onclick="approveStoreReceipt('${branch}',${origIdx})"><svg class="ic"><use href="#i-check-circle"/></svg> Approve & Receive</button>
+          <button type="button" class="apv-btn approve" onclick="approveStoreReceipt('${branch}',${origIdx},this)"><svg class="ic"><use href="#i-check-circle"/></svg> Approve & Receive</button>
           <button type="button" class="apv-btn deny" onclick="rejectStoreReceipt('${branch}',${origIdx})"><svg class="ic"><use href="#i-x-circle"/></svg> Reject</button>
           <button type="button" class="btn btn-sm" style="margin-left:4px" onclick='viewStoreReceiptPrint(${esc(JSON.stringify(r))})'><svg class="ic"><use href="#i-printer"/></svg></button>
         </div>`:`<div style="margin-top:8px"><button type="button" class="btn btn-sm" onclick='viewStoreReceiptPrint(${esc(JSON.stringify(r))})'><svg class="ic"><use href="#i-printer"/></svg> Print</button></div>`}
@@ -6188,19 +6363,22 @@ function openStoreReceipts(){
 }
 function closeStoreReceipts(){document.getElementById('store-receipt-overlay').classList.remove('open');}
 
-function approveStoreReceipt(branch,idx){
+function approveStoreReceipt(branch,idx,btnEl){
   const receipts=loadBranchReceipts(branch);
   if(!receipts[idx])return;
-  receipts[idx].status='approved';receipts[idx].approvedBy=S.user;receipts[idx].approvedAt=new Date().toISOString();
-  saveBranchReceipts(branch,receipts);
-  const r=receipts[idx];
-  const _dIdx=S.storeDispatches.findIndex(d=>d.id===r.id);
-  if(_dIdx>=0){S.storeDispatches[_dIdx].status='approved';S.storeDispatches[_dIdx].approvedBy=S.user;S.storeDispatches[_dIdx].approvedAt=r.approvedAt;}
-  S.purchase.push({date:r.date,party:'[STORE DISPATCH]',branch,id:r.itemId,name:r.itemName,desc:r.itemDesc||'',qty:r.qty,uPrice:r.price,payment:'STORE TRANSFER',_by:S.user});
-  S.branchReceipts=loadBranchReceipts(branch);
-  saveUserData();
-  showToast('<svg class="ic"><use href="#i-check-circle"/></svg> Receipt approved! Added to purchase records.','success');
-  updateStoreNotifBadge();openStoreReceipts();
+  if(btnEl){btnEl.disabled=true;btnEl.innerHTML='<svg class="ic dsc-spin on" style="display:inline-block"><use href="#i-refresh"/></svg> Approving…';}
+  setTimeout(()=>{
+    receipts[idx].status='approved';receipts[idx].approvedBy=S.user;receipts[idx].approvedAt=new Date().toISOString();
+    saveBranchReceipts(branch,receipts);
+    const r=receipts[idx];
+    const _dIdx=S.storeDispatches.findIndex(d=>d.id===r.id);
+    if(_dIdx>=0){S.storeDispatches[_dIdx].status='approved';S.storeDispatches[_dIdx].approvedBy=S.user;S.storeDispatches[_dIdx].approvedAt=r.approvedAt;}
+    S.purchase.push({date:r.date,party:'[STORE DISPATCH]',branch,id:r.itemId,name:r.itemName,desc:r.itemDesc||'',qty:r.qty,uPrice:r.price,payment:'STORE TRANSFER',_by:S.user});
+    S.branchReceipts=loadBranchReceipts(branch);
+    saveUserData();
+    showToast('<svg class="ic"><use href="#i-check-circle"/></svg> Receipt approved! Added to purchase records.','success');
+    updateStoreNotifBadge();openStoreReceipts();
+  },50);
 }
 function rejectStoreReceipt(branch,idx){
   const receipts=loadBranchReceipts(branch);
@@ -6542,7 +6720,7 @@ function exportStoreReceiptPDF(){
 function _getResetRequests(){return _lsGet('ims_reset_requests',[]);}
 function _saveResetRequests(reqs){
   _lsSet('ims_reset_requests',reqs);
-  if(S.db)S.db.collection('power_ims5').doc('_reset_requests').set({requests:JSON.stringify(reqs),updatedAt:new Date().toISOString()},{merge:true}).catch(err=>console.warn('reqs cloud sync:',err));
+  if(S.db)S.db.collection('power_ims5').doc('_reset_requests').set({requests:JSON.stringify(reqs),updatedAt:new Date().toISOString()},{merge:true}).catch(()=>{});
 }
 function requestDataReset(){
   customConfirm(
@@ -6590,7 +6768,7 @@ function approveDataReset(reqAt){
           storeItems:empty,storeDispatches:empty,
           beginBal:0,branchBeginBal:'{}',
           resetAt:now,updatedAt:now
-        },{merge:true}).catch(err=>console.warn('data reset cloud push:',err));
+        },{merge:true}).catch(()=>{});
       }
       showToast(`<svg class="ic"><use href="#i-check-circle"/></svg> Data reset approved for ${fresh[fi].ownerUsername}`,'success');
       renderSystemOwnerDashboard();
@@ -6705,12 +6883,35 @@ function showUI(){
   document.getElementById('owner-screen').style.display='none';
   setTimeout(_updateFAB,100);
 }
-function openModal(id){document.getElementById(id).classList.add('open');}
+const FOCUSABLE='a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
+let _modalPrevFocus=null;
+function openModal(id){
+  _modalPrevFocus=document.activeElement;
+  const el=document.getElementById(id);
+  el.classList.add('open');
+  requestAnimationFrame(()=>{
+    const first=el.querySelector(FOCUSABLE);
+    if(first)first.focus();
+    el._trapFn=e=>{
+      if(e.key!=='Tab')return;
+      const nodes=[...el.querySelectorAll(FOCUSABLE)].filter(n=>n.offsetParent!==null);
+      if(!nodes.length)return;
+      const first=nodes[0],last=nodes[nodes.length-1];
+      if(e.shiftKey){if(document.activeElement===first){e.preventDefault();last.focus();}}
+      else{if(document.activeElement===last){e.preventDefault();first.focus();}}
+    };
+    el.addEventListener('keydown',el._trapFn);
+  });
+}
 let _noDraftSave=false;
 function closeModal(id){
   if(id==='add-row-modal'&&!_noDraftSave)_draftSave();
   _noDraftSave=false;
-  document.getElementById(id).classList.remove('open');
+  const el=document.getElementById(id);
+  el.classList.remove('open');
+  if(el._trapFn){el.removeEventListener('keydown',el._trapFn);el._trapFn=null;}
+  if(_modalPrevFocus&&typeof _modalPrevFocus.focus==='function')try{_modalPrevFocus.focus();}catch(e){}
+  _modalPrevFocus=null;
 }
 function _draftKey(){return`ims_draft_${ownerNS()}_${S&&S.tab||''}`;}
 function _draftSave(){
@@ -6949,6 +7150,7 @@ function switchTab(tab){
     S.navHistory.push(S.tab);
   }
   S._historyFromPopState=false;
+  if(tab!==S.tab)S._dispatchPage=1; // reset pagination on tab change
   S.tab=tab;
   const meta=TAB_META[tab]||TAB_META['ITEMS'];
   document.getElementById('page-icon').innerHTML=meta.icon;
@@ -6962,10 +7164,7 @@ function switchTab(tab){
   // Only push a new history entry when the user navigates forward; popstate already moved the pointer
   if(!fromPopState&&typeof history!=='undefined'&&history.pushState){try{history.pushState({tab:tab},'',window.location.href);}catch(e){}}
   window.scrollTo({top:0,behavior:'smooth'});
-  // Section color tint on nav border + glow
-  const _tabRGB={PURCHASE:'129,140,248',SALES:'52,211,153',BALANCE:'192,132,252',EXPENSE:'244,63,94',REPORT:'245,158,11',CREDIT:'129,140,248',ITEMS:'245,158,11',STORE:'52,211,153',STOREBALANCE:'52,211,153',STOREREPORT:'52,211,153'};
-  const _navEl=document.getElementById('bottom-nav');
-  if(_navEl){const _rgb=_tabRGB[tab]||'59,130,246';_navEl.style.borderTopColor=`rgba(${_rgb},.25)`;_navEl.style.boxShadow=`0 -2px 24px rgba(${_rgb},.1)`;}
+  if(navigator.vibrate)navigator.vibrate(6);
   _drPreset='all';updateSuggestions();renderTab();_updateFAB();
 }
 function updateSuggestions(){
@@ -7005,6 +7204,9 @@ function goBack(){
    RENDER TAB
 ═══════════════════════════════════════════════════════ */
 function renderTab(){
+  // Preserve focused search/filter input so re-render doesn't yank the cursor
+  const _prevFocusId=document.activeElement?.id||null;
+  const _prevFocusVal=document.activeElement?.value||null;
   document.getElementById('tab-content').innerHTML='';
   document.getElementById('extras').innerHTML='';
   renderHeadActions();
@@ -7017,6 +7219,22 @@ function renderTab(){
   else if(S.tab==='EXPENSE')renderExpense();
   else if(S.tab==='REPORT')renderReport();
   else if(S.tab==='CREDIT')renderCreditPage();
+  // Restore focus to the same input field if it still exists after render
+  if(_prevFocusId){
+    const el=document.getElementById(_prevFocusId);
+    if(el&&(el.tagName==='INPUT'||el.tagName==='SELECT')){
+      el.focus();
+      if(el.type!=='date'&&_prevFocusVal!==null&&el.value===_prevFocusVal){
+        try{el.setSelectionRange(el.value.length,el.value.length);}catch(e){}
+      }
+    }
+  }
+  // Attach overflow scroll-hint
+  document.querySelectorAll('.table-wrap').forEach(w=>{
+    const t=w.querySelector('table');
+    if(t&&t.scrollWidth>w.clientWidth)w.classList.add('has-overflow');
+    else w.classList.remove('has-overflow');
+  });
 }
 function renderHeadActions(){
   const ha=document.getElementById('head-actions');if(!ha)return;
@@ -7341,7 +7559,7 @@ function buildTxForm(row,mode,isP,idx){
       <div class="field"><label>${isP?L('supplier'):L('customer')} *</label><input id="f-party" list="party-list" value="${esc(d.party||'')}" placeholder="${isP?L('supplierNamePh'):L('customerNamePh')}"></div>
     </div>
     ${_buildPartyChips('f-party')}
-    <div class="field"><label>${L('branch')}</label><select id="f-branch">${branchOpts}</select></div>
+    ${availBranches.length>1?`<div class="field"><label>${L('branch')}</label><select id="f-branch">${branchOpts}</select></div>`:`<input type="hidden" id="f-branch" value="${esc(availBranches[0]||'Main')}">`}
     <div class="field"><label>${L('partNoLbl')}</label><select id="f-id" onchange="autoFillItem()"><option value="">— ${L('selectItem')} —</option>${itemOpts}</select></div>
     <div class="field-row">
       <div class="field"><label>${L('itemNameAutoLbl')}</label><input id="f-name" readonly style="background:var(--surface3);cursor:not-allowed"></div>
@@ -7351,14 +7569,15 @@ function buildTxForm(row,mode,isP,idx){
       <div class="field"><label>${L('dispatchQtyLbl')}</label><input type="number" id="f-qty" value="${qty}" placeholder="0" min="0" step="any" oninput="recalcFormTotals(${isP})"></div>
       <div class="field"><label>${isP?L('unitPurchPriceLbl'):L('unitSellPriceLbl')}</label><input type="number" id="f-price" value="${price}" placeholder="0.00" step="any" oninput="recalcFormTotals(${isP})"></div>
     </div>
+    <div id="f-subtotal-row" style="text-align:right;margin:-6px 0 10px;font-size:11px;font-family:var(--mono);color:var(--text3);min-height:15px"></div>
     <div class="field"><label>${L('method')}</label><select id="f-payment">${pmOpts}</select></div>
     ${!isP?`<div class="field"><label>${L('commissionAmtLbl')}</label><input type="number" id="f-commission" value="${d.commission||''}" placeholder="0.00" step="any" min="0" oninput="recalcFormTotals(false)"></div>`:''}
     <div style="padding:12px;background:var(--surface2);border-radius:var(--radius-sm);margin-bottom:12px;border:1px solid var(--border)">
       <div style="font-size:10.5px;font-weight:700;color:var(--text3);margin-bottom:10px">${L('taxOptions')}</div>
       <div style="display:flex;flex-wrap:wrap;gap:14px">
-        <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:12.5px;font-weight:600"><input type="checkbox" id="f-vat" ${vatChk?'checked':''} style="width:15px;height:15px;accent-color:var(--p)" onchange="recalcFormTotals(${isP})">${L('vat')}</label>
-        ${!isP?`<label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:12.5px;font-weight:600"><input type="checkbox" id="f-wh3" ${wh3Chk?'checked':''} style="width:15px;height:15px;accent-color:var(--p)" onchange="recalcFormTotals(false)">${L('wh3')}</label>
-        <label style="display:flex;align-items:center;gap:7px;cursor:pointer;font-size:12.5px;font-weight:600"><input type="checkbox" id="f-vwh" ${vwhChk?'checked':''} style="width:15px;height:15px;accent-color:var(--p)" onchange="recalcFormTotals(false)">${L('vwh')}</label>`:''}
+        <label class="tx-tog"><input type="checkbox" id="f-vat" ${vatChk?'checked':''} onchange="recalcFormTotals(${isP})"><span class="tx-tog-track"></span><span class="tx-tog-lbl">${L('vat')}</span></label>
+        ${!isP?`<label class="tx-tog"><input type="checkbox" id="f-wh3" ${wh3Chk?'checked':''} onchange="recalcFormTotals(false)"><span class="tx-tog-track"></span><span class="tx-tog-lbl">${L('wh3')}</span></label>
+        <label class="tx-tog"><input type="checkbox" id="f-vwh" ${vwhChk?'checked':''} onchange="recalcFormTotals(false)"><span class="tx-tog-track"></span><span class="tx-tog-lbl">${L('vwh')}</span></label>`:''}
       </div>
       <div id="f-tax-display" style="margin-top:10px;font-family:var(--mono);font-size:11.5px;color:var(--text3)"></div>
     </div>
@@ -7376,14 +7595,24 @@ function buildTxForm(row,mode,isP,idx){
     <div id="f-session-table"></div>
     <div class="modal-error" id="f-error"></div>`;
   if(d.id){const item=S.items.find(m=>m.id===d.id);if(item){document.getElementById('f-name').value=item.name;document.getElementById('f-desc').value=item.desc;}}
+  if(mode==='add'){const lp=sessionStorage.getItem('ims_lp_'+(isP?'P':'S'));const lb=sessionStorage.getItem('ims_lb');const lpm=sessionStorage.getItem('ims_lpm_'+(isP?'P':'S'));if(lp){const el=document.getElementById('f-party');if(el&&!el.value)el.value=lp;}if(lb&&!S.userBranch){const el=document.getElementById('f-branch');if(el&&el.tagName==='SELECT')el.value=lb;}if(lpm){const el=document.getElementById('f-payment');if(el)el.value=lpm;}}
   recalcFormTotals(isP);
+  setTimeout(()=>{document.getElementById('f-party')?.focus();if(typeof _attachTxFormEnhancements==='function')_attachTxFormEnhancements(isP,mode,idx??-1);},50);
 }
 function autoFillItem(){
   const sel=document.getElementById('f-id');if(!sel)return;
   const item=S.items.find(m=>m.id===sel.value);
   document.getElementById('f-name').value=item?item.name:'';
   document.getElementById('f-desc').value=item?item.desc:'';
-  recalcFormTotals(S.tab==='PURCHASE');
+  const isP=S.tab==='PURCHASE';
+  if(item){
+    const party=(document.getElementById('f-party')?.value||'').trim();
+    const arr=isP?S.purchase:S.sales;const pk=isP?'uPrice':'sPrice';
+    const recent=arr.filter(r=>r.id===item.id&&(!party||r.party===party)).sort((a,b)=>(b.date||'').localeCompare(a.date||''))[0];
+    const priceEl=document.getElementById('f-price');
+    if(recent&&recent[pk]&&priceEl&&!priceEl.value){priceEl.value=recent[pk];priceEl.classList.add('_price-filled');setTimeout(()=>priceEl.classList.remove('_price-filled'),1200);}
+  }
+  recalcFormTotals(isP);
 }
 function recalcFormTotals(isP){
   const qty=parseFloat(document.getElementById('f-qty')?.value)||0;
@@ -7400,7 +7629,9 @@ function recalcFormTotals(isP){
     if(commV>0){total-=commV;taxHtml+=`<span>${L('commissionLabel')}: -${fmt(commV)}</span>`;}
   }
   const txd=document.getElementById('f-tax-display');if(txd)txd.innerHTML=taxHtml||`<span>${L('noTaxLabel')}</span>`;
-  const td=document.getElementById('f-total-display');if(td)td.textContent=fmt(total);
+  const sub=document.getElementById('f-subtotal-row');if(sub)sub.textContent=(qty&&price)?qty+' × '+fmt(price)+' = '+fmt(base):'';
+  const td=document.getElementById('f-total-display');
+  if(td){const prev=parseFloat(td.dataset.prev||0);td.textContent=fmt(total);td.dataset.prev=total;td.classList.remove('tf-up','tf-dn');void td.offsetWidth;if(total>prev+0.001)td.classList.add('tf-up');else if(total<prev-0.001)td.classList.add('tf-dn');}
 }
 function submitTxForm(mode,idx,isP,keepOpen=false){
   const date=document.getElementById('f-date').value.trim();
@@ -7740,7 +7971,6 @@ function exportCreditPDF(){
   const activeFilter=S.creditFilter||'outstanding';
   const activeParty=S.creditPartyFilter||'';
   const filterLabel=activeParty?` — ${activeParty}`:` — ${activeFilter.charAt(0).toUpperCase()+activeFilter.slice(1)}`;
-  
   // Header bar
   doc.setFillColor(245,158,11);doc.rect(0,0,pageW,48,'F');
   doc.setTextColor(255,255,255);doc.setFont('helvetica','bold');doc.setFontSize(16);
@@ -7751,39 +7981,31 @@ function exportCreditPDF(){
   doc.text(`Generated: ${new Date().toLocaleString()}   User: ${S.user}`,pageW-24,30,{align:'right'});
   doc.text(`Filter: ${activeFilter}${activeParty?', Party: '+activeParty:''}`,pageW-24,43,{align:'right'});
   doc.setTextColor(0,0,0);
-  
   const headers=[['Date','Type','Party','Branch','Part No.','Item Name','Qty','Description','Amount','Paid','Balance','Status']];
   const rows=[];let totalAmt=0,totalPaid=0,totalBalance=0;
-  
   const calcPT=p=>{const b=(p.qty||0)*(p.uPrice||0);return b+(p.vatOn?b*0.15:0);};
   const calcST=s=>{const b=(s.qty||0)*(s.sPrice||0);return b+(s.vatOn?b*0.15:0)-(s.wh3On?b*0.03:0)-(s.vwhOn?b*0.075:0)-(s.commission||0);};
-  
   const creditSales=S.sales.filter(s=>s.payment==='CREDIT'&&s._cid);
   const creditPurch=S.purchase.filter(p=>p.payment==='CREDIT'&&p._cid);
-  
   const all=[
     ...creditSales.map(r=>({...r,_type:'sale',_amt:calcST(r)})),
     ...creditPurch.map(r=>({...r,_type:'purchase',_amt:calcPT(r)}))
   ].sort(_dateSort);
-  
   const byType=activeFilter==='sales'?all.filter(r=>r._type==='sale'):
                activeFilter==='purchases'?all.filter(r=>r._type==='purchase'):all;
   let filtered=activeFilter==='paid'
     ?byType.filter(r=>getCreditPaidAmt(r._cid)>=r._amt-0.001)
     :byType.filter(r=>getCreditPaidAmt(r._cid)<r._amt-0.001);
   if(activeParty)filtered=filtered.filter(r=>(r.party||'')===activeParty);
-  
   filtered.forEach(row=>{
     const paidAmt=getCreditPaidAmt(row._cid);
     const balance=Math.max(0,row._amt-paidAmt);
     const isFullyPaid=paidAmt>=row._amt-0.001;
     const status=isFullyPaid?'PAID':paidAmt>0.001?'PARTIAL':'OUTSTANDING';
     const typeLabel=row._type==='sale'?'SALE':'PURCHASE';
-    
     totalAmt+=row._amt;
     totalPaid+=paidAmt;
     totalBalance+=balance;
-    
     rows.push([
       (row.date||'').replace('T',' '),
       typeLabel,
@@ -7799,9 +8021,7 @@ function exportCreditPDF(){
       status
     ]);
   });
-  
   rows.push(['','','','','','','TOTAL','',fmtN(totalAmt),fmtN(totalPaid),fmtN(totalBalance),'']);
-  
   doc.autoTable({
     startY:56,head:headers,body:rows,theme:'grid',
     headStyles:{fillColor:[245,158,11],textColor:255,fontStyle:'bold',fontSize:9},
@@ -7823,7 +8043,6 @@ function exportCreditPDF(){
       }
     }
   });
-  
   const filename=`POWER-IMS_Credit${activeParty?'_'+activeParty:''}_${activeFilter}_${new Date().toISOString().slice(0,10)}.pdf`;
   doc.save(filename);
   showToast('Credit Ledger PDF downloaded <svg class="ic"><use href="#i-check"/></svg>','success');
@@ -8008,7 +8227,12 @@ function renderStore(){
       <td class="num td-mono" data-label="Total Value">${fmt(s.qty*(s.cost||0))}</td>
     </tr>`).join('');
 
-  const dispatchRows=[...dispatches].sort(_dateSort).slice(0,30).map(d=>{
+  if(!S._dispatchPage)S._dispatchPage=1;
+  const PAGE=30;
+  const sortedDispatches=[...dispatches].sort(_dateSort);
+  const dispSlice=sortedDispatches.slice(0,S._dispatchPage*PAGE);
+  const hasMore=sortedDispatches.length>dispSlice.length;
+  const dispatchRows=dispSlice.map(d=>{
     const statusBadge=d.status==='pending'?`<span class="td-badge badge-pending"><svg class="ic"><use href="#i-clock"/></svg> Pending</span>`:d.status==='approved'?`<span class="td-badge badge-approved"><svg class="ic"><use href="#i-check-circle"/></svg> Approved</span>`:`<span class="td-badge badge-rejected"><svg class="ic"><use href="#i-x-circle"/></svg> Rejected</span>`;
     return`<tr>
       <td class="td-mono" data-label="Date" style="font-size:11px">${(d.date||'').replace('T',' ')}</td>
@@ -8022,6 +8246,7 @@ function renderStore(){
       <td data-label=""><button type="button" class="btn btn-sm" onclick='viewStoreReceiptPrint(${JSON.stringify(d)})'><svg class="ic"><use href="#i-printer"/></svg></button></td>
     </tr>`;
   }).join('');
+  const loadMoreBtn=hasMore?`<tr><td colspan="9" style="text-align:center;padding:10px"><button type="button" class="btn btn-sm" onclick="S._dispatchPage=(S._dispatchPage||1)+1;renderTab()">Load more (${sortedDispatches.length-dispSlice.length} remaining)</button></td></tr>`:'';
 
   document.getElementById('tab-content').innerHTML=`
     <div style="padding:12px 16px;background:rgba(16,185,129,.08);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px">
@@ -8042,7 +8267,7 @@ function renderStore(){
     <div class="table-wrap">
       <table>
         <thead><tr><th>${L('date')}</th><th>${L('partNo')}</th><th>${L('item')}</th><th class="num">${L('qty')}</th><th class="num">${L('price')}</th><th class="num">${L('total')}</th><th>${L('branch')}</th><th>${L('status')}</th><th></th></tr></thead>
-        <tbody>${dispatchRows}</tbody>
+        <tbody>${dispatchRows}${loadMoreBtn}</tbody>
       </table>
     </div>`:''}`;
 }
@@ -8053,8 +8278,14 @@ function renderStore(){
 // --- Credit partial payment helpers ---
 let _cpCid=null,_cpTotalAmt=0;
 
+let _cpCache=null;
+function _invalidateCpCache(){_cpCache=null;}
 function getCreditPaidAmt(cid){
-  return(S.creditPayments||[]).filter(p=>p.cid===cid).reduce((a,p)=>a+(p.amount||0),0);
+  if(!_cpCache){
+    _cpCache={};
+    (S.creditPayments||[]).forEach(p=>{if(p.cid)_cpCache[p.cid]=(_cpCache[p.cid]||0)+(p.amount||0);});
+  }
+  return _cpCache[cid]||0;
 }
 
 function openCreditPayModal(cid,totalAmt){
@@ -8437,8 +8668,8 @@ function renderReport(){
   </div>`:'';
 
   const datebar=`<div class="date-bar no-print">
-    <label>${L('fromLabel')}: <input type="text" placeholder="dd-mm-yyyy" value="${S.reportRange.from}" onchange="S.reportRange.from=this.value;renderTab()"></label>
-    <label>${L('toLabel')}: <input type="text" placeholder="dd-mm-yyyy" value="${S.reportRange.to}" onchange="S.reportRange.to=this.value;renderTab()"></label>
+    <label>${L('fromLabel')}: <input type="text" placeholder="dd-mm-yyyy" id="rpt-from" value="${S.reportRange.from}" oninput="_debouncedDateFilter()"></label>
+    <label>${L('toLabel')}: <input type="text" placeholder="dd-mm-yyyy" id="rpt-to" value="${S.reportRange.to}" oninput="_debouncedDateFilter()"></label>
     <button type="button" class="btn btn-sm" onclick="S.reportRange.from='';S.reportRange.to='';renderTab()">${L('btnClear')}</button>
     <button type="button" class="btn btn-sm no-print" onclick="exportReportPDF()" style="margin-left:auto;background:var(--error);color:#E4E6F5;border-color:var(--error)"><svg class="ic"><use href="#i-file"/></svg> ${L('exportPdfBtn').replace(/<[^>]+>/g,'').trim()}</button>
     <button type="button" class="btn btn-sm no-print" onclick="printReport()">${L('btnPrint')}</button>
@@ -9058,25 +9289,20 @@ function exportXL(tab,opts={}){
     headers=['Date','Type','Party','Branch','Part No.','Item Name','Description','Qty','Amount','Paid','Balance','Status'];
     const activeFilter=S.creditFilter||'outstanding';
     const activeParty=S.creditPartyFilter||'';
-    
     const calcPT=p=>{const b=(p.qty||0)*(p.uPrice||0);return b+(p.vatOn?b*0.15:0);};
     const calcST=s=>{const b=(s.qty||0)*(s.sPrice||0);return b+(s.vatOn?b*0.15:0)-(s.wh3On?b*0.03:0)-(s.vwhOn?b*0.075:0)-(s.commission||0);};
-    
     const creditSales=S.sales.filter(s=>s.payment==='CREDIT'&&s._cid);
     const creditPurch=S.purchase.filter(p=>p.payment==='CREDIT'&&p._cid);
-    
     const all=[
       ...creditSales.map(r=>({...r,_type:'sale',_amt:calcST(r)})),
       ...creditPurch.map(r=>({...r,_type:'purchase',_amt:calcPT(r)}))
     ].sort(_dateSort);
-    
     const byType=activeFilter==='sales'?all.filter(r=>r._type==='sale'):
                  activeFilter==='purchases'?all.filter(r=>r._type==='purchase'):all;
     let filtered=activeFilter==='paid'
       ?byType.filter(r=>getCreditPaidAmt(r._cid)>=r._amt-0.001)
       :byType.filter(r=>getCreditPaidAmt(r._cid)<r._amt-0.001);
     if(activeParty)filtered=filtered.filter(r=>(r.party||'')===activeParty);
-    
     let totalAmt=0,totalPaid=0,totalBalance=0;
     filtered.forEach(row=>{
       const paidAmt=getCreditPaidAmt(row._cid);
@@ -9084,11 +9310,9 @@ function exportXL(tab,opts={}){
       const isFullyPaid=paidAmt>=row._amt-0.001;
       const status=isFullyPaid?'PAID':paidAmt>0.001?'PARTIAL':'OUTSTANDING';
       const typeLabel=row._type==='sale'?'SALE':'PURCHASE';
-      
       totalAmt+=row._amt;
       totalPaid+=paidAmt;
       totalBalance+=balance;
-      
       data.push([
         (row.date||'').replace('T',' '),
         typeLabel,
@@ -9104,7 +9328,6 @@ function exportXL(tab,opts={}){
         status
       ]);
     });
-    
     data.push(['','','','','','','TOTAL','',totalAmt,totalPaid,totalBalance,'']);
   }
   const ws=XLSX.utils.aoa_to_sheet([headers,...data]);
@@ -9214,7 +9437,6 @@ function onImpFileChange(input){
       document.getElementById('imp-preview').innerHTML=
         `<span style="color:var(--success);font-weight:600">${_impRows.length} row(s) ready to import</span> from ${file.name}`;
     }catch(err){
-      console.error('Import error:',err);
       document.getElementById('imp-preview').textContent='Error reading file: '+err.message;
       _impRows=[];
     }
@@ -9257,7 +9479,6 @@ function _parseImpDate(v){
     }
     return '';
   }catch(e){
-    console.warn('Date parsing error:',v,e);
     return '';
   }
 }
@@ -9337,7 +9558,6 @@ function _parseImpRows(headers,dataRows,sheet){
         const desc=g(r,'Desc')||(found?found.desc:'')||'';
         rows.push({date:_parseImpDate(g(r,'Date')),party:String(party),branch:g(r,'Branch')||S.userBranch||(S.branches&&S.branches[0])||'Main',id:String(id),name:String(name),desc:String(desc),qty,uPrice:parseFloat(g(r,'Unit Price'))||0,payment:_normPayment(g(r,'Payment')),vatOn:false,_by:S.user});
       }catch(e){
-        console.warn('Skipping invalid purchase row:',r,e);
       }
     });
   }else if(sheet==='SALES'){
@@ -9357,7 +9577,6 @@ function _parseImpRows(headers,dataRows,sheet){
         const commission=parseFloat(g(r,'commission'))||0;
         rows.push({date:_parseImpDate(g(r,'Date')),party:String(party),branch:g(r,'Branch')||S.userBranch||(S.branches&&S.branches[0])||'Main',id:String(id),name:String(name),desc:String(desc),qty,sPrice:parseFloat(g(r,'Price'))||0,payment:_normPayment(g(r,'Payment')),vatOn,wh3On,vwhOn,commission,_by:S.user});
       }catch(e){
-        console.warn('Skipping invalid sales row:',r,e);
       }
     });
   }else if(sheet==='EXPENSE'){
@@ -9367,7 +9586,6 @@ function _parseImpRows(headers,dataRows,sheet){
         if(!reason&&!amt)return;
         rows.push({date:_parseImpDate(g(r,'Date')),reason:String(reason),amt,payment:_normPayment(g(r,'Payment')),branch:g(r,'Branch')||S.expenseBranch||S.userBranch||(S.branches&&S.branches[0])||'STORE',_by:S.user});
       }catch(e){
-        console.warn('Skipping invalid expense row:',r,e);
       }
     });
   }else if(sheet==='ITEMS'){
@@ -9378,7 +9596,6 @@ function _parseImpRows(headers,dataRows,sheet){
         if(S.items.some(it=>it.id===String(id)))return;
         rows.push({id:String(id),name:String(name),desc:String(g(r,'Description')),_by:S.user});
       }catch(e){
-        console.warn('Skipping invalid item row:',r,e);
       }
     });
   }else if(sheet==='STORE'){
@@ -9392,7 +9609,6 @@ function _parseImpRows(headers,dataRows,sheet){
         const resolvedDesc=g(r,'Desc')||(found?found.desc:'')||'';
         rows.push({itemId:String(itemId),itemName:String(resolvedName),itemDesc:String(resolvedDesc),supplier:String(g(r,'Supplier')),date:_parseImpDate(g(r,'Date Received')),qty,cost:parseFloat(g(r,'Unit Cost'))||0});
       }catch(e){
-        console.warn('Skipping invalid store row:',r,e);
       }
     });
   }
@@ -9409,7 +9625,6 @@ function _parseImpRows(headers,dataRows,sheet){
     return true;
   });
   }catch(err){
-    console.error('Parse error:',err);
     throw new Error('Failed to parse import data: '+err.message);
   }
 }
@@ -9444,7 +9659,6 @@ function doImport(){
       },50);
     },30);
   }catch(err){
-    console.error('Import error:',err);
     showToast('Import failed: '+err.message,'error');
   }
 }
@@ -9655,7 +9869,7 @@ async function init(){
     // No valid local session — fetch fresh registry before showing the login form
     // so authentication works against up-to-date account data.
     try{await Promise.race([loadRegistryFromCloud(),new Promise(r=>setTimeout(r,4000))]);}catch(e){}
-  }catch(e){console.error('init error',e);}finally{
+  }catch(e){}finally{
     if(!loggedIn){hideLoader();document.getElementById('auth-screen').style.display='flex';setTimeout(()=>{const u=document.getElementById('auth-user');if(u)u.focus();},120);}
   }
 }
@@ -9855,11 +10069,9 @@ document.addEventListener('DOMContentLoaded',init);
               const cid = match[1];
               const amt = parseFloat(match[2]) || 0;
               const paidAmt = getCreditPaidAmt(cid);
-              
               // Determine if this is a sale or purchase from the type badge
               const typeBadge = tr.querySelector('.td-badge');
               const isSale = typeBadge && typeBadge.textContent.includes('SALE');
-              
               if(isSale) {
                 visibleRecTotal += amt;
                 visibleRecCollected += paidAmt;
@@ -10578,14 +10790,14 @@ function _setAutoLogout(mins){
       top: 5px;
       height: 3px;
       border-radius: 3px;
+      background: var(--p);
+      box-shadow: 0 0 7px var(--p-glow);
       pointer-events: none;
       z-index: 5;
       will-change: left, width;
       transition:
         left   .32s cubic-bezier(.34,1.56,.64,1),
-        width  .32s cubic-bezier(.34,1.56,.64,1),
-        background .22s ease,
-        box-shadow .22s ease;
+        width  .32s cubic-bezier(.34,1.56,.64,1);
     }
 
     /* 3. Ripple */
@@ -10614,50 +10826,32 @@ function _setAutoLogout(mins){
   ind.id = 'nav-ind';
   nav.insertBefore(ind, nav.firstChild);
 
-  /* ── Tab → RGB map (matches _tabRGB in switchTab) ── */
-  var RGB = {
-    PURCHASE:'129,140,248', SALES:'52,211,153', BALANCE:'192,132,252',
-    EXPENSE:'244,63,94',    REPORT:'245,158,11', CREDIT:'129,140,248',
-    ITEMS:'245,158,11',    STORE:'52,211,153',  STOREBALANCE:'52,211,153',
-    STOREREPORT:'52,211,153'
-  };
-
-  /* 1. Move the sliding pill to the active tab */
+  /* Move the sliding pill to the active tab */
   function moveInd(tab) {
     var btn = document.getElementById('nav-' + tab);
     if (!btn || getComputedStyle(btn).display === 'none') return;
     var W = 22;
     ind.style.left  = (btn.offsetLeft + (btn.offsetWidth - W) / 2) + 'px';
     ind.style.width = W + 'px';
-    var rgb = RGB[tab] || '91,138,248';
-    ind.style.background  = 'rgb(' + rgb + ')';
-    ind.style.boxShadow   = '0 0 7px rgba(' + rgb + ',.65)';
   }
 
-  /* 2. Strengthen the existing nav border/glow — original sets .25/.1; we use .45/.18 */
-  function setGlow(tab) {
-    var rgb = RGB[tab] || '59,130,246';
-    nav.style.borderTopColor = 'rgba(' + rgb + ',.45)';
-    nav.style.boxShadow      = '0 -4px 28px rgba(' + rgb + ',.18), 0 -1px 0 rgba(' + rgb + ',.25)';
-  }
-
-  /* Patch switchTab — runs after original so glow overrides the weaker original values */
+  /* Patch switchTab */
   var _origST = window.switchTab;
   window.switchTab = function(tab) {
     _origST(tab);
-    requestAnimationFrame(function() { moveInd(tab); setGlow(tab); });
+    requestAnimationFrame(function() { moveInd(tab); });
   };
 
   /* Patch showUI — position indicator once nav becomes visible */
   var _origSUI = window.showUI;
   if (_origSUI) window.showUI = function() {
     _origSUI();
-    setTimeout(function() { if (S && S.tab) { moveInd(S.tab); setGlow(S.tab); } }, 60);
+    setTimeout(function() { if (S && S.tab) { moveInd(S.tab); } }, 60);
   };
 
   /* Also handle already-visible nav (e.g. hot-reload / direct open) */
   if (getComputedStyle(nav).display !== 'none') {
-    setTimeout(function() { if (typeof S !== 'undefined' && S && S.tab) { moveInd(S.tab); setGlow(S.tab); } }, 80);
+    setTimeout(function() { if (typeof S !== 'undefined' && S && S.tab) { moveInd(S.tab); } }, 80);
   }
 
   /* 3. Ripple on tap */
@@ -10888,6 +11082,768 @@ function _setAutoLogout(mins){
       if(fn) holdConfirm(btn, fn, 1500);
     });
   }, 300);
+})();
+</script>
+
+<script>
+/* ── Improvement bundle ──────────────────────────────────────────────────── */
+(function(){
+
+  /* 1. Debounce helper + date-range filter debounce */
+  function _debounce(fn,ms){var t;return function(){clearTimeout(t);t=setTimeout(fn,ms);};}
+  window._debouncedDateFilter=_debounce(function(){
+    var f=document.getElementById('rpt-from'),t=document.getElementById('rpt-to');
+    if(f)S.reportRange.from=f.value;
+    if(t)S.reportRange.to=t.value;
+    if(typeof renderTab==='function')renderTab();
+  },380);
+
+  /* 2. visualViewport resize — keep open mobile modals above keyboard */
+  if(window.visualViewport){
+    var _vvFn=_debounce(function(){
+      var kbH=window.innerHeight-window.visualViewport.height;
+      document.querySelectorAll('.modal-overlay.open .modal-box,.modal-overlay.open .modal-card').forEach(function(box){
+        box.style.marginBottom=kbH>60?kbH+'px':'';
+      });
+    },60);
+    window.visualViewport.addEventListener('resize',_vvFn);
+  }
+
+  /* 3. Offline queue counter on sync-ring tooltip */
+  window._updateOfflineQueueBadge=function(){
+    var r=document.getElementById('sync-ring');if(!r)return;
+    if(typeof S_pendingSync!=='undefined'&&S_pendingSync){
+      r.title='Changes pending sync…';
+    }else{
+      r.title='Synced';
+    }
+  };
+  // Hook into online/offline events to update badge
+  window.addEventListener('online',function(){if(typeof syncToCloud==='function')syncToCloud();});
+  window.addEventListener('offline',function(){var r=document.getElementById('sync-ring');if(r)r.title='Offline — changes saved locally';});
+
+  /* 4. Data-change audit log — lightweight hook on saveUserData */
+  var _auditTypes={purchase:'Purchase',sales:'Sale',expense:'Expense',storeItems:'Store',items:'Items'};
+  var _auditCounts={};
+  var _origSaveUD=window.saveUserData;
+  if(_origSaveUD){
+    window.saveUserData=function(){
+      if(typeof S!=='undefined'&&S.user){
+        var now=new Date().toISOString();
+        var entry={t:now,u:S.user,tab:S&&S.tab||'?'};
+        if(!S.permAuditLog)S.permAuditLog=[];
+        // Only log if data changed (compare quick length snapshot)
+        var sig=[
+          (S.purchase||[]).length,(S.sales||[]).length,
+          (S.expense||[]).length,(S.items||[]).length,
+          (S.storeItems||[]).length
+        ].join(',');
+        if(sig!==_auditCounts._lastSig){
+          _auditCounts._lastSig=sig;
+          S.permAuditLog.push({...entry,action:'data-save'});
+          if(S.permAuditLog.length>500)S.permAuditLog=S.permAuditLog.slice(-500);
+        }
+      }
+      _origSaveUD.apply(this,arguments);
+    };
+  }
+
+  /* 5. Table overflow scroll-hint on window resize */
+  window.addEventListener('resize',_debounce(function(){
+    document.querySelectorAll('.table-wrap').forEach(function(w){
+      var t=w.querySelector('table');
+      if(t&&t.scrollWidth>w.clientWidth)w.classList.add('has-overflow');
+      else w.classList.remove('has-overflow');
+    });
+  },150));
+
+  /* 6. Approval panel landscape CSS fix */
+  var _apvStyle=document.createElement('style');
+  _apvStyle.textContent=
+    '@media(max-height:480px) and (orientation:landscape){'+
+    '.approval-panel,.approval-overlay .modal-box{max-height:95dvh!important}'+
+    '}';
+  document.head.appendChild(_apvStyle);
+
+})();
+</script>
+
+<script>
+// ═══ NAV ENHANCEMENTS (1–7) ════════════════════════════════════════════════
+(function(){
+
+  /* ── CSS injection ── */
+  var s = document.createElement('style');
+  s.textContent = [
+    // 1. Sliding indicator bar at top edge
+    '#nav-indicator{position:absolute;top:0;height:3px;border-radius:0 0 3px 3px;pointer-events:none;z-index:10;background:var(--tab-color,var(--p));transition:left .28s cubic-bezier(.34,1.56,.64,1),width .28s cubic-bezier(.34,1.56,.64,1),background .22s}',
+
+    // 2. Hide labels on inactive, show on active (override earlier .45 rule)
+    '.nav-item .ni-label{opacity:0!important;transition:opacity .2s,color .18s!important}',
+    '.nav-item.active .ni-label{opacity:1!important}',
+
+    // 3. Semi-filled icon on active tab (thicker stroke + faint fill)
+    '#bottom-nav .nav-item.active svg{stroke-width:2.2;fill:currentColor;fill-opacity:.1}',
+
+    // 4. Ripple — clip inside bubble, keyframe
+    '.ni-bubble{overflow:hidden}',
+    '@keyframes _nr{to{transform:scale(2.5);opacity:0}}',
+    '._nr{position:absolute;border-radius:50%;background:currentColor;opacity:.22;pointer-events:none;transform:scale(0);animation:_nr .45s ease-out forwards}',
+
+    // 5. Single accent color for all active tabs
+    '#bottom-nav .nav-item.active{color:var(--p)!important}',
+    '#bottom-nav .nav-item.active .ni-bubble{background:var(--p-glass)!important;box-shadow:0 2px 16px var(--p-glow)!important}',
+
+    // 6. Credit badge ring pulse
+    '@keyframes _br{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.6)}60%{box-shadow:0 0 0 6px rgba(239,68,68,0)}}',
+    '.nav-badge.ring-pulse{animation:_br 2s ease infinite!important}',
+
+    // 7. Long-press tooltip
+    '._ntip{position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) scale(.88);background:var(--surface);border:1px solid var(--border2);border-radius:8px;padding:5px 11px;font-size:11px;font-weight:600;color:var(--text);white-space:nowrap;pointer-events:none;z-index:901;opacity:0;box-shadow:0 4px 18px rgba(0,0,0,.22);transition:opacity .15s,transform .15s}',
+    '._ntip.on{opacity:1;transform:translateX(-50%) scale(1)}',
+    '._ntip::after{content:"";position:absolute;top:100%;left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:var(--border2)}',
+  ].join('');
+  document.head.appendChild(s);
+
+
+  /* ── 1. Inject sliding indicator element ── */
+  var nav = document.getElementById('bottom-nav');
+  if(nav && !document.getElementById('nav-indicator')){
+    var ind = document.createElement('div'); ind.id = 'nav-indicator';
+    nav.insertBefore(ind, nav.firstChild);
+  }
+
+  /* ── Position indicator ── */
+  function _applyTab(tab){
+    var navEl = document.getElementById('bottom-nav');
+    var indEl = document.getElementById('nav-indicator');
+    if(!navEl || navEl.style.display === 'none') return;
+    if(!indEl) return;
+    var ab = navEl.querySelector('.nav-item.active');
+    if(!ab){ indEl.style.width = '0'; return; }
+    var nr = navEl.getBoundingClientRect(), br = ab.getBoundingClientRect();
+    var pw = Math.min(br.width * 0.72, 52);
+    indEl.style.left  = (br.left - nr.left + (br.width - pw) / 2) + 'px';
+    indEl.style.width = pw + 'px';
+  }
+
+  /* ── Patch switchTab to call _applyTab after DOM settles ── */
+  var _oST = window.switchTab;
+  if(_oST) window.switchTab = function(tab, fp){
+    _oST.apply(this, arguments);
+    requestAnimationFrame(function(){ _applyTab(tab); });
+  };
+
+  /* ── 4. Ripple + haptic on nav tap ── */
+  if(nav) nav.addEventListener('click', function(e){
+    var btn = e.target.closest('.nav-item');
+    if(!btn) return;
+    if(navigator.vibrate) navigator.vibrate(8);
+    var bub = btn.querySelector('.ni-bubble') || btn;
+    var rct = bub.getBoundingClientRect();
+    var sz  = Math.max(rct.width, rct.height);
+    var r   = document.createElement('span'); r.className = '_nr';
+    r.style.cssText = 'width:'+sz+'px;height:'+sz+'px;top:'+(e.clientY-rct.top-sz/2)+'px;left:'+(e.clientX-rct.left-sz/2)+'px';
+    bub.appendChild(r);
+    r.addEventListener('animationend', function(){ r.remove(); });
+  }, true);
+
+  /* ── 6. Badge ring pulse — patch updateNotifBadge ── */
+  var _oBdg = window.updateNotifBadge;
+  if(_oBdg) window.updateNotifBadge = function(){
+    _oBdg.apply(this, arguments);
+    var b = document.getElementById('nav-credit-badge');
+    if(b) b.classList.toggle('ring-pulse', b.style.display !== 'none');
+  };
+
+  /* ── 7. Long-press tooltip ── */
+  var _tTm = null, _tEl = null;
+  function _htip(){ clearTimeout(_tTm); if(_tEl){ _tEl.classList.remove('on'); _tEl = null; } }
+  if(nav){
+    nav.addEventListener('pointerdown', function(e){
+      var btn = e.target.closest('.nav-item[data-tab]');
+      if(!btn) return;
+      var tip = btn.querySelector('._ntip');
+      if(!tip){
+        var lbl = btn.querySelector('.ni-label');
+        if(!lbl || !lbl.textContent.trim()) return;
+        tip = document.createElement('span'); tip.className = '_ntip';
+        tip.textContent = lbl.textContent.trim();
+        btn.appendChild(tip);
+      }
+      _htip();
+      _tTm = setTimeout(function(){ _tEl = tip; tip.classList.add('on'); }, 420);
+    });
+    ['pointerup','pointerleave','pointercancel','click'].forEach(function(ev){
+      nav.addEventListener(ev, _htip);
+    });
+  }
+
+  /* ── Re-align indicator on resize ── */
+  window.addEventListener('resize', function(){
+    if(typeof S !== 'undefined' && S && S.tab) _applyTab(S.tab);
+  });
+
+  /* ── Init on current tab after login ── */
+  setTimeout(function(){
+    if(typeof S !== 'undefined' && S && S.tab) _applyTab(S.tab);
+  }, 150);
+
+})();
+</script>
+<script>
+// ═══ FORM ENHANCEMENTS (1–8) ════════════════════════════════════════════════
+(function(){
+  var s=document.createElement('style');
+  s.textContent=[
+    // 2. Tax toggle switches
+    '.tx-tog{display:flex;align-items:center;gap:9px;cursor:pointer;user-select:none}',
+    '.tx-tog input{position:absolute;opacity:0;width:0;height:0;pointer-events:none}',
+    '.tx-tog-track{width:38px;height:21px;border-radius:11px;background:var(--border2);position:relative;transition:background .2s;flex-shrink:0}',
+    '.tx-tog-track::after{content:"";position:absolute;top:3px;left:3px;width:15px;height:15px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 4px rgba(0,0,0,.25)}',
+    '.tx-tog input:checked+.tx-tog-track{background:var(--p)}',
+    '.tx-tog input:checked+.tx-tog-track::after{left:20px}',
+    '.tx-tog-lbl{font-size:12.5px;font-weight:600;color:var(--text);transition:color .2s}',
+    '.tx-tog input:checked+.tx-tog-track+.tx-tog-lbl{color:var(--p)}',
+    // 7. Inline field validation
+    '.field-invalid{border-color:var(--error)!important;box-shadow:0 0 0 3px rgba(239,68,68,.1)!important}',
+    '.f-inline-err{font-size:10px;color:var(--error);margin-top:3px;display:none}',
+    '.f-inline-err.show{display:block}',
+    // 8. Total flash animations
+    '@keyframes _tfUp{0%{color:var(--success);transform:scale(1.06)}100%{color:var(--p);transform:none}}',
+    '@keyframes _tfDn{0%{color:var(--error);transform:scale(1.06)}100%{color:var(--p);transform:none}}',
+    '.tf-up{animation:_tfUp .4s ease forwards}',
+    '.tf-dn{animation:_tfDn .4s ease forwards}',
+    // 1. Price pre-fill flash
+    '@keyframes _pfFill{0%{background:rgba(52,211,153,.2)}100%{background:transparent}}',
+    '._price-filled{animation:_pfFill 1.2s ease forwards}',
+  ].join('');
+  document.head.appendChild(s);
+
+  /* ── 4+7. Keyboard chain + inline validation ── */
+  window._attachTxFormEnhancements=function(isP,mode,idx){
+    var partyEl=document.getElementById('f-party');
+    if(partyEl)partyEl.addEventListener('change',function(){if(document.getElementById('f-id')?.value&&typeof autoFillItem==='function')autoFillItem();});
+    var bodyEl=document.getElementById(mode==='add'?'add-form-body':'edit-form-body');
+    if(bodyEl)bodyEl.addEventListener('keydown',function(e){
+      if(e.key!=='Enter'||document.activeElement?.tagName==='BUTTON')return;
+      e.preventDefault();
+      if(e.shiftKey&&mode==='add'){if(typeof submitTxForm==='function')submitTxForm('add',-1,isP,true);}
+      else{if(typeof submitTxForm==='function')submitTxForm(mode,idx,isP);}
+    });
+    var rules=[
+      {id:'f-party',msg:'Name is required'},
+      {id:'f-qty',  msg:'Qty must be > 0',   check:function(v){return parseFloat(v)>0;}},
+      {id:'f-price',msg:'Price must be > 0', check:function(v){return parseFloat(v)>0;}},
+    ];
+    rules.forEach(function(rule){
+      var el=document.getElementById(rule.id);if(!el)return;
+      var err=el.parentNode.querySelector('.f-inline-err');
+      if(!err){err=document.createElement('div');err.className='f-inline-err';el.parentNode.appendChild(err);}
+      el.addEventListener('blur',function(){
+        var bad=rule.check?!rule.check(el.value.trim()):!el.value.trim();
+        el.classList.toggle('field-invalid',bad);
+        err.textContent=bad?rule.msg:'';err.classList.toggle('show',bad);
+      });
+    });
+  };
+
+  /* ── 5. Save last-used defaults on submit ── */
+  var _oST=window.submitTxForm;
+  if(_oST)window.submitTxForm=function(mode,idx,isP,keepOpen){
+    var party=document.getElementById('f-party')?.value?.trim();
+    var branch=document.getElementById('f-branch')?.value;
+    var payment=document.getElementById('f-payment')?.value;
+    if(party)  sessionStorage.setItem('ims_lp_'+(isP?'P':'S'),party);
+    if(branch) sessionStorage.setItem('ims_lb',branch);
+    if(payment)sessionStorage.setItem('ims_lpm_'+(isP?'P':'S'),payment);
+    return _oST.apply(this,arguments);
+  };
+})();
+</script>
+
+<script>
+// ═══ LOGIN + SYS-ADMIN ENHANCEMENTS (1–12) ═════════════════════════════════
+(function(){
+
+  /* ── CSS ── */
+  var s=document.createElement('style');
+  s.textContent=
+    /* 1. Login loader spinner */
+    '@keyframes _ldsp{to{transform:rotate(360deg)}}'+
+    '.auth-loading .auth-submit-btn{pointer-events:none;opacity:.7}'+
+    '.auth-loading .auth-submit-btn::after{content:"";display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:_ldsp .7s linear infinite;margin-left:8px;vertical-align:-3px}'+
+
+    /* 2. Caps Lock warning */
+    '._caps-warn{display:none;align-items:center;gap:5px;font-size:11px;color:var(--warn);margin-top:4px;padding:4px 8px;background:rgba(245,158,11,.08);border-radius:6px}'+
+    '._caps-warn.show{display:flex}'+
+    '._caps-warn svg{width:13px;height:13px;flex-shrink:0}'+
+
+    /* 3. Shake on bad login */
+    '@keyframes _shk{0%,100%{transform:translateX(0)}20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}'+
+    '.auth-shake{animation:_shk .35s ease}'+
+
+    /* 6. Tab slide transitions */
+    '@keyframes _slR{from{opacity:0;transform:translateX(22px)}to{opacity:1;transform:translateX(0)}}'+
+    '@keyframes _slL{from{opacity:0;transform:translateX(-22px)}to{opacity:1;transform:translateX(0)}}'+
+    '._slide-r{animation:_slR .22s ease}'+
+    '._slide-l{animation:_slL .22s ease}'+
+
+    /* 7. Stats summary strip */
+    '#_sstrip{display:flex;gap:8px;flex-wrap:wrap;padding:10px 16px 2px;margin-bottom:2px}'+
+    '._spill{display:inline-flex;align-items:center;gap:5px;padding:5px 11px 5px 9px;border-radius:99px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid transparent;transition:opacity .15s,border-color .15s;background:var(--card);color:var(--text2)}'+
+    '._spill:hover{opacity:.85}'+
+    '._spill._sp-active{border-color:var(--success);color:var(--success)}'+
+    '._spill._sp-trial{border-color:var(--warn);color:var(--warn)}'+
+    '._spill._sp-expired{border-color:var(--error);color:var(--error)}'+
+    '._spill._sp-suspended{border-color:#94a3b8;color:#94a3b8}'+
+    '._spill._sp-all{border-color:var(--p);color:var(--p)}'+
+    '._sstrip-lbl{font-size:10px;text-transform:uppercase;letter-spacing:.06em;color:var(--text3);padding:5px 4px 0;font-weight:700}'+
+
+    /* 9. Search clear button */
+    '._srw{position:relative;display:flex;align-items:center;flex:1}'+
+    '._srw input{flex:1;width:100%}'+
+    '._sclr{position:absolute;right:6px;background:none;border:none;cursor:pointer;color:var(--text3);padding:2px 4px;font-size:16px;line-height:1;border-radius:4px;display:none}'+
+    '._sclr:hover{color:var(--text1)}'+
+    '._srw input:not(:placeholder-shown) ~ ._sclr{display:block}'+
+
+    /* 10. Sort control */
+    '._srt{background:var(--input);border:1px solid var(--border);color:var(--text1);border-radius:8px;padding:5px 8px;font-size:12px;cursor:pointer;min-width:110px}'+
+
+    /* 11. Empty state in list sections */
+    '._semp{text-align:center;padding:24px 16px;color:var(--text3);font-size:13px}'+
+    '._semp svg{width:28px;height:28px;opacity:.3;display:block;margin:0 auto 8px}'+
+
+    /* Loading state for auth-card */
+    '.auth-card-loading{pointer-events:none;opacity:.7}';
+  document.head.appendChild(s);
+
+  /* ── 2. Caps Lock warning ── */
+  function _initCaps(){
+    var pass=document.getElementById('auth-pass');if(!pass)return;
+    if(pass._capsInit)return;pass._capsInit=true;
+    var warn=document.createElement('div');
+    warn.className='_caps-warn';
+    warn.innerHTML='<svg class="ic"><use href="#i-alert"/></svg>Caps Lock is on';
+    pass.parentNode.insertBefore(warn,pass.nextSibling);
+    function check(e){warn.classList.toggle('show',e.getModifierState&&e.getModifierState('CapsLock'));}
+    pass.addEventListener('keyup',check);
+    pass.addEventListener('focus',check);
+  }
+
+  /* ── 3. Remember username ── */
+  function _initRemember(){
+    var u=document.getElementById('auth-user');
+    if(u&&!u.value){var saved=localStorage.getItem('ims_last_user');if(saved)u.value=saved;}
+    var _oLogin=window.doLogin;
+    if(_oLogin&&!window._loginPatched){
+      window._loginPatched=true;
+      window.doLogin=function(){
+        var u2=document.getElementById('auth-user');
+        if(u2&&u2.value.trim())localStorage.setItem('ims_last_user',u2.value.trim());
+        return _oLogin.apply(this,arguments);
+      };
+    }
+  }
+
+  /* ── 4. Shake on error + loading state ── */
+  function _initShake(){
+    var errEl=document.getElementById('auth-error');
+    var card=document.querySelector('.auth-card');
+    if(!errEl||!card||errEl._shakeInit)return;
+    errEl._shakeInit=true;
+    new MutationObserver(function(){
+      if(errEl.textContent.trim()){
+        card.classList.remove('auth-shake');
+        void card.offsetWidth;
+        card.classList.add('auth-shake');
+        card.addEventListener('animationend',function h(){card.classList.remove('auth-shake');card.removeEventListener('animationend',h);});
+      }
+    }).observe(errEl,{childList:true,subtree:true,characterData:true});
+  }
+
+  /* ── 1. Loading state on submit ── */
+  function _initLoading(){
+    var form=document.querySelector('.auth-form');
+    if(!form||form._loadInit)return;
+    form._loadInit=true;
+    var _oSA=window.submitAuth;
+    if(_oSA&&!window._authLoadPatched){
+      window._authLoadPatched=true;
+      window.submitAuth=function(){
+        var card=document.querySelector('.auth-card');
+        if(card)card.classList.add('auth-card-loading');
+        var r=_oSA.apply(this,arguments);
+        setTimeout(function(){if(card)card.classList.remove('auth-card-loading');},1500);
+        return r;
+      };
+    }
+  }
+
+  /* ── 5. Enter to submit on auth fields ── */
+  function _initEnter(){
+    var ids=['auth-user','auth-pass','auth-confirm','auth-shopname','auth-phone','auth-admin-target'];
+    ids.forEach(function(id){
+      var el=document.getElementById(id);
+      if(el&&!el._enterInit){
+        el._enterInit=true;
+        el.addEventListener('keydown',function(e){
+          if(e.key==='Enter'){e.preventDefault();if(typeof submitAuth==='function')submitAuth();}
+        });
+      }
+    });
+  }
+
+  /* ── 6. Tab slide transition ── */
+  function _initTabSlide(){
+    var lastIdx=-1;
+    var tabs=document.querySelectorAll('.auth-tab-btn');
+    tabs.forEach(function(btn,i){
+      btn.addEventListener('click',function(){
+        var body=document.querySelector('.auth-body');
+        if(!body)return;
+        var dir=i>lastIdx?'_slide-r':'_slide-l';
+        lastIdx=i;
+        body.classList.remove('_slide-r','_slide-l');
+        void body.offsetWidth;
+        body.classList.add(dir);
+        body.addEventListener('animationend',function h(){body.classList.remove('_slide-r','_slide-l');body.removeEventListener('animationend',h);});
+      },true);
+    });
+  }
+
+  /* ── 7. Stats summary strip + 8. color-coded avatars are handled by avatar edit above ── */
+  function _updateStrip(){
+    var strip=document.getElementById('_sstrip');if(!strip)return;
+    try{
+      var reg=JSON.parse(localStorage.getItem('ims_registry')||'{}');
+      var counts={all:0,active:0,trial:0,expired:0,suspended:0};
+      Object.keys(reg).forEach(function(u){
+        var r=reg[u];if(!r||r.role!=='owner')return;
+        counts.all++;
+        var st=r.subscription&&r.subscription.status?r.subscription.status:'trial';
+        if(counts[st]!==undefined)counts[st]++;
+      });
+      strip.innerHTML=
+        '<span class="_sstrip-lbl">Owners</span>'+
+        '<span class="_spill _sp-all" onclick="if(typeof setSysFilter===\'function\')setSysFilter(\'all\')">All <strong>'+counts.all+'</strong></span>'+
+        (counts.active?'<span class="_spill _sp-active" onclick="if(typeof setSysFilter===\'function\')setSysFilter(\'active\')">Active <strong>'+counts.active+'</strong></span>':'')+
+        (counts.trial?'<span class="_spill _sp-trial" onclick="if(typeof setSysFilter===\'function\')setSysFilter(\'trial\')">Trial <strong>'+counts.trial+'</strong></span>':'')+
+        (counts.expired?'<span class="_spill _sp-expired" onclick="if(typeof setSysFilter===\'function\')setSysFilter(\'expired\')">Expired <strong>'+counts.expired+'</strong></span>':'')+
+        (counts.suspended?'<span class="_spill _sp-suspended" onclick="if(typeof setSysFilter===\'function\')setSysFilter(\'suspended\')">Suspended <strong>'+counts.suspended+'</strong></span>':'');
+    }catch(e){}
+  }
+
+  /* ── 9. Search clear button ── */
+  function _injectClear(){
+    var inp=document.getElementById('sys-owner-search');
+    if(!inp||inp._clearInit)return;
+    inp._clearInit=true;
+    var wrap=document.createElement('div');
+    wrap.className='_srw';
+    inp.parentNode.insertBefore(wrap,inp);
+    wrap.appendChild(inp);
+    var btn=document.createElement('button');
+    btn.type='button';btn.className='_sclr';btn.title='Clear';btn.textContent='×';
+    wrap.appendChild(btn);
+    btn.addEventListener('click',function(){
+      inp.value='';inp.dispatchEvent(new Event('input'));inp.focus();
+    });
+  }
+
+  /* ── 10. Sort control ── */
+  var _sortMode='status';
+  function _injectSort(){
+    var bar=document.getElementById('sys-filter-bar');
+    if(!bar||bar._sortInit)return;
+    bar._sortInit=true;
+    var sel=document.createElement('select');
+    sel.className='_srt';sel.title='Sort owners';
+    [['status','By Status'],['name','By Name'],['expiry','By Expiry'],['login','By Last Login'],['newest','Newest First']].forEach(function(o){
+      var opt=document.createElement('option');opt.value=o[0];opt.textContent=o[1];sel.appendChild(opt);
+    });
+    sel.value=_sortMode;
+    sel.addEventListener('change',function(){_sortMode=sel.value;if(typeof _renderSysOwnerList==='function')_renderSysOwnerList();});
+    bar.appendChild(sel);
+  }
+
+  function _applySort(owners,reg){
+    var cp=owners.slice();
+    if(_sortMode==='name')cp.sort(function(a,b){return a.localeCompare(b);});
+    else if(_sortMode==='expiry'){cp.sort(function(a,b){
+      var ra=reg[a],rb=reg[b];
+      var ea=ra&&ra.subscription&&ra.subscription.expiry?ra.subscription.expiry:'9999';
+      var eb=rb&&rb.subscription&&rb.subscription.expiry?rb.subscription.expiry:'9999';
+      return ea.localeCompare(eb);
+    });}
+    else if(_sortMode==='login'){cp.sort(function(a,b){
+      var ra=reg[a],rb=reg[b];
+      var la=ra&&ra.lastLogin?ra.lastLogin:'';
+      var lb=rb&&rb.lastLogin?rb.lastLogin:'';
+      return lb.localeCompare(la);
+    });}
+    else if(_sortMode==='newest'){cp.sort(function(a,b){
+      var ra=reg[a],rb=reg[b];
+      var ca=ra&&ra.createdAt?ra.createdAt:'';
+      var cb=rb&&rb.createdAt?rb.createdAt:'';
+      return cb.localeCompare(ca);
+    });}
+    return cp;
+  }
+
+  function _patchOwnerList(){
+    var _oRL=window._renderSysOwnerList;
+    if(!_oRL||window._sortPatched)return;
+    window._sortPatched=true;
+    window._renderSysOwnerList=function(){
+      _oRL.apply(this,arguments);
+      var body=document.getElementById('user-list-body');if(!body)return;
+      try{
+        var reg=JSON.parse(localStorage.getItem('ims_registry')||'{}');
+        var items=Array.from(body.querySelectorAll('.oc-wrap'));
+        if(!items.length)return;
+        var sorted=_applySort(items.map(function(el){return el.dataset.u;}),reg);
+        sorted.forEach(function(u){
+          var el=body.querySelector('.oc-wrap[data-u="'+u+'"]');
+          if(el)body.appendChild(el);
+        });
+      }catch(e){}
+    };
+  }
+
+  /* ── 9b. Ctrl+F focuses search ── */
+  function _initCtrlF(){
+    if(window._ctrlFInit)return;window._ctrlFInit=true;
+    document.addEventListener('keydown',function(e){
+      if((e.ctrlKey||e.metaKey)&&e.key==='f'){
+        var bar=document.getElementById('sys-filter-bar');
+        if(bar&&bar.offsetParent!==null){
+          e.preventDefault();
+          var inp=document.getElementById('sys-owner-search');
+          if(inp)inp.focus();
+        }
+      }
+    });
+  }
+
+  /* ── 11. Empty states for pending lists ── */
+  function _applyEmpty(){
+    var lists=[
+      {id:'pending-user-list',icon:'#i-user',msg:'No pending requests'},
+      {id:'banned-owner-list',icon:'#i-lock',msg:'No banned owners'},
+      {id:'reset-request-list',icon:'#i-refresh',msg:'No password reset requests'},
+      {id:'sub-req-list',icon:'#i-crown',msg:'No subscription requests'}
+    ];
+    lists.forEach(function(cfg){
+      var el=document.getElementById(cfg.id);
+      if(!el||el._empInit)return;
+      el._empInit=true;
+      new MutationObserver(function(){
+        var hasReal=Array.from(el.children).some(function(c){return!c.classList.contains('_semp');});
+        var hasEmp=el.querySelector('._semp');
+        if(!hasReal&&!hasEmp){
+          var d=document.createElement('div');d.className='_semp';
+          d.innerHTML='<svg class="ic"><use href="'+cfg.icon+'"/></svg>'+cfg.msg;
+          el.appendChild(d);
+        } else if(hasReal&&hasEmp){hasEmp.remove();}
+      }).observe(el,{childList:true});
+    });
+  }
+
+  /* ── Setup: inject strip + wire everything ── */
+  function _setupDash(){
+    /* strip */
+    if(!document.getElementById('_sstrip')){
+      var bar=document.getElementById('sys-filter-bar');
+      if(bar){
+        var strip=document.createElement('div');strip.id='_sstrip';
+        bar.parentNode.insertBefore(strip,bar);
+      }
+    }
+    _updateStrip();
+    _injectClear();
+    _injectSort();
+    _patchOwnerList();
+    _initCtrlF();
+    _applyEmpty();
+  }
+
+  /* ── Patch renderSystemOwnerDashboard ── */
+  var _oRSOD=window.renderSystemOwnerDashboard;
+  if(_oRSOD&&!window._rsodPatched){
+    window._rsodPatched=true;
+    window.renderSystemOwnerDashboard=function(){
+      var r=_oRSOD.apply(this,arguments);
+      setTimeout(_setupDash,0);
+      return r;
+    };
+  }
+
+  /* ── Auth page init (runs once DOM is ready) ── */
+  function _initAuth(){
+    _initCaps();
+    _initRemember();
+    _initShake();
+    _initLoading();
+    _initEnter();
+    _initTabSlide();
+  }
+
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',_initAuth);
+  else _initAuth();
+
+  /* Re-init auth fields on tab switches (tabs rendered dynamically) */
+  var _authObs=new MutationObserver(function(){
+    _initCaps();_initEnter();_initTabSlide();
+  });
+  var authBody=document.querySelector('.auth-body')||document.querySelector('.auth-card');
+  if(authBody)_authObs.observe(authBody,{childList:true,subtree:true});
+
+})();
+</script>
+
+<script>
+// ═══ LOGIN PAGE IMPROVEMENTS (3) ════════════════════════════════════════════
+(function(){
+  var s=document.createElement('style');
+  s.textContent=
+    '._pws{display:flex;gap:3px;height:3px;margin-top:6px;opacity:0;transition:opacity .2s}._pws.vis{opacity:1}'+
+    '._pws-seg{flex:1;border-radius:2px;background:var(--border);transition:background .3s}'+
+    '._pws-lbl{font-size:10px;margin-top:3px;opacity:0;transition:opacity .2s,color .25s;text-align:right}._pws-lbl.vis{opacity:1}'+
+    '._utaken{font-size:10.5px;margin-top:4px;min-height:14px;transition:opacity .15s}._utaken.hidden{opacity:0}._utaken.taken{color:var(--error)}._utaken.avail{color:var(--success)}._utaken.checking{color:var(--text3)}'+
+    '._cmatch{font-size:12px;font-weight:700;pointer-events:none;opacity:0;transition:opacity .15s;margin-left:4px;flex-shrink:0}._cmatch.vis{opacity:1}'+
+    '.auth-submit-btn{overflow:hidden!important;position:relative!important}'+
+    '@keyframes _rplA{to{transform:scale(4.5);opacity:0}}._rpl{position:absolute;border-radius:50%;width:50px;height:50px;margin:-25px 0 0 -25px;background:rgba(255,255,255,.3);transform:scale(0);animation:_rplA .55s ease-out forwards;pointer-events:none}'+
+    '#auth-screen{transition:opacity .3s ease}#auth-screen._fade{opacity:0;pointer-events:none}'+
+    '._remhint{font-size:10px;color:var(--p);margin-top:3px;display:none;align-items:center;gap:4px}._remhint.vis{display:flex}'+
+    '#_fp-row{text-align:right;margin-top:-6px;margin-bottom:8px}#_fp-btn{background:none;border:none;color:var(--text3);cursor:pointer;font-size:11px;padding:0;text-decoration:underline;text-underline-offset:2px}#_fp-btn:hover{color:var(--text2)}';
+  document.head.appendChild(s);
+
+  var _pwlabels=['Weak','Fair','Good','Strong'];
+  var _pwcolors=['#f43f5e','#f59e0b','#38bdf8','var(--success)'];
+  function _pwScore(v){var sc=0;if(v.length>=6)sc++;if(v.length>=10)sc++;if(/[A-Z]/.test(v))sc++;if(/[0-9]/.test(v)||/[^a-zA-Z0-9]/.test(v))sc++;return Math.min(4,Math.max(1,sc));}
+
+  function _initPassStrength(){
+    var pf=document.getElementById('auth-pass-field'),pe=document.getElementById('auth-pass');
+    if(!pf||!pe||pf._strInit)return;pf._strInit=true;
+    var bar=document.createElement('div');bar.className='_pws';
+    bar.innerHTML='<div class="_pws-seg"></div><div class="_pws-seg"></div><div class="_pws-seg"></div><div class="_pws-seg"></div>';
+    var lbl=document.createElement('div');lbl.className='_pws-lbl';
+    pf.appendChild(bar);pf.appendChild(lbl);
+    function upd(){
+      var isSU=typeof authMode!=='undefined'&&authMode==='signup',v=pe.value;
+      if(!isSU||!v){bar.classList.remove('vis');lbl.classList.remove('vis');return;}
+      var sc=_pwScore(v);
+      bar.querySelectorAll('._pws-seg').forEach(function(seg,i){seg.style.background=i<sc?_pwcolors[sc-1]:'var(--border)';});
+      bar.classList.add('vis');lbl.textContent=_pwlabels[sc-1];lbl.style.color=_pwcolors[sc-1];lbl.classList.add('vis');
+    }
+    pe.addEventListener('input',upd);
+    var tabs=document.getElementById('auth-tabs');
+    if(tabs&&!tabs._strObs){tabs._strObs=true;new MutationObserver(function(){bar.classList.remove('vis');lbl.classList.remove('vis');}).observe(tabs,{attributes:true,attributeFilter:['data-active']});}
+  }
+
+  function _initUsernameTaken(){
+    var uf=document.getElementById('auth-user-field'),ue=document.getElementById('auth-user');
+    if(!uf||!ue||uf._takenInit)return;uf._takenInit=true;
+    var hint=document.createElement('div');hint.className='_utaken hidden';uf.appendChild(hint);
+    var tmr=null;
+    ue.addEventListener('input',function(){
+      var isSU=typeof authMode!=='undefined'&&authMode==='signup';
+      var isBiz=typeof authSubMode==='undefined'||authSubMode==='business';
+      var v=(ue.value||'').trim();
+      if(!isSU||!isBiz||v.length<3){hint.className='_utaken hidden';return;}
+      hint.className='_utaken checking';hint.textContent='Checking...';
+      clearTimeout(tmr);
+      tmr=setTimeout(function(){
+        try{var reg=JSON.parse(localStorage.getItem('ims_registry')||'{}');
+          if(reg[v]){hint.className='_utaken taken';hint.textContent='✗ "'+v+'" is already taken';}
+          else{hint.className='_utaken avail';hint.textContent='✓ Username is available';}
+        }catch(e){hint.className='_utaken hidden';}
+      },500);
+    });
+    var tabs=document.getElementById('auth-tabs');
+    if(tabs&&!tabs._takenObs){tabs._takenObs=true;new MutationObserver(function(){hint.className='_utaken hidden';}).observe(tabs,{attributes:true,attributeFilter:['data-active']});}
+  }
+
+  function _initConfirmMatch(){
+    var ce=document.getElementById('auth-confirm'),pe=document.getElementById('auth-pass');
+    var cw=document.querySelector('#auth-confirm-wrap .pw-wrap');
+    if(!ce||!pe||!cw||ce._matchInit)return;ce._matchInit=true;
+    var icon=document.createElement('span');icon.className='_cmatch';
+    cw.insertBefore(icon,cw.querySelector('.pw-toggle')||null);
+    function upd(){var cv=ce.value;if(!cv){icon.classList.remove('vis');return;}icon.classList.add('vis');if(pe.value===cv){icon.textContent='✓';icon.style.color='var(--success)';}else{icon.textContent='✗';icon.style.color='var(--error)';}}
+    ce.addEventListener('input',upd);pe.addEventListener('input',upd);
+  }
+
+  function _initAutoTrim(){
+    var ue=document.getElementById('auth-user'),sn=document.getElementById('auth-shopname');
+    if(ue&&!ue._trimInit){ue._trimInit=true;ue.addEventListener('blur',function(){this.value=this.value.trim();});}
+    if(sn&&!sn._trimInit){sn._trimInit=true;sn.addEventListener('blur',function(){this.value=this.value.trim().replace(/\b\w/g,function(c){return c.toUpperCase();});});}
+  }
+
+  function _initRipple(){
+    var btn=document.getElementById('auth-btn');
+    if(!btn||btn._rippleInit)return;btn._rippleInit=true;
+    btn.addEventListener('mousedown',function(e){
+      var r=document.createElement('span');r.className='_rpl';
+      var rc=btn.getBoundingClientRect();r.style.left=(e.clientX-rc.left)+'px';r.style.top=(e.clientY-rc.top)+'px';
+      btn.appendChild(r);r.addEventListener('animationend',function(){r.remove();});
+    });
+  }
+
+  function _initExitAnim(){
+    if(window._exitAnimPatched)return;window._exitAnimPatched=true;
+    function wrap(fn){return function(){
+      var screen=document.getElementById('auth-screen');
+      if(!screen){fn.apply(this,arguments);return;}
+      var args=[].slice.call(arguments),ctx=this;
+      screen.classList.add('_fade');
+      var fired=false;
+      function proceed(){if(fired)return;fired=true;fn.apply(ctx,args);requestAnimationFrame(function(){screen.classList.remove('_fade');});}
+      setTimeout(proceed,320);
+    };}
+    if(window.doLogin)window.doLogin=wrap(window.doLogin);
+    if(window.doLoginSystemOwner)window.doLoginSystemOwner=wrap(window.doLoginSystemOwner);
+  }
+
+  function _initRememberedHint(){
+    var uf=document.getElementById('auth-user-field'),ue=document.getElementById('auth-user');
+    if(!uf||!ue||uf._remInit)return;uf._remInit=true;
+    var hint=document.createElement('div');hint.className='_remhint';
+    hint.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Remembered from last session';
+    uf.appendChild(hint);
+    var saved=localStorage.getItem('ims_last_user');
+    if(saved&&ue.value===saved)hint.classList.add('vis');
+    ue.addEventListener('input',function(){hint.classList.remove('vis');});
+  }
+
+  function _initForgotPass(){
+    var pf=document.getElementById('auth-pass-field');
+    if(!pf||pf._fpInit)return;pf._fpInit=true;
+    var row=document.createElement('div');row.id='_fp-row';
+    row.innerHTML='<button type="button" id="_fp-btn">Forgot password?</button>';
+    pf.parentNode.insertBefore(row,pf.nextSibling);
+    document.getElementById('_fp-btn').addEventListener('click',function(){
+      var e=document.getElementById('auth-error');
+      if(e){e.innerHTML='<svg class="ic"><use href="#i-info"/></svg> Contact your platform owner or system admin to reset your password.';e.style.display='';setTimeout(function(){if(e)e.style.display='none';},6000);}
+    });
+    var tabs=document.getElementById('auth-tabs');
+    if(tabs)new MutationObserver(function(){row.style.display=(tabs.dataset.active||'login')==='login'?'':'none';}).observe(tabs,{attributes:true,attributeFilter:['data-active']});
+  }
+
+  function _initAll(){
+    _initPassStrength();_initUsernameTaken();_initConfirmMatch();
+    _initAutoTrim();_initRipple();_initExitAnim();
+    _initRememberedHint();_initForgotPass();
+  }
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',_initAll);
+  else _initAll();
+
+  var _ab2=document.querySelector('.auth-body')||document.querySelector('.auth-card');
+  if(_ab2)new MutationObserver(function(){
+    _initPassStrength();_initUsernameTaken();_initConfirmMatch();
+    _initAutoTrim();_initRipple();_initRememberedHint();_initForgotPass();
+  }).observe(_ab2,{childList:true,subtree:false});
 })();
 </script>
 </body></html>
