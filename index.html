@@ -912,6 +912,98 @@ tbody tr:last-child td{border-bottom:none}
   font-size:11px;cursor:pointer
 }
 
+/* ══ Settings Drawer — UI overhaul (improvements 2-7) ══════════════ */
+
+/* #6 — Close button: proper pill with border */
+.drawer-close-btn{
+  width:32px;height:32px;border-radius:9px;
+  border:1.5px solid var(--border2);background:var(--surface2);
+  color:var(--text2);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:all .15s;flex-shrink:0;margin-right:14px;
+}
+.drawer-close-btn:hover{background:var(--surface3);color:var(--text);border-color:var(--border2)}
+
+/* #2 — Profile card */
+.drawer-info-card{
+  margin:12px 14px 4px!important;border-radius:14px!important;
+  background:var(--surface2)!important;border:1px solid var(--border)!important;
+  box-shadow:0 2px 10px rgba(0,0,0,.07)!important;overflow:hidden!important;
+}
+.drawer-session-top{padding:14px 16px 10px!important;gap:12px!important;}
+.drawer-session-av{
+  width:44px!important;height:44px!important;border-radius:12px!important;
+  font-size:17px!important;font-weight:800!important;
+  box-shadow:0 3px 10px rgba(0,0,0,.25)!important;
+}
+.drawer-session-name{font-size:14px!important;font-weight:800!important;letter-spacing:-.015em!important;}
+.drawer-session-role{
+  font-size:9px!important;font-weight:700!important;letter-spacing:.08em!important;
+  color:#E4E6F5!important;background:var(--p)!important;
+  padding:2px 8px!important;border-radius:99px!important;display:inline-block!important;margin-top:4px!important;
+}
+.drawer-session-detail{padding:0 16px 10px!important;font-size:11px!important;color:var(--text3)!important;}
+.drawer-sync-row{padding:8px 14px!important;gap:8px!important;background:rgba(0,0,0,.04)!important;border-top:1px solid var(--border)!important;}
+.drawer-sync-dot{width:8px!important;height:8px!important;}
+.drawer-snap-grid{border-top:1px solid var(--border)}
+.drawer-snap-cell{padding:12px 8px!important;text-align:center}
+.drawer-snap-val{font-size:1.1rem!important;font-weight:800!important;line-height:1!important;}
+.drawer-snap-lbl{font-size:9px!important;letter-spacing:.07em!important;text-transform:uppercase!important;margin-top:3px!important;color:var(--text3)!important;font-weight:700!important;}
+#dsc-snap .drawer-snap-cell:nth-child(1) .drawer-snap-val{color:var(--success)}
+#dsc-snap .drawer-snap-cell:nth-child(2) .drawer-snap-val{color:var(--p)}
+#dsc-snap .drawer-snap-cell:nth-child(3) .drawer-snap-val{color:var(--error)}
+
+/* #4 — Chevron: CSS border arrow replacing › text */
+.drawer-item::after{
+  content:''!important;font-size:0!important;
+  width:6px!important;height:6px!important;
+  border-right:2px solid var(--text3)!important;border-bottom:2px solid var(--text3)!important;
+  border-radius:1px!important;transform:rotate(-45deg)!important;
+  opacity:.32!important;flex-shrink:0!important;margin-left:auto!important;padding:0!important;
+  transition:transform .18s,opacity .18s!important;
+}
+.drawer-item:hover::after{transform:rotate(-45deg) translateX(3px)!important;opacity:.65!important;}
+.drawer-item.active::after{border-color:var(--p)!important;opacity:.85!important;}
+
+/* #3 — Preference rows: match nav item layout */
+.drawer-pref-row{
+  display:flex;align-items:center;gap:14px;
+  padding:10px 20px;min-height:52px;border:none;width:100%;
+  background:transparent;transition:background .14s;
+}
+.drawer-pref-row:hover{background:var(--surface2)}
+.drawer-pref-row .di-icon{
+  width:36px;height:36px;border-radius:10px;background:var(--surface3);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.drawer-pref-row .di-info{flex:1;min-width:0;}
+.drawer-pref-row .di-label{font-size:13px;font-weight:600;color:var(--text);}
+.drawer-pref-row .di-sub{font-size:11px;color:var(--text3);margin-top:2px;}
+
+/* #5 — Section header color accents */
+.drawer-section[data-sec="nav"]{color:rgba(45,75,138,.9)!important;}
+.drawer-section[data-sec="data"]{color:rgba(16,185,129,.85)!important;}
+.drawer-section[data-sec="acct"]{color:rgba(245,158,11,.9)!important;}
+.drawer-section[data-sec="prefs"]{color:var(--text2)!important;}
+.drawer-section[data-sec]::after{background:var(--border)!important;opacity:.55!important;}
+
+/* #7 — Footer */
+.drawer-footer{
+  flex-shrink:0;border-top:1px solid var(--border);
+  padding:11px 18px calc(18px + env(safe-area-inset-bottom,0px));
+  background:var(--surface);
+}
+.drawer-footer-row{display:flex;align-items:center;gap:8px;}
+.drawer-footer-brand{font-size:11.5px;font-weight:800;color:var(--text2);letter-spacing:-.01em;flex:1;}
+.drawer-footer-ver{
+  font-size:9.5px;font-weight:700;color:var(--text3);
+  padding:1px 7px;background:var(--surface2);border:1px solid var(--border);border-radius:99px;
+}
+.drawer-footer-sync{
+  margin-top:7px;font-size:10.5px;color:var(--text3);
+  display:flex;align-items:center;gap:6px;
+}
+.drawer-footer-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+
 /* ── Toasts ── */
 .toast-wrap{position:fixed;bottom:calc(var(--nav-h) + 12px);left:50%;transform:translateX(-50%);z-index:900;display:flex;flex-direction:column;gap:6px;pointer-events:none;align-items:center}
 .toast{
@@ -1653,8 +1745,301 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
 }
 
 /* ════════════════════════════════════════════
-   ADMIN DASHBOARD IMPROVEMENTS
+   ADMIN DASHBOARD — FULL UI OVERHAUL
 ════════════════════════════════════════════ */
+
+/* ── Sys-admin screen container ── */
+#owner-screen.sys-admin-mode .owner-screen{max-width:1140px}
+
+/* ── Hero: richer gradient mesh ── */
+#owner-screen.sys-admin-mode .owner-hero{
+  background:linear-gradient(135deg,#1a2f60 0%,#2D4B8A 55%,#1e3a72 100%)!important;
+  border:1px solid rgba(77,117,196,.3)!important;
+  box-shadow:0 8px 40px rgba(0,0,0,.35),inset 0 1px 0 rgba(255,255,255,.06)!important;
+  padding:34px 38px 30px!important;
+  position:relative;overflow:hidden!important
+}
+#owner-screen.sys-admin-mode .owner-hero::before{
+  content:'';position:absolute;top:-60px;right:-60px;
+  width:260px;height:260px;border-radius:50%;
+  background:radial-gradient(circle,rgba(100,140,220,.18) 0%,transparent 70%);
+  pointer-events:none
+}
+#owner-screen.sys-admin-mode .owner-hero::after{
+  content:'';position:absolute;bottom:-40px;left:30%;
+  width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle,rgba(45,75,138,.25) 0%,transparent 70%);
+  pointer-events:none;display:block!important
+}
+.owner-hero h1{font-size:1.6rem!important;letter-spacing:-.028em!important;margin-bottom:4px!important;font-weight:900!important}
+.owner-hero p{font-size:.79rem!important;color:rgba(228,230,245,.65)!important;letter-spacing:.01em!important}
+
+/* ── Hero badge: glowing pill ── */
+.owner-hero-badge{
+  background:rgba(228,230,245,.12)!important;
+  border:1px solid rgba(228,230,245,.2)!important;
+  border-radius:99px!important;padding:3px 12px!important;
+  box-shadow:0 0 14px rgba(100,140,220,.2)!important;
+  font-size:10px!important;letter-spacing:.08em!important
+}
+.owner-hero-badge-dot{width:7px!important;height:7px!important;box-shadow:0 0 6px currentColor!important}
+
+/* ── Hero buttons ── */
+.owner-refresh-btn,.owner-logout-btn{
+  border-radius:10px!important;
+  font-size:12px!important;font-weight:600!important;
+  transition:all .2s cubic-bezier(.22,1,.36,1)!important
+}
+.owner-refresh-btn:hover,.owner-logout-btn:hover{transform:translateY(-1px)!important}
+
+/* ── Quick-pill strip ── */
+.hero-quick-strip{margin-top:16px!important;padding-top:14px!important;gap:7px!important}
+.hero-quick-pill{font-size:9.5px!important;font-weight:700!important;letter-spacing:.04em!important;padding:3px 11px!important}
+
+/* ── Live badge ── */
+.sys-live-badge{font-size:9.5px!important;font-weight:700!important;letter-spacing:.04em!important}
+
+/* ── Stats cards ── */
+.owner-stats{gap:12px!important;margin-bottom:20px!important}
+.owner-stat{
+  padding:18px 16px 15px!important;
+  border-radius:14px!important;
+  border-left-width:4px!important;
+  border:1px solid var(--border)!important;
+  box-shadow:0 2px 14px rgba(0,0,0,.13)!important;
+  background:var(--surface)!important;
+  position:relative;overflow:hidden;
+  transition:transform .22s cubic-bezier(.22,1,.36,1),box-shadow .22s!important;
+  cursor:pointer
+}
+.owner-stat::before{width:4px!important;border-radius:0!important}
+.owner-stat::after{
+  content:'';position:absolute;top:0;right:0;bottom:0;width:60%;
+  background:linear-gradient(90deg,transparent,rgba(228,230,245,.02));
+  pointer-events:none
+}
+.owner-stat:hover{transform:translateY(-5px)!important;box-shadow:0 10px 32px rgba(0,0,0,.22)!important}
+.stat-icon-box{
+  width:42px!important;height:42px!important;
+  border-radius:12px!important;
+  box-shadow:0 2px 10px rgba(0,0,0,.2)!important;
+  flex-shrink:0
+}
+.stat-val{font-size:1.8rem!important;font-weight:900!important;letter-spacing:-.04em!important;line-height:1!important}
+.stat-lbl{font-size:.63rem!important;letter-spacing:.12em!important;margin-top:5px!important;font-weight:700!important;text-transform:uppercase!important}
+
+/* ── Tab bar: pill-style ── */
+.sys-tab-bar{
+  padding:5px!important;gap:3px!important;
+  background:var(--surface2)!important;
+  border-radius:16px!important;
+  border:1px solid var(--border)!important;
+  box-shadow:0 2px 8px rgba(0,0,0,.12),inset 0 1px 2px rgba(0,0,0,.08)!important;
+  margin-bottom:4px
+}
+.sys-tab{
+  border-radius:11px!important;border:none!important;
+  padding:8px 13px!important;font-size:11px!important;font-weight:600!important;
+  gap:5px!important;color:var(--text3)!important;
+  transition:all .18s cubic-bezier(.22,1,.36,1)!important
+}
+.sys-tab:hover{background:rgba(228,230,245,.07)!important;color:var(--text2)!important}
+.sys-tab.active{
+  background:var(--surface)!important;
+  color:var(--p)!important;font-weight:700!important;
+  box-shadow:0 2px 12px rgba(0,0,0,.22),0 0 0 1px var(--border)!important
+}
+.sys-tab.active svg{transform:scale(1.2)!important}
+.sys-tab-badge{
+  min-width:17px!important;height:17px!important;
+  font-size:9px!important;font-weight:900!important;
+  border-radius:99px!important;padding:0 4px!important
+}
+.sys-tab-badge.tb-warn{animation:badgePulse 2.5s ease infinite!important}
+.sys-tab-badge.tb-err{animation:badgePulseRed 2.5s ease infinite!important}
+@keyframes badgePulse{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.5)}70%{box-shadow:0 0 0 5px rgba(245,158,11,0)}}
+@keyframes badgePulseRed{0%,100%{box-shadow:0 0 0 0 rgba(244,63,94,.5)}70%{box-shadow:0 0 0 5px rgba(244,63,94,0)}}
+
+/* ── Section containers ── */
+.owner-section.sys-sec{
+  border-radius:16px!important;
+  box-shadow:0 2px 18px rgba(0,0,0,.13)!important;
+  border:1px solid var(--border)!important;
+  overflow:hidden!important;
+  margin-bottom:16px!important;
+  background:var(--surface)!important
+}
+.owner-section-hdr{
+  padding:13px 18px!important;
+  background:var(--surface)!important;
+  border-bottom:1px solid var(--border)!important;
+  transition:background .15s!important;
+  display:flex!important;align-items:center!important;gap:10px!important
+}
+.owner-section-hdr:hover{background:var(--surface2)!important}
+.owner-section-hdr h3{font-size:.83rem!important;font-weight:700!important;letter-spacing:.01em!important;margin:0!important;display:flex;align-items:center;gap:6px}
+.sec-count-badge{
+  font-size:10.5px!important;font-weight:800!important;
+  padding:2px 9px!important;border-radius:99px!important;
+  border:1px solid currentColor!important;opacity:.85
+}
+#sys-sec-owners  .owner-section-hdr{border-left:4px solid var(--p)!important}
+#sys-sec-pending .owner-section-hdr{border-left:4px solid var(--warn)!important}
+#sys-sec-subs    .owner-section-hdr{border-left:4px solid #a78bfa!important}
+#sys-sec-resets  .owner-section-hdr{border-left:4px solid var(--error)!important}
+#sys-sec-banned  .owner-section-hdr{border-left:4px solid var(--error)!important}
+#sys-sec-auditlog .owner-section-hdr{border-left:4px solid rgba(45,75,138,.7)!important}
+
+/* ── Filter bar ── */
+.sys-filter-bar{
+  padding:10px 16px!important;gap:8px!important;
+  background:var(--surface)!important;
+  border-bottom:1px solid var(--border)!important;
+  flex-wrap:wrap!important
+}
+.sys-search{
+  border-radius:10px!important;padding:8px 12px 8px 34px!important;
+  font-size:12px!important;background:var(--surface2)!important;
+  border:1.5px solid var(--border2)!important;
+  transition:border-color .18s,box-shadow .18s!important
+}
+.sys-search:focus{
+  border-color:rgba(45,75,138,.7)!important;
+  box-shadow:0 0 0 3px rgba(45,75,138,.12)!important;
+  outline:none!important
+}
+.sf-chip{
+  padding:5px 13px!important;border-radius:99px!important;
+  font-size:10.5px!important;font-weight:600!important;
+  border:1.5px solid var(--border2)!important;
+  transition:all .15s!important;background:transparent!important;
+  color:var(--text3)!important
+}
+.sf-chip:hover{border-color:rgba(45,75,138,.5)!important;color:var(--p)!important}
+.sf-chip.active{
+  background:rgba(45,75,138,.12)!important;
+  border-color:rgba(45,75,138,.4)!important;
+  color:var(--p)!important;
+  box-shadow:0 1px 6px rgba(45,75,138,.15)!important
+}
+.sf-chip.sf-trial.active{background:rgba(245,158,11,.12)!important;border-color:rgba(245,158,11,.4)!important;color:var(--warn)!important}
+.sf-chip.sf-expired.active{background:rgba(239,68,68,.1)!important;border-color:rgba(239,68,68,.35)!important;color:var(--error)!important}
+.sf-chip.sf-sus.active{background:rgba(100,116,139,.12)!important;border-color:rgba(100,116,139,.4)!important;color:#94a3b8!important}
+
+/* ── Bulk bar ── */
+.bulk-bar{
+  padding:9px 14px!important;gap:7px!important;
+  background:rgba(45,75,138,.09)!important;
+  border-bottom:2px solid rgba(45,75,138,.2)!important;
+  backdrop-filter:blur(10px)!important
+}
+.bulk-count{font-size:11.5px!important;font-weight:800!important;color:var(--p)!important}
+.bulk-btn{
+  padding:5px 12px!important;font-size:10.5px!important;font-weight:600!important;
+  border-radius:8px!important;border:1.5px solid var(--border2)!important;
+  background:var(--surface)!important;color:var(--text2)!important;
+  transition:all .15s!important;display:inline-flex;align-items:center;gap:5px
+}
+.bulk-btn:hover{background:var(--p-glass)!important;border-color:var(--p)!important;color:var(--p)!important}
+.bulk-btn.bulk-danger:hover{background:rgba(239,68,68,.08)!important;border-color:rgba(239,68,68,.45)!important;color:var(--error)!important}
+.bulk-btn.bulk-success:hover{background:rgba(16,185,129,.08)!important;border-color:rgba(16,185,129,.45)!important;color:var(--success)!important}
+
+/* ── Owner cards ── */
+.oc-wrap{
+  border-left:3px solid transparent!important;
+  transition:background .15s,border-left-color .2s,box-shadow .15s!important;
+  cursor:pointer
+}
+.oc-wrap:hover{
+  background:var(--surface2)!important;
+  border-left-color:var(--p)!important
+}
+.oc-wrap.oc-selected{background:rgba(45,75,138,.06)!important;border-left-color:var(--p)!important}
+.oc-top{padding:13px 16px 11px!important;gap:12px!important}
+.oc-avatar{
+  width:38px!important;height:38px!important;border-radius:11px!important;
+  font-size:14px!important;font-weight:800!important;
+  box-shadow:0 3px 10px rgba(0,0,0,.25)!important;flex-shrink:0
+}
+.oc-name{font-size:13px!important;font-weight:700!important;display:flex;align-items:center;gap:6px;flex-wrap:wrap;line-height:1.4}
+.oc-detail{font-size:10.5px!important;color:var(--text3)!important;display:flex;flex-wrap:wrap;gap:8px;margin-top:4px!important}
+.oc-detail span{display:inline-flex;align-items:center;gap:3px}
+.sub-badge{font-size:10px!important;font-weight:700!important;padding:2px 8px!important;border-radius:6px!important}
+.force-reset-badge{font-size:9px!important;padding:2px 7px!important;border-radius:99px!important;font-weight:800!important}
+.oc-ext-btn{
+  font-size:10px!important;padding:3px 9px!important;border-radius:7px!important;
+  border:1.5px solid var(--border2)!important;background:var(--surface2)!important;
+  color:var(--p)!important;font-weight:700!important;cursor:pointer;
+  transition:all .14s!important;white-space:nowrap
+}
+.oc-ext-btn:hover{background:var(--p)!important;border-color:var(--p)!important;color:#fff!important}
+
+/* ── Pending / SR / Reset / Banned cards ── */
+.pc-card,.sr-card{
+  margin:0;border-radius:0!important;
+  border-bottom:1px solid var(--border)!important;
+  border-left:3px solid transparent!important;
+  transition:background .14s,border-left-color .18s!important
+}
+.pc-card:last-child,.sr-card:last-child{border-bottom:none!important}
+.pc-card:hover{background:rgba(245,158,11,.04)!important;border-left-color:var(--warn)!important}
+.sr-card:hover{background:rgba(45,75,138,.04)!important;border-left-color:var(--p)!important}
+.pc-top,.sr-top{padding:13px 16px 11px!important;gap:12px!important;display:flex;align-items:flex-start}
+.pc-avatar{
+  width:36px!important;height:36px!important;border-radius:10px!important;
+  font-size:14px!important;font-weight:800!important;
+  box-shadow:0 2px 8px rgba(0,0,0,.22)!important;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;color:#fff
+}
+.pc-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:3px;font-size:10.5px;color:var(--text3)}
+.pc-meta span{display:inline-flex;align-items:center;gap:3px}
+.pc-actions{padding:0 16px 12px!important;gap:6px!important;display:flex}
+
+/* ── Empty states ── */
+.sys-empty{
+  padding:56px 24px!important;
+  display:flex;flex-direction:column;align-items:center;
+  gap:10px;text-align:center
+}
+.sys-empty-icon{
+  width:56px;height:56px;border-radius:18px;
+  background:var(--surface2);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  margin-bottom:4px;opacity:.6
+}
+.sys-empty-icon svg{width:24px;height:24px;stroke:var(--text3)}
+
+/* ── Manage-owner panel ── */
+#manage-owner-panel{border-radius:16px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,.16);border:1px solid var(--border);background:var(--surface)}
+
+/* ── Audit log rows ── */
+#admin-log-list .alog-row{
+  display:grid;grid-template-columns:150px 1fr 1fr;
+  gap:10px;align-items:center;
+  padding:9px 16px;font-size:11.5px;
+  border-bottom:1px solid var(--border2);
+  transition:background .12s
+}
+#admin-log-list .alog-row:hover{background:var(--surface2)}
+#admin-log-list .alog-row:last-child{border-bottom:none}
+#admin-log-list .alog-time{font-size:10px;color:var(--text3);white-space:nowrap}
+#admin-log-list .alog-action{font-weight:700;display:flex;align-items:center;gap:5px}
+#admin-log-list .alog-notes{color:var(--text2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+/* ── Gen code box ── */
+.gen-code-box{border-radius:12px!important;padding:14px!important;margin:0 16px 12px!important;background:var(--surface2)!important;border:1px solid var(--border)!important}
+.gen-code-val{font-size:1.4rem!important;letter-spacing:.25em!important;font-family:var(--mono)!important;font-weight:800!important}
+
+/* ── Responsive ── */
+@media(max-width:640px){
+  #owner-screen.sys-admin-mode .owner-hero{padding:22px 20px 18px!important}
+  .owner-hero h1{font-size:1.3rem!important}
+  .sys-tab{padding:7px 9px!important;font-size:10.5px!important}
+  .owner-stats{grid-template-columns:repeat(2,1fr)!important}
+}
+@media(min-width:900px){
+  .owner-stats{grid-template-columns:repeat(4,1fr)!important}
+}
 
 /* Hero — taller, more spacious, subtle bottom info strip */
 .owner-hero{padding:32px 36px 28px}
@@ -1842,7 +2227,6 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
 
 /* Empty state — more helpful */
 .sys-empty{padding:52px 24px!important;gap:10px!important}
-.sys-empty-icon{font-size:36px!important;opacity:.4!important}
 
 /* Pending / Sub-request cards */
 .pc-card,.sr-card{border-left:3px solid transparent;transition:background .14s,border-left-color .18s!important}
@@ -2151,16 +2535,22 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
 <div class="drawer-overlay" id="drawer-overlay" onclick="closeSettings()"></div>
 <div class="settings-drawer" id="settings-drawer">
   <div id="drawer-hdr" style="display:none"></div>
+
+  <!-- #6 Top strip: logout + title + better close button -->
   <div class="drawer-top-strip">
     <button type="button" class="drawer-item" onclick="logout()" style="color:var(--error);flex:1;min-height:54px">
       <span class="di-icon" style="background:rgba(239,68,68,.1);color:var(--error)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
       <div class="di-info"><div class="di-label" style="color:var(--error)" data-i18n="settingsLogout">Log Out</div></div>
     </button>
-    <button type="button" class="icon-btn" onclick="closeSettings()" style="margin-right:12px;flex-shrink:0"><svg class="ic"><use href="#i-x"/></svg></button>
+    <button type="button" class="drawer-close-btn" onclick="closeSettings()" title="Close settings">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
   </div>
+
   <div class="drawer-body">
-    <!-- Session info + Today's snapshot + Sync status -->
-    <div class="drawer-info-card" id="drawer-info-card" style="display:none">
+
+    <!-- #2 Profile card: always visible, JS hides if not logged in -->
+    <div class="drawer-info-card" id="drawer-info-card">
       <div class="drawer-session-top">
         <div class="drawer-session-av" id="dsc-avatar"></div>
         <div class="drawer-session-meta">
@@ -2169,13 +2559,30 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
         </div>
       </div>
       <div class="drawer-session-detail" id="dsc-detail"></div>
+      <!-- Today's snapshot grid (owners/managers only) -->
+      <div class="drawer-snap-grid" id="dsc-snap" style="display:none">
+        <div class="drawer-snap-cell">
+          <div class="drawer-snap-val" id="snap-sales">—</div>
+          <div class="drawer-snap-lbl">Sales</div>
+        </div>
+        <div class="drawer-snap-cell">
+          <div class="drawer-snap-val" id="snap-purchase">—</div>
+          <div class="drawer-snap-lbl">Purchase</div>
+        </div>
+        <div class="drawer-snap-cell">
+          <div class="drawer-snap-val" id="snap-expense">—</div>
+          <div class="drawer-snap-lbl">Expenses</div>
+        </div>
+      </div>
       <div class="drawer-sync-row" id="dsc-sync" style="display:none">
         <div class="drawer-sync-dot" id="dsc-sync-dot"></div>
         <div class="drawer-sync-txt" id="dsc-sync-txt">Checking…</div>
         <button type="button" class="drawer-sync-btn" id="dsc-sync-btn" onclick="_syncNow()">Sync</button>
       </div>
     </div>
-    <div class="drawer-section" data-i18n="settingsNav">Navigation</div>
+
+    <!-- #5 Navigation section — blue accent -->
+    <div class="drawer-section" data-sec="nav" data-i18n="settingsNav">Navigation</div>
     <button type="button" class="drawer-item" id="drawer-items-btn" onclick="switchTab('ITEMS');closeSettings()">
       <span class="di-icon" style="background:var(--p-glass);color:var(--p)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
       <div class="di-info"><div class="di-label" data-i18n="settingsAddItems">Add Items</div><div class="di-sub" data-i18n="settingsAddItemsSub">Manage inventory catalog</div></div>
@@ -2186,21 +2593,23 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
     </button>
     <div id="store-settings-section" style="display:none">
       <div class="drawer-divider"></div>
-      <div class="drawer-section" data-i18n="settingsStore">Store</div>
+      <div class="drawer-section" data-sec="nav" data-i18n="settingsStore">Store</div>
       <button type="button" class="drawer-item" onclick="openStoreOptions()">
         <span class="di-icon" style="background:var(--store-glass);color:var(--store)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span>
-        <div class="di-info"><div class="di-label" data-i18n="settingsStore">Store</div><div class="di-sub">Access inventory, balance, report and expenses</div></div>
+        <div class="di-info"><div class="di-label" data-i18n="settingsStore">Store</div><div class="di-sub">Inventory, balance, report &amp; expenses</div></div>
       </button>
     </div>
+
     <div class="drawer-divider"></div>
-    <div class="drawer-section" data-i18n="settingsExport">Export Data</div>
+    <!-- #5 Data section — green accent -->
+    <div class="drawer-section" data-sec="data" data-i18n="settingsExport">Export Data</div>
     <button type="button" class="drawer-item" onclick="openExportModal();closeSettings()">
       <span class="di-icon" style="background:rgba(16,185,129,.12);color:var(--success)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
-      <div class="di-info"><div class="di-label" data-i18n="settingsExportBtn">Export (PDF &amp; Excel)</div></div>
+      <div class="di-info"><div class="di-label" data-i18n="settingsExportBtn">Export (PDF &amp; Excel)</div><div class="di-sub">Download report or spreadsheet</div></div>
     </button>
     <button type="button" class="drawer-item" onclick="openImportModal();closeSettings()">
       <span class="di-icon" style="background:rgba(45,75,138,.12);color:var(--p)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
-      <div class="di-info"><div class="di-label">Import from Excel</div><div class="di-sub">Upload .xlsx to import data</div></div>
+      <div class="di-info"><div class="di-label">Import from Excel</div><div class="di-sub">Upload .xlsx to restore data</div></div>
     </button>
     <button type="button" class="drawer-item" id="btn-backup-data" onclick="backupData();closeSettings()" style="display:none">
       <span class="di-icon" style="background:rgba(16,185,129,.12);color:var(--success)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span>
@@ -2210,54 +2619,75 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
       <span class="di-icon" style="background:rgba(239,68,68,.12);color:var(--error)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.86"/></svg></span>
       <div class="di-info"><div class="di-label">Restore Data</div><div class="di-sub">Upload JSON backup file</div></div>
     </button>
+
     <div class="drawer-divider"></div>
-    <div class="drawer-section" data-i18n="settingsAccount">Account</div>
+    <!-- #5 Account section — amber accent -->
+    <div class="drawer-section" data-sec="acct" data-i18n="settingsAccount">Account</div>
     <button type="button" class="drawer-item" onclick="openChangePass();closeSettings()">
       <span class="di-icon" style="background:rgba(245,158,11,.12);color:var(--warn)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
-      <div class="di-info"><div class="di-label" data-i18n="settingsChangePass">Change Password</div></div>
+      <div class="di-info"><div class="di-label" data-i18n="settingsChangePass">Change Password</div><div class="di-sub">Update your login credentials</div></div>
     </button>
-
     <button type="button" class="drawer-item" id="btn-owner-dash" onclick="closeSettings();handleBrandClick()" style="display:none">
       <span class="di-icon" style="background:var(--owner-glass);color:var(--owner)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></span>
-      <div class="di-info"><div class="di-label">Shop Owner Dashboard</div><div class="di-sub">Manage team, branches &amp; subscription</div></div>
+      <div class="di-info"><div class="di-label">Shop Owner Dashboard</div><div class="di-sub">Team, branches &amp; subscription</div></div>
     </button>
     <button type="button" class="drawer-item" id="btn-request-store" onclick="openRequestItemModal();closeSettings()" style="display:none">
-      <span class="di-icon" style="background:rgba(16,185,129,.12);color:var(--success)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-      </span>
+      <span class="di-icon" style="background:rgba(16,185,129,.12);color:var(--success)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></span>
       <div class="di-info"><div class="di-label" data-i18n="settingsReqStore">Request from Store</div><div class="di-sub" data-i18n="settingsReqStoreSub">Request items for your branch</div></div>
     </button>
+
     <div class="drawer-divider"></div>
-    <div class="drawer-section" data-i18n="settingsPrefs">Preferences</div>
-    <div class="drawer-toggle-row">
-      <label data-i18n="settingsLight" style="display:flex;align-items:center;gap:6px">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>
-        Light Mode
-      </label>
+    <!-- #3 & #5 Preferences section — icon-box rows, muted accent -->
+    <div class="drawer-section" data-sec="prefs" data-i18n="settingsPrefs">Preferences</div>
+
+    <!-- Light Mode -->
+    <div class="drawer-pref-row">
+      <span class="di-icon" style="background:rgba(245,158,11,.1);color:var(--warn)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>
+      </span>
+      <div class="di-info">
+        <div class="di-label" data-i18n="settingsLight">Light Mode</div>
+        <div class="di-sub">Switch between dark and light theme</div>
+      </div>
       <label class="toggle-sw"><input type="checkbox" id="dark-toggle" onchange="setTheme(this.checked?'light':'dark')"><span></span></label>
     </div>
-    <div class="drawer-toggle-row">
-      <label data-i18n="settingsMobile" style="display:flex;align-items:center;gap:6px">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
-        Mobile View
-      </label>
+
+    <!-- Mobile View -->
+    <div class="drawer-pref-row">
+      <span class="di-icon" style="background:rgba(45,75,138,.1);color:var(--p)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+      </span>
+      <div class="di-info">
+        <div class="di-label" data-i18n="settingsMobile">Mobile View</div>
+        <div class="di-sub">Optimize layout for small screens</div>
+      </div>
       <label class="toggle-sw"><input type="checkbox" id="mobile-toggle" onchange="setViewMode(this.checked?'mobile':'desktop')"><span></span></label>
     </div>
-    <div class="drawer-toggle-row">
-      <label data-i18n="settingsLang" style="display:flex;align-items:center;gap:6px">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-        Language
-      </label>
+
+    <!-- Language -->
+    <div class="drawer-pref-row">
+      <span class="di-icon" style="background:rgba(16,185,129,.1);color:var(--success)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+      </span>
+      <div class="di-info">
+        <div class="di-label" data-i18n="settingsLang">Language</div>
+        <div class="di-sub">English or አማርኛ</div>
+      </div>
       <select class="drawer-select" id="lang-select" onchange="setLang(this.value)">
         <option value="en">🇬🇧 English</option>
         <option value="am">🇪🇹 አማርኛ</option>
       </select>
     </div>
-    <div class="drawer-toggle-row">
-      <label style="display:flex;align-items:center;gap:6px">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-        Auto-Logout
-      </label>
+
+    <!-- Auto-Logout -->
+    <div class="drawer-pref-row">
+      <span class="di-icon" style="background:rgba(100,116,139,.1);color:#94a3b8">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </span>
+      <div class="di-info">
+        <div class="di-label">Auto-Logout</div>
+        <div class="di-sub">Session timeout duration</div>
+      </div>
       <select class="drawer-select" id="auto-logout-select" onchange="_setAutoLogout(this.value)">
         <option value="0">Off</option>
         <option value="15">15 min</option>
@@ -2265,6 +2695,59 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
         <option value="60">1 hr</option>
         <option value="120">2 hr</option>
       </select>
+    </div>
+
+  </div>
+
+  <!-- #7 Footer: app info + sync status -->
+  <div class="drawer-footer">
+    <div class="drawer-footer-row">
+      <span class="drawer-footer-brand">POWER — IMS</span>
+      <span class="drawer-footer-ver" id="drawer-ver">v5</span>
+    </div>
+    <div class="drawer-footer-sync" id="drawer-footer-sync">
+      <span class="drawer-footer-dot" id="drawer-footer-dot" style="background:var(--text3)"></span>
+      <span id="drawer-footer-sync-txt">Offline</span>
+    </div>
+  </div>
+</div>
+
+<!-- Report Date Filter Modal -->
+<div class="modal-overlay" id="rpt-date-filter-modal" onclick="if(event.target===this)closeModal('rpt-date-filter-modal')">
+  <div class="modal-box narrow">
+    <div class="modal-hdr">
+      <div class="modal-hdr-icon-wrap"><div class="modal-hdr-icon"><svg class="ic" style="width:20px;height:20px"><use href="#i-calendar"/></svg></div></div>
+      <div><h2>Filter Report by Date</h2><p>Show only records within a date range</p></div>
+      <button type="button" class="modal-hdr-close" onclick="closeModal('rpt-date-filter-modal')"><svg class="ic"><use href="#i-x"/></svg></button>
+    </div>
+    <div style="padding:18px 20px 6px">
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
+        <button type="button" class="btn btn-sm" onclick="_rptDatePreset('today')" id="rdf-preset-today">Today</button>
+        <button type="button" class="btn btn-sm" onclick="_rptDatePreset('week')" id="rdf-preset-week">This Week</button>
+        <button type="button" class="btn btn-sm" onclick="_rptDatePreset('month')" id="rdf-preset-month">This Month</button>
+        <button type="button" class="btn btn-sm" onclick="_rptDatePreset('lastmonth')" id="rdf-preset-lastmonth">Last Month</button>
+        <button type="button" class="btn btn-sm" onclick="_rptDatePreset('year')" id="rdf-preset-year">This Year</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:6px">
+        <div class="field" style="margin:0">
+          <label>From</label>
+          <input type="text" id="rdf-from" placeholder="dd-mm-yyyy" autocomplete="off"
+            style="font-family:var(--mono)"
+            oninput="_rdfClearPresetHighlight()">
+        </div>
+        <div class="field" style="margin:0">
+          <label>To</label>
+          <input type="text" id="rdf-to" placeholder="dd-mm-yyyy" autocomplete="off"
+            style="font-family:var(--mono)"
+            oninput="_rdfClearPresetHighlight()">
+        </div>
+      </div>
+      <p style="font-size:10.5px;color:var(--text3);margin:6px 0 14px">Ethiopian calendar &nbsp;·&nbsp; Format: dd-mm-yyyy &nbsp;·&nbsp; Leave blank for open-ended range</p>
+    </div>
+    <div style="padding:0 20px 18px;display:flex;gap:8px;flex-wrap:wrap">
+      <button type="button" class="btn btn-primary" onclick="_applyRptDateFilter()" style="flex:1"><svg class="ic"><use href="#i-check-circle"/></svg> Apply Filter</button>
+      <button type="button" class="btn" onclick="_clearRptDateFilter()" style="color:var(--error);border-color:rgba(239,68,68,.3)"><svg class="ic"><use href="#i-x"/></svg> Clear</button>
+      <button type="button" class="btn" onclick="closeModal('rpt-date-filter-modal')">Cancel</button>
     </div>
   </div>
 </div>
@@ -2723,6 +3206,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
       <button type="button" class="sys-tab" id="stab-subs" onclick="switchSysTab('subs')"><svg class="ic"><use href="#i-gem"/></svg> Sub Requests <span class="sys-tab-badge tb-warn" id="stab-subs-badge" style="display:none">0</span></button>
       <button type="button" class="sys-tab" id="stab-resets" onclick="switchSysTab('resets')"><svg class="ic"><use href="#i-trash"/></svg> Resets <span class="sys-tab-badge tb-err" id="stab-resets-badge" style="display:none">0</span></button>
       <button type="button" class="sys-tab" id="stab-banned" onclick="switchSysTab('banned')"><svg class="ic"><use href="#i-ban"/></svg> Banned <span class="sys-tab-badge tb-err" id="stab-banned-badge" style="display:none">0</span></button>
+      <button type="button" class="sys-tab" id="stab-auditlog" onclick="switchSysTab('auditlog');_renderAdminLog()"><svg class="ic"><use href="#i-clock"/></svg> Audit Log</button>
     </div>
 
     <!-- Owners section -->
@@ -2746,10 +3230,14 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
         <button type="button" class="bulk-btn" onclick="_bulkExtend(7)">+7d</button>
         <button type="button" class="bulk-btn" onclick="_bulkExtend(30)">+30d</button>
         <button type="button" class="bulk-btn" onclick="_bulkExtend(90)">+90d</button>
+        <input type="number" id="bulk-custom-days" min="1" max="3650" placeholder="days" title="Custom days" style="width:58px;padding:3px 7px;border:1.5px solid var(--border2);border-radius:6px;background:var(--surface);color:var(--text);font-size:11px;font-family:var(--font);outline:none" onkeydown="if(event.key==='Enter')_bulkExtendCustom()">
+        <button type="button" class="bulk-btn" onclick="_bulkExtendCustom()" title="Extend by custom days">+Custom</button>
         <div class="bulk-sep"></div>
         <button type="button" class="bulk-btn bulk-danger" onclick="_bulkSuspend()"><svg class="ic"><use href="#i-ban"/></svg> Suspend</button>
         <button type="button" class="bulk-btn bulk-success" onclick="_bulkUnsuspend()"><svg class="ic"><use href="#i-check-circle"/></svg> Unsuspend</button>
         <button type="button" class="bulk-btn" onclick="_bulkResetPass()"><svg class="ic"><use href="#i-key"/></svg> Reset Pass</button>
+        <div class="bulk-sep"></div>
+        <button type="button" class="bulk-btn bulk-success" onclick="_bulkExportCSV()" title="Export selected owners to CSV"><svg class="ic"><use href="#i-download"/></svg> Export</button>
         <button type="button" class="bulk-btn bulk-danger" style="margin-left:auto" onclick="_bulkDelete()"><svg class="ic"><use href="#i-trash"/></svg> Delete</button>
         <button type="button" class="bulk-btn" onclick="_bulkClearSelection()"><svg class="ic"><use href="#i-x"/></svg> Clear</button>
       </div>
@@ -2761,6 +3249,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
       <div class="owner-section-hdr">
         <h3 id="owner-pending-title"><svg class="ic"><use href="#i-clock"/></svg> Pending Registrations</h3>
         <span id="pending-count" class="sec-count-badge">0</span>
+        <button type="button" class="bulk-btn bulk-success" id="approve-all-btn" onclick="_approveAllPending()" style="display:none;margin-left:auto;font-size:11px;padding:4px 12px"><svg class="ic"><use href="#i-check-circle"/></svg> Approve All</button>
       </div>
       <div id="pending-user-list"></div>
     </div>
@@ -2790,6 +3279,19 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
         <span id="banned-count" class="sec-count-badge" style="background:rgba(244,63,94,.14);color:var(--error);border-color:rgba(244,63,94,.35)">0</span>
       </div>
       <div id="banned-owner-list"></div>
+    </div>
+
+    <!-- Admin Audit Log section -->
+    <div class="owner-section sys-sec" id="sys-sec-auditlog">
+      <div class="owner-section-hdr">
+        <h3><svg class="ic"><use href="#i-clock"/></svg> Admin Audit Log <span class="sec-count-badge" id="audit-log-count" style="color:rgba(45,75,138,.8);border-color:rgba(45,75,138,.3);display:none"></span></h3>
+        <button type="button" class="bulk-btn bulk-success" onclick="_exportAdminLog()" style="margin-left:auto;font-size:11px;padding:4px 12px"><svg class="ic"><use href="#i-download"/></svg> Export CSV</button>
+        <button type="button" class="bulk-btn bulk-danger" onclick="_clearAdminLog()" style="font-size:11px;padding:4px 12px"><svg class="ic"><use href="#i-trash"/></svg> Clear</button>
+      </div>
+      <div id="admin-log-hdr" style="display:none;grid-template-columns:150px 1fr 1fr;gap:10px;padding:6px 16px;background:var(--surface2);border-bottom:1px solid var(--border);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)">
+        <span>Timestamp</span><span>Action</span><span>Notes</span>
+      </div>
+      <div id="admin-log-list"></div>
     </div>
 
 
@@ -2998,11 +3500,11 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
       <p style="font-size:12px;color:var(--text3);margin-bottom:14px;line-height:1.5">Set a temporary password for this owner. They will be required to change it the next time they log in.</p>
       <div class="field">
         <label>New Temporary Password</label>
-        <div class="pw-wrap"><input type="password" id="frm-pass" class="pw-input" placeholder="Enter new password…" /></div>
+        <div class="pw-wrap"><input type="password" id="frm-pass" class="pw-input" placeholder="Enter new password…" onkeydown="if(event.key==='Enter')document.getElementById('frm-pass2').focus()" /></div>
       </div>
       <div class="field">
         <label>Confirm Password</label>
-        <div class="pw-wrap"><input type="password" id="frm-pass2" class="pw-input" placeholder="Confirm password…" /></div>
+        <div class="pw-wrap"><input type="password" id="frm-pass2" class="pw-input" placeholder="Confirm password…" onkeydown="if(event.key==='Enter')confirmForceResetPassword()" /></div>
       </div>
       <div class="modal-error" id="frm-error"></div>
       <button type="button" class="modal-btn owner-btn" onclick="confirmForceResetPassword()"><svg class="ic"><use href="#i-key"/></svg> Set Temporary Password</button>
@@ -4460,11 +4962,39 @@ function selectSubPlan(plan){
 ═══════════════════════════════════════════════════════ */
 let _sysRenderDebounce=null;
 let _sysLastSync='';
+let _sysPrevCounts={pending:0,subs:0,resets:0};
+function _playAdminChime(){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const osc=ctx.createOscillator();const g=ctx.createGain();
+    osc.connect(g);g.connect(ctx.destination);
+    osc.frequency.setValueAtTime(880,ctx.currentTime);
+    osc.frequency.setValueAtTime(1100,ctx.currentTime+0.1);
+    g.gain.setValueAtTime(0.12,ctx.currentTime);
+    g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.35);
+    osc.start(ctx.currentTime);osc.stop(ctx.currentTime+0.35);
+  }catch(e){}
+}
+function _flashSysTabBadge(tabId){
+  const btn=document.getElementById('stab-'+tabId);if(!btn)return;
+  btn.style.transition='background .15s';
+  btn.style.background='rgba(245,158,11,.25)';
+  setTimeout(()=>{btn.style.background='';},800);
+}
 function _debouncedSysRender(){
   clearTimeout(_sysRenderDebounce);
   _sysRenderDebounce=setTimeout(()=>{
     _sysLastSync=new Date().toISOString();
-    if(isSystemOwner())renderSystemOwnerDashboard();
+    if(isSystemOwner()){
+      const newPending=(_lsGet('ims_pending_owners',[])).length;
+      const newSubs=getSubRequests().filter(r=>r.status==='pending').length;
+      const newResets=(_lsGet('ims_reset_requests',[])).filter(r=>r.status==='pending').length;
+      if(newPending>_sysPrevCounts.pending){_flashSysTabBadge('pending');_playAdminChime();}
+      if(newSubs>_sysPrevCounts.subs){_flashSysTabBadge('subs');_playAdminChime();}
+      if(newResets>_sysPrevCounts.resets){_flashSysTabBadge('resets');_playAdminChime();}
+      _sysPrevCounts={pending:newPending,subs:newSubs,resets:newResets};
+      renderSystemOwnerDashboard();
+    }
   },250);
 }
 
@@ -4584,6 +5114,69 @@ async function loadPendingOwnersFromCloud(){
   }catch(e){}
 }
 
+/* ════════════════════════════════════════════════════
+   ADMIN AUDIT LOG  (#23-24)
+════════════════════════════════════════════════════ */
+const _ADMIN_LOG_KEY='ims_sysadmin_action_log';
+const _ADMIN_LOG_MAX=500;
+function _logAdminAction(action,target,notes){
+  const entry={ts:new Date().toISOString(),action,target:target||'—',notes:notes||''};
+  const log=_lsGet(_ADMIN_LOG_KEY,[]);
+  log.unshift(entry);
+  if(log.length>_ADMIN_LOG_MAX)log.length=_ADMIN_LOG_MAX;
+  _lsSet(_ADMIN_LOG_KEY,log);
+}
+function _getAdminLog(){return _lsGet(_ADMIN_LOG_KEY,[]);}
+function _clearAdminLog(){
+  customConfirm('Clear Audit Log?','This permanently removes all recorded admin actions from this device.',
+    '<svg class="ic"><use href="#i-trash"/></svg>','Clear Log',()=>{
+      _lsSet(_ADMIN_LOG_KEY,[]);
+      _renderAdminLog();
+      showToast('Admin log cleared','warn');
+    }
+  );
+}
+function _renderAdminLog(){
+  const log=_getAdminLog();
+  const el=document.getElementById('admin-log-list');if(!el)return;
+  const hdr=document.getElementById('admin-log-hdr');
+  const countBadge=document.getElementById('audit-log-count');
+  if(!log.length){
+    if(hdr)hdr.style.display='none';
+    if(countBadge)countBadge.style.display='none';
+    el.innerHTML=`<div class="sys-empty"><div class="sys-empty-icon"><svg class="ic"><use href="#i-clock"/></svg></div><strong style="color:var(--text2);font-size:14px">No admin actions recorded yet</strong><span style="font-size:12px">Actions like approvals, bans, denials, and unlocks are logged here.</span></div>`;
+    return;
+  }
+  if(hdr){hdr.style.display='grid';}
+  if(countBadge){countBadge.textContent=log.length;countBadge.style.display='';}
+  const _actionLabel={
+    approve_pending:'Approved registration',deny_pending:'Denied registration',approve_all_pending:'Approved all pending',
+    ban:'Banned from platform',restore:'Restored from ban',
+    approve_reset:'Approved data reset',deny_reset:'Denied data reset',
+    mark_contacted:'Marked as contacted',
+    admin_unlock:'Admin panel unlocked',admin_lock:'Admin panel locked',
+    bulk_extend:'Bulk extended subscription',bulk_suspend:'Bulk suspended',bulk_delete:'Bulk deleted',
+  };
+  el.innerHTML=log.map(e=>{
+    const label=_actionLabel[e.action]||e.action;
+    const actionColor=e.action.startsWith('ban')||e.action.startsWith('deny')||e.action.startsWith('bulk_delete')||e.action.startsWith('bulk_suspend')?'var(--error)':e.action.startsWith('approve')||e.action.startsWith('restore')?'var(--success)':'var(--p)';
+    return`<div class="alog-row">
+      <span class="alog-time">${new Date(e.ts).toLocaleString()}</span>
+      <span class="alog-action"><span style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${actionColor};margin-right:2px;flex-shrink:0"></span>${esc(label)}&nbsp;<span style="color:var(--text3);font-weight:400">→</span>&nbsp;<span style="color:var(--p)">${esc(e.target)}</span></span>
+      <span class="alog-notes" title="${esc(e.notes)}">${esc(e.notes)||'—'}</span>
+    </div>`;
+  }).join('');
+}
+function _exportAdminLog(){
+  const log=_getAdminLog();if(!log.length){showToast('No log entries to export','warn');return;}
+  const rows=[['Timestamp','Action','Target','Notes'],...log.map(e=>[e.ts,e.action,e.target,e.notes])];
+  const csv=rows.map(r=>r.map(v=>'"'+(String(v||'').replace(/"/g,'""'))+'"').join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='admin-audit-log-'+new Date().toISOString().slice(0,10)+'.csv';a.click();
+  showToast('<svg class="ic"><use href="#i-download"/></svg> Audit log exported','success');
+}
+
 const BANNED_LS_KEY='ims_banned_owners';
 function getBannedOwners(){return _lsGet(BANNED_LS_KEY,[]);}
 function saveBannedOwners(list){
@@ -4600,6 +5193,7 @@ function restoreOwner(username){
     saveRegistry(reg);
     const updated=getBannedOwners().filter(x=>x.username!==username);
     saveBannedOwners(updated);
+    _logAdminAction('restore',b.username,'Restored from banned list');
     showToast(`<svg class="ic"><use href="#i-check-circle"/></svg> ${b.username} restored`,'success');
     renderSystemOwnerDashboard();
   });
@@ -4881,6 +5475,31 @@ function _deleteOwnerSilent(u){
   if(S.db){const db=S.db,col='power_ims5';db.collection(col).doc(ns).delete().catch(function(){});saveRegistryToCloud(getRegistry(),true);db.collection(col).doc('_pending_owners').set({pending:JSON.stringify(pending),updatedAt:new Date().toISOString()},{merge:true}).catch(function(){});db.collection(col).doc('_banned_owners').set({banned:JSON.stringify(banned),updatedAt:new Date().toISOString()},{merge:true}).catch(function(){});db.collection(col).doc('_reset_requests').set({requests:JSON.stringify(resetReqs),updatedAt:new Date().toISOString()},{merge:true}).catch(function(){});db.collection(col).doc('_sub_requests').set({requests:JSON.stringify(subReqs),updatedAt:new Date().toISOString()},{merge:true}).catch(function(){});}
 }
 
+function _bulkExtendCustom(){
+  const inp=document.getElementById('bulk-custom-days');
+  const days=parseInt(inp?inp.value:0,10);
+  if(!days||days<1){showToast('Enter a valid number of days','warn');return;}
+  inp.value='';
+  _bulkExtend(days);
+}
+
+function _bulkExportCSV(){
+  const users=[..._bulkSelected];if(!users.length){showToast('No owners selected','warn');return;}
+  const reg=getRegistry();
+  const today=new Date().toISOString().slice(0,10);
+  const rows=[['Username','Shop Name','Email','Phone','Status','Plan','Paid Until','Users','Last Login']];
+  users.forEach(function(u){
+    const r=reg[u];if(!r)return;
+    const ss=getSubStatus(r);
+    const uCount=Object.keys(reg).filter(k=>reg[k].ownerId===u&&k!==u).length;
+    rows.push([u,r.shopName||'',r.email||'',r.phone||'',ss.status,r.sub||'',r.paidUntil||'',uCount,r.lastLogin?r.lastLogin.slice(0,10):'']);
+  });
+  const csv=rows.map(r=>r.map(v=>'"'+(String(v).replace(/"/g,'""'))+'"').join(',')).join('\n');
+  const blob=new Blob([csv],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='owners-export-'+today+'.csv';a.click();
+  showToast('<svg class="ic"><use href="#i-download"/></svg> Exported '+users.length+' owners to CSV','success');
+}
+
 /* ════════════════════════════════════════════════════
    FORCE PASSWORD RESET  (Feature 2)
 ════════════════════════════════════════════════════ */
@@ -4970,9 +5589,17 @@ function _renderSysOwnerList(){
   body.innerHTML=owners.map((u,i)=>{
     const r=reg[u],ss=ssCache[u],online=isUserOnline(r);
     const userCount=Object.keys(reg).filter(k=>reg[k].ownerId===u&&k!==u).length;
-    const urgBorder=ss.daysLeft<=3&&ss.status!=='expired'&&ss.status!=='suspended'?'border-left:3px solid var(--warn);':'';
-    const avatarColor=ss.status==='suspended'?'background:#64748b':ss.status==='expired'?'background:var(--error)':ss.status==='active'?'background:var(--success)':'background:var(--warn)';
-    return`<div class="oc-wrap" style="${urgBorder}animation-delay:${i*.05}s" data-u="${u}" onclick="openManageOwner('${esc(u)}')">
+    const isExpired=ss.status==='expired',isSus=ss.status==='suspended';
+    const expiringAmber=!isExpired&&!isSus&&ss.daysLeft<=7&&ss.daysLeft>3;
+    const expiringRed=!isExpired&&!isSus&&ss.daysLeft<=3;
+    let cardBorder='';
+    if(isExpired||isSus) cardBorder='border-left:3px solid var(--error);';
+    else if(expiringRed)  cardBorder='border-left:3px solid var(--error);';
+    else if(expiringAmber)cardBorder='border-left:3px solid var(--warn);';
+    const expiryStyle=isExpired?'color:var(--error);font-weight:700':expiringRed?'color:var(--error);font-weight:700':expiringAmber?'color:var(--warn);font-weight:700':'';
+    const avatarColor=isSus?'background:#64748b':isExpired?'background:var(--error)':ss.status==='active'?'background:var(--success)':'background:var(--warn)';
+    const lastLoginStr=r.lastLogin?`<span title="${new Date(r.lastLogin).toLocaleString()}"><svg class="ic"><use href="#i-clock"/></svg> ${_timeAgo(r.lastLogin)}</span>`:'';
+    return`<div class="oc-wrap" style="${cardBorder}animation-delay:${i*.05}s" data-u="${u}" onclick="openManageOwner('${esc(u)}')">
       <div class="oc-top">
         <div class="oc-avatar" style="${avatarColor}">${u[0].toUpperCase()}</div>
         <div class="oc-main">
@@ -4986,10 +5613,14 @@ function _renderSysOwnerList(){
           <div class="oc-detail">
             ${r.email?`<span><svg class="ic"><use href="#i-mail"/></svg> ${esc(r.email)}</span>`:''}
             <span><svg class="ic"><use href="#i-users"/></svg> ${userCount} user${userCount!==1?'s':''}</span>
-            ${r.paidUntil?`<span><svg class="ic"><use href="#i-calendar"/></svg> Until ${r.paidUntil}</span>`:''}
+            ${r.paidUntil?`<span style="${expiryStyle}"><svg class="ic"><use href="#i-calendar"/></svg> Until ${r.paidUntil}${(expiringAmber||expiringRed)?` (${ss.daysLeft}d)`:''}${isExpired?' — EXPIRED':''}</span>`:''}
+            ${lastLoginStr}
           </div>
         </div>
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text3);flex-shrink:0"><polyline points="9 18 15 12 9 6"/></svg>
+        <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+          <button type="button" class="oc-ext-btn" style="font-size:10px;padding:3px 8px" onclick="event.stopPropagation();extendOwnerSub('${esc(u)}',30)" title="Quick extend +30 days">+30d</button>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text3)"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
       </div>
     </div>`;
   }).join('');
@@ -5020,6 +5651,11 @@ function _buildSubReqCard(q,i){
   const dur=SUB_DURATIONS[q.plan]||{label:q.plan,icon:'<svg class="ic"><use href="#i-calendar"/></svg>'};
   const statusColor=q.status==='pending'?'var(--warn)':q.status==='code_ready'?'var(--success)':q.status==='activated'?'var(--p)':'var(--text3)';
   const statusLabel=q.status==='pending'?'<svg class="ic"><use href="#i-clock"/></svg> Pending':q.status==='code_ready'?'<svg class="ic"><use href="#i-check-circle"/></svg> Code Ready':q.status==='activated'?'<svg class="ic"><use href="#i-gem"/></svg> Activated':'';
+  const ageHrs=q.requestedAt?((Date.now()-new Date(q.requestedAt).getTime())/3600000):0;
+  const slaOver=q.status==='pending'&&ageHrs>48;
+  const contactedLabel=q.contacted?'<span style="font-size:9px;background:rgba(45,75,138,.15);color:var(--p);padding:1px 7px;border-radius:99px;font-weight:700;margin-left:4px">● Contacted</span>':'';
+  const slaWarning=slaOver?`<div style="font-size:10px;color:var(--error);font-weight:700;margin-top:3px;display:flex;align-items:center;gap:4px"><svg class="ic"><use href="#i-alert"/></svg> Awaiting response for ${Math.round(ageHrs)}h — follow up needed</div>`:'';
+  const cardBorder=slaOver?'border-left:3px solid var(--error)':'';
   const codeBox=q.status==='code_ready'?`<div class="gen-code-box">
     <div style="font-size:10px;color:var(--text3);margin-bottom:4px">Send this code to <strong>${esc(q.username)}</strong></div>
     <div class="gen-code-val">${q.code}</div>
@@ -5027,29 +5663,47 @@ function _buildSubReqCard(q,i){
     <button type="button" class="btn btn-sm btn-owner" onclick="copySubCode('${q.code}')"><svg class="ic"><use href="#i-clipboard"/></svg> Copy Code</button>
   </div>`:'';
   const activatedInfo=q.status==='activated'?`<div style="font-size:10px;color:var(--p);margin-top:4px">Activated ${(q.activatedAt||'').slice(0,10)} · Until ${q.paidUntil||'—'}</div>`:'';
-  return`<div class="sr-card" style="animation-delay:${i*.04}s">
+  const contactBtn=q.status==='pending'?`<button type="button" class="btn btn-sm" onclick="_toggleSubReqContacted('${q.id}')" title="${q.contacted?'Mark as not contacted':'Mark as contacted'}" style="white-space:nowrap;flex-shrink:0;font-size:10px">${q.contacted?'✓ Contacted':'Mark Contacted'}</button>`:'';
+  return`<div class="sr-card" style="${cardBorder};animation-delay:${i*.04}s">
     <div class="sr-top">
-      <div class="pc-avatar" style="background:var(--owner)">${q.username[0].toUpperCase()}</div>
+      <div class="pc-avatar" style="background:${slaOver?'var(--error)':'var(--owner)'}">${q.username[0].toUpperCase()}</div>
       <div class="sr-info">
-        <div class="user-name">${esc(q.username)}${q.shopName&&q.shopName!==q.username?` <span style="font-size:11px;font-weight:400;color:var(--text3)">— ${esc(q.shopName)}</span>`:''} <span style="font-size:10px;color:${statusColor};font-weight:700">${statusLabel}</span></div>
+        <div class="user-name">${esc(q.username)}${q.shopName&&q.shopName!==q.username?` <span style="font-size:11px;font-weight:400;color:var(--text3)">— ${esc(q.shopName)}</span>`:''}${contactedLabel} <span style="font-size:10px;color:${statusColor};font-weight:700">${statusLabel}</span></div>
         <div class="pc-meta">${dur.icon} ${dur.label} · Requested ${_timeAgo(q.requestedAt)}</div>
+        ${slaWarning}
         ${activatedInfo}
       </div>
-      ${q.status==='pending'?`<button type="button" class="btn btn-sm btn-owner" onclick="generateSubCode('${q.id}')" style="white-space:nowrap;flex-shrink:0"><svg class="ic"><use href="#i-key"/></svg> Generate Code</button>`:''}
+      <div style="display:flex;flex-direction:column;gap:5px;align-items:flex-end;flex-shrink:0">
+        ${contactBtn}
+        ${q.status==='pending'?`<button type="button" class="btn btn-sm btn-owner" onclick="generateSubCode('${q.id}')" style="white-space:nowrap"><svg class="ic"><use href="#i-key"/></svg> Generate Code</button>`:''}
+      </div>
     </div>
     ${codeBox}
   </div>`;
 }
 
+function _toggleSubReqContacted(reqId){
+  const list=getSubRequests();
+  const idx=list.findIndex(r=>r.id===reqId);
+  if(idx===-1)return;
+  list[idx].contacted=!list[idx].contacted;
+  if(list[idx].contacted)list[idx].contactedAt=new Date().toISOString();
+  saveSubRequests(list);
+  _logAdminAction('mark_contacted',list[idx].username,list[idx].contacted?'Marked as contacted':'Cleared contacted status');
+  _renderSysSubReqs(list,list.filter(r=>r.status==='pending').length);
+}
+
 function _buildResetCard(r,i){
   const statusColor=r.status==='pending'?'var(--warn)':r.status==='approved'?'var(--success)':'var(--error)';
   const statusIcon=r.status==='pending'?'<svg class="ic"><use href="#i-clock"/></svg>':r.status==='approved'?'<svg class="ic"><use href="#i-check-circle"/></svg>':'<svg class="ic"><use href="#i-x-circle"/></svg>';
+  const denyNote=r.denyReason?`<div style="font-size:10px;color:var(--text3);margin-top:4px">Denial reason: ${esc(r.denyReason)}</div>`:'';
   return`<div class="pc-card" style="animation-delay:${i*.06}s;border-left:3px solid ${statusColor}">
     <div class="pc-top">
       <div class="pc-avatar" style="background:rgba(239,68,68,.2);color:var(--error);font-size:18px"><svg class="ic"><use href="#i-trash"/></svg></div>
       <div style="flex:1;min-width:0">
         <div class="user-name">${esc(r.ownerUsername)} <span style="font-size:10px;color:${statusColor};font-weight:700">${statusIcon} ${r.status.toUpperCase()}</span></div>
         <div class="pc-meta"><span>Requested ${_timeAgo(r.requestedAt)}</span>${r.respondedAt?`<span>Responded ${_timeAgo(r.respondedAt)}</span>`:''}</div>
+        ${denyNote}
       </div>
       ${r.status==='pending'?`<div style="display:flex;gap:4px;flex-shrink:0">
         <button type="button" class="btn btn-sm btn-success" onclick="approveDataReset('${esc(r.requestedAt)}')"><svg class="ic"><use href="#i-check-circle"/></svg> Approve</button>
@@ -5060,19 +5714,99 @@ function _buildResetCard(r,i){
 }
 
 function _buildBannedCard(b,i){
+  const now=new Date();
+  const autoUnbanAt=b.banExpiresAt?new Date(b.banExpiresAt):null;
+  const expired=autoUnbanAt&&autoUnbanAt<=now;
+  const timedBanInfo=autoUnbanAt?`<span style="color:${expired?'var(--success)':'var(--warn)'}">${expired?'⏱ Ban expired — can be restored':'⏱ Auto-unban: '+autoUnbanAt.toISOString().slice(0,10)}</span>`:'';
   return`<div class="pc-card" style="animation-delay:${i*.06}s;border-left:3px solid var(--error)">
     <div class="pc-top">
       <div class="pc-avatar" style="background:rgba(239,68,68,.18);color:var(--error)">${b.username[0].toUpperCase()}</div>
       <div style="flex:1;min-width:0">
         <div class="user-name">${esc(b.username)}${b.shopName?` <span style="font-weight:400;font-size:11px;color:var(--text3)">— ${esc(b.shopName)}</span>`:''} <span style="font-size:9px;background:rgba(239,68,68,.15);color:var(--error);padding:1px 7px;border-radius:99px;font-weight:700">BANNED</span></div>
-        <div class="pc-meta">${b.email?`<span><svg class="ic"><use href="#i-mail"/></svg> ${esc(b.email)}</span>`:''}${b.bannedAt?`<span>Banned ${_timeAgo(b.bannedAt)}</span>`:''}</div>
+        <div class="pc-meta">
+          ${b.email?`<span><svg class="ic"><use href="#i-mail"/></svg> ${esc(b.email)}</span>`:''}
+          ${b.bannedAt?`<span title="${new Date(b.bannedAt).toLocaleString()}">Banned ${_timeAgo(b.bannedAt)}</span>`:''}
+          ${timedBanInfo}
+        </div>
+        ${b.banReason?`<div style="font-size:10px;color:var(--text2);margin-top:3px;padding:4px 8px;background:rgba(239,68,68,.06);border-radius:6px;border:1px solid rgba(239,68,68,.15)">Reason: ${esc(b.banReason)}</div>`:''}
       </div>
       <button type="button" class="btn btn-sm btn-success" onclick="restoreOwner('${esc(b.username)}')" style="flex-shrink:0"><svg class="ic"><use href="#i-check-circle"/></svg> Restore</button>
     </div>
   </div>`;
 }
 
+function banFromPlatform(u){
+  const reg=getRegistry();const r=reg[u]||{};
+  const reason=prompt(`Reason for banning "${u}" from the platform (required):`);
+  if(reason===null)return;
+  if(!reason.trim()){showToast('A reason is required to ban an owner','warn');return;}
+  const durStr=prompt('Ban duration in days (leave blank or 0 for permanent ban):');
+  if(durStr===null)return;
+  const durDays=parseInt(durStr,10)||0;
+  const now=new Date().toISOString();
+  const banEntry={
+    username:u,shopName:r.shopName||'',email:r.email||'',phone:r.phone||'',
+    ownerId:r.ownerId||u,bannedAt:now,banReason:reason.trim(),
+    banExpiresAt:durDays>0?new Date(Date.now()+durDays*864e5).toISOString():null,
+    originalData:{...r}
+  };
+  const banned=getBannedOwners();
+  if(!banned.find(x=>x.username===u))banned.push(banEntry);
+  saveBannedOwners(banned);
+  delete reg[u];saveRegistry(reg);saveRegistryToCloud(reg,true);
+  _logAdminAction('ban',u,`${reason}${durDays?` · ${durDays}d ban`:', permanent'}`);
+  showToast(`<svg class="ic"><use href="#i-ban"/></svg> ${u} banned from platform`,'error');
+  closeManageOwner();
+}
+
 // ── Section renderers (#14) ──────────────────────────────────────────
+const _STATS_SNAP_KEY='ims_sysadmin_stats_snap';
+function _getStatsTrend(key,val){
+  const snap=_lsGet(_STATS_SNAP_KEY,{});
+  const prev=snap[key];
+  if(prev===undefined||prev===null)return'';
+  const delta=val-prev;
+  if(delta===0)return'';
+  const dir=delta>0?'▲':'▼';
+  const col=delta>0?(key==='expiredSus'||key==='expiringSoon'?'var(--error)':'var(--success)'):(key==='expiredSus'||key==='expiringSoon'?'var(--success)':'var(--error)');
+  return`<span style="font-size:9px;font-weight:700;color:${col};margin-left:4px">${dir}${Math.abs(delta)}</span>`;
+}
+function _saveStatsSnap(counts){
+  const snap=_lsGet(_STATS_SNAP_KEY,{});
+  Object.assign(snap,counts);
+  _lsSet(_STATS_SNAP_KEY,snap);
+}
+
+async function _fetchTotalStorage(owners){
+  const el=document.getElementById('sys-total-storage-val');
+  if(!el)return;
+  const reg=getRegistry();
+  let totalBytes=0;
+  // Sum localStorage for any owner data present locally
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k&&k.startsWith('ims_'))totalBytes+=(localStorage.getItem(k)||'').length*2;
+  }
+  if(totalBytes>0){
+    el.textContent=totalBytes>=1048576?(totalBytes/1048576).toFixed(2)+' MB':(totalBytes/1024).toFixed(1)+' KB';
+    return;
+  }
+  // No local data — fetch from Supabase in parallel for all owners
+  if(!S.db){el.textContent='N/A';return;}
+  try{
+    const nsList=owners.map(u=>(reg[u]||{}).ownerId||u);
+    const unique=[...new Set(nsList)];
+    const docs=await Promise.all(unique.map(ns=>S.db.collection('power_ims5').doc(ns).get().catch(()=>null)));
+    docs.forEach(doc=>{
+      if(!doc||!doc.exists)return;
+      Object.values(doc.data()||{}).forEach(v=>{
+        totalBytes+=typeof v==='string'?v.length*2:JSON.stringify(v).length*2;
+      });
+    });
+    el.textContent=totalBytes>=1048576?(totalBytes/1048576).toFixed(2)+' MB':(totalBytes/1024).toFixed(1)+' KB';
+  }catch(e){el.textContent='N/A';}
+}
+
 function _renderSysStats(owners,reg,pendingOwners,bannedOwners,pendingSubReqs,pendingResets){
   const ssList=owners.map(u=>getSubStatus(reg[u]));
   const paidCount=ssList.filter(s=>s.status==='active').length;
@@ -5081,14 +5815,26 @@ function _renderSysStats(owners,reg,pendingOwners,bannedOwners,pendingSubReqs,pe
   const susCount=ssList.filter(s=>s.status==='suspended').length;
   const expiringSoon=ssList.filter(s=>(s.status==='active'||s.status==='trial')&&s.daysLeft<=5).length;
   const onlineCount=owners.filter(u=>isUserOnline(reg[u])).length;
-  const _st=(icon,val,lbl,vc='',bc='')=>`<div class="owner-stat" style="border-left-color:${bc||'var(--border2)'};border-left-width:4px"><div class="stat-icon-box" style="${bc?`background:${bc}20;border-color:${bc}35;color:${bc}`:''}"><span class="stat-icon">${icon}</span></div><div class="stat-body"><div class="stat-val" style="${vc?`color:${vc}`:'color:var(--text)'}">${val}</div><div class="stat-lbl">${lbl}</div></div></div>`;
+  const counts={total:owners.length,paid:paidCount,trial:trialCount,expiredSus:expiredCount+susCount,expiringSoon};
+  const _st=(icon,val,lbl,vc='',bc='',tab='',trendKey='')=>`<div class="owner-stat" style="border-left-color:${bc||'var(--border2)'};border-left-width:4px;cursor:${tab?'pointer':'default'}" ${tab?`onclick="switchSysTab('${tab}')" title="Jump to ${tab} tab"`:''}>
+    <div class="stat-icon-box" style="${bc?`background:${bc}20;border-color:${bc}35;color:${bc}`:''}"><span class="stat-icon">${icon}</span></div>
+    <div class="stat-body"><div class="stat-val" style="${vc?`color:${vc}`:'color:var(--text)'}">${val}${trendKey?_getStatsTrend(trendKey,val):''}</div><div class="stat-lbl">${lbl}</div></div>
+  </div>`;
   document.getElementById('owner-stats').innerHTML=
-    _st('<svg class="ic"><use href="#i-crown"/></svg>',owners.length,'Total Owners','','rgba(45,75,138,1)')+
-    _st('<svg class="ic"><use href="#i-check-circle"/></svg>',paidCount,'Paid Active','var(--success)','var(--success)')+
-    _st('<svg class="ic"><use href="#i-clock"/></svg>',trialCount,'On Trial','var(--warn)','var(--warn)')+
-    _st('<svg class="ic"><use href="#i-circle-green"/></svg>',onlineCount,'Online Now','','rgba(45,75,138,.7)')+
-    _st('<svg class="ic"><use href="#i-circle-red"/></svg>',expiredCount+susCount,'Expired / Sus.','var(--error)','var(--error)')+
-    (expiringSoon?_st('<svg class="ic"><use href="#i-alert"/></svg>',expiringSoon,'Expiring ≤5d','var(--warn)','var(--warn)'):'');
+    _st('<svg class="ic"><use href="#i-crown"/></svg>',owners.length,'Total Owners','','rgba(45,75,138,1)','owners','total')+
+    _st('<svg class="ic"><use href="#i-check-circle"/></svg>',paidCount,'Paid Active','var(--success)','var(--success)','owners','paid')+
+    _st('<svg class="ic"><use href="#i-clock"/></svg>',trialCount,'On Trial','var(--warn)','var(--warn)','owners','trial')+
+    _st('<svg class="ic"><use href="#i-circle-green"/></svg>',onlineCount,'Online Now','','rgba(45,75,138,.7)','owners','')+
+    _st('<svg class="ic"><use href="#i-circle-red"/></svg>',expiredCount+susCount,'Expired / Sus.','var(--error)','var(--error)','owners','expiredSus')+
+    (expiringSoon?_st('<svg class="ic"><use href="#i-alert"/></svg>',expiringSoon,'Expiring ≤5d','var(--warn)','var(--warn)','owners','expiringSoon'):'')+
+    _st('<svg class="ic"><use href="#i-clock"/></svg>',pendingOwners.length,'Pending','var(--warn)','var(--warn)','pending','')+
+    (pendingSubReqs?_st('<svg class="ic"><use href="#i-gem"/></svg>',pendingSubReqs,'Sub Requests','var(--p)','var(--p)','subs',''):'')+
+    `<div class="owner-stat" style="border-left-color:rgba(45,75,138,.6);border-left-width:4px;cursor:default">
+      <div class="stat-icon-box" style="background:rgba(45,75,138,.12);border-color:rgba(45,75,138,.25);color:rgba(45,75,138,1)"><span class="stat-icon"><svg class="ic"><use href="#i-save"/></svg></span></div>
+      <div class="stat-body"><div class="stat-val" id="sys-total-storage-val" style="color:var(--text)">…</div><div class="stat-lbl">Total Storage</div></div>
+    </div>`;
+  setTimeout(()=>_saveStatsSnap(counts),2000);
+  _fetchTotalStorage(owners);
   return{paidCount,expiringSoon};
 }
 
@@ -5118,9 +5864,35 @@ function _renderSysHeroPills(owners,paidCount,pendingOwners,expiringSoon,pending
 
 function _renderSysPending(pendingOwners){
   document.getElementById('pending-count').textContent=pendingOwners.length;
+  const approveAllBtn=document.getElementById('approve-all-btn');
+  if(approveAllBtn)approveAllBtn.style.display=pendingOwners.length>1?'':'none';
   document.getElementById('pending-user-list').innerHTML=pendingOwners.length
     ?[...pendingOwners].reverse().map(_buildPendingCard).join('')
     :`<div class="sys-empty"><div class="sys-empty-icon"><svg class="ic"><use href="#i-sparkle"/></svg></div><strong style="color:var(--text2);font-size:14px">No pending requests</strong><span style="font-size:12px">New registrations awaiting approval will appear here.</span></div>`;
+}
+
+function _approveAllPending(){
+  const pending=_lsGet('ims_pending_owners',[]);
+  if(!pending.length){showToast('No pending registrations','warn');return;}
+  customConfirm(
+    `Approve all ${pending.length} pending registration(s)?`,
+    pending.map(p=>p.username).join(', ')+'  — All will receive a 14-day trial.',
+    '<svg class="ic"><use href="#i-check-circle"/></svg>','Approve All',
+    async()=>{
+      const reg=getRegistry();
+      for(const p of pending){
+        if(reg[p.username])continue;
+        const pwd=isHashed(p.password)?p.password:await sha256Hex(p.password);
+        reg[p.username]={password:pwd,ownerId:p.username,role:'owner',shopName:p.shopName||'',email:p.email||'',phone:p.phone||'',sub:'trial',status:'trial',trialStart:new Date().toISOString().slice(0,10),trialDays:14,payHistory:[]};
+        _logAdminAction('approve_pending',p.username,'Approved via Approve All');
+      }
+      saveRegistry(reg);
+      _lsSet('ims_pending_owners',[]);
+      if(S.db)S.db.collection('power_ims5').doc('_pending_owners').set({pending:'[]',updatedAt:new Date().toISOString()},{merge:true}).catch(()=>{});
+      showToast(`<svg class="ic"><use href="#i-check-circle"/></svg> ${pending.length} owner(s) approved — 14-day trials started`,'success');
+      renderSystemOwnerDashboard();
+    }
+  );
 }
 
 function _renderSysSubReqs(subReqs,pendingSubReqs){
@@ -5150,6 +5922,7 @@ let _mopOwner=null;
 function openManageOwner(u){
   _mopOwner=u;
   _renderMopContent(u);
+  _fetchMopStorage(u);
   // hide all main-dashboard content
   document.querySelectorAll('#sys-tab-bar,.sys-sec,.owner-section,#owner-stats,.owner-stats,#hero-quick-strip,#owner-sub-banner,#owner-sub-progress,#owner-quick-actions').forEach(el=>{
     if(!el.closest('#manage-owner-panel'))el.style.display='none';
@@ -5164,13 +5937,35 @@ function closeManageOwner(){
   renderSystemOwnerDashboard();
 }
 
+async function _fetchMopStorage(u){
+  const el=document.getElementById('mop-storage-val');
+  if(!el)return;
+  const ns=(getRegistry()[u]||{}).ownerId||u;
+  // First try localStorage (owner on same device)
+  let bytes=0;
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k&&k.startsWith(`ims_${ns}_`))bytes+=(localStorage.getItem(k)||'').length*2;
+  }
+  if(bytes>0){el.textContent=(bytes/1024).toFixed(1)+' KB';return;}
+  // Fall back to Supabase cloud document
+  if(!S.db){el.textContent='N/A';return;}
+  try{
+    const doc=await S.db.collection('power_ims5').doc(ns).get();
+    if(!doc.exists){el.textContent='0 KB';return;}
+    const d=doc.data()||{};
+    let cloudBytes=0;
+    Object.values(d).forEach(v=>{if(typeof v==='string')cloudBytes+=v.length*2;else cloudBytes+=JSON.stringify(v).length*2;});
+    el.textContent=(cloudBytes/1024).toFixed(1)+' KB';
+  }catch(e){el.textContent='N/A';}
+}
+
 function _renderMopContent(u){
   const reg=getRegistry();
   const r=reg[u];
   if(!r){closeManageOwner();return;}
   const ss=getSubStatus(r);
   const online=isUserOnline(r);
-  const act=_getOwnerActivity(u);
   const users=Object.keys(reg).filter(k=>reg[k].ownerId===u&&k!==u);
   const isSus=ss.status==='suspended';
   const avatarBg=isSus?'#64748b':ss.status==='expired'?'var(--error)':ss.status==='active'?'var(--success)':'var(--warn)';
@@ -5201,10 +5996,7 @@ function _renderMopContent(u){
     </div>
 
     <div style="padding:12px 18px;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:8px">
-      <div style="display:flex;align-items:center;gap:6px;padding:7px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;font-size:12px"><svg class="ic" style="color:var(--p)"><use href="#i-package"/></svg> <strong>${act.items}</strong>&nbsp;items</div>
-      <div style="display:flex;align-items:center;gap:6px;padding:7px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;font-size:12px"><svg class="ic" style="color:var(--success)"><use href="#i-cart"/></svg> <strong>${act.purchases}</strong>&nbsp;purchases</div>
-      <div style="display:flex;align-items:center;gap:6px;padding:7px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;font-size:12px"><svg class="ic" style="color:var(--warn)"><use href="#i-money"/></svg> <strong>${act.sales}</strong>&nbsp;sales</div>
-      <div style="display:flex;align-items:center;gap:6px;padding:7px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;font-size:12px"><svg class="ic" style="color:var(--text2)"><use href="#i-save"/></svg> <strong>${act.kb}&nbsp;KB</strong></div>
+      <div style="display:flex;align-items:center;gap:6px;padding:7px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;font-size:12px"><svg class="ic" style="color:var(--text2)"><use href="#i-save"/></svg> <strong id="mop-storage-val">…</strong>&nbsp;storage</div>
     </div>
 
     <div style="padding:14px 18px;border-bottom:1px solid var(--border)">
@@ -5229,6 +6021,7 @@ function _renderMopContent(u){
         ${isSus
           ?`<button type="button" class="btn btn-sm btn-success" onclick="unsuspendUser('${esc(u)}')"><svg class="ic"><use href="#i-check-circle"/></svg> Unsuspend</button>`
           :`<button type="button" class="btn btn-sm btn-danger" onclick="suspendUser('${esc(u)}')"><svg class="ic"><use href="#i-ban"/></svg> Suspend</button>`}
+        <button type="button" class="btn btn-sm" onclick="banFromPlatform('${esc(u)}')" style="color:var(--error);border-color:rgba(239,68,68,.3)" title="Permanently ban from platform with reason"><svg class="ic"><use href="#i-ban"/></svg> Ban from Platform</button>
         <button type="button" class="btn btn-sm" onclick="deleteOwner('${esc(u)}')" style="color:var(--error);border-color:rgba(239,68,68,.3)"><svg class="ic"><use href="#i-trash"/></svg> Delete Owner</button>
       </div>
     </div>
@@ -5452,10 +6245,12 @@ function denyOwner(username){
     'Their request will be removed. They can re-apply at any time.',
     '<svg class="ic"><use href="#i-x-circle"/></svg>','Deny',
     ()=>{
+      const reason=prompt(`Reason for denying "${name}" (optional — stored in the admin log):`)||'';
       const list=_lsGet('ims_pending_owners',[]);
       const updated=list.filter(x=>x.username!==username);
       _lsSet('ims_pending_owners',updated);
       if(S.db)S.db.collection('power_ims5').doc('_pending_owners').set({pending:JSON.stringify(updated),updatedAt:new Date().toISOString()},{merge:true}).catch(()=>{});
+      _logAdminAction('deny_pending',name,reason||'No reason given');
       showToast(`<svg class="ic"><use href="#i-x-circle"/></svg> ${name} denied — they may re-apply`,'warn');renderSystemOwnerDashboard();
     }
   );
@@ -5543,12 +6338,14 @@ function confirmApproveOwnerTrial(){
 function suspendUser(u){
   customConfirm('Suspend Owner?',`"${u}" will immediately lose access to their account and all users under them will be locked out.`,_SVG.ban,'Suspend',()=>{
     const reg=getRegistry();if(reg[u])reg[u].status='suspended';saveRegistry(reg);saveRegistryToCloud(reg,true);
+    _logAdminAction('suspend',u,'');
     showToast(`${u} suspended`,'warn');renderSystemOwnerDashboard();
   });
 }
 function unsuspendUser(u){
   customConfirm('Restore Access?',`"${u}" and their users will regain full access immediately.`,_SVG.check,'Restore',()=>{
     const reg=getRegistry();if(reg[u])reg[u].status='active';saveRegistry(reg);saveRegistryToCloud(reg,true);
+    _logAdminAction('unsuspend',u,'');
     showToast(`${u} reactivated`,'success');renderSystemOwnerDashboard();
   });
 }
@@ -6780,8 +7577,11 @@ function denyDataReset(reqAt){
   const idx=reqs.findIndex(r=>r.requestedAt===reqAt);
   if(idx===-1){showToast('Request not found — the list may have updated','warn');renderSystemOwnerDashboard();return;}
   if(reqs[idx].status!=='pending')return;
+  const reason=prompt(`Reason for denying reset request for "${reqs[idx].ownerUsername}" (shown on their card):`)||'';
   reqs[idx].status='denied';reqs[idx].respondedAt=new Date().toISOString();
+  if(reason)reqs[idx].denyReason=reason;
   _saveResetRequests(reqs);
+  _logAdminAction('deny_reset',reqs[idx].ownerUsername,reason||'No reason given');
   showToast(`<svg class="ic"><use href="#i-x-circle"/></svg> Reset denied for ${reqs[idx].ownerUsername}`,'warn');
   renderSystemOwnerDashboard();
 }
@@ -6973,6 +7773,7 @@ function openSettings(){
   document.getElementById('drawer-overlay').classList.add('open');
   dr.classList.add('open');
   _syncDrawerActive();
+  if(typeof _refreshDrawer==='function')_refreshDrawer();
   const items=[...dr.querySelectorAll('.drawer-item')].filter(el=>el.offsetParent!==null);
   items.forEach((el,i)=>{el.style.animation='drawer-item-in .28s cubic-bezier(.22,1,.36,1) '+(40+i*28)+'ms both';});
 }
@@ -8113,9 +8914,10 @@ function renderStoreBalance(){
    RENDER STORE REPORT
 ═══════════════════════════════════════════════════════ */
 function renderStoreReport(){
+  const _dmyToYmd=s=>{const p=(s||'').split('-');return p.length===3?p[2]+'-'+p[1]+'-'+p[0]:s;};
   const inRange=arr=>arr.filter(r=>{
     if(!r.date)return true;
-    const d=r.date.slice(0,10);
+    const d=_dmyToYmd(r.date.slice(0,10));
     if(S.storeReportRange.from&&d<S.storeReportRange.from)return false;
     if(S.storeReportRange.to&&d>S.storeReportRange.to)return false;
     return true;
@@ -8144,9 +8946,7 @@ function renderStoreReport(){
   </tr>`).join('');
   document.getElementById('tab-content').innerHTML=`
     <div class="date-bar no-print">
-      <label>${L('fromLabel')}: <input type="text" placeholder="dd-mm-yyyy" value="${S.storeReportRange.from}" onchange="S.storeReportRange.from=this.value;renderTab()"></label>
-      <label>${L('toLabel')}: <input type="text" placeholder="dd-mm-yyyy" value="${S.storeReportRange.to}" onchange="S.storeReportRange.to=this.value;renderTab()"></label>
-      <button type="button" class="btn btn-sm" onclick="S.storeReportRange.from='';S.storeReportRange.to='';renderTab()">${L('btnClear')}</button>
+      ${(()=>{const sr=S.storeReportRange;const a=sr.from||sr.to;const f=s=>{if(!s)return'';const p=s.split('-');return p.length===3?p[2]+'-'+p[1]+'-'+p[0]:s;};const lbl=a?(f(sr.from)||'…')+' → '+(f(sr.to)||'…'):'All Dates';return`<button type="button" class="btn btn-sm${a?' btn-primary':''}" onclick="_openRptDateFilter('store')" style="display:flex;align-items:center;gap:6px"><svg class="ic"><use href="#i-calendar"/></svg><span>${lbl}</span></button>${a?`<button type="button" class="btn btn-sm" onclick="_clearRptDateFilter()" title="Clear date filter" style="padding:4px 8px;color:var(--error);border-color:rgba(239,68,68,.3)"><svg class="ic"><use href="#i-x"/></svg></button>`:''}`})()}
       <button type="button" class="btn btn-sm no-print" onclick="printStoreReport()" style="margin-left:auto">${L('btnPrint')}</button>
     </div>
     ${summaryData.map(r=>`<div class="${r.total?'report-row report-total-row':'report-row'}">
@@ -8602,9 +9402,10 @@ function _setBranchBal(branch,val){if(!S.branchBeginBal)S.branchBeginBal={};S.br
 function _reportCalc(branch){
   const calcPT=p=>{const b=(p.qty||0)*(p.uPrice||0);return b+(p.vatOn?b*0.15:0);};
   const calcST=s=>{const b=(s.qty||0)*(s.sPrice||0);return b+(s.vatOn?b*0.15:0)-(s.wh3On?b*0.03:0)-(s.vwhOn?b*0.075:0)-(s.commission||0);};
+  const _dmyToYmd=s=>{const p=(s||'').split('-');return p.length===3?p[2]+'-'+p[1]+'-'+p[0]:s;};
   const inRange=arr=>arr.filter(r=>{
     if(!r.date)return true;
-    const d=r.date.slice(0,10);
+    const d=_dmyToYmd(r.date.slice(0,10));
     if(S.reportRange.from&&d<S.reportRange.from)return false;
     if(S.reportRange.to&&d>S.reportRange.to)return false;
     return true;
@@ -8667,10 +9468,16 @@ function renderReport(){
     <button type="button" class="btn btn-sm${activeBranch==='STORE'?' btn-primary':''}" onclick="S.reportBranch='STORE';renderTab()"><svg class="ic"><use href="#i-store"/></svg> ${L('navStore')}</button>
   </div>`:'';
 
+  const _rr=S.reportRange;
+  const _rrActive=_rr.from||_rr.to;
+  const _ymdToDmy=s=>{if(!s)return'';const p=s.split('-');return p.length===3?p[2]+'-'+p[1]+'-'+p[0]:s;};
+  const _rrLabel=_rrActive?(_ymdToDmy(_rr.from)||'…')+' → '+(_ymdToDmy(_rr.to)||'…'):'All Dates';
   const datebar=`<div class="date-bar no-print">
-    <label>${L('fromLabel')}: <input type="text" placeholder="dd-mm-yyyy" id="rpt-from" value="${S.reportRange.from}" oninput="_debouncedDateFilter()"></label>
-    <label>${L('toLabel')}: <input type="text" placeholder="dd-mm-yyyy" id="rpt-to" value="${S.reportRange.to}" oninput="_debouncedDateFilter()"></label>
-    <button type="button" class="btn btn-sm" onclick="S.reportRange.from='';S.reportRange.to='';renderTab()">${L('btnClear')}</button>
+    <button type="button" class="btn btn-sm${_rrActive?' btn-primary':''}" onclick="_openRptDateFilter('report')" style="display:flex;align-items:center;gap:6px">
+      <svg class="ic"><use href="#i-calendar"/></svg>
+      <span>${_rrLabel}</span>
+    </button>
+    ${_rrActive?`<button type="button" class="btn btn-sm" onclick="_clearRptDateFilter()" title="Clear date filter" style="padding:4px 8px;color:var(--error);border-color:rgba(239,68,68,.3)"><svg class="ic"><use href="#i-x"/></svg></button>`:''}
     <button type="button" class="btn btn-sm no-print" onclick="exportReportPDF()" style="margin-left:auto;background:var(--error);color:#E4E6F5;border-color:var(--error)"><svg class="ic"><use href="#i-file"/></svg> ${L('exportPdfBtn').replace(/<[^>]+>/g,'').trim()}</button>
     <button type="button" class="btn btn-sm no-print" onclick="printReport()">${L('btnPrint')}</button>
   </div>`;
@@ -10500,8 +11307,24 @@ function _storeNav(tab){
 ═══════════════════════════════════════════════════════ */
 let _adminOverlay = false;
 let _savedSession = null;
+let _adminTimeoutId = null;
+const _ADMIN_OVERLAY_TIMEOUT_MS = 30 * 60 * 1000; // 30 minutes
+
+function _resetAdminTimeout(){
+  clearTimeout(_adminTimeoutId);
+  if(_adminOverlay){
+    _adminTimeoutId = setTimeout(()=>{
+      if(_adminOverlay){
+        showToast('<svg class="ic"><use href="#i-lock"/></svg> Admin session timed out after 30 min of inactivity','warn');
+        _logAdminAction('admin_lock','system','Auto-lock: 30 min inactivity timeout');
+        _closeAdminOverlay();
+      }
+    }, _ADMIN_OVERLAY_TIMEOUT_MS);
+  }
+}
 
 document.addEventListener('keydown', function(e){
+  if(_adminOverlay) _resetAdminTimeout();
   if(e.ctrlKey && e.shiftKey && (e.key === 'A' || e.key === 'a')){
     e.preventDefault();
     if(_adminOverlay){ _closeAdminOverlay(); return; }
@@ -10511,7 +11334,21 @@ document.addEventListener('keydown', function(e){
     document.getElementById('admin-unlock-err').textContent = '';
     setTimeout(() => inp.focus(), 60);
   }
+  // Keyboard nav: Escape closes admin unlock modal
+  if(e.key === 'Escape'){
+    const unlockModal = document.getElementById('admin-unlock-modal');
+    if(unlockModal && unlockModal.classList.contains('show')) closeModal('admin-unlock-modal');
+    const frmModal = document.getElementById('force-reset-modal');
+    if(frmModal && frmModal.classList.contains('show')) closeModal('force-reset-modal');
+  }
+  // Enter submits admin unlock modal when it has focus
+  if(e.key === 'Enter'){
+    const unlockModal = document.getElementById('admin-unlock-modal');
+    if(unlockModal && unlockModal.classList.contains('show')) _doAdminUnlock();
+  }
 });
+
+document.addEventListener('mousemove', function(){ if(_adminOverlay) _resetAdminTimeout(); });
 
 async function _doAdminUnlock(){
   const p = document.getElementById('admin-unlock-pass').value;
@@ -10522,6 +11359,7 @@ async function _doAdminUnlock(){
   try{ h = await sha256Hex(p); } catch(e){ err.textContent = 'Error checking password.'; return; }
   if(h !== OWNER_PASSWORD_HASH){ err.textContent = 'Incorrect password.'; document.getElementById('admin-unlock-pass').value = ''; return; }
   closeModal('admin-unlock-modal');
+  _logAdminAction('admin_unlock', S.user||'unknown', 'Admin panel unlocked via Ctrl+Shift+A');
   _openAdminOverlay();
 }
 
@@ -10539,12 +11377,15 @@ function _openAdminOverlay(){
   }
   const logoutBtn = document.querySelector('#owner-screen .owner-logout-btn');
   if(logoutBtn){ logoutBtn.innerHTML = '<svg class="ic"><use href="#i-arrow-left"/></svg> Return to Session'; }
+  _resetAdminTimeout();
   showToast('Admin overlay active — press Ctrl+Shift+A or click Return to Session to exit', 'success');
 }
 
 function _closeAdminOverlay(){
   if(!_savedSession) return;
+  clearTimeout(_adminTimeoutId);
   _adminOverlay = false;
+  _logAdminAction('admin_lock', _savedSession.user||'unknown', 'Admin panel closed');
   const { user, ownerId, role } = _savedSession;
   _savedSession = null;
   S.user = user; S.ownerId = ownerId; S.role = role;
@@ -10579,12 +11420,8 @@ function _refreshDrawer(){
   var dt = document.getElementById('dsc-detail');
   if(av){
     av.textContent = (S.user||'?')[0].toUpperCase();
-    var roleColors = {system_owner:'#2D4B8A',owner:'#2D4B8A',manager:'#2D4B8A',storekeeper:'#2D4B8A',readonly:'#6b7280'};
+    var roleColors = {system_owner:'#2D4B8A',owner:'#2D4B8A',manager:'#7c3aed',storekeeper:'#059669',readonly:'#6b7280'};
     av.style.background = roleColors[S.role] || '#6b7280';
-    av.style.color = '#E4E6F5';
-    av.style.width = '36px'; av.style.height = '36px'; av.style.borderRadius = '50%';
-    av.style.display = 'flex'; av.style.alignItems = 'center'; av.style.justifyContent = 'center';
-    av.style.fontWeight = '700'; av.style.fontSize = '15px';
   }
   if(nm) nm.textContent = S.user || '';
   if(rl){
@@ -10639,6 +11476,22 @@ function _refreshDrawer(){
   var alSel = document.getElementById('auto-logout-select');
   if(alSel){
     alSel.value = localStorage.getItem('ims__auto_logout') || '0';
+  }
+
+  // Footer sync dot + text
+  var fdot = document.getElementById('drawer-footer-dot');
+  var ftxt = document.getElementById('drawer-footer-sync-txt');
+  if(fdot && ftxt){
+    if(S.db && S.dbConnected){
+      fdot.style.background = 'var(--success)';
+      ftxt.textContent = 'Cloud sync active';
+    } else if(S.db){
+      fdot.style.background = 'var(--warn)';
+      ftxt.textContent = 'Connecting to cloud…';
+    } else {
+      fdot.style.background = '#94a3b8';
+      ftxt.textContent = 'Offline — no cloud connection';
+    }
   }
 }
 
@@ -11089,14 +11942,122 @@ function _setAutoLogout(mins){
 /* ── Improvement bundle ──────────────────────────────────────────────────── */
 (function(){
 
-  /* 1. Debounce helper + date-range filter debounce */
+  /* 1. Debounce helper */
   function _debounce(fn,ms){var t;return function(){clearTimeout(t);t=setTimeout(fn,ms);};}
-  window._debouncedDateFilter=_debounce(function(){
-    var f=document.getElementById('rpt-from'),t=document.getElementById('rpt-to');
-    if(f)S.reportRange.from=f.value;
-    if(t)S.reportRange.to=t.value;
+
+  /* ── Report date filter — Ethiopian calendar ── */
+  var _rdfMode='report';
+
+  /* Convert Gregorian date object → Ethiopian {year,month,day} */
+  function _gcToEc(gc){
+    var y=gc.getFullYear(),m=gc.getMonth()+1,d=gc.getDate();
+    var a=Math.floor((14-m)/12);
+    var yy=y+4800-a,mm=m+12*a-3;
+    var jdn=d+Math.floor((153*mm+2)/5)+365*yy+Math.floor(yy/4)-Math.floor(yy/100)+Math.floor(yy/400)-32045;
+    var r=jdn-1724221;
+    var n4=Math.floor(r/1461),r1=r%1461;
+    var ey,em,ed;
+    if(r1<365){ey=4*n4+1;em=Math.floor(r1/30)+1;ed=r1%30+1;}
+    else if(r1<730){ey=4*n4+2;var r2=r1-365;em=Math.floor(r2/30)+1;ed=r2%30+1;}
+    else if(r1<1095){ey=4*n4+3;var r2=r1-730;em=Math.floor(r2/30)+1;ed=r2%30+1;}
+    else{ey=4*n4+4;var r2=r1-1095;em=Math.floor(r2/30)+1;ed=r2%30+1;}
+    return{year:ey,month:em,day:ed};
+  }
+
+  /* Format Ethiopian {year,month,day} → dd-mm-yyyy */
+  function _ecFmt(ec){
+    var p=function(n){return String(n).padStart(2,'0');};
+    return p(ec.day)+'-'+p(ec.month)+'-'+ec.year;
+  }
+
+  /* dd-mm-yyyy ↔ yyyy-mm-dd (works for Ethiopian dates too) */
+  function _dmyToYmd(s){if(!s)return'';var p=s.split('-');return p.length===3?p[2]+'-'+p[1]+'-'+p[0]:s;}
+  function _ymdToDmy(s){if(!s)return'';var p=s.split('-');return p.length===3?p[2]+'-'+p[1]+'-'+p[0]:s;}
+
+  window._openRptDateFilter=function(mode){
+    _rdfMode=mode||'report';
+    var range=mode==='store'?S.storeReportRange:S.reportRange;
+    var fi=document.getElementById('rdf-from'),ti=document.getElementById('rdf-to');
+    if(fi)fi.value=_ymdToDmy(range.from);
+    if(ti)ti.value=_ymdToDmy(range.to);
+    _rdfClearPresetHighlight();
+    if(typeof openModal==='function')openModal('rpt-date-filter-modal');
+    else{var m=document.getElementById('rpt-date-filter-modal');if(m)m.classList.add('open');}
+    setTimeout(function(){var f=document.getElementById('rdf-from');if(f)f.focus();},120);
+  };
+
+  window._rdfClearPresetHighlight=function(){
+    ['today','week','month','lastmonth','year'].forEach(function(id){
+      var el=document.getElementById('rdf-preset-'+id);
+      if(el){el.classList.remove('btn-primary');}
+    });
+  };
+
+  window._rptDatePreset=function(preset){
+    var now=new Date();
+    var ec=_gcToEc(now);
+    var from,to;
+
+    if(preset==='today'){
+      from=to=_ecFmt(ec);
+
+    }else if(preset==='week'){
+      /* Monday–Sunday of current Gregorian week, converted to EC */
+      var dow=now.getDay()||7; // 1=Mon…7=Sun
+      var mon=new Date(now);mon.setDate(now.getDate()-dow+1);
+      var sun=new Date(mon);sun.setDate(mon.getDate()+6);
+      from=_ecFmt(_gcToEc(mon));
+      to=_ecFmt(_gcToEc(sun));
+
+    }else if(preset==='month'){
+      /* First and last day of current EC month */
+      from=_ecFmt({year:ec.year,month:ec.month,day:1});
+      var lastDay=ec.month===13?(ec.year%4===3?6:5):30;
+      to=_ecFmt({year:ec.year,month:ec.month,day:lastDay});
+
+    }else if(preset==='lastmonth'){
+      var pm=ec.month-1,py=ec.year;
+      if(pm<1){pm=13;py--;}
+      from=_ecFmt({year:py,month:pm,day:1});
+      var lastDay=pm===13?(py%4===3?6:5):30;
+      to=_ecFmt({year:py,month:pm,day:lastDay});
+
+    }else if(preset==='year'){
+      from=_ecFmt({year:ec.year,month:1,day:1});
+      var lastDay=ec.year%4===3?6:5;
+      to=_ecFmt({year:ec.year,month:13,day:lastDay});
+    }
+
+    var fi=document.getElementById('rdf-from'),ti=document.getElementById('rdf-to');
+    if(fi)fi.value=from||'';
+    if(ti)ti.value=to||'';
+    _rdfClearPresetHighlight();
+    var btn=document.getElementById('rdf-preset-'+preset);
+    if(btn)btn.classList.add('btn-primary');
+  };
+
+  window._applyRptDateFilter=function(){
+    var fi=document.getElementById('rdf-from'),ti=document.getElementById('rdf-to');
+    var fromDMY=(fi?fi.value:'').trim();
+    var toDMY=(ti?ti.value:'').trim();
+    /* Store as yyyy-mm-dd (Ethiopian) for sortable string comparison in _inRng */
+    var fromYMD=fromDMY?_dmyToYmd(fromDMY):'';
+    var toYMD=toDMY?_dmyToYmd(toDMY):'';
+    if(_rdfMode==='store'){S.storeReportRange={from:fromYMD,to:toYMD};}
+    else{S.reportRange={from:fromYMD,to:toYMD};}
+    if(typeof closeModal==='function')closeModal('rpt-date-filter-modal');
+    else{var m=document.getElementById('rpt-date-filter-modal');if(m)m.classList.remove('open');}
     if(typeof renderTab==='function')renderTab();
-  },380);
+  };
+
+  window._clearRptDateFilter=function(){
+    _rdfMode=_rdfMode||'report';
+    if(_rdfMode==='store'){S.storeReportRange={from:'',to:''};}
+    else{S.reportRange={from:'',to:''};}
+    var m=document.getElementById('rpt-date-filter-modal');
+    if(m)m.classList.remove('open');
+    if(typeof renderTab==='function')renderTab();
+  };
 
   /* 2. visualViewport resize — keep open mobile modals above keyboard */
   if(window.visualViewport){
