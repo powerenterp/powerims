@@ -2542,44 +2542,12 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
       <span class="di-icon" style="background:rgba(239,68,68,.1);color:var(--error)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
       <div class="di-info"><div class="di-label" style="color:var(--error)" data-i18n="settingsLogout">Log Out</div></div>
     </button>
-    <button type="button" class="drawer-close-btn" onclick="closeSettings()" title="Close settings">
+    <button type="button" class="drawer-close-btn" onclick="closeSettings()" title="Close settings" aria-label="Close settings">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
     </button>
   </div>
 
   <div class="drawer-body">
-
-    <!-- #2 Profile card: always visible, JS hides if not logged in -->
-    <div class="drawer-info-card" id="drawer-info-card">
-      <div class="drawer-session-top">
-        <div class="drawer-session-av" id="dsc-avatar"></div>
-        <div class="drawer-session-meta">
-          <div class="drawer-session-name" id="dsc-name"></div>
-          <div class="drawer-session-role" id="dsc-role"></div>
-        </div>
-      </div>
-      <div class="drawer-session-detail" id="dsc-detail"></div>
-      <!-- Today's snapshot grid (owners/managers only) -->
-      <div class="drawer-snap-grid" id="dsc-snap" style="display:none">
-        <div class="drawer-snap-cell">
-          <div class="drawer-snap-val" id="snap-sales">—</div>
-          <div class="drawer-snap-lbl">Sales</div>
-        </div>
-        <div class="drawer-snap-cell">
-          <div class="drawer-snap-val" id="snap-purchase">—</div>
-          <div class="drawer-snap-lbl">Purchase</div>
-        </div>
-        <div class="drawer-snap-cell">
-          <div class="drawer-snap-val" id="snap-expense">—</div>
-          <div class="drawer-snap-lbl">Expenses</div>
-        </div>
-      </div>
-      <div class="drawer-sync-row" id="dsc-sync" style="display:none">
-        <div class="drawer-sync-dot" id="dsc-sync-dot"></div>
-        <div class="drawer-sync-txt" id="dsc-sync-txt">Checking…</div>
-        <button type="button" class="drawer-sync-btn" id="dsc-sync-btn" onclick="_syncNow()">Sync</button>
-      </div>
-    </div>
 
     <!-- #5 Navigation section — blue accent -->
     <div class="drawer-section" data-sec="nav" data-i18n="settingsNav">Navigation</div>
@@ -2699,11 +2667,17 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
 
   </div>
 
-  <!-- #7 Footer: app info + sync status -->
+  <!-- #7 Footer: current user + version + sync status -->
   <div class="drawer-footer">
+    <div class="drawer-footer-row" style="margin-bottom:6px">
+      <span style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;overflow:hidden">
+        <span id="drawer-footer-av" style="width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:10px;color:#E4E6F5;flex-shrink:0;background:var(--p)"></span>
+        <span id="drawer-footer-username" style="font-size:12px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+      </span>
+      <span class="drawer-footer-ver" id="drawer-ver">v6</span>
+    </div>
     <div class="drawer-footer-row">
       <span class="drawer-footer-brand">POWER — IMS</span>
-      <span class="drawer-footer-ver" id="drawer-ver">v5</span>
     </div>
     <div class="drawer-footer-sync" id="drawer-footer-sync">
       <span class="drawer-footer-dot" id="drawer-footer-dot" style="background:var(--text3)"></span>
@@ -2718,7 +2692,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
     <div class="modal-hdr">
       <div class="modal-hdr-icon-wrap"><div class="modal-hdr-icon"><svg class="ic" style="width:20px;height:20px"><use href="#i-calendar"/></svg></div></div>
       <div><h2>Filter Report by Date</h2><p>Show only records within a date range</p></div>
-      <button type="button" class="modal-hdr-close" onclick="closeModal('rpt-date-filter-modal')"><svg class="ic"><use href="#i-x"/></svg></button>
+      <button type="button" class="modal-hdr-close" onclick="closeModal('rpt-date-filter-modal')" aria-label="Close date filter"><svg class="ic"><use href="#i-x"/></svg></button>
     </div>
     <div style="padding:18px 20px 6px">
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px">
@@ -3216,7 +3190,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
         <button type="button" class="btn btn-sm" style="background:rgba(45,75,138,.12);color:rgba(45,75,138,1);border-color:rgba(45,75,138,.3)" id="owner-add-user-btn" onclick="openAddUserModal()">+ Add User</button>
       </div>
       <div class="sys-filter-bar" id="sys-owner-filter-bar">
-        <input class="sys-search" type="text" id="sys-owner-search" placeholder="Search by name, shop, email…" oninput="_renderSysOwnerList()">
+        <input class="sys-search" type="text" id="sys-owner-search" placeholder="Search by name, shop, email…" oninput="_debouncedSysSearch()">
         <button type="button" class="sf-chip active" id="sf-all"      onclick="setSysFilter('all')">All</button>
         <button type="button" class="sf-chip sf-trial"   id="sf-trial"  onclick="setSysFilter('trial')">Trial</button>
         <button type="button" class="sf-chip active"     id="sf-active" onclick="setSysFilter('active')" style="display:none">Active</button>
@@ -4118,6 +4092,11 @@ function markUserAsActive(u){
   if(!u) return;
   const reg=getRegistry();
   if(!reg[u]) return;
+  if(reg[u].status==='suspended'){
+    showToast('Your account has been suspended by the administrator.','error',4500);
+    setTimeout(()=>logout(),2800);
+    return;
+  }
   const forceAt=reg[u].forceLogout;
   const sessionStart=localStorage.getItem('ims_sessionStart_'+u)||'';
   if(forceAt&&sessionStart&&forceAt>sessionStart){
@@ -4282,7 +4261,10 @@ async function loadFromCloud(ns){
     const d=doc.data();
     if(d.updatedAt)_lastWrittenAt=d.updatedAt;
     applyCloudSnapshot(ns,d);
-  }catch(e){}
+  }catch(e){
+    console.error('[POWER-IMS] Cloud load failed:',e);
+    showToast('<svg class="ic"><use href="#i-alert"/></svg> Cloud sync failed — working offline','warn',4000);
+  }
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -4441,6 +4423,7 @@ function applyCloudSnapshot(ns,d){
   if(d.creditPayments!==undefined)_lsSet(`ims_${ns}_creditPayments`,d.creditPayments);
   if(d.creditSchedule!==undefined)_lsSet(`ims_${ns}_creditSchedule`,d.creditSchedule);
   if(d.deletedUsers!==undefined)_lsSet(`ims_${ns}_deletedUsers`,d.deletedUsers);
+  try{localStorage.setItem('ims_lastCloudSyncDate',new Date().toISOString().slice(0,10));}catch(e){}
   const branches=d.branches?_safeJSON(d.branches,['Main'],'cloud branches'):['Main'];
   branches.forEach(b=>{if(d[`br_${b}`]!==undefined)_lsSet(`ims_${ns}_branchreceipts_${b}`,d[`br_${b}`]);});
   if(d.resetAt&&d.resetAt!==localStorage.getItem(`ims_${ns}_lastResetAt`)){
@@ -4894,13 +4877,27 @@ function updateNavForRole(){
 /* ═══════════════════════════════════════════════════════
    SUBSCRIPTION ENGINE
 ═══════════════════════════════════════════════════════ */
+const SUB_USER_LIMITS={trial:2,basic:2,pro:10,enterprise:Infinity};
 function getSubStatus(r){
   if(!r) return{status:'expired',daysLeft:0,label:'Expired',variant:'expired'};
   if(r.status==='suspended') return{status:'suspended',daysLeft:0,label:'Suspended',variant:'sus'};
-  const today=new Date().toISOString().slice(0,10);
+  // Use the later of the local clock and the last cloud-sync date so rolling back the
+  // system clock cannot extend trial or subscription windows
+  const localToday=new Date().toISOString().slice(0,10);
+  const lastSync=localStorage.getItem('ims_lastCloudSyncDate')||'';
+  const today=localToday>lastSync?localToday:lastSync;
   if(r.paidUntil&&r.paidUntil>=today){
     const diff=Math.ceil((new Date(r.paidUntil)-new Date(today))/86400000);
     return{status:'active',daysLeft:diff,label:`Active · ${diff}d left`,variant:'active-paid'};
+  }
+  // 3-day grace period for expired paid subscriptions (trial has its own 7-day grace below)
+  if(r.paidUntil){
+    const paidGrace=new Date(r.paidUntil);paidGrace.setDate(paidGrace.getDate()+3);
+    const paidGraceStr=paidGrace.toISOString().slice(0,10);
+    if(paidGraceStr>=today){
+      const diff=Math.ceil((paidGrace-new Date(today))/86400000);
+      return{status:'active',daysLeft:diff,label:`Grace · ${diff}d`,variant:'expired'};
+    }
   }
   if(r.trialStart){
     const te=new Date(r.trialStart);te.setDate(te.getDate()+(r.trialDays||14));
@@ -4918,8 +4915,8 @@ function getSubStatus(r){
     }
     return{status:'expired',daysLeft:0,label:'Expired',variant:'expired'};
   }
-  // Legacy account with no subscription data <svg class="ic"><use href="#i-arrow-right"/></svg> auto-grant 30-day trial from today
-  return{status:'trial',daysLeft:30,label:'Trial · 30d left',variant:'trial'};
+  // Legacy accounts with no subscription data are expired, not granted a free trial
+  return{status:'expired',daysLeft:0,label:'Expired',variant:'expired'};
 }
 
 function checkSubscriptionGate(reg,ownerId){
@@ -5566,6 +5563,8 @@ function _getOwnerActivity(ns){
   return{items,purchases,sales,lastChange,kb:(bytes/1024).toFixed(1)};
 }
 
+let _sysSrchTimer;
+function _debouncedSysSearch(){clearTimeout(_sysSrchTimer);_sysSrchTimer=setTimeout(_renderSysOwnerList,220);}
 function _renderSysOwnerList(){
   const reg=getRegistry();
   const q=(document.getElementById('sys-owner-search')||{}).value||'';
@@ -6374,6 +6373,7 @@ function saveSubscription(){
   const reg=getRegistry();if(!reg[_subTarget])return;
   const plan=_subPlan;
   const paidUntil=document.getElementById('sub-paid-until').value;
+  if(paidUntil&&!/^\d{4}-\d{2}-\d{2}$/.test(paidUntil)){showToast('Invalid date — use YYYY-MM-DD format.','error');return;}
   const amount=parseFloat(document.getElementById('sub-pay-amount').value)||0;
   const note=document.getElementById('sub-notes').value.trim();
   reg[_subTarget].sub=plan;
@@ -6484,9 +6484,11 @@ function submitSubRequest(){
   hideMsg('sub-req-error');
   const reg=getRegistry();const r=reg[S.ownerId]||{};
   const reqs=getSubRequests();
-  // Check no pending request already
+  if(reqs.some(q=>q.username===S.ownerId&&q.status==='code_ready')){
+    showMsg('sub-req-error','You have an activation code ready — enter it below to activate your subscription.');return;
+  }
   if(reqs.some(q=>q.username===S.ownerId&&q.status==='pending')){
-    showMsg('sub-req-error','You already have a pending request.');return;
+    showMsg('sub-req-error','You already have a pending request. Please wait for it to be processed.');return;
   }
   const req={
     id:`sr_${Date.now()}_${Math.random().toString(36).slice(2,6)}`,
@@ -6514,20 +6516,37 @@ function _subActAttempts(){try{return JSON.parse(localStorage.getItem(_SUB_ACT_K
 function _subActRecord(){const d=_subActAttempts();const now=Date.now();if(now-d.first>_SUB_ACT_WINDOW){d.count=1;d.first=now;}else{d.count++;}try{localStorage.setItem(_SUB_ACT_KEY,JSON.stringify(d));}catch(e){}}
 function activateSubCode(){
   hideMsg('sub-act-error');hideMsg('sub-act-success');
-  const actD=_subActAttempts();const now=Date.now();
-  if(actD.count>=_SUB_ACT_MAX&&now-actD.first<_SUB_ACT_WINDOW){
-    const mins=Math.ceil((_SUB_ACT_WINDOW-(now-actD.first))/60000);
+  const now=Date.now();
+  // Check rate limit from localStorage
+  const actD=_subActAttempts();
+  // Also check registry-backed attempt count so clearing localStorage doesn't bypass the limit
+  const reg=getRegistry();
+  const _regActs=(reg[S.ownerId]||{})._subActAttempts||{count:0,first:0};
+  const lsBlocked=actD.count>=_SUB_ACT_MAX&&now-actD.first<_SUB_ACT_WINDOW;
+  const regBlocked=_regActs.count>=_SUB_ACT_MAX&&now-_regActs.first<_SUB_ACT_WINDOW;
+  if(lsBlocked||regBlocked){
+    const blockRef=regBlocked?_regActs:actD;
+    const mins=Math.ceil((_SUB_ACT_WINDOW-(now-blockRef.first))/60000);
     showMsg('sub-act-error',`Too many attempts. Try again in ${mins} min.`);return;
   }
   const code=(document.getElementById('sub-act-code')?.value||'').trim();
   if(code.length!==8||!/^\d{8}$/.test(code)){showMsg('sub-act-error','Enter a valid 8-digit code.');return;}
   const reqs=getSubRequests();
   const idx=reqs.findIndex(q=>q.username===S.ownerId&&q.code===code&&q.status==='code_ready');
+  // Record attempt in both localStorage and registry before checking result
   _subActRecord();
-  if(idx===-1){showMsg('sub-act-error','Code not found or already used.');return;}
+  if(reg[S.ownerId]){
+    const ra=reg[S.ownerId]._subActAttempts||{count:0,first:0};
+    if(now-ra.first>_SUB_ACT_WINDOW){ra.count=1;ra.first=now;}else{ra.count++;}
+    reg[S.ownerId]._subActAttempts=ra;
+    saveRegistry(reg);
+  }
+  if(idx===-1){
+    const alreadyUsed=reqs.some(q=>q.username===S.ownerId&&q.code===code&&q.status==='activated');
+    showMsg('sub-act-error',alreadyUsed?'This code has already been used.':'Code not found. Check the code and try again.');return;
+  }
   const req=reqs[idx];
   // Apply paidUntil to registry
-  const reg=getRegistry();
   if(!reg[S.ownerId])return;
   reg[S.ownerId].paidUntil=req.paidUntil;
   reg[S.ownerId].status='active';
@@ -6561,7 +6580,8 @@ function generateSubCode(reqId){
   const base=(ownerReg.paidUntil&&ownerReg.paidUntil>today)?ownerReg.paidUntil:today;
   const d=new Date(base);d.setMonth(d.getMonth()+SUB_DURATIONS[req.plan].months);
   const paidUntil=d.toISOString().slice(0,10);
-  const code=(()=>{try{const a=new Uint32Array(1);crypto.getRandomValues(a);return String(10000000+(a[0]%90000000));}catch(_){return String(Math.floor(10000000+Math.random()*90000000));}})();
+  const _codeArr=new Uint32Array(1);crypto.getRandomValues(_codeArr);
+  const code=String(10000000+(_codeArr[0]%90000000));
   reqs[idx].code=code;reqs[idx].status='code_ready';
   reqs[idx].codeGeneratedAt=new Date().toISOString();reqs[idx].paidUntil=paidUntil;
   saveSubRequests(reqs);
@@ -6851,14 +6871,14 @@ const getPerm=tab=>{
     if(tab==='ITEMS')return S.perms[S.user]?.ITEMS??'read';
     return'none';
   }
-  return S.perms[S.user]?.[tab]??'full';
+  return S.perms[S.user]?.[tab]??'read';
 };
 const canWrite=tab=>['full','add_only'].includes(getPerm(tab));
 const canRead=tab=>getPerm(tab)!=='none';
 // managers default to true; regular/readonly users default to false for export
 const canExport=()=>isOwner()||(S.exportPerms[S.user]??(isManager()));
-const canEditRow=()=>isOwner()||(S.rowEditPerms[S.user]??true);
-const canDeleteRow=()=>isOwner()||(S.deletePerms[S.user]??true);
+const canEditRow=()=>isOwner()||(!isReadOnly()&&(S.rowEditPerms[S.user]??true));
+const canDeleteRow=()=>isOwner()||(!isReadOnly()&&(S.deletePerms[S.user]??true));
 
 // User join date filtering: new users only see data created after they joined
 function getUserJoinDate(){
@@ -6907,6 +6927,13 @@ async function submitAddUser(){
   if(p.length<4){showMsg('nu-error','Password min 4 characters');return;}
   const reg=getRegistry();
   if(reg[u]||u===OWNER_USERNAME){showMsg('nu-error','Username already exists');return;}
+  const _ownerEntry=reg[S.ownerId]||{};
+  const _planKey=_ownerEntry.sub||'trial';
+  const _userLimit=SUB_USER_LIMITS[_planKey]??2;
+  if(_userLimit!==Infinity){
+    const _currentCount=Object.values(reg).filter(e=>e.ownerId===S.ownerId&&e.role!=='owner').length;
+    if(_currentCount>=_userLimit){showMsg('nu-error',`Your ${_planKey} plan allows up to ${_userLimit} user(s). Upgrade to add more.`);return;}
+  }
   const pwdHash=await sha256Hex(p);
   reg[u]={password:pwdHash,ownerId:S.ownerId,role,branch,status:'active',addedAt:new Date().toISOString()};
   saveRegistry(reg);
@@ -8368,7 +8395,7 @@ function buildTxForm(row,mode,isP,idx){
     </div>
     <div class="field-row">
       <div class="field"><label>${L('dispatchQtyLbl')}</label><input type="number" id="f-qty" value="${qty}" placeholder="0" min="0" step="any" oninput="recalcFormTotals(${isP})"></div>
-      <div class="field"><label>${isP?L('unitPurchPriceLbl'):L('unitSellPriceLbl')}</label><input type="number" id="f-price" value="${price}" placeholder="0.00" step="any" oninput="recalcFormTotals(${isP})"></div>
+      <div class="field"><label>${isP?L('unitPurchPriceLbl'):L('unitSellPriceLbl')}</label><input type="number" id="f-price" value="${price}" placeholder="0.00" min="0" step="any" oninput="recalcFormTotals(${isP})"></div>
     </div>
     <div id="f-subtotal-row" style="text-align:right;margin:-6px 0 10px;font-size:11px;font-family:var(--mono);color:var(--text3);min-height:15px"></div>
     <div class="field"><label>${L('method')}</label><select id="f-payment">${pmOpts}</select></div>
@@ -8515,7 +8542,7 @@ function buildExpenseForm(row,mode,idx){
     <div class="field"><label>Reason *</label><input id="f-reason" value="${esc(d.reason||'')}" placeholder="What was this expense for?" list="reason-list"></div>
     ${_buildReasonChips()}
     <div class="field-row">
-      <div class="field"><label>Amount *</label><input type="number" id="f-amt" value="${d.amt||''}" placeholder="0.00" step="any"></div>
+      <div class="field"><label>Amount *</label><input type="number" id="f-amt" value="${d.amt||''}" placeholder="0.00" min="0" step="any"></div>
       <div class="field"><label>Payment</label><select id="f-payment">${pmOpts}</select></div>
     </div>
     ${(isOwner()||isSystemOwner())?`<div class="field"><label>Type</label><select id="f-expense-branch">${branchOpts}</select></div>`:''}
@@ -8596,7 +8623,10 @@ function renderTx(){
   const list=isP?S.purchase:S.sales;
   const branchF=document.getElementById('branch-filter')?.value||'';
   const effectiveBranchF=S.userBranch?S.userBranch:branchF;
-  const visible=list.filter(r=>r.id||r.name||r.party||r.qty).filter(r=>!effectiveBranchF||r.branch===effectiveBranchF).filter(r=>shouldUserSeeData(r)).filter(r=>_drPass(r)).slice().sort(_dateSort);
+  const _allVisible=list.filter(r=>r.id||r.name||r.party||r.qty).filter(r=>!effectiveBranchF||r.branch===effectiveBranchF).filter(r=>shouldUserSeeData(r)).filter(r=>_drPass(r)).slice().sort(_dateSort);
+  const MAX_ROWS=500;
+  const visible=_allVisible.slice(0,MAX_ROWS);
+  const _rowCapNotice=_allVisible.length>MAX_ROWS?`<div style="padding:8px 14px;font-size:11px;color:var(--warn);background:rgba(245,158,11,.08);border-bottom:1px solid var(--border)">Showing first ${MAX_ROWS} of ${_allVisible.length} records — use date or branch filters to narrow results.</div>`:'';
   let totQty=0,totVal=0,totComm=0;
   const rows=visible.map(row=>{
     const i=list.indexOf(row);
@@ -8631,7 +8661,7 @@ function renderTx(){
   const commColHdr=!isP?`<th class="num">Commission</th>`:'';
   const colCount=isP?11:12;
   const cols=`<th>${L('date')}</th><th>${isP?L('supplier'):L('customer')}</th><th>${L('branch')}</th><th>${L('partNo')}</th><th>${L('itemName')}</th><th>${L('desc')}</th><th class="num">${L('qty')}</th><th class="num">${isP?L('unitPrice'):L('price')}</th><th>${L('vat').split(' ')[0]}</th><th class="num">${L('totalPrice')}</th>${commColHdr}<th>${L('payment')}</th>`;
-  document.getElementById('tab-content').innerHTML=`${_drChipStrip()}<div class="table-wrap">
+  document.getElementById('tab-content').innerHTML=`${_drChipStrip()}${_rowCapNotice}<div class="table-wrap">
     <table>
       <thead><tr>${cols}</tr></thead>
       <tbody>
@@ -9078,12 +9108,15 @@ function renderStore(){
 // --- Credit partial payment helpers ---
 let _cpCid=null,_cpTotalAmt=0;
 
+// Round to 2 decimal places to prevent IEEE 754 drift in currency arithmetic
+const _c2=n=>Math.round(n*100)/100;
+
 let _cpCache=null;
 function _invalidateCpCache(){_cpCache=null;}
 function getCreditPaidAmt(cid){
   if(!_cpCache){
     _cpCache={};
-    (S.creditPayments||[]).forEach(p=>{if(p.cid)_cpCache[p.cid]=(_cpCache[p.cid]||0)+(p.amount||0);});
+    (S.creditPayments||[]).forEach(p=>{if(p.cid)_cpCache[p.cid]=_c2((_cpCache[p.cid]||0)+(p.amount||0));});
   }
   return _cpCache[cid]||0;
 }
@@ -9127,7 +9160,12 @@ function removeCreditPayment(cid,idx){
     const target=payments[idx];
     if(!target)return;
     const pos=S.creditPayments.indexOf(target);
-    if(pos>-1)S.creditPayments.splice(pos,1);
+    if(pos>-1){
+      S.creditPayments[pos]._removed=true;
+      S.creditPayments[pos]._removedBy=S.user||'unknown';
+      S.creditPayments[pos]._removedAt=new Date().toISOString();
+      S.creditPayments.splice(pos,1);
+    }
     saveUserData();renderTab();showToast('<svg class="ic"><use href="#i-return"/></svg> Payment removed','warn');
   });
 }
@@ -9255,7 +9293,7 @@ function renderCreditPage(){
         <span class="td-mono num-pos">+${fmt(p.amount||0)}</span>
         <span>${(p.paidAt||'').slice(0,10)}</span>
         ${p.note?`<span style="color:var(--text3)">· ${esc(p.note)}</span>`:''}
-        ${canMark?`<button type="button" onclick="removeCreditPayment('${row._cid}',${i})" style="background:none;border:none;cursor:pointer;color:var(--error);font-size:9px;padding:0 2px;line-height:1" title="Remove this payment"><svg class="ic"><use href="#i-x"/></svg></button>`:''}
+        ${canMark?`<button type="button" onclick="removeCreditPayment('${esc(row._cid)}',${i})" style="background:none;border:none;cursor:pointer;color:var(--error);font-size:9px;padding:0 2px;line-height:1" title="Remove this payment" aria-label="Remove payment"><svg class="ic"><use href="#i-x"/></svg></button>`:''}
       </span>`).join('')+
       `</div>`:'';
     const remainingLabel=isFullyPaid?'':`<div style="font-size:10px;color:${isPartial?'var(--warn)':'var(--text3)'};margin-top:2px">${isPartial?`${L('balanceLabel')}: ${fmt(remaining)}`:'—'}</div>`;
@@ -9439,7 +9477,9 @@ function _reportCalc(branch){
   const fifo={};
   allBranchPR.forEach(p=>{if(!p.id)return;if(!fifo[p.id])fifo[p.id]=[];fifo[p.id].push({uPrice:parseFloat(p.uPrice)||0,qty:parseFloat(p.qty)||0,date:p.date||''});});
   Object.values(fifo).forEach(q=>q.sort(_dateSortAsc));
-  const consumeFIFO=(id,qty)=>{let rem=qty,cogs=0;for(const lot of fifo[id]||[]){if(rem<=0)break;const take=Math.min(rem,lot.qty);cogs+=take*lot.uPrice;lot.qty-=take;rem-=take;}return cogs;};
+  // Work on a shallow copy of each lot so repeated renders don't deplete the same stock
+  const fifoWip=Object.fromEntries(Object.entries(fifo).map(([k,lots])=>[k,lots.map(l=>({...l}))]));
+  const consumeFIFO=(id,qty)=>{let rem=qty,cogs=0;for(const lot of fifoWip[id]||[]){if(rem<=0)break;const take=Math.min(rem,lot.qty);cogs+=take*lot.uPrice;lot.qty-=take;rem-=take;}return cogs;};
   // Walk ALL branch sales oldest-first so pre-range sales deplete FIFO correctly
   const allBranchSales=(branch?S.sales.filter(s=>s.branch===branch):S.sales).slice().sort(_dateSortAsc);
   const srSet=new Set(SR);
@@ -9803,8 +9843,9 @@ function openRowReceipt(idx,listType){
 }
 function printReceiptDirectly(){
   if(!canExport()){showToast('<svg class="ic"><use href="#i-ban"/></svg> No export permission','error');return;}
-  const pa=document.getElementById('print-area');
-  pa.innerHTML=`<style>
+  customConfirm('Print Receipt?','Send this receipt to your printer?',_SVG.check,'Print',()=>{
+    const pa=document.getElementById('print-area');
+    pa.innerHTML=`<style>
 @page{size:A4;margin:10mm}
 #print-area{display:block;width:90mm;margin:0 auto;background:#E4E6F5;padding:12px;font-family:monospace;font-size:12px}
 .rcpt-hdr{text-align:center;padding:12px 0 10px;border-bottom:2px dashed #2D4B8A;margin-bottom:10px}
@@ -9817,9 +9858,10 @@ function printReceiptDirectly(){
 .rcpt-total-val{font-size:22px;font-weight:800;color:#2D4B8A;font-family:monospace}
 .rcpt-footer{text-align:center;color:rgba(45,75,138,.55);font-size:9px;margin-top:10px;border-top:2px dashed #2D4B8A;padding-top:10px;line-height:1.6}
 </style>${document.getElementById('receipt-content').innerHTML}`;
-  const _apc=()=>{pa.innerHTML='';window.removeEventListener('afterprint',_apc);};
-  window.addEventListener('afterprint',_apc);
-  window.print();
+    const _apc=()=>{pa.innerHTML='';window.removeEventListener('afterprint',_apc);};
+    window.addEventListener('afterprint',_apc);
+    window.print();
+  });
 }
 
 /* ═══════════════════════════════════════════════════════
@@ -9856,6 +9898,7 @@ function _renderPermBody(){
     readonly:'<span class="role-badge readonly" style="font-size:9px;padding:2px 7px;margin-left:5px">Read Only</span>',
     user:''
   };
+  const READ_ONLY_TABS=['BALANCE','REPORT'];
   const cards=users.map(u=>{
     const role=reg[u]?.role||'user';
     const up=S.perms[u]||{};
@@ -9864,6 +9907,7 @@ function _renderPermBody(){
     const dp=S.deletePerms[u]??true;
     const isStoreKpr=role==='storekeeper';
     const isRO=role==='readonly';
+    const uq=u.replace(/'/g,'&#39;');
     let tabsHtml;
     if(isStoreKpr){
       const cur=up['ITEMS']??'read';
@@ -9871,7 +9915,7 @@ function _renderPermBody(){
         <div class="perm-group-label">Configurable Tab <span style="color:var(--text3);font-weight:400;text-transform:none;letter-spacing:0">(other tabs are fixed by storekeeper role)</span></div>
         <div class="perm-tab-row">
           <span class="perm-tab-label"><span>${PERM_TAB_ICON['ITEMS']||''}</span>ITEMS</span>
-          <div class="perm-chips">${PERM_OPTS.map(o=>`<button type="button" class="perm-chip ppc-${o.v}${cur===o.v?' active':''}" onclick="setUserPermUI('${u}','ITEMS','${o.v}',this)">${PERM_LABELS[o.v]}</button>`).join('')}</div>
+          <div class="perm-chips">${PERM_OPTS.map(o=>`<button type="button" class="perm-chip ppc-${o.v}${cur===o.v?' active':''}" onclick="setUserPermUI('${uq}','ITEMS','${o.v}',this)">${PERM_LABELS[o.v]}</button>`).join('')}</div>
         </div>
       </div>`;
     } else if(isRO){
@@ -9881,14 +9925,20 @@ function _renderPermBody(){
         <div class="perm-group">
           <div class="perm-group-label">${g.label}</div>
           ${g.tabs.map(t=>{
-            const cur=up[t]||'full';
+            const cur=up[t]||'read';
+            const opts=READ_ONLY_TABS.includes(t)?PERM_OPTS.filter(o=>o.v!=='add_only'):PERM_OPTS;
             return`<div class="perm-tab-row">
               <span class="perm-tab-label"><span>${PERM_TAB_ICON[t]||''}</span>${t}</span>
-              <div class="perm-chips">${PERM_OPTS.map(o=>`<button type="button" class="perm-chip ppc-${o.v}${cur===o.v?' active':''}" onclick="setUserPermUI('${u}','${t}','${o.v}',this)">${PERM_LABELS[o.v]}</button>`).join('')}</div>
+              <div class="perm-chips">${opts.map(o=>`<button type="button" class="perm-chip ppc-${o.v}${cur===o.v?' active':''}" onclick="setUserPermUI('${uq}','${t}','${o.v}',this)">${PERM_LABELS[o.v]}</button>`).join('')}</div>
             </div>`;
           }).join('')}
         </div>`).join('');
     }
+    const rowEditDeleteHtml=isRO
+      ?`<div class="perm-perm-row" style="opacity:.45;pointer-events:none" title="Fixed for read-only role"><label>Can Edit Rows</label><label class="toggle-sw"><input type="checkbox" disabled><span></span></label></div>
+      <div class="perm-perm-row" style="opacity:.45;pointer-events:none" title="Fixed for read-only role"><label>Can Delete Rows</label><label class="toggle-sw"><input type="checkbox" disabled><span></span></label></div>`
+      :`<div class="perm-perm-row"><label>Can Edit Rows</label><label class="toggle-sw"><input type="checkbox" ${rp?'checked':''} onchange="setRowEditPerm('${uq}',this.checked)"><span></span></label></div>
+      <div class="perm-perm-row"><label>Can Delete Rows</label><label class="toggle-sw"><input type="checkbox" ${dp?'checked':''} onchange="setDeletePerm('${uq}',this.checked)"><span></span></label></div>`;
     return`<div class="perm-user-card">
       <div class="perm-user-hdr">
         <div class="perm-avatar-sm">${u[0].toUpperCase()}</div>
@@ -9898,13 +9948,12 @@ function _renderPermBody(){
         </div>
         ${(!isStoreKpr&&!isRO)?`<div class="perm-quick-set">
           <span style="font-size:9px;color:var(--text3);margin-right:3px">Set all:</span>
-          ${['full','add_only','read','none'].map(v=>`<button type="button" class="perm-preset-btn perm-preset-${v}" onclick="setAllPerms('${u}','${v}')">${PERM_LABELS[v]}</button>`).join('')}
+          ${['full','add_only','read','none'].map(v=>`<button type="button" class="perm-preset-btn perm-preset-${v}" onclick="setAllPerms('${uq}','${v}')">${PERM_LABELS[v]}</button>`).join('')}
         </div>`:''}
       </div>
       ${tabsHtml}
-      <div class="perm-perm-row"><label data-i18n="exportPermLabel">Export Permission</label><label class="toggle-sw"><input type="checkbox" ${ep?'checked':''} onchange="setExportPerm('${u}',this.checked)"><span></span></label></div>
-      <div class="perm-perm-row"><label>Can Edit Rows</label><label class="toggle-sw"><input type="checkbox" ${rp?'checked':''} onchange="setRowEditPerm('${u}',this.checked)"><span></span></label></div>
-      <div class="perm-perm-row"><label>Can Delete Rows</label><label class="toggle-sw"><input type="checkbox" ${dp?'checked':''} onchange="setDeletePerm('${u}',this.checked)"><span></span></label></div>
+      <div class="perm-perm-row"><label data-i18n="exportPermLabel">Export Permission</label><label class="toggle-sw"><input type="checkbox" ${ep?'checked':''} onchange="setExportPerm('${uq}',this.checked)"><span></span></label></div>
+      ${rowEditDeleteHtml}
     </div>`;
   }).join('');
   const auditEntries=(S.permAuditLog||[]).slice(-20).reverse();
@@ -9928,6 +9977,7 @@ function setUserPermUI(u,tab,v,btn){
   showToast(`${tab}: ${PERM_LABELS[v]} for ${u}`,'success');
 }
 function setAllPerms(u,v){
+  if(v==='none'&&!confirm(`Remove all tab access for "${u}"? They will be locked out of every section.`))return;
   if(!S.perms[u])S.perms[u]={};
   PERM_TABS.forEach(t=>{S.perms[u][t]=v;});
   saveUserData();
@@ -10478,7 +10528,8 @@ function backupData(){
   const branchReceipts={};
   (S.branches||['Main']).forEach(b=>{branchReceipts[b]=loadBranchReceipts(b);});
   const backup={
-    version:1,
+    version:2,
+    schemaNote:'POWER-IMS v6 backup — restore only with a compatible version',
     exportedAt:new Date().toISOString(),
     owner:S.ownerId,
     items:S.items,
@@ -10518,6 +10569,7 @@ function triggerRestoreFile(){
       try{
         const data=JSON.parse(ev.target.result);
         if(!data.version||!Array.isArray(data.items)){showToast('<svg class="ic"><use href="#i-x-circle"/></svg> Invalid backup file','error');return;}
+        if(data.version>2){showToast('<svg class="ic"><use href="#i-alert"/></svg> Backup was created by a newer version — some data may not restore correctly','warn',5000);}
         const dateStr=data.exportedAt?new Date(data.exportedAt).toLocaleString():'unknown date';
         customConfirm('Restore Backup?',
           `Replace ALL current data with the backup from ${dateStr}? This cannot be undone.`,
@@ -11409,74 +11461,21 @@ function _closeAdminOverlay(){
 var _sessionStart = Date.now();
 
 function _refreshDrawer(){
-  var card = document.getElementById('drawer-info-card');
-  if(!card || typeof S === 'undefined' || !S.user){ if(card) card.style.display='none'; return; }
-  card.style.display = 'block';
+  if(typeof S === 'undefined' || !S.user) return;
 
-  // Avatar + name + role
-  var av = document.getElementById('dsc-avatar');
-  var nm = document.getElementById('dsc-name');
-  var rl = document.getElementById('dsc-role');
-  var dt = document.getElementById('dsc-detail');
-  if(av){
-    av.textContent = (S.user||'?')[0].toUpperCase();
-    var roleColors = {system_owner:'#2D4B8A',owner:'#2D4B8A',manager:'#7c3aed',storekeeper:'#059669',readonly:'#6b7280'};
-    av.style.background = roleColors[S.role] || '#6b7280';
+  // Footer: avatar initial + username alongside version
+  var roleColors = {system_owner:'#2D4B8A',owner:'#2D4B8A',manager:'#7c3aed',storekeeper:'#059669',readonly:'#6b7280'};
+  var fuAv = document.getElementById('drawer-footer-av');
+  var fuName = document.getElementById('drawer-footer-username');
+  if(fuAv){
+    fuAv.textContent = (S.user||'?')[0].toUpperCase();
+    fuAv.style.background = roleColors[S.role] || '#6b7280';
   }
-  if(nm) nm.textContent = S.user || '';
-  if(rl){
-    var roleLabels = {system_owner:'System Owner',owner:'Shop Owner',manager:'Manager',storekeeper:'Store Keeper',readonly:'Read Only',user:'User'};
-    rl.textContent = roleLabels[S.role] || S.role || '';
-  }
-  if(dt){
-    var ageMs = Date.now() - _sessionStart;
-    var ageMins = Math.round(ageMs / 60000);
-    if(ageMins < 1) dt.textContent = 'Session just started';
-    else if(ageMins === 1) dt.textContent = 'Session started 1 min ago';
-    else if(ageMins < 60) dt.textContent = 'Session started ' + ageMins + ' mins ago';
-    else dt.textContent = 'Session started ' + Math.round(ageMins/60) + ' hr ago';
-  }
-
-  // Today's snapshot — owners/managers only
-  var snap = document.getElementById('dsc-snap');
-  if(snap && (S.role==='owner'||S.role==='manager'||S.role==='system_owner')){
-    snap.style.display = 'grid';
-    var today = new Date().toISOString().slice(0,10);
-    var flt = function(arr,key){ return (arr||[]).filter(function(r){return (r.date||'').slice(0,10)===today;}).reduce(function(a,r){return a+parseFloat(r[key]||r.total||r.totalPrice||0);},0); };
-    var todaySales = flt(S.sales,'total');
-    var todayPurch = flt(S.purchase,'total');
-    var todayExp = (S.expense||[]).filter(function(r){return (r.date||'').slice(0,10)===today;}).reduce(function(a,r){return a+parseFloat(r.amount||0);},0);
-    var fmt = function(n){ return Number(n).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0}); };
-    var ss = document.getElementById('snap-sales'); if(ss) ss.textContent = fmt(todaySales);
-    var sp = document.getElementById('snap-purchase'); if(sp) sp.textContent = fmt(todayPurch);
-    var se = document.getElementById('snap-expense'); if(se) se.textContent = fmt(todayExp);
-  } else if(snap){
-    snap.style.display = 'none';
-  }
-
-  // Cloud sync status
-  var syncRow = document.getElementById('dsc-sync');
-  var syncDot = document.getElementById('dsc-sync-dot');
-  var syncTxt = document.getElementById('dsc-sync-txt');
-  if(syncRow){
-    syncRow.style.display = 'flex';
-    if(S.db && S.dbConnected){
-      if(syncDot) syncDot.style.background = 'var(--success)';
-      if(syncTxt) syncTxt.textContent = 'Cloud sync active';
-    } else if(S.db){
-      if(syncDot) syncDot.style.background = 'var(--warn)';
-      if(syncTxt) syncTxt.textContent = 'Connecting to cloud…';
-    } else {
-      if(syncDot) syncDot.style.background = 'var(--error)';
-      if(syncTxt) syncTxt.textContent = 'Offline — no cloud';
-    }
-  }
+  if(fuName) fuName.textContent = S.user || '';
 
   // Auto-logout select value
   var alSel = document.getElementById('auto-logout-select');
-  if(alSel){
-    alSel.value = localStorage.getItem('ims__auto_logout') || '0';
-  }
+  if(alSel) alSel.value = localStorage.getItem('ims__auto_logout') || '0';
 
   // Footer sync dot + text
   var fdot = document.getElementById('drawer-footer-dot');
@@ -11496,22 +11495,18 @@ function _refreshDrawer(){
 }
 
 function _syncNow(){
-  var btn = document.getElementById('dsc-sync-btn');
-  var txt = document.getElementById('dsc-sync-txt');
-  if(btn){ btn.disabled = true; btn.textContent = '…'; }
-  if(txt) txt.textContent = 'Syncing…';
+  var ftxt = document.getElementById('drawer-footer-sync-txt');
+  var fdot = document.getElementById('drawer-footer-dot');
+  if(ftxt) ftxt.textContent = 'Syncing…';
+  if(fdot) fdot.style.background = 'var(--warn)';
   if(typeof loadRegistryFromCloud === 'function'){
     loadRegistryFromCloud().then(function(){
-      if(txt) txt.textContent = 'Sync complete!';
-      if(btn){ btn.disabled = false; btn.textContent = 'Sync'; }
       setTimeout(_refreshDrawer, 1200);
     }).catch(function(){
-      if(txt) txt.textContent = 'Sync failed';
-      if(btn){ btn.disabled = false; btn.textContent = 'Sync'; }
+      if(ftxt) ftxt.textContent = 'Sync failed';
     });
   } else {
-    if(txt) txt.textContent = 'No cloud available';
-    if(btn){ btn.disabled = false; btn.textContent = 'Sync'; }
+    if(ftxt) ftxt.textContent = 'No cloud available';
   }
 }
 
@@ -11540,6 +11535,18 @@ function _setAutoLogout(mins){
 
 ['click','keydown','touchstart','mousemove','scroll'].forEach(function(ev){
   document.addEventListener(ev, function(){ _lastActivity = Date.now(); }, {passive:true});
+});
+
+// Global Escape key: close open modal or settings drawer
+document.addEventListener('keydown',function(e){
+  if(e.key!=='Escape')return;
+  var openModal=document.querySelector('.modal-overlay.open');
+  if(openModal&&openModal.id){
+    if(typeof closeModal==='function')closeModal(openModal.id);
+    return;
+  }
+  var drawer=document.getElementById('settings-drawer');
+  if(drawer&&drawer.classList.contains('open')&&typeof closeSettings==='function')closeSettings();
 });
 
 // Restore auto-logout setting on load
@@ -12043,6 +12050,11 @@ function _setAutoLogout(mins){
     /* Store as yyyy-mm-dd (Ethiopian) for sortable string comparison in _inRng */
     var fromYMD=fromDMY?_dmyToYmd(fromDMY):'';
     var toYMD=toDMY?_dmyToYmd(toDMY):'';
+    if(fromYMD&&toYMD&&fromYMD>toYMD){
+      if(typeof showToast==='function')showToast('"From" date must not be after "To" date.','error');
+      if(fi)fi.focus();
+      return;
+    }
     if(_rdfMode==='store'){S.storeReportRange={from:fromYMD,to:toYMD};}
     else{S.reportRange={from:fromYMD,to:toYMD};}
     if(typeof closeModal==='function')closeModal('rpt-date-filter-modal');
