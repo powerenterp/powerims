@@ -6114,6 +6114,10 @@ function openManageOwner(u){
 function closeManageOwner(){
   _mopOwner=null;
   document.getElementById('manage-owner-panel').style.display='none';
+  // openManageOwner hides these with inline style.display='none'. switchSysTab only toggles
+  // CSS .active classes, and _renderSysStats fills innerHTML without resetting display, so
+  // the inline overrides must be cleared here before renderSystemOwnerDashboard runs.
+  document.querySelectorAll('.sys-sec,.owner-stats').forEach(el=>el.style.display='');
   renderSystemOwnerDashboard();
 }
 
