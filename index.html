@@ -4091,7 +4091,7 @@ const ONLINE_THRESHOLD_MS=5*60*1000;
 function markUserAsActive(u){
   if(!u) return;
   const reg=getRegistry();
-  if(!reg[u]) return;
+  if(!reg[u]||reg[u]._deleted) return;
   if(reg[u].status==='suspended'){
     showToast('Your account has been suspended by the administrator.','error',4500);
     setTimeout(()=>logout(),2800);
@@ -4138,11 +4138,13 @@ async function loadRegistryFromCloud(){
       if(localAt&&localAt>cloudDocAt){return localReg;}
       // Start from cloud (authoritative) so deletions made on other devices propagate.
       // Keep any local entry that is strictly newer than cloud (offline edits).
+      // Local tombstones (_deleted:true) always win regardless of timestamp — stale
+      // devices must never be able to resurrect an intentionally deleted owner.
       const merged={...cloudReg};
       Object.keys(localReg).forEach(u=>{
         const localT=localReg[u]?.updatedAt||'';
         const cloudT=merged[u]?.updatedAt||'';
-        if(localT>cloudT){merged[u]=localReg[u];}
+        if(localReg[u]?._deleted||localT>cloudT){merged[u]=localReg[u];}
       });
       try{_lsSet('ims_reg',merged);}catch(e){}
       return merged;
@@ -4651,7 +4653,7 @@ async function submitAuth(){
 
     if(authMode==='login'){
       const entry=reg[u];
-      if(!entry){
+      if(!entry||entry._deleted){
         const isBanned=getBannedOwners().find(b=>b.username===u);
         if(isBanned){showMsg('auth-error','<svg class="ic"><use href="#i-ban"/></svg> This account has been removed. Contact the platform administrator.');return;}
         recordLoginFailure(u);
@@ -4699,12 +4701,17 @@ async function submitAuth(){
       if(authSubMode==='business'){
         const shopName=cap(document.getElementById('auth-shopname')?.value.trim()||'',MAX_NAME_LEN);
         if(!shopName){showMsg('auth-error','Please enter your business/shop name.');return;}
-        const pending=_lsGet('ims_pending_owners',[]);
+        // Merge cloud pending so we catch duplicates registered from other devices
+        let pending=_lsGet('ims_pending_owners',[]);
+        if(S.db){try{const pd=await S.db.collection('power_ims5').doc('_pending_owners').get();if(pd.exists&&pd.data().pending){const cp=_safeJSON(pd.data().pending,[],'cloud pending');cp.forEach(x=>{if(!pending.find(l=>l.username===x.username))pending.push(x);});_lsSet('ims_pending_owners',pending);}}catch(_e){}}
         if(pending.find(x=>x.username===u)){showMsg('auth-error','A request with this username is already pending.');return;}
         const banned=getBannedOwners();
         if(banned.find(b=>b.username===u)){showMsg('auth-error','<svg class="ic"><use href="#i-ban"/></svg> This username has been removed from the platform. Contact the platform administrator.');return;}
         const pwdHash=await sha256Hex(p);
-        pending.push({username:u,password:pwdHash,shopName,requestedAt:new Date().toISOString()});
+        // Generate a unique namespace ID — completely separate from username so two owners
+        // can never share data even if a username collision somehow occurs.
+        const ownerId=u+'_'+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+        pending.push({username:u,password:pwdHash,shopName,ownerId,requestedAt:new Date().toISOString()});
         _lsSet('ims_pending_owners',pending);
         if(S.db){
           S.db.collection('power_ims5').doc('_pending_owners').set({pending:JSON.stringify(pending),updatedAt:new Date().toISOString()},{merge:true}).catch(()=>{});
@@ -5196,49 +5203,49 @@ function restoreOwner(username){
   });
 }
 function deleteOwner(u){
-  customConfirm(`Permanently Delete "${u}"?`,'This removes their account and wipes ALL their inventory data from this device and the cloud. They can re-apply as a new user. This cannot be undone.',_SVG.trash,'Delete Permanently',()=>{
+  customConfirm(`Permanently Delete "${u}"?`,'This removes their account and wipes ALL their inventory data from this device and the cloud. This cannot be undone.',_SVG.trash,'Delete Permanently',()=>{
     const reg=getRegistry();
-    const ownerData=reg[u]||{};
-    const ns=ownerData.ownerId||u;
+    const ns=(reg[u]||{}).ownerId||u;
+    const now=new Date().toISOString();
 
-    // 1. Wipe all localStorage keys for this owner's namespace
-    const keysToRemove=[];
-    for(let i=0;i<localStorage.length;i++){
-      const k=localStorage.key(i);
-      if(k&&k.startsWith(`ims_${ns}_`))keysToRemove.push(k);
-    }
-    keysToRemove.forEach(k=>localStorage.removeItem(k));
+    // 1. Wipe ALL localStorage keys for this owner's namespace
+    const lsKeys=[];
+    for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k)lsKeys.push(k);}
+    lsKeys.forEach(k=>{if(k.startsWith('ims_'+ns+'_'))localStorage.removeItem(k);});
+    // Session keys use the username, not namespace — remove for owner + all sub-users
+    localStorage.removeItem('ims_sessionStart_'+u);
+    Object.keys(reg).forEach(k=>{
+      if(k!==u&&reg[k]&&reg[k].ownerId===ns)localStorage.removeItem('ims_sessionStart_'+k);
+    });
 
-    // 2. Remove owner and their sub-users from registry
-    Object.keys(reg).forEach(k=>{if(reg[k].ownerId===ns&&k!==u)delete reg[k];});
-    delete reg[u];
+    // 2. Tombstone owner + sub-users in registry (prevents stale-device resurrection)
+    const _tomb={_deleted:true,deletedAt:now,updatedAt:now};
+    Object.keys(reg).forEach(k=>{if(reg[k]&&!reg[k]._deleted&&reg[k].ownerId===ns)reg[k]=Object.assign({},_tomb);});
+    reg[u]=Object.assign({},_tomb);
     saveRegistry(reg);
 
-    // 3. Remove from pending owners list
+    // 3. Remove from all auxiliary local lists
     const pendingOwners=_lsGet('ims_pending_owners',[]).filter(x=>x.username!==u&&x.ownerId!==ns);
     _lsSet('ims_pending_owners',pendingOwners);
-
-    // 4. Remove from banned owners list
     const banned=getBannedOwners().filter(x=>x.username!==u&&x.ownerId!==ns);
     _lsSet(BANNED_LS_KEY,banned);
-
-    // 5. Remove from reset requests
     const resetReqs=_lsGet('ims_reset_requests',[]).filter(x=>x.username!==u&&x.ownerId!==ns);
     _lsSet('ims_reset_requests',resetReqs);
-
-    // 6. Remove from subscription requests
     const subReqs=getSubRequests().filter(x=>x.username!==u&&x.ownerId!==ns);
     _lsSet(SUB_REQ_KEY,subReqs);
 
-    // 7. Wipe from cloud — re-init connection if needed
+    // 4. Wipe ALL cloud data for this owner
     if(!S.db)initSupabase();
     if(S.db){
-      const db=S.db;
-      const col='power_ims5';
-      const now=new Date().toISOString();
+      const db=S.db,col='power_ims5';
+      // Delete the owner's entire data document (all sales, purchases, items, etc.)
       db.collection(col).doc(ns).delete()
-        .then(()=>showToast(`<svg class="ic"><use href="#i-cloud"/></svg> ${u} wiped from cloud`,'success'))
-        .catch(err=>{showToast('<svg class="ic"><use href="#i-alert"/></svg> Cloud delete failed — data removed locally only','warn');});
+        .then(()=>showToast(`<svg class="ic"><use href="#i-cloud"/></svg> ${u} fully wiped from cloud`,'success'))
+        .catch(()=>{
+          showToast('<svg class="ic"><use href="#i-alert"/></svg> Cloud delete failed — retrying…','warn');
+          setTimeout(()=>db.collection(col).doc(ns).delete().catch(()=>{}),3000);
+        });
+      // Push tombstoned registry so every device sees the deletion
       saveRegistryToCloud(getRegistry(),true);
       db.collection(col).doc('_pending_owners').set({pending:JSON.stringify(pendingOwners),updatedAt:now},{merge:true}).catch(()=>{});
       db.collection(col).doc('_banned_owners').set({banned:JSON.stringify(banned),updatedAt:now},{merge:true}).catch(()=>{});
@@ -5249,7 +5256,7 @@ function deleteOwner(u){
     }
 
     showToast(`<svg class="ic"><use href="#i-trash"/></svg> ${u} permanently deleted`,'success');
-    renderSystemOwnerDashboard();
+    closeManageOwner();renderSystemOwnerDashboard();
   });
 }
 
@@ -5460,16 +5467,60 @@ function _bulkDelete(){
 }
 
 function _deleteOwnerSilent(u){
-  const reg=getRegistry();const ns=(reg[u]||{}).ownerId||u;
-  const keysToRemove=[];for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('ims_'+ns+'_'))keysToRemove.push(k);}
-  keysToRemove.forEach(function(k){localStorage.removeItem(k);});
-  Object.keys(reg).forEach(function(k){if(reg[k].ownerId===ns&&k!==u)delete reg[k];});
-  delete reg[u];saveRegistry(reg);
-  const pending=_lsGet('ims_pending_owners',[]).filter(function(x){return x.username!==u&&x.ownerId!==ns;});_lsSet('ims_pending_owners',pending);
-  const banned=getBannedOwners().filter(function(x){return x.username!==u&&x.ownerId!==ns;});_lsSet(BANNED_LS_KEY,banned);
-  const resetReqs=_lsGet('ims_reset_requests',[]).filter(function(x){return x.username!==u&&x.ownerId!==ns;});_lsSet('ims_reset_requests',resetReqs);
-  const subReqs=getSubRequests().filter(function(x){return x.username!==u&&x.ownerId!==ns;});_lsSet(SUB_REQ_KEY,subReqs);
-  if(S.db){const db=S.db,col='power_ims5';db.collection(col).doc(ns).delete().catch(function(){});saveRegistryToCloud(getRegistry(),true);db.collection(col).doc('_pending_owners').set({pending:JSON.stringify(pending),updatedAt:new Date().toISOString()},{merge:true}).catch(function(){});db.collection(col).doc('_banned_owners').set({banned:JSON.stringify(banned),updatedAt:new Date().toISOString()},{merge:true}).catch(function(){});db.collection(col).doc('_reset_requests').set({requests:JSON.stringify(resetReqs),updatedAt:new Date().toISOString()},{merge:true}).catch(function(){});db.collection(col).doc('_sub_requests').set({requests:JSON.stringify(subReqs),updatedAt:new Date().toISOString()},{merge:true}).catch(function(){});}
+  const reg=getRegistry();
+  const ns=(reg[u]||{}).ownerId||u;
+  const now=new Date().toISOString();
+
+  // ── 1. Wipe ALL localStorage keys belonging to this owner's namespace ────
+  // Collect first (can't remove while iterating)
+  const lsKeys=[];
+  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k)lsKeys.push(k);}
+  lsKeys.forEach(function(k){
+    // All owner data: ims_<ns>_*
+    if(k.startsWith('ims_'+ns+'_'))localStorage.removeItem(k);
+  });
+  // Session keys use the USERNAME, not the namespace — remove for owner + all sub-users
+  localStorage.removeItem('ims_sessionStart_'+u);
+  Object.keys(reg).forEach(function(k){
+    if(k!==u&&reg[k]&&(reg[k].ownerId===ns))localStorage.removeItem('ims_sessionStart_'+k);
+  });
+
+  // ── 2. Tombstone registry entries (owner + all sub-users) ────────────────
+  // We keep a minimal tombstone {_deleted:true} so that stale devices can never
+  // re-upload old data and resurrect this owner. The tombstone has NO shop data.
+  const _tomb={_deleted:true,deletedAt:now,updatedAt:now};
+  Object.keys(reg).forEach(function(k){
+    if(reg[k]&&!reg[k]._deleted&&reg[k].ownerId===ns)reg[k]=Object.assign({},_tomb);
+  });
+  reg[u]=Object.assign({},_tomb);
+  saveRegistry(reg);
+
+  // ── 3. Remove from all auxiliary local lists ─────────────────────────────
+  const pending=_lsGet('ims_pending_owners',[]).filter(function(x){return x.username!==u&&x.ownerId!==ns;});
+  _lsSet('ims_pending_owners',pending);
+  const banned=getBannedOwners().filter(function(x){return x.username!==u&&x.ownerId!==ns;});
+  _lsSet(BANNED_LS_KEY,banned);
+  const resetReqs=_lsGet('ims_reset_requests',[]).filter(function(x){return x.username!==u&&x.ownerId!==ns;});
+  _lsSet('ims_reset_requests',resetReqs);
+  const subReqs=getSubRequests().filter(function(x){return x.username!==u&&x.ownerId!==ns;});
+  _lsSet(SUB_REQ_KEY,subReqs);
+
+  // ── 4. Wipe ALL cloud data for this owner ───────────────────────────────
+  if(S.db){
+    const db=S.db,col='power_ims5',at=now;
+    // Delete the owner's entire data document (sales, purchase, items, etc.)
+    db.collection(col).doc(ns).delete().catch(function(){
+      // Retry once on failure — this data MUST be gone
+      setTimeout(function(){db.collection(col).doc(ns).delete().catch(function(){});},3000);
+    });
+    // Push tombstoned registry to cloud so every device sees the deletion
+    saveRegistryToCloud(getRegistry(),true);
+    // Update auxiliary cloud lists
+    db.collection(col).doc('_pending_owners').set({pending:JSON.stringify(pending),updatedAt:at},{merge:true}).catch(function(){});
+    db.collection(col).doc('_banned_owners').set({banned:JSON.stringify(banned),updatedAt:at},{merge:true}).catch(function(){});
+    db.collection(col).doc('_reset_requests').set({requests:JSON.stringify(resetReqs),updatedAt:at},{merge:true}).catch(function(){});
+    db.collection(col).doc('_sub_requests').set({requests:JSON.stringify(subReqs),updatedAt:at},{merge:true}).catch(function(){});
+  }
 }
 
 function _bulkExtendCustom(){
@@ -5752,7 +5803,7 @@ function banFromPlatform(u){
   const banned=getBannedOwners();
   if(!banned.find(x=>x.username===u))banned.push(banEntry);
   saveBannedOwners(banned);
-  delete reg[u];saveRegistry(reg);saveRegistryToCloud(reg,true);
+  reg[u]={_deleted:true,deletedAt:new Date().toISOString(),updatedAt:new Date().toISOString()};saveRegistry(reg);saveRegistryToCloud(reg,true);
   _logAdminAction('ban',u,`${reason}${durDays?` · ${durDays}d ban`:', permanent'}`);
   showToast(`<svg class="ic"><use href="#i-ban"/></svg> ${u} banned from platform`,'error');
   closeManageOwner();
@@ -5882,7 +5933,7 @@ function _approveAllPending(){
       for(const p of pending){
         if(reg[p.username])continue;
         const pwd=isHashed(p.password)?p.password:await sha256Hex(p.password);
-        reg[p.username]={password:pwd,ownerId:p.username,role:'owner',shopName:p.shopName||'',email:p.email||'',phone:p.phone||'',sub:'trial',status:'trial',trialStart:new Date().toISOString().slice(0,10),trialDays:14,payHistory:[]};
+        reg[p.username]={password:pwd,ownerId:p.ownerId||p.username,role:'owner',shopName:p.shopName||'',email:p.email||'',phone:p.phone||'',sub:'trial',status:'trial',trialStart:new Date().toISOString().slice(0,10),trialDays:14,payHistory:[]};
         _logAdminAction('approve_pending',p.username,'Approved via Approve All');
       }
       saveRegistry(reg);
@@ -6089,10 +6140,13 @@ function _exportPartyPDF(type){
   const today=new Date().toISOString().slice(0,10);
   const now=new Date().toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short'});
   const rangeLabel=(S.reportRange.from||S.reportRange.to)
-    ?(S.reportRange.from||'…')+' → '+(S.reportRange.to||'…'):'All dates';
-  const NAVY=[45,75,138],DARK=[20,30,60],MUTED=[110,130,155],GREEN=[34,197,94],RED=[244,63,94];
-  const PAGE_W=210,M=16;
+    ?(S.reportRange.from||'...')+' to '+(S.reportRange.to||'...'):'All dates';
+  const DNAV=[30,58,122],NAVY=[45,75,138],DARK=[20,30,60];
+  const LBUE=[244,247,255],BRDR=[213,223,245],MUTED=[106,122,154],GTXT=[154,170,192];
+  const GREEN=[21,128,61],RED=[220,38,38],WHITE=[255,255,255];
+  const PAGE_W=210,PAGE_H=297,M=14;
   const f=n=>fmt(n);
+  const cardW=PAGE_W-2*M;
   const _dmyToYmd=s=>{const p=(s||'').split('-');return p.length===3?p[2]+'-'+p[1]+'-'+p[0]:s;};
   const inRange=r=>{if(!r.date)return true;const d=_dmyToYmd(r.date.slice(0,10));if(S.reportRange.from&&d<S.reportRange.from)return false;if(S.reportRange.to&&d>S.reportRange.to)return false;return true;};
   const calcST=s=>{const b=(s.qty||0)*(s.sPrice||0);return b+(s.vatOn?b*0.15:0)-(s.wh3On?b*0.03:0)-(s.vwhOn?b*0.075:0)-(s.commission||0);};
@@ -6103,85 +6157,126 @@ function _exportPartyPDF(type){
     :(activeBranch?S.purchase.filter(p=>p.branch===activeBranch):S.purchase).filter(inRange);
   const typeLabel=isCustomer?'Customer':'Supplier';
   const branchLabel=activeBranch||(isOwner()&&S.branches.length>1?'All Branches':S.branches[0]||'');
-  // Header banner
-  doc.setFillColor(...NAVY);doc.rect(0,0,PAGE_W,34,'F');
-  doc.setFont('helvetica','bold');doc.setFontSize(15);doc.setTextColor(255,255,255);
+  const amtColor=isCustomer?GREEN:RED;
+
+  // ── HEADER (full-bleed dark navy) ────────────────────────
+  const HDR_H=42;
+  doc.setFillColor(...DNAV);doc.rect(0,0,PAGE_W,HDR_H,'F');
+  // Decorative circles
+  doc.setFillColor(40,72,135);doc.circle(PAGE_W+2,HDR_H-18,24,'F');
+  doc.setFillColor(36,65,128);doc.circle(PAGE_W-14,HDR_H+10,16,'F');
+  // Shop name
+  doc.setFont('helvetica','bold');doc.setFontSize(17);doc.setTextColor(...WHITE);
   doc.text(shopName,M,13);
-  doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(180,200,240);
-  const subtitle=selected
-    ?`${typeLabel} Transactions — ${selected}  ·  ${branchLabel}  ·  ${rangeLabel}`
-    :`${typeLabel} List  ·  ${branchLabel}  ·  ${rangeLabel}`;
-  doc.text(subtitle,M,20);
-  doc.text('Generated: '+now,M,27);
-  let y=40;
+  // Tagline
+  doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(160,190,235);
+  doc.text('Power Inventory Management System',M,19.5);
+  // Badge
+  const badgeLabel=(isCustomer?'CUSTOMER':'SUPPLIER')+' STATEMENT';
+  const bW=52,bH=7.5,bX=PAGE_W-M-bW,bY=7;
+  doc.setFillColor(55,88,158);doc.roundedRect(bX,bY,bW,bH,2,2,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(6.5);doc.setTextColor(...WHITE);
+  doc.text(badgeLabel,bX+bW/2,bY+4.8,{align:'center'});
+  // Divider
+  doc.setDrawColor(65,98,168);doc.setLineWidth(0.3);doc.line(M,26,PAGE_W-M,26);
+  // Meta row
+  doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(155,185,230);
+  const metaStr=`Branch: ${branchLabel}   ·   Period: ${rangeLabel}   ·   Generated: ${now}`;
+  const metaLines=doc.splitTextToSize(metaStr,PAGE_W-2*M-4);
+  doc.text(metaLines,M,31);
+
+  let y=HDR_H+5;
+
   if(selected){
     const partyRecs=allRecs.filter(r=>(r.party||'')==selected);
     const total=partyRecs.reduce((a,r)=>a+calcAmt(r),0);
     const cashTotal=partyRecs.filter(r=>r.payment==='CASH').reduce((a,r)=>a+calcAmt(r),0);
     const creditTotal=total-cashTotal;
-    const amtColor=isCustomer?GREEN:RED;
-    // ── Party info card ──────────────────────────────────────
-    const cardH=24,cardX=M,cardW=PAGE_W-2*M;
-    doc.setFillColor(240,244,255);doc.setDrawColor(...[201,214,240]);doc.setLineWidth(0.3);
-    doc.roundedRect(cardX,y,cardW,cardH,3,3,'FD');
-    // avatar circle
-    const avCx=cardX+14,avCy=y+cardH/2;
-    doc.setFillColor(...NAVY);doc.circle(avCx,avCy,7,'F');
-    doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(255,255,255);
-    doc.text((selected[0]||'?').toUpperCase(),avCx,avCy+0.5,{align:'center',baseline:'middle'});
-    // party name + sub
-    doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...NAVY);
-    doc.text(selected,cardX+24,y+8);
+
+    // ── PARTY INFO CARD ────────────────────────────────────
+    const cardH=28,cardY=y;
+    doc.setFillColor(...LBUE);doc.setDrawColor(...BRDR);doc.setLineWidth(0.3);
+    doc.roundedRect(M,cardY,cardW,cardH,3,3,'FD');
+    doc.setFillColor(...NAVY);doc.rect(M,cardY,2.5,cardH,'F'); // left accent bar
+    // Avatar
+    const avX=M+16,avY=cardY+cardH/2;
+    doc.setFillColor(...NAVY);doc.circle(avX,avY,9,'F');
+    doc.setFont('helvetica','bold');doc.setFontSize(13);doc.setTextColor(...WHITE);
+    doc.text((selected[0]||'?').toUpperCase(),avX,avY+1,{align:'center',baseline:'middle'});
+    // Name + sub-info
+    doc.setFont('helvetica','bold');doc.setFontSize(11);doc.setTextColor(...NAVY);
+    doc.text(selected,M+30,cardY+9);
     doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(...MUTED);
-    doc.text(`${typeLabel}  ·  ${partyRecs.length} transaction${partyRecs.length!==1?'s':''}  ·  ${rangeLabel}`,cardX+24,y+14);
-    // total on right
-    doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(...MUTED);
-    doc.text(`Total ${isCustomer?'Purchases':'Supplied'}`,PAGE_W-M,y+8,{align:'right'});
-    doc.setFont('helvetica','bold');doc.setFontSize(12);doc.setTextColor(...amtColor);
-    doc.text(f(total),PAGE_W-M,y+16,{align:'right'});
+    doc.text(`${typeLabel}  ·  ${partyRecs.length} transaction${partyRecs.length!==1?'s':''}`,M+30,cardY+16);
+    doc.text(`Date range: ${rangeLabel}`,M+30,cardY+22);
+    // Right divider + total
+    const divX=PAGE_W-M-44;
+    doc.setDrawColor(...BRDR);doc.setLineWidth(0.3);doc.line(divX,cardY+5,divX,cardY+cardH-5);
+    doc.setFont('helvetica','normal');doc.setFontSize(7.5);doc.setTextColor(...GTXT);
+    doc.text(`Total ${isCustomer?'Amount':'Supplied'}`,PAGE_W-M,cardY+10,{align:'right'});
+    doc.setFont('helvetica','bold');doc.setFontSize(15);doc.setTextColor(...amtColor);
+    doc.text(f(total),PAGE_W-M,cardY+22,{align:'right'});
     y+=cardH+5;
-    // ── Payment breakdown chips ──────────────────────────────
-    const chips=[['Cash',f(cashTotal)],['Credit',f(creditTotal)],['Transactions',String(partyRecs.length)]];
-    const chipW=(cardW-8)/3,chipH=11;
-    chips.forEach((chip,i)=>{
-      const cx=M+i*(chipW+4);
-      doc.setFillColor(240,244,255);doc.setDrawColor(...[201,214,240]);doc.setLineWidth(0.3);
-      doc.roundedRect(cx,y,chipW,chipH,2,2,'FD');
-      doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(...NAVY);
-      doc.text(chip[0].toUpperCase(),cx+chipW/2,y+4,{align:'center'});
-      doc.setFont('helvetica','bold');doc.setFontSize(8);doc.setTextColor(...DARK);
-      doc.text(chip[1],cx+chipW/2,y+9,{align:'center'});
+
+    // ── BREAKDOWN BOXES ────────────────────────────────────
+    const bxW=(cardW-10)/3,bxH=14;
+    const boxes=[
+      {lbl:'CASH PAYMENTS',val:f(cashTotal),clr:GREEN},
+      {lbl:'CREDIT PAYMENTS',val:f(creditTotal),clr:NAVY},
+      {lbl:'TOTAL TRANSACTIONS',val:String(partyRecs.length),clr:GTXT}
+    ];
+    boxes.forEach((box,i)=>{
+      const bx=M+i*(bxW+5),by=y;
+      doc.setFillColor(255,255,255);doc.setDrawColor(...BRDR);doc.setLineWidth(0.3);
+      doc.roundedRect(bx,by,bxW,bxH,2,2,'FD');
+      doc.setFillColor(...box.clr);doc.rect(bx,by,bxW,1.8,'F'); // top colour bar
+      doc.setFont('helvetica','bold');doc.setFontSize(6.5);doc.setTextColor(...GTXT);
+      doc.text(box.lbl,bx+bxW/2,by+6,{align:'center'});
+      doc.setFont('helvetica','bold');doc.setFontSize(10);doc.setTextColor(...box.clr);
+      doc.text(box.val,bx+bxW/2,by+12,{align:'center'});
     });
-    y+=chipH+5;
-    // ── Transaction table ────────────────────────────────────
+    y+=bxH+5;
+
+    // ── SECTION LABEL ──────────────────────────────────────
+    const lblMid=PAGE_W/2;
+    doc.setDrawColor(...BRDR);doc.setLineWidth(0.25);
+    doc.line(M,y+2,lblMid-24,y+2);doc.line(lblMid+24,y+2,PAGE_W-M,y+2);
+    doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(...GTXT);
+    doc.text('TRANSACTION HISTORY',lblMid,y+4,{align:'center'});
+    y+=8;
+
+    // ── TRANSACTION TABLE ──────────────────────────────────
     doc.autoTable({
       startY:y,
       head:[['Date','Item','Description','Qty','Unit Price','Amount','Payment']],
-      body:partyRecs.map(r=>[(r.date||'').slice(0,10),r.name||r.id||'—',r.desc||'—',fmtQ(parseFloat(r.qty)||0),f(isCustomer?(r.sPrice||0):(parseFloat(r.uPrice)||0)),f(calcAmt(r)),r.payment||'—']),
+      body:partyRecs.map(r=>{const _p=r._cid?getCreditPaidAmt(r._cid):0,_t=calcAmt(r),_fp=_p>=_t-0.001,_pp=_p>0.001&&!_fp;const payLbl=r.payment==='CASH'?'PAID':r._cid?(_fp?'PAID':_pp?'PARTIAL':'CREDIT'):r.payment||'—';return[(r.date||'').slice(0,10),r.name||r.id||'—',r.desc||'—',fmtQ(parseFloat(r.qty)||0),f(isCustomer?(r.sPrice||0):(parseFloat(r.uPrice)||0)),f(_t),payLbl];}),
       foot:[['','','','','TOTAL',f(total),'']],
       margin:{left:M,right:M},
       styles:{fontSize:7.5,cellPadding:2.5,textColor:DARK},
       headStyles:{fillColor:NAVY,textColor:255,fontStyle:'bold',fontSize:7.5},
-      footStyles:{fillColor:[238,244,255],textColor:DARK,fontStyle:'bold'},
-      alternateRowStyles:{fillColor:[248,250,255]},
+      footStyles:{fillColor:[238,242,252],textColor:DARK,fontStyle:'bold',fontSize:8.5},
+      alternateRowStyles:{fillColor:[247,249,255]},
       columnStyles:{3:{halign:'right'},4:{halign:'right'},5:{halign:'right',fontStyle:'bold'}},
-      didParseCell:(d)=>{if(d.section==='body'&&d.column.index===5)d.cell.styles.textColor=isCustomer?GREEN:RED;}
+      didParseCell:(d)=>{if(d.section==='body'&&d.column.index===5){d.cell.styles.textColor=isCustomer?GREEN:RED;}if(d.section==='body'&&d.column.index===6){const v=d.cell.raw;if(v==='PAID')d.cell.styles.textColor=GREEN;else if(v==='PARTIAL')d.cell.styles.textColor=[180,100,0];else d.cell.styles.textColor=NAVY;}}
     });
-    // ── Signature section ────────────────────────────────────
+
+    // ── SIGNATURE SECTION ──────────────────────────────────
     y=doc.lastAutoTable.finalY+14;
-    if(y>250){doc.addPage();y=20;}
-    doc.setDrawColor(180,180,180);doc.setLineWidth(0.3);
-    doc.setLineDashPattern([1.5,1.5],0);
-    doc.line(M,y,PAGE_W-M,y);
-    doc.setLineDashPattern([],0);
-    y+=8;
-    const sigW=(cardW-16)/3,sigLabels=[isCustomer?'Customer Signature':'Supplier Signature','Authorized By','Date'];
-    sigLabels.forEach((lbl,i)=>{
+    if(y>252){doc.addPage();y=20;}
+    // "AUTHORIZED SIGNATURES" label with lines
+    const sigMid=PAGE_W/2;
+    doc.setDrawColor(...BRDR);doc.setLineWidth(0.3);
+    doc.line(M,y+2,sigMid-30,y+2);doc.line(sigMid+30,y+2,PAGE_W-M,y+2);
+    doc.setFont('helvetica','bold');doc.setFontSize(7);doc.setTextColor(...GTXT);
+    doc.text('AUTHORIZED SIGNATURES',sigMid,y+4,{align:'center'});
+    y+=12;
+    const sigW=(cardW-16)/3;
+    [isCustomer?'Customer Signature':'Supplier Signature','Authorized By','Date'].forEach((lbl,i)=>{
       const sx=M+i*(sigW+8);
-      doc.setDrawColor(...MUTED);doc.setLineWidth(0.4);
-      doc.line(sx,y+14,sx+sigW,y+14);
-      doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(...MUTED);
-      doc.text(lbl.toUpperCase(),sx+sigW/2,y+19,{align:'center'});
+      doc.setDrawColor(...NAVY);doc.setLineWidth(0.5);
+      doc.line(sx,y+16,sx+sigW,y+16);
+      doc.setFont('helvetica','bold');doc.setFontSize(6.5);doc.setTextColor(...GTXT);
+      doc.text(lbl.toUpperCase(),sx+sigW/2,y+21,{align:'center'});
     });
   }else{
     const partyMap={};
@@ -6198,19 +6293,25 @@ function _exportPartyPDF(type){
       margin:{left:M,right:M},
       styles:{fontSize:8,cellPadding:3,textColor:DARK},
       headStyles:{fillColor:NAVY,textColor:255,fontStyle:'bold',fontSize:8},
-      footStyles:{fillColor:[238,244,255],textColor:DARK,fontStyle:'bold'},
-      alternateRowStyles:{fillColor:[248,250,255]},
+      footStyles:{fillColor:[238,242,252],textColor:DARK,fontStyle:'bold'},
+      alternateRowStyles:{fillColor:[247,249,255]},
       columnStyles:{0:{cellWidth:10},2:{halign:'right'},3:{halign:'right'},4:{halign:'right',fontStyle:'bold'}},
       didParseCell:(d)=>{if(d.section==='body'&&d.column.index===4)d.cell.styles.textColor=isCustomer?GREEN:RED;}
     });
   }
+
+  // ── PER-PAGE FOOTER (dark navy bar) ──────────────────────
   const pageCount=doc.internal.getNumberOfPages();
+  const FTR_H=13,FTR_Y=PAGE_H-FTR_H;
   for(let i=1;i<=pageCount;i++){
     doc.setPage(i);
-    doc.setDrawColor(210,218,240);doc.setLineWidth(0.25);doc.line(M,286,PAGE_W-M,286);
-    doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(...MUTED);
-    doc.text('POWER-IMS · '+shopName+' · Confidential',M,291);
-    doc.text('Page '+i+' / '+pageCount,PAGE_W-M,291,{align:'right'});
+    doc.setFillColor(...DNAV);doc.rect(0,FTR_Y,PAGE_W,FTR_H,'F');
+    doc.setFont('helvetica','normal');doc.setFontSize(7);doc.setTextColor(...WHITE);
+    doc.text('Power Inventory Management System',M,FTR_Y+7.5);
+    doc.setFont('helvetica','bold');
+    doc.text(shopName,PAGE_W/2,FTR_Y+7.5,{align:'center'});
+    doc.setFont('helvetica','normal');doc.setTextColor(160,190,235);
+    doc.text('Page '+i+' / '+pageCount+' · Confidential',PAGE_W-M,FTR_Y+7.5,{align:'right'});
   }
   const safeName=shopName.replace(/\s+/g,'-').toLowerCase();
   const partySlug=selected?('-'+selected.replace(/[^a-z0-9]/gi,'-').toLowerCase().slice(0,20)):'';
@@ -6232,7 +6333,7 @@ function exportReportPDF(){
   const today=new Date().toISOString().slice(0,10);
   const now=new Date().toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short'});
   const rangeLabel=(S.reportRange.from||S.reportRange.to)
-    ?(S.reportRange.from||'…')+' → '+(S.reportRange.to||'…')
+    ?(S.reportRange.from||'...')+' to '+(S.reportRange.to||'...')
     :'All dates';
   const branchLabel=activeBranch||( isOwner()&&S.branches.length>1?'All Branches':S.branches[0]||'');
 
@@ -6367,7 +6468,7 @@ async function approveOwner(username){
   if(reg[username]){showToast(`"${username}" is already registered`,'warn');return;}
   const pwd=isHashed(p.password)?p.password:await sha256Hex(p.password);
   reg[p.username]={
-    password:pwd,ownerId:p.username,role:'owner',
+    password:pwd,ownerId:p.ownerId||p.username,role:'owner',
     shopName:p.shopName||'',email:p.email||'',phone:p.phone||'',
     sub:'trial',status:'trial',
     trialStart:new Date().toISOString().slice(0,10),trialDays:14,
@@ -6457,7 +6558,7 @@ async function confirmApproveOwnerPaid(){
   const reg=getRegistry();
   const pwd=isHashed(p.password)?p.password:await sha256Hex(p.password);
   reg[p.username]={
-    password:pwd,ownerId:p.username,role:'owner',
+    password:pwd,ownerId:p.ownerId||p.username,role:'owner',
     shopName:p.shopName||'',email:p.email||'',phone:p.phone||'',
     sub:_apvDur,status:'active',
     paidUntil,
@@ -9932,6 +10033,14 @@ function _renderPartyListReport(type,branch,branchTabsHtml,datebar){
   if(selected){
     const partyRecs=allRecs.filter(r=>(r.party||'')==selected);
     const total=partyRecs.reduce((a,r)=>a+calcAmt(r),0);
+    const _payBadge=r=>{
+      if(r.payment==='CASH')return`<span class="td-badge badge-cash"><svg class="ic"><use href="#i-check-circle"/></svg> PAID</span>`;
+      if(r._cid){const p=getCreditPaidAmt(r._cid),t=calcAmt(r),fp=p>=t-0.001,pp=p>0.001&&!fp;
+        if(fp)return`<span class="td-badge badge-cash"><svg class="ic"><use href="#i-check-circle"/></svg> PAID</span>`;
+        if(pp)return`<span class="td-badge" style="background:rgba(245,158,11,.13);color:#b45309;border:1px solid rgba(245,158,11,.3);font-size:9px"><svg class="ic"><use href="#i-zap"/></svg> PARTIAL</span>`;
+      }
+      return`<span class="td-badge badge-credit">CREDIT</span>`;
+    };
     const txRows=partyRecs.length
       ?partyRecs.map(r=>`<tr>
           <td>${(r.date||'').slice(0,10)}</td>
@@ -9940,7 +10049,7 @@ function _renderPartyListReport(type,branch,branchTabsHtml,datebar){
           <td class="num">${fmtQ(parseFloat(r.qty)||0)}</td>
           <td class="num">${fmt(isCustomer?(r.sPrice||0):(parseFloat(r.uPrice)||0))}</td>
           <td class="num">${fmt(calcAmt(r))}</td>
-          <td><span class="td-badge ${r.payment==='CASH'?'badge-cash':'badge-credit'}">${esc(r.payment||'—')}</span></td>
+          <td>${_payBadge(r)}</td>
         </tr>`).join('')
       :`<tr><td colspan="7" class="credit-empty">No transactions</td></tr>`;
     const _typeKey=isCustomer?'CUSTOMER':'SUPPLIER';
@@ -10023,85 +10132,138 @@ function _printPartyReport(type){
   const total=partyRecs.reduce((a,r)=>a+calcAmt(r),0);
   const cashTotal=partyRecs.filter(r=>r.payment==='CASH').reduce((a,r)=>a+calcAmt(r),0);
   const creditTotal=total-cashTotal;
+  const _printPayBadge=r=>{
+    if(r.payment==='CASH')return`<span class="pay-badge pay-cash">PAID</span>`;
+    if(r._cid){const p=getCreditPaidAmt(r._cid),t=calcAmt(r),fp=p>=t-0.001,pp=p>0.001&&!fp;
+      if(fp)return`<span class="pay-badge pay-cash">PAID</span>`;
+      if(pp)return`<span class="pay-badge" style="background:rgba(245,158,11,.13);color:#b45309;border:1px solid rgba(245,158,11,.3)">PARTIAL</span>`;
+    }
+    return`<span class="pay-badge pay-credit">CREDIT</span>`;
+  };
   const txRows=partyRecs.map(r=>`<tr>
     <td>${(r.date||'').slice(0,10)}</td>
     <td>${esc(r.name||r.id||'—')}</td>
-    <td style="color:#666;font-size:10px">${esc(r.desc||'—')}</td>
+    <td style="color:#7a8aaa;font-size:9px">${esc(r.desc||'—')}</td>
     <td class="num">${fmtQ(parseFloat(r.qty)||0)}</td>
     <td class="num">${fmt(isCustomer?(r.sPrice||0):(parseFloat(r.uPrice)||0))}</td>
-    <td class="num" style="font-weight:700">${fmt(calcAmt(r))}</td>
-    <td style="text-align:center"><span style="padding:2px 7px;border-radius:99px;font-size:9px;font-weight:700;background:${r.payment==='CASH'?'rgba(34,197,94,.15)':'rgba(45,75,138,.12)'};color:${r.payment==='CASH'?'#16a34a':'#2D4B8A'}">${esc(r.payment||'—')}</span></td>
+    <td class="num" style="color:${isCustomer?'#15803d':'#dc2626'}">${fmt(calcAmt(r))}</td>
+    <td>${_printPayBadge(r)}</td>
   </tr>`).join('');
   const pa=document.getElementById('print-area');
   pa.innerHTML=`<style>
-@page{size:A4;margin:16mm 14mm 18mm}
-#print-area{display:block!important;position:absolute;top:0;left:0;width:100%;background:#fff;font-family:sans-serif;font-size:12px;color:#1a1a2e;box-sizing:border-box;padding:14mm 14mm 28mm}
-.ph{border-bottom:3px solid #2D4B8A;padding:0 0 10px 0;margin-bottom:14px;display:flex;align-items:flex-start;justify-content:space-between}
-.ph-shop{font-size:18px;font-weight:800;color:#2D4B8A;letter-spacing:-.01em}
-.ph-meta{font-size:9px;color:#666;margin-top:3px;line-height:1.7}
-.ph-tag{font-size:8px;font-weight:700;background:#2D4B8A;color:#fff;padding:2px 8px;border-radius:99px;display:inline-block;margin-top:4px}
-.pi{background:#f0f4ff;border:1px solid #c9d6f0;border-radius:10px;padding:12px 16px;margin-bottom:14px;display:flex;align-items:center;gap:14px}
-.pi-av{width:48px;height:48px;border-radius:50%;background:#2D4B8A;color:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;flex-shrink:0}
-.pi-name{font-size:15px;font-weight:800;color:#2D4B8A}
-.pi-sub{font-size:10px;color:#666;margin-top:2px;line-height:1.7}
-.pi-stats{margin-left:auto;text-align:right}
-.pi-total{font-size:18px;font-weight:800;color:${isCustomer?'#16a34a':'#dc2626'};font-family:monospace}
-.pi-total-lbl{font-size:9px;color:#888;text-transform:uppercase;letter-spacing:.06em}
-table{width:100%;border-collapse:collapse;margin-bottom:14px;font-size:10.5px}
-thead{display:table-header-group}tr{page-break-inside:avoid}
-th{font-weight:700;background:#2D4B8A;color:#fff;padding:7px 9px;text-align:left;font-size:9.5px;text-transform:uppercase;letter-spacing:.05em}
-th.num{text-align:right}
-td{padding:6px 9px;border-bottom:1px solid #e8edf5;color:#1a1a2e;vertical-align:middle}
-td.num{text-align:right;font-family:monospace}
+@page{size:A4;margin:0}
+*{-webkit-print-color-adjust:exact;print-color-adjust:exact;box-sizing:border-box}
+#print-area{display:block!important;position:absolute;top:0;left:0;width:210mm;min-height:297mm;background:#fff;font-family:'Segoe UI',Arial,sans-serif;font-size:11px;color:#1a1a2e}
+/* ── Header ── */
+.hdr{background:#1e3a7a;color:#fff;padding:10mm 14mm 8mm;position:relative;overflow:hidden}
+.hdr-circle1{position:absolute;right:-12mm;top:-12mm;width:52mm;height:52mm;border-radius:50%;background:rgba(255,255,255,.06)}
+.hdr-circle2{position:absolute;right:16mm;bottom:-14mm;width:34mm;height:34mm;border-radius:50%;background:rgba(255,255,255,.05)}
+.hdr-top{display:flex;align-items:flex-start;justify-content:space-between;position:relative}
+.hdr-shop{font-size:20px;font-weight:800;letter-spacing:-.02em;line-height:1.1}
+.hdr-tagline{font-size:8.5px;opacity:.65;margin-top:2px}
+.hdr-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.28);border-radius:99px;padding:3px 11px;font-size:8px;font-weight:700;letter-spacing:.1em;white-space:nowrap}
+.hdr-divider{height:1px;background:rgba(255,255,255,.15);margin:7px 0}
+.hdr-meta{font-size:8px;opacity:.65;line-height:1.9;position:relative}
+/* ── Body ── */
+.body{padding:7mm 14mm 26mm}
+/* ── Party card ── */
+.pi{display:flex;align-items:center;gap:13px;background:#f4f7ff;border:1px solid #d5dff5;border-left:5px solid #2D4B8A;border-radius:0 10px 10px 0;padding:11px 15px;margin-bottom:11px}
+.pi-av{width:50px;height:50px;border-radius:50%;background:#2D4B8A;color:#fff;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:800;flex-shrink:0;box-shadow:0 2px 8px rgba(45,75,138,.35)}
+.pi-name{font-size:15px;font-weight:800;color:#1e3a7a;line-height:1.2;margin-bottom:2px}
+.pi-sub{font-size:9px;color:#6a7a9a;line-height:1.8}
+.pi-stats{margin-left:auto;text-align:right;flex-shrink:0;padding-left:12px;border-left:1px solid #d5dff5}
+.pi-total-lbl{font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:#9aaac0;margin-bottom:2px}
+.pi-total{font-size:19px;font-weight:800;font-family:monospace;color:${isCustomer?'#15803d':'#dc2626'};line-height:1}
+/* ── Breakdown boxes ── */
+.bd{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:13px}
+.bd-box{border:1px solid #e4ebf8;border-radius:8px;padding:8px 10px;background:#fff}
+.bd-box.c-cash{border-top:3px solid #16a34a}
+.bd-box.c-credit{border-top:3px solid #2D4B8A}
+.bd-box.c-count{border-top:3px solid #8899bb}
+.bd-lbl{font-size:7.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#9aaac0;margin-bottom:4px}
+.bd-val{font-size:14px;font-weight:800;font-family:monospace;color:#1e3a7a}
+.bd-box.c-cash .bd-val{color:#15803d}
+/* ── Section label ── */
+.sec-lbl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#9aaac0;margin-bottom:6px;padding-bottom:5px;border-bottom:1px solid #eaeff8}
+/* ── Table ── */
+table{width:100%;border-collapse:collapse;margin-bottom:13px;font-size:9.5px}
+thead{display:table-header-group}
+tr{page-break-inside:avoid}
+th{font-weight:700;background:#2D4B8A;color:#fff;padding:7px 8px;text-align:left;font-size:8.5px;text-transform:uppercase;letter-spacing:.05em;white-space:nowrap}
+th.num,td.num{text-align:right}
+td{padding:6px 8px;border-bottom:1px solid #edf0f8;color:#1a1a2e;vertical-align:middle}
+td.num{font-family:monospace;font-weight:600}
 tbody tr:nth-child(even){background:#f7f9ff}
-.sum-row td{font-weight:700;background:#e8edf5;border-top:2px solid #2D4B8A;font-family:monospace}
-.breakdown{display:flex;gap:18px;margin-bottom:14px;font-size:10px;color:#555}
-.breakdown span{background:#f0f4ff;border:1px solid #c9d6f0;border-radius:6px;padding:5px 10px}
-.breakdown strong{color:#2D4B8A}
-.sig{margin-top:36px;border-top:1px dashed #bbb;padding-top:18px;display:flex;justify-content:space-between;gap:30px;page-break-inside:avoid}
-.sig-block{flex:1}
-.sig-line{border-bottom:1px solid #888;height:24px;margin-bottom:5px}
-.sig-lbl{font-size:9px;color:#888;text-transform:uppercase;letter-spacing:.06em}
-.pr-ftr{position:fixed;bottom:0;left:0;right:0;padding:2.5mm 14mm;background:#fff;border-top:1px solid #c9d6f0;display:flex;align-items:center;justify-content:space-between;font-size:8px;color:#999}
+.sum-row td{font-weight:800;background:#edf0f8;border-top:2px solid #2D4B8A;font-family:monospace;font-size:10.5px;color:#1e3a7a}
+.pay-badge{display:inline-block;padding:1px 6px;border-radius:99px;font-size:8px;font-weight:700}
+.pay-cash{background:rgba(21,128,61,.12);color:#15803d}
+.pay-credit{background:rgba(45,75,138,.12);color:#2D4B8A}
+/* ── Signature ── */
+.sig-wrap{margin-top:28px;page-break-inside:avoid}
+.sig-header{text-align:center;font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#b0bcd0;display:flex;align-items:center;gap:8px;margin-bottom:16px}
+.sig-header::before,.sig-header::after{content:'';flex:1;height:1px;background:#e4ebf8}
+.sig{display:flex;justify-content:space-between;gap:20px}
+.sig-block{flex:1;text-align:center}
+.sig-line{border-bottom:1.5px solid #2D4B8A;height:30px;margin-bottom:6px}
+.sig-lbl{font-size:8px;color:#9aaac0;text-transform:uppercase;letter-spacing:.07em;font-weight:600}
+/* ── Footer ── */
+.pr-ftr{position:fixed;bottom:0;left:0;right:0;padding:3mm 14mm;background:#1e3a7a;display:flex;align-items:center;justify-content:space-between;font-size:8px;color:rgba(255,255,255,.6)}
+.pr-ftr strong{color:#fff;font-weight:700}
 .no-print{display:none!important}
 </style>
-<div class="ph">
-  <div>
-    <div class="ph-shop">${esc(shopName)}</div>
-    <div class="ph-meta">Branch: ${esc(branchLabel)} &nbsp;·&nbsp; Period: ${rangeLabel}<br>Printed by: ${esc(S.user||S.ownerId||'—')} &nbsp;·&nbsp; ${ts}</div>
-    <span class="ph-tag">${isCustomer?'CUSTOMER STATEMENT':'SUPPLIER STATEMENT'}</span>
+<div class="hdr">
+  <div class="hdr-circle1"></div><div class="hdr-circle2"></div>
+  <div class="hdr-top">
+    <div>
+      <div class="hdr-shop">${esc(shopName)}</div>
+      <div class="hdr-tagline">Power Inventory Management System</div>
+    </div>
+    <div class="hdr-badge">${isCustomer?'CUSTOMER STATEMENT':'SUPPLIER STATEMENT'}</div>
+  </div>
+  <div class="hdr-divider"></div>
+  <div class="hdr-meta">
+    Branch: <strong style="color:#fff;opacity:1">${esc(branchLabel)}</strong>
+    &nbsp;&nbsp;·&nbsp;&nbsp; Period: <strong style="color:#fff;opacity:1">${rangeLabel}</strong>
+    &nbsp;&nbsp;·&nbsp;&nbsp; Printed by: <strong style="color:#fff;opacity:1">${esc(S.user||S.ownerId||'—')}</strong>
+    &nbsp;&nbsp;·&nbsp;&nbsp; ${ts}
   </div>
 </div>
-<div class="pi">
-  <div class="pi-av">${esc((selected[0]||'?').toUpperCase())}</div>
-  <div>
-    <div class="pi-name">${esc(selected)}</div>
-    <div class="pi-sub">${isCustomer?'Customer':'Supplier'} &nbsp;·&nbsp; ${partyRecs.length} transaction${partyRecs.length!==1?'s':''}</div>
-    <div class="pi-sub">Date range: ${rangeLabel}</div>
+<div class="body">
+  <div class="pi">
+    <div class="pi-av">${esc((selected[0]||'?').toUpperCase())}</div>
+    <div style="flex:1;min-width:0">
+      <div class="pi-name">${esc(selected)}</div>
+      <div class="pi-sub">${isCustomer?'Customer':'Supplier'} &nbsp;·&nbsp; ${partyRecs.length} transaction${partyRecs.length!==1?'s':''}</div>
+      <div class="pi-sub">Date range: ${rangeLabel}</div>
+    </div>
+    <div class="pi-stats">
+      <div class="pi-total-lbl">Total ${isCustomer?'Amount':'Supplied'}</div>
+      <div class="pi-total">${fmt(total)}</div>
+    </div>
   </div>
-  <div class="pi-stats">
-    <div class="pi-total-lbl">Total ${isCustomer?'Purchases':'Supplied'}</div>
-    <div class="pi-total">${fmt(total)}</div>
+  <div class="bd">
+    <div class="bd-box c-cash"><div class="bd-lbl">Cash Payments</div><div class="bd-val">${fmt(cashTotal)}</div></div>
+    <div class="bd-box c-credit"><div class="bd-lbl">Credit Payments</div><div class="bd-val">${fmt(creditTotal)}</div></div>
+    <div class="bd-box c-count"><div class="bd-lbl">Total Transactions</div><div class="bd-val">${partyRecs.length}</div></div>
+  </div>
+  <div class="sec-lbl">Transaction History</div>
+  <table>
+    <thead><tr><th>Date</th><th>Item</th><th>Description</th><th class="num">Qty</th><th class="num">Unit Price</th><th class="num">Amount</th><th>Payment</th></tr></thead>
+    <tbody>
+      ${txRows}
+      <tr class="sum-row"><td colspan="5">TOTAL</td><td class="num">${fmt(total)}</td><td></td></tr>
+    </tbody>
+  </table>
+  <div class="sig-wrap">
+    <div class="sig-header">Authorized Signatures</div>
+    <div class="sig">
+      <div class="sig-block"><div class="sig-line"></div><div class="sig-lbl">${isCustomer?'Customer Signature':'Supplier Signature'}</div></div>
+      <div class="sig-block"><div class="sig-line"></div><div class="sig-lbl">Authorized By</div></div>
+      <div class="sig-block"><div class="sig-line"></div><div class="sig-lbl">Date</div></div>
+    </div>
   </div>
 </div>
-<div class="breakdown">
-  <span><strong>Cash:</strong> ${fmt(cashTotal)}</span>
-  <span><strong>Credit:</strong> ${fmt(creditTotal)}</span>
-  <span><strong>Transactions:</strong> ${partyRecs.length}</span>
-</div>
-<table>
-  <thead><tr><th>Date</th><th>Item</th><th>Description</th><th class="num">Qty</th><th class="num">Unit Price</th><th class="num">Amount</th><th>Payment</th></tr></thead>
-  <tbody>
-    ${txRows}
-    <tr class="sum-row"><td colspan="5">TOTAL</td><td class="num">${fmt(total)}</td><td></td></tr>
-  </tbody>
-</table>
-<div class="sig">
-  <div class="sig-block"><div class="sig-line"></div><div class="sig-lbl">${isCustomer?'Customer Signature':'Supplier Signature'}</div></div>
-  <div class="sig-block"><div class="sig-line"></div><div class="sig-lbl">Authorized By</div></div>
-  <div class="sig-block"><div class="sig-line"></div><div class="sig-lbl">Date</div></div>
-</div>
-<div class="pr-ftr"><span>Power Inventory Management System</span><span>${esc(shopName)}</span></div>`;
+<div class="pr-ftr"><span>Power Inventory Management System</span><strong>${esc(shopName)}</strong><span>Confidential Document</span></div>`;
   const _apc=()=>{pa.innerHTML='';window.removeEventListener('afterprint',_apc);};
   window.addEventListener('afterprint',_apc);
   window.print();
