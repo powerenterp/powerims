@@ -3180,6 +3180,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
       <button type="button" class="sys-tab" id="stab-subs" onclick="switchSysTab('subs')"><svg class="ic"><use href="#i-gem"/></svg> Sub Requests <span class="sys-tab-badge tb-warn" id="stab-subs-badge" style="display:none">0</span></button>
       <button type="button" class="sys-tab" id="stab-resets" onclick="switchSysTab('resets')"><svg class="ic"><use href="#i-trash"/></svg> Resets <span class="sys-tab-badge tb-err" id="stab-resets-badge" style="display:none">0</span></button>
       <button type="button" class="sys-tab" id="stab-banned" onclick="switchSysTab('banned')"><svg class="ic"><use href="#i-ban"/></svg> Banned <span class="sys-tab-badge tb-err" id="stab-banned-badge" style="display:none">0</span></button>
+      <button type="button" class="sys-tab" id="stab-deleted" onclick="switchSysTab('deleted');_renderSysDeleted()"><svg class="ic"><use href="#i-trash"/></svg> Deleted <span class="sys-tab-badge tb-err" id="stab-deleted-badge" style="display:none">0</span></button>
       <button type="button" class="sys-tab" id="stab-auditlog" onclick="switchSysTab('auditlog');_renderAdminLog()"><svg class="ic"><use href="#i-clock"/></svg> Audit Log</button>
     </div>
 
@@ -3253,6 +3254,17 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
         <span id="banned-count" class="sec-count-badge" style="background:rgba(244,63,94,.14);color:var(--error);border-color:rgba(244,63,94,.35)">0</span>
       </div>
       <div id="banned-owner-list"></div>
+    </div>
+
+    <!-- Deleted Accounts Recovery section -->
+    <div class="owner-section sys-sec" id="sys-sec-deleted">
+      <div class="owner-section-hdr" style="border-left:4px solid var(--error)">
+        <h3><svg class="ic"><use href="#i-trash"/></svg> Deleted Accounts <span style="font-size:9px;background:rgba(239,68,68,.12);color:var(--error);padding:1px 8px;border-radius:99px;font-weight:700;margin-left:4px">TOMBSTONED</span></h3>
+        <span id="deleted-count" class="sec-count-badge" style="background:rgba(244,63,94,.14);color:var(--error);border-color:rgba(244,63,94,.35)">0</span>
+        <button type="button" class="bulk-btn" onclick="_fetchCloudDeletedRecovery()" style="margin-left:auto;font-size:11px;padding:4px 12px;background:rgba(45,75,138,.1);border-color:rgba(45,75,138,.3);color:var(--p)"><svg class="ic"><use href="#i-cloud"/></svg> Cloud Recovery</button>
+      </div>
+      <div style="padding:8px 16px 8px;background:rgba(239,68,68,.05);border-bottom:1px solid rgba(239,68,68,.1);font-size:11px;color:var(--text2)"><svg class="ic" style="color:var(--warn)"><use href="#i-alert"/></svg> These accounts were deleted but kept as tombstones. Click <strong>Cloud Recovery</strong> first to try retrieving original data, then <strong>Restore</strong> to reactivate an account.</div>
+      <div id="deleted-owner-list"></div>
     </div>
 
     <!-- Admin Audit Log section -->
@@ -5218,10 +5230,17 @@ function deleteOwner(u){
       if(k!==u&&reg[k]&&reg[k].ownerId===ns)localStorage.removeItem('ims_sessionStart_'+k);
     });
 
-    // 2. Tombstone owner + sub-users in registry (prevents stale-device resurrection)
-    const _tomb={_deleted:true,deletedAt:now,updatedAt:now};
-    Object.keys(reg).forEach(k=>{if(reg[k]&&!reg[k]._deleted&&reg[k].ownerId===ns)reg[k]=Object.assign({},_tomb);});
-    reg[u]=Object.assign({},_tomb);
+    // 2. Tombstone owner + all sub-users in registry (prevents stale-device resurrection)
+    // Preserves _orig so the admin can restore accidentally deleted accounts.
+    // IMPORTANT: only cascade to non-owner roles — never auto-tombstone another owner-level
+    // account just because it shares the same ownerId (possible with old registration format).
+    const _makeT=e=>{const o=e||{};return{_deleted:true,_orig:{shopName:o.shopName||'',email:o.email||'',phone:o.phone||'',ownerId:o.ownerId||'',sub:o.sub||'',paidUntil:o.paidUntil||'',role:o.role||'',password:o.password||''},deletedAt:now,updatedAt:now};};
+    Object.keys(reg).forEach(k=>{
+      if(k===u)return;
+      const e=reg[k];
+      if(e&&!e._deleted&&e.ownerId===ns&&e.role!=='owner')reg[k]=_makeT(e);
+    });
+    reg[u]=_makeT(reg[u]);
     saveRegistry(reg);
 
     // 3. Remove from all auxiliary local lists
@@ -5486,13 +5505,17 @@ function _deleteOwnerSilent(u){
   });
 
   // ── 2. Tombstone registry entries (owner + all sub-users) ────────────────
-  // We keep a minimal tombstone {_deleted:true} so that stale devices can never
-  // re-upload old data and resurrect this owner. The tombstone has NO shop data.
-  const _tomb={_deleted:true,deletedAt:now,updatedAt:now};
+  // Tombstone preserves _orig so admins can restore accidentally deleted accounts.
+  // The _deleted flag ensures stale devices can never resurrect this owner.
+  // IMPORTANT: only cascade to non-owner roles — never auto-tombstone another owner-level
+  // account just because it shares the same ownerId (can happen with old registration format).
+  const _makeT=function(e){const o=e||{};return{_deleted:true,_orig:{shopName:o.shopName||'',email:o.email||'',phone:o.phone||'',ownerId:o.ownerId||'',sub:o.sub||'',paidUntil:o.paidUntil||'',role:o.role||'',password:o.password||''},deletedAt:now,updatedAt:now};};
   Object.keys(reg).forEach(function(k){
-    if(reg[k]&&!reg[k]._deleted&&reg[k].ownerId===ns)reg[k]=Object.assign({},_tomb);
+    if(k===u)return; // handled below
+    const e=reg[k];
+    if(e&&!e._deleted&&e.ownerId===ns&&e.role!=='owner')reg[k]=_makeT(e);
   });
-  reg[u]=Object.assign({},_tomb);
+  reg[u]=_makeT(reg[u]);
   saveRegistry(reg);
 
   // ── 3. Remove from all auxiliary local lists ─────────────────────────────
@@ -5895,6 +5918,9 @@ function _renderSysTabBadges(owners,pendingOwners,bannedOwners,pendingSubReqs,pe
   _tb('stab-subs-badge',pendingSubReqs,'tb-warn');
   _tb('stab-resets-badge',pendingResets,'tb-err');
   _tb('stab-banned-badge',bannedOwners.length,'tb-err');
+  const reg=getRegistry();
+  const deletedCount=Object.keys(reg).filter(u=>reg[u]&&reg[u]._deleted).length;
+  _tb('stab-deleted-badge',deletedCount,'tb-err');
 }
 
 function _renderSysHeroPills(owners,paidCount,pendingOwners,expiringSoon,pendingSubReqs,pendingResets){
@@ -5964,6 +5990,110 @@ function _renderSysBanned(bannedOwners){
   document.getElementById('banned-owner-list').innerHTML=bannedOwners.length
     ?bannedOwners.map(_buildBannedCard).join('')
     :`<div class="sys-empty"><div class="sys-empty-icon"><svg class="ic"><use href="#i-check-circle"/></svg></div><strong style="color:var(--text2);font-size:14px">No banned accounts</strong><span style="font-size:12px">All owners are in good standing.</span></div>`;
+}
+
+function _renderSysDeleted(){
+  const reg=getRegistry();
+  const deleted=Object.keys(reg).filter(u=>reg[u]&&reg[u]._deleted);
+  const countEl=document.getElementById('deleted-count');if(countEl)countEl.textContent=deleted.length;
+  const tb=document.getElementById('stab-deleted-badge');if(tb){tb.textContent=deleted.length;tb.style.display=deleted.length>0?'flex':'none';}
+  const listEl=document.getElementById('deleted-owner-list');if(!listEl)return;
+  listEl.innerHTML=deleted.length
+    ?deleted.map((u,i)=>_buildDeletedCard(u,reg[u],i)).join('')
+    :`<div class="sys-empty"><div class="sys-empty-icon"><svg class="ic"><use href="#i-check-circle"/></svg></div><strong style="color:var(--text2);font-size:14px">No deleted accounts</strong><span style="font-size:12px;color:var(--text3)">No tombstoned registry entries found.</span></div>`;
+}
+
+function _buildDeletedCard(u,entry,i){
+  const orig=entry._orig||{};
+  const shopName=orig.shopName||'';
+  const deletedAgo=entry.deletedAt?_timeAgo(entry.deletedAt):'Unknown';
+  const deletedFull=entry.deletedAt?new Date(entry.deletedAt).toLocaleString():'';
+  const hasData=!!(orig.shopName||orig.email||orig.ownerId);
+  return`<div class="pc-card" style="animation-delay:${i*.06}s;border-left:3px solid var(--error)">
+    <div class="pc-top">
+      <div class="pc-avatar" style="background:rgba(239,68,68,.18);color:var(--error)">${(u[0]||'?').toUpperCase()}</div>
+      <div style="flex:1;min-width:0">
+        <div class="user-name">${esc(u)}${shopName?` <span style="font-weight:400;font-size:11px;color:var(--text3)">— ${esc(shopName)}</span>`:''} <span style="font-size:9px;background:rgba(239,68,68,.15);color:var(--error);padding:1px 7px;border-radius:99px;font-weight:700">DELETED</span></div>
+        <div class="pc-meta">
+          ${orig.email?`<span><svg class="ic"><use href="#i-mail"/></svg> ${esc(orig.email)}</span>`:''}
+          ${orig.role?`<span>${esc(orig.role)}</span>`:''}
+          <span title="${deletedFull}">Deleted ${deletedAgo}</span>
+        </div>
+        ${!hasData?`<div style="font-size:10px;color:var(--warn);margin-top:3px;padding:4px 8px;background:rgba(245,158,11,.06);border-radius:6px;border:1px solid rgba(245,158,11,.15)">No backup data saved — click <strong>Cloud Recovery</strong> above to try retrieving original data before restoring</div>`:''}
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0">
+        <button type="button" class="btn btn-sm btn-success" onclick="_recoverDeletedOwner('${esc(u)}')"><svg class="ic"><use href="#i-check-circle"/></svg> Restore</button>
+        <button type="button" class="btn btn-sm btn-danger" onclick="_permanentErase('${esc(u)}')"><svg class="ic"><use href="#i-trash"/></svg> Erase</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+async function _recoverDeletedOwner(u){
+  const reg=getRegistry();
+  const tomb=reg[u];
+  if(!tomb||!tomb._deleted){showToast('This entry is not tombstoned','warn');return;}
+  // Try to fetch original data from cloud registry
+  let cloudEntry=null;
+  if(S.db){
+    try{
+      const doc=await S.db.collection('power_ims5').doc('_global_registry').get();
+      if(doc.exists){const cr=_safeJSON(doc.data().registry||'{}','{}');if(cr[u]&&!cr[u]._deleted)cloudEntry=cr[u];}
+    }catch(e){}
+  }
+  const orig=tomb._orig||{};
+  const hasOrig=!!(orig.ownerId||orig.shopName||orig.email);
+  const restoreData=cloudEntry||(hasOrig?{shopName:orig.shopName||'',email:orig.email||'',phone:orig.phone||'',ownerId:orig.ownerId||u,sub:orig.sub||'basic',paidUntil:orig.paidUntil||'',role:orig.role||'owner',password:orig.password||'',status:'active',updatedAt:new Date().toISOString()}:null);
+  if(!restoreData){
+    customConfirm('No recovery data for "'+u+'"','No original data was found in the tombstone or cloud. Restore as a minimal blank entry? The owner must reset their password.',_SVG.check,'Create Blank Entry',function(){
+      reg[u]={shopName:'',email:'',phone:'',ownerId:u,sub:'basic',paidUntil:'',role:'owner',password:'',status:'active',updatedAt:new Date().toISOString()};
+      saveRegistry(reg);saveRegistryToCloud(reg,true);
+      _logAdminAction('restore',u,'Force-restored as blank entry (no original data found)');
+      showToast('<svg class="ic"><use href="#i-check-circle"/></svg> '+u+' restored as blank entry — owner must reset password','success');
+      _renderSysDeleted();renderSystemOwnerDashboard();
+    });
+    return;
+  }
+  const src=cloudEntry?'cloud registry':'tombstone backup';
+  customConfirm('Restore "'+u+'"?','Account data found in '+src+'. This will reactivate their login.',_SVG.check,'Restore Account',function(){
+    const entry=Object.assign({},restoreData);
+    delete entry._deleted;delete entry.deletedAt;
+    entry.status='active';entry.updatedAt=new Date().toISOString();
+    reg[u]=entry;
+    saveRegistry(reg);saveRegistryToCloud(reg,true);
+    _logAdminAction('restore',u,'Restored from '+src);
+    showToast('<svg class="ic"><use href="#i-check-circle"/></svg> '+u+' restored successfully','success');
+    _renderSysDeleted();renderSystemOwnerDashboard();
+  });
+}
+
+async function _fetchCloudDeletedRecovery(){
+  if(!S.db){showToast('No cloud connection available','warn');return;}
+  showToast('<svg class="ic"><use href="#i-cloud"/></svg> Fetching cloud registry...','info');
+  try{
+    const doc=await S.db.collection('power_ims5').doc('_global_registry').get();
+    if(!doc.exists){showToast('Cloud registry document not found','warn');return;}
+    const cr=_safeJSON(doc.data().registry||'{}','{}');
+    const lr=getRegistry();let recovered=0;
+    Object.keys(cr).forEach(function(u){
+      if(cr[u]&&!cr[u]._deleted&&lr[u]&&lr[u]._deleted&&!lr[u]._orig){
+        const ce=cr[u];
+        lr[u]._orig={shopName:ce.shopName||'',email:ce.email||'',phone:ce.phone||'',ownerId:ce.ownerId||u,sub:ce.sub||'',paidUntil:ce.paidUntil||'',role:ce.role||'owner',password:ce.password||''};
+        recovered++;
+      }
+    });
+    if(recovered>0){saveRegistry(lr);showToast('<svg class="ic"><use href="#i-check-circle"/></svg> Found original data for '+recovered+' deleted account(s) — now click Restore','success');_renderSysDeleted();}
+    else showToast('No additional recovery data found in cloud for tombstoned entries','warn');
+  }catch(e){showToast('Cloud fetch failed: '+e.message,'warn');}
+}
+
+function _permanentErase(u){
+  customConfirm('Permanently erase "'+u+'" from registry?','This removes the tombstone entry completely. The username can be re-used. This cannot be undone.',_SVG.trash,'Erase Entry',function(){
+    const reg=getRegistry();delete reg[u];
+    saveRegistry(reg);saveRegistryToCloud(reg,true);
+    showToast(esc(u)+' erased from registry','success');
+    _renderSysDeleted();
+  });
 }
 
 // ── Manage Single Owner Panel ─────────────────────────────────────────
@@ -6116,6 +6246,7 @@ function renderSystemOwnerDashboard(){
   _renderSysSubReqs(subReqs,pendingSubReqs);
   _renderSysResets(resetReqs,pendingResets);
   _renderSysBanned(bannedOwners);
+  if(_sysState.tab==='deleted')_renderSysDeleted();
   updateEmailConfigStatus();
   const liveBadge=document.getElementById('sys-live-badge');
   if(liveBadge){
