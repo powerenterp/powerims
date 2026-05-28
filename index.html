@@ -16,7 +16,6 @@
 <script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
@@ -585,6 +584,29 @@ html[data-view="mobile"] .brand-text{display:none}
 /* Empty state */
 .sys-empty{padding:40px 24px;text-align:center;color:var(--text3);font-size:13px;display:flex;flex-direction:column;align-items:center;gap:8px}
 .sys-empty-icon{font-size:32px;opacity:.5}
+.sys-empty-svg{width:72px;height:72px;opacity:.35;margin-bottom:4px}
+/* ── Sparkline ── */
+.sys-sparkline{padding:12px 16px 10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);margin-bottom:14px;animation:flyInUp .32s cubic-bezier(.22,1,.36,1)}
+/* ── SLA chips ── */
+.sla-chip{display:inline-flex;align-items:center;gap:3px;font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:99px;border:1px solid;white-space:nowrap}
+.sla-chip.sla-ok{background:rgba(16,185,129,.1);color:var(--success);border-color:rgba(16,185,129,.25)}
+.sla-chip.sla-warn{background:rgba(245,158,11,.1);color:var(--warn);border-color:rgba(245,158,11,.25)}
+.sla-chip.sla-over{background:rgba(239,68,68,.12);color:var(--error);border-color:rgba(239,68,68,.3)}
+/* ── Auto-extend badge ── */
+.auto-ext-badge{font-size:9px;background:rgba(16,185,129,.12);color:var(--success);padding:1px 7px;border-radius:99px;font-weight:700;border:1px solid rgba(16,185,129,.3)}
+/* ── Quick-expand inline panel ── */
+.oc-expand{display:none;border-top:1px solid var(--border);padding:12px 18px 14px;background:var(--surface2)}
+.oc-expand.show{display:block;animation:flyInUp .15s ease}
+/* ── Pay history timeline ── */
+.pay-timeline-wrap{max-height:200px;overflow-y:auto;padding:0 18px 14px}
+.pay-tl-item{display:flex;gap:10px;padding:7px 0;border-bottom:1px dashed rgba(45,75,138,.15)}
+.pay-tl-item:last-child{border-bottom:none}
+.pay-tl-dot{width:9px;height:9px;border-radius:50%;background:rgba(45,75,138,.6);flex-shrink:0;margin-top:4px}
+/* ── Tab badge pulse ── */
+@keyframes sysb-pulse{0%,100%{box-shadow:0 0 0 0 rgba(245,158,11,.55)}70%{box-shadow:0 0 0 6px transparent}}
+@keyframes sysb-pulse-r{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.55)}70%{box-shadow:0 0 0 6px transparent}}
+.sys-tab-badge.tb-warn.has-items{animation:sysb-pulse 2s ease-in-out infinite}
+.sys-tab-badge.tb-err.has-items{animation:sysb-pulse-r 2s ease-in-out infinite}
 
 /* ── Subscription Gate ── */
 .sub-gate{position:fixed;inset:0;z-index:9999;background:rgba(45,75,138,.97);display:flex;align-items:center;justify-content:center;padding:24px}
@@ -2387,7 +2409,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
 <body>
 <svg id="icon-sprite" width="0" height="0" style="position:absolute;width:0;height:0;overflow:hidden" aria-hidden="true">
 <defs>
-<symbol id="i-ban" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></symbol><symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></symbol><symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol><symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol><symbol id="i-x-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></symbol><symbol id="i-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/><path d="M15.5 7.5l3 3M19 5l2 2"/></symbol><symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol><symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol><symbol id="i-lock-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1.2"/></symbol><symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol><symbol id="i-calendar-days" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="8" cy="15" r=".5" fill="currentColor"/><circle cx="12" cy="15" r=".5" fill="currentColor"/><circle cx="16" cy="15" r=".5" fill="currentColor"/></symbol><symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol><symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6 12 13 2 6"/></symbol><symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></symbol><symbol id="i-smartphone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></symbol><symbol id="i-phone-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-3.33-2.67M5.51 5.51l-1.4 1.4M2 22l20-20"/></symbol><symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol><symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol><symbol id="i-crown" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l3 14h14l3-14-6 7-4-8-4 8-6-7zM5 21h14"/></symbol><symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol><symbol id="i-gem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M11 3 8 9l4 12 4-12-3-6"/><line x1="2" y1="9" x2="22" y2="9"/></symbol><symbol id="i-money" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></symbol><symbol id="i-credit-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></symbol><symbol id="i-cash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></symbol><symbol id="i-cash-fly" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20l3-8 6 2-3 8z"/><rect x="9" y="4" width="12" height="8" rx="1.5" transform="rotate(15 15 8)"/><circle cx="15" cy="8" r="1.6" transform="rotate(15 15 8)"/></symbol><symbol id="i-trending-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></symbol><symbol id="i-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></symbol><symbol id="i-package" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></symbol><symbol id="i-bar-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="3" y1="20" x2="21" y2="20"/></symbol><symbol id="i-edit-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></symbol><symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></symbol><symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></symbol><symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></symbol><symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol><symbol id="i-circle-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" fill="#f43f5e" stroke="none"/></symbol><symbol id="i-circle-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" fill="#22c55e" stroke="none"/></symbol><symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol><symbol id="i-sparkle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.6 5.4L19 10l-5.4 1.6L12 17l-1.6-5.4L5 10l5.4-1.6z"/><path d="M19 16l.6 1.7L21 18l-1.4.3L19 20l-.6-1.7L17 18l1.4-.3z"/></symbol><symbol id="i-monitor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></symbol><symbol id="i-printer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></symbol><symbol id="i-building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="1.5"/><path d="M8 6h2M14 6h2M8 10h2M14 10h2M8 14h2M14 14h2"/><path d="M10 22v-4h4v4"/></symbol><symbol id="i-bank" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M3 10h18M5 10v11M19 10v11M9 10v11M15 10v11M12 3 3 8h18z"/></symbol><symbol id="i-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9"/><path d="M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/><path d="M10 21v-6h4v6"/></symbol><symbol id="i-door" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/><circle cx="15" cy="13" r=".8" fill="currentColor"/></symbol><symbol id="i-receipt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2v20l2.5-2L10 22l2.5-2L15 22l2.5-2L20 22V2l-2.5 2L15 2l-2.5 2L10 2 7.5 4 5 2z"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="14" y2="13"/></symbol><symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol><symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol><symbol id="i-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></symbol><symbol id="i-return" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></symbol><symbol id="i-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol><symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></symbol><symbol id="i-free" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><text x="12" y="15.5" text-anchor="middle" font-size="7" font-weight="800" font-family="sans-serif" fill="currentColor" stroke="none">FREE</text></symbol><symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></symbol>
+<symbol id="i-ban" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="4.93" y1="4.93" x2="19.07" y2="19.07"/></symbol><symbol id="i-check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></symbol><symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></symbol><symbol id="i-x" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></symbol><symbol id="i-x-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></symbol><symbol id="i-pencil" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></symbol><symbol id="i-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 2l-9.6 9.6"/><circle cx="7.5" cy="15.5" r="5.5"/><path d="M15.5 7.5l3 3M19 5l2 2"/></symbol><symbol id="i-trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></symbol><symbol id="i-lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol><symbol id="i-lock-key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/><circle cx="12" cy="16" r="1.2"/></symbol><symbol id="i-calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol><symbol id="i-calendar-days" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><circle cx="8" cy="15" r=".5" fill="currentColor"/><circle cx="12" cy="15" r=".5" fill="currentColor"/><circle cx="16" cy="15" r=".5" fill="currentColor"/></symbol><symbol id="i-alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86 1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></symbol><symbol id="i-mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 6 12 13 2 6"/></symbol><symbol id="i-phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></symbol><symbol id="i-smartphone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></symbol><symbol id="i-phone-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.68 13.31a16 16 0 0 0 3.41 2.6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7 2 2 0 0 1 1.72 2v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.42 19.42 0 0 1-3.33-2.67M5.51 5.51l-1.4 1.4M2 22l20-20"/></symbol><symbol id="i-users" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></symbol><symbol id="i-user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></symbol><symbol id="i-crown" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 4l3 14h14l3-14-6 7-4-8-4 8-6-7zM5 21h14"/></symbol><symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></symbol><symbol id="i-gem" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12l4 6-10 12L2 9z"/><path d="M11 3 8 9l4 12 4-12-3-6"/><line x1="2" y1="9" x2="22" y2="9"/></symbol><symbol id="i-money" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></symbol><symbol id="i-credit-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></symbol><symbol id="i-cash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></symbol><symbol id="i-cash-fly" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20l3-8 6 2-3 8z"/><rect x="9" y="4" width="12" height="8" rx="1.5" transform="rotate(15 15 8)"/><circle cx="15" cy="8" r="1.6" transform="rotate(15 15 8)"/></symbol><symbol id="i-trending-up" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></symbol><symbol id="i-save" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></symbol><symbol id="i-package" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></symbol><symbol id="i-bar-chart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="10"/><line x1="18" y1="20" x2="18" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="3" y1="20" x2="21" y2="20"/></symbol><symbol id="i-edit-note" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></symbol><symbol id="i-clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></symbol><symbol id="i-file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></symbol><symbol id="i-upload" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></symbol><symbol id="i-search" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></symbol><symbol id="i-circle-red" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" fill="#f43f5e" stroke="none"/></symbol><symbol id="i-circle-green" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" fill="#22c55e" stroke="none"/></symbol><symbol id="i-target" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></symbol><symbol id="i-sparkle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.6 5.4L19 10l-5.4 1.6L12 17l-1.6-5.4L5 10l5.4-1.6z"/><path d="M19 16l.6 1.7L21 18l-1.4.3L19 20l-.6-1.7L17 18l1.4-.3z"/></symbol><symbol id="i-monitor" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></symbol><symbol id="i-printer" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></symbol><symbol id="i-building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="1.5"/><path d="M8 6h2M14 6h2M8 10h2M14 10h2M8 14h2M14 14h2"/><path d="M10 22v-4h4v4"/></symbol><symbol id="i-bank" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18M3 10h18M5 10v11M19 10v11M9 10v11M15 10v11M12 3 3 8h18z"/></symbol><symbol id="i-store" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l1.5-5h15L21 9"/><path d="M4 9v11a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1V9"/><path d="M3 9a3 3 0 0 0 6 0 3 3 0 0 0 6 0 3 3 0 0 0 6 0"/><path d="M10 21v-6h4v6"/></symbol><symbol id="i-door" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/><circle cx="15" cy="13" r=".8" fill="currentColor"/></symbol><symbol id="i-receipt" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2v20l2.5-2L10 22l2.5-2L15 22l2.5-2L20 22V2l-2.5 2L15 2l-2.5 2L10 2 7.5 4 5 2z"/><line x1="8" y1="9" x2="16" y2="9"/><line x1="8" y1="13" x2="14" y2="13"/></symbol><symbol id="i-globe" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></symbol><symbol id="i-bell" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></symbol><symbol id="i-cart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></symbol><symbol id="i-arrow-right" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></symbol><symbol id="i-arrow-left" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></symbol><symbol id="i-return" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 14 4 9 9 4"/><path d="M20 20v-7a4 4 0 0 0-4-4H4"/></symbol><symbol id="i-zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></symbol><symbol id="i-plus" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></symbol><symbol id="i-cloud" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z"/></symbol><symbol id="i-free" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><text x="12" y="15.5" text-anchor="middle" font-size="7" font-weight="800" font-family="sans-serif" fill="currentColor" stroke="none">FREE</text></symbol><symbol id="i-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></symbol><symbol id="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></symbol><symbol id="i-refresh-cw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></symbol>
 <symbol id="i-shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></symbol>
 <symbol id="i-eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></symbol>
 </defs>
@@ -3162,6 +3184,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
             Back
           </button>
+          <button type="button" class="owner-logout-btn" id="sys-theme-toggle-btn" onclick="_toggleSysTheme()" title="Toggle dark/light mode"><svg class="ic" id="sys-theme-icon"><use href="#i-moon"/></svg></button>
           <button type="button" class="owner-logout-btn" onclick="logout()" title="Sign out of account"><svg class="ic"><use href="#i-door"/></svg> Log Out</button>
         </div>
       </div>
@@ -3171,7 +3194,11 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
     <div id="owner-sub-banner"></div>
     <div id="owner-sub-progress" style="display:none"></div>
     <div id="owner-quick-actions" style="display:none"></div>
+    <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:6px" id="sys-stats-hdr" style="display:none">
+      <button type="button" id="sys-stats-collapse-btn" onclick="_toggleStatsCollapse()" style="font-size:10px;padding:3px 9px;border:1px solid var(--border2);border-radius:6px;background:transparent;cursor:pointer;color:var(--text3);font-family:var(--font)">▲ Hide Stats</button>
+    </div>
     <div class="owner-stats" id="owner-stats"></div>
+    <div id="sys-sparkline" style="display:none"></div>
 
     <!-- Tab bar (sys-admin mode only) -->
     <div class="sys-tab-bar" id="sys-tab-bar" style="display:none">
@@ -3272,6 +3299,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
       <div class="owner-section-hdr">
         <h3><svg class="ic"><use href="#i-clock"/></svg> Admin Audit Log <span class="sec-count-badge" id="audit-log-count" style="color:rgba(45,75,138,.8);border-color:rgba(45,75,138,.3);display:none"></span></h3>
         <button type="button" class="bulk-btn bulk-success" onclick="_exportAdminLog()" style="margin-left:auto;font-size:11px;padding:4px 12px"><svg class="ic"><use href="#i-download"/></svg> Export CSV</button>
+        <button type="button" class="bulk-btn" onclick="_exportAdminLogPDF()" style="font-size:11px;padding:4px 12px"><svg class="ic"><use href="#i-file"/></svg> Export PDF</button>
         <button type="button" class="bulk-btn bulk-danger" onclick="_clearAdminLog()" style="font-size:11px;padding:4px 12px"><svg class="ic"><use href="#i-trash"/></svg> Clear</button>
       </div>
       <div id="admin-log-hdr" style="display:none;grid-template-columns:150px 1fr 1fr;gap:10px;padding:6px 16px;background:var(--surface2);border-bottom:1px solid var(--border);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)">
@@ -3358,35 +3386,6 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
 
   </div>
 </div>
-
-<div class="modal-overlay" id="emailjs-modal">
-  <div class="modal-box narrow">
-    <div class="modal-hdr owner-hdr">
-      <div class="modal-hdr-icon-wrap"><span class="modal-hdr-icon"><svg class="ic"><use href="#i-mail"/></svg></span></div>
-      <div><h2>Email Settings</h2><p>Configure EmailJS to send real OTP codes</p></div>
-      <button type="button" class="modal-hdr-close" onclick="closeModal('emailjs-modal')"><svg class="ic"><use href="#i-x"/></svg></button>
-    </div>
-    <div class="modal-body">
-      <div style="background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:14px;font-size:11.5px;color:var(--text2);line-height:1.6">
-        <strong>Quick setup (free):</strong><br>
-        1. Go to <strong>emailjs.com</strong> <svg class="ic"><use href="#i-arrow-right"/></svg> Sign up free<br>
-        2. Add your Gmail / Outlook as an <strong>Email Service</strong><br>
-        3. Create an <strong>Email Template</strong> with these variables:<br>
-        &nbsp;&nbsp;<code style="background:var(--surface3);padding:1px 5px;border-radius:4px">{{to_email}}</code>&nbsp;
-        <code style="background:var(--surface3);padding:1px 5px;border-radius:4px">{{otp_code}}</code>&nbsp;
-        <code style="background:var(--surface3);padding:1px 5px;border-radius:4px">{{shop_name}}</code>&nbsp;
-        <code style="background:var(--surface3);padding:1px 5px;border-radius:4px">{{to_name}}</code><br>
-        4. Copy your <strong>Service ID</strong>, <strong>Template ID</strong>, and <strong>Public Key</strong> below
-      </div>
-      <div class="field"><label>Service ID</label><input id="ejs-service" placeholder="e.g. service_abc123"></div>
-      <div class="field"><label>Template ID</label><input id="ejs-template" placeholder="e.g. template_xyz789"></div>
-      <div class="field"><label>Public Key</label><input id="ejs-pubkey" placeholder="From Account <svg class="ic"><use href="#i-arrow-right"/></svg> API Keys"></div>
-      <button type="button" class="modal-btn" onclick="saveEmailConfig()"><svg class="ic"><use href="#i-save"/></svg> Save Configuration</button>
-      <button type="button" class="modal-btn secondary" onclick="clearEmailConfig()" style="margin-top:5px"><svg class="ic"><use href="#i-trash"/></svg> Clear</button>
-      <div class="modal-error" id="ejs-error"></div>
-      <div class="modal-success" id="ejs-success"></div>
-    </div>
-  </div>
 </div>
 
 <!-- OWNER SELF-SERVICE SUBSCRIPTION MODAL -->
@@ -4527,17 +4526,6 @@ function emergencyReset(){
 let authMode='login';
 let authSubMode='business';
 
-// ── EmailJS — credentials stored via Platform Dashboard ──
-const EJS_LS_KEY='ims_emailjs_config';
-function getEmailConfig(){
-  const s=_safeJSON(localStorage.getItem(EJS_LS_KEY),null,'emailjs config');
-  if(s&&s.serviceId&&s.templateId&&s.publicKey)return s;
-  return null;
-}
-function initEmailJS(){
-  const cfg=getEmailConfig();
-  if(cfg&&typeof emailjs!=='undefined')emailjs.init(cfg.publicKey);
-}
 
 function setAuthSubMode(m){
   authSubMode=m;
@@ -5160,7 +5148,7 @@ function _renderAdminLog(){
   if(!log.length){
     if(hdr)hdr.style.display='none';
     if(countBadge)countBadge.style.display='none';
-    el.innerHTML=`<div class="sys-empty"><div class="sys-empty-icon"><svg class="ic"><use href="#i-clock"/></svg></div><strong style="color:var(--text2);font-size:14px">No admin actions recorded yet</strong><span style="font-size:12px">Actions like approvals, bans, denials, and unlocks are logged here.</span></div>`;
+    el.innerHTML=_sysEmptyState('<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="18" y="14" width="44" height="52" rx="5" stroke="currentColor" stroke-width="2.5"/><line x1="26" y1="28" x2="54" y2="28" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".5"/><line x1="26" y1="38" x2="54" y2="38" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".5"/><line x1="26" y1="48" x2="42" y2="48" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".5"/><circle cx="54" cy="52" r="10" stroke="currentColor" stroke-width="2.5"/><line x1="54" y1="46" x2="54" y2="52" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="54" y1="52" x2="58" y2="56" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>','No audit log entries','Actions like approvals, bans, denials, and unlocks will be logged here.');
     return;
   }
   if(hdr){hdr.style.display='grid';}
@@ -5279,41 +5267,6 @@ function deleteOwner(u){
   });
 }
 
-function updateEmailConfigStatus(){
-  const el=document.getElementById('email-config-status');if(!el)return;
-  const cfg=getEmailConfig();
-  if(cfg){
-    el.innerHTML=`<span style="color:var(--success);font-weight:600"><svg class="ic"><use href="#i-check-circle"/></svg> EmailJS configured</span> <span style="color:var(--text3)">— Service: ${esc(cfg.serviceId)} · Template: ${esc(cfg.templateId)}</span>`;
-  }else{
-    el.innerHTML=`<span style="color:var(--warn)"><svg class="ic"><use href="#i-alert"/></svg> Not configured</span> <span style="color:var(--text3)">— OTP codes are shown on screen only. Click <strong>Configure</strong> to enable real email delivery.</span>`;
-  }
-}
-function openEmailConfigModal(){
-  const cfg=getEmailConfig()||{};
-  document.getElementById('ejs-service').value=cfg.serviceId||'';
-  document.getElementById('ejs-template').value=cfg.templateId||'';
-  document.getElementById('ejs-pubkey').value=cfg.publicKey||'';
-  hideMsg('ejs-error');hideMsg('ejs-success');
-  openModal('emailjs-modal');
-}
-function saveEmailConfig(){
-  const serviceId=document.getElementById('ejs-service').value.trim();
-  const templateId=document.getElementById('ejs-template').value.trim();
-  const publicKey=document.getElementById('ejs-pubkey').value.trim();
-  if(!serviceId||!templateId||!publicKey){showMsg('ejs-error','All three fields are required.');return;}
-  _lsSet(EJS_LS_KEY,{serviceId,templateId,publicKey});
-  initEmailJS();
-  showMsg('ejs-success','<svg class="ic"><use href="#i-check-circle"/></svg> Saved! New owner registrations will now receive real OTP emails.','success');
-  updateEmailConfigStatus();
-}
-function clearEmailConfig(){
-  localStorage.removeItem(EJS_LS_KEY);
-  document.getElementById('ejs-service').value='';
-  document.getElementById('ejs-template').value='';
-  document.getElementById('ejs-pubkey').value='';
-  showMsg('ejs-success','Config cleared.','success');
-  updateEmailConfigStatus();
-}
 
 function _setOwnerDashMode(mode){
   // mode: 'sys-admin' | 'shop-owner'
@@ -5324,15 +5277,14 @@ function _setOwnerDashMode(mode){
   const tabBar=document.getElementById('sys-tab-bar');
   const sysSecs=document.querySelectorAll('.sys-sec');
   const shopSecs=['section-owner-settings','section-branch-cmp','section-danger-zone'];
-  const sysOnlyPlain=['section-email-settings'];
   if(tabBar)tabBar.style.display=mode==='sys-admin'?'flex':'none';
   if(mode==='sys-admin'){
-    // sections are controlled by switchSysTab — don't touch them here
+    // Clear any inline display overrides so switchSysTab's CSS .active class can show sections
+    sysSecs.forEach(s=>s.style.display='');
   } else {
     sysSecs.forEach(s=>s.style.display='none');
   }
   shopSecs.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display=mode==='shop-owner'?'':'none';});
-  sysOnlyPlain.forEach(id=>{const el=document.getElementById(id);if(el)el.style.display=mode==='sys-admin'?'':'none';});
   // "Add User" only for shop-owner mode
   const addBtn=document.getElementById('owner-add-user-btn');
   if(addBtn)addBtn.style.display=mode==='shop-owner'?'':'none';
@@ -5658,7 +5610,7 @@ function _renderSysOwnerList(){
     return sa.daysLeft-sb.daysLeft;
   });
   const body=document.getElementById('user-list-body');if(!body)return;
-  if(!owners.length){body.innerHTML=`<div class="sys-empty"><div class="sys-empty-icon">${q||filter!=='all'?'<svg class="ic"><use href="#i-search"/></svg>':'<svg class="ic"><use href="#i-crown"/></svg>'}</div><strong style="color:var(--text2);font-size:14px">${q||filter!=='all'?'No results found':'No owners registered yet'}</strong><span style="font-size:12px">${q||filter!=='all'?'Try a different search or filter.':'Approved registrations will appear here.'}</span></div>`;return;}
+  if(!owners.length){body.innerHTML=(q||filter!=='all')?_sysEmptyState('<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="35" cy="35" r="18" stroke="currentColor" stroke-width="2.5"/><line x1="48" y1="48" x2="64" y2="64" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>','No results found','Try adjusting your search or filter.'):_sysEmptyState('<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M20 56c0-11 9-20 20-20s20 9 20 20" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><circle cx="40" cy="26" r="12" stroke="currentColor" stroke-width="2.5"/><path d="M58 36l4 4-4 4M62 40h-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>','No owners yet','Approved registrations will appear here.');return;}
   body.innerHTML=owners.map((u,i)=>{
     const r=reg[u],ss=ssCache[u],online=isUserOnline(r);
     const userCount=Object.keys(reg).filter(k=>reg[k].ownerId===u&&k!==u).length;
@@ -5672,8 +5624,10 @@ function _renderSysOwnerList(){
     const expiryStyle=isExpired?'color:var(--error);font-weight:700':expiringRed?'color:var(--error);font-weight:700':expiringAmber?'color:var(--warn);font-weight:700':'';
     const avatarColor=isSus?'background:#64748b':isExpired?'background:var(--error)':ss.status==='active'?'background:var(--success)':'background:var(--warn)';
     const lastLoginStr=r.lastLogin?`<span title="${new Date(r.lastLogin).toLocaleString()}"><svg class="ic"><use href="#i-clock"/></svg> ${_timeAgo(r.lastLogin)}</span>`:'';
-    return`<div class="oc-wrap" style="${cardBorder}animation-delay:${i*.05}s" data-u="${u}" onclick="openManageOwner('${esc(u)}')">
-      <div class="oc-top">
+    const autoExtBadge=r.autoExtend?'<span class="auto-ext-badge">↻ Auto-Extend</span>':'';
+    const uId='oc-exp-'+u.replace(/[^a-z0-9]/gi,'_');
+    return`<div class="oc-wrap" style="${cardBorder}animation-delay:${i*.05}s" data-u="${u}">
+      <div class="oc-top" onclick="_toggleOwnerExpand('${esc(u)}','${uId}')" style="cursor:pointer">
         <div class="oc-avatar" style="${avatarColor}">${u[0].toUpperCase()}</div>
         <div class="oc-main">
           <div class="oc-name">
@@ -5682,6 +5636,7 @@ function _renderSysOwnerList(){
             <span class="sub-badge sub-${ss.variant}">${ss.label}</span>
             ${online?'<span style="font-size:9px;background:rgba(16,185,129,.15);color:var(--success);padding:1px 7px;border-radius:99px;font-weight:700">● ONLINE</span>':''}
             ${r.forcePassReset?'<span class="force-reset-badge"><svg class="ic"><use href="#i-alert"/></svg> Pass Reset</span>':''}
+            ${autoExtBadge}
           </div>
           <div class="oc-detail">
             ${r.email?`<span><svg class="ic"><use href="#i-mail"/></svg> ${esc(r.email)}</span>`:''}
@@ -5692,30 +5647,49 @@ function _renderSysOwnerList(){
         </div>
         <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
           <button type="button" class="oc-ext-btn" style="font-size:10px;padding:3px 8px" onclick="event.stopPropagation();extendOwnerSub('${esc(u)}',30)" title="Quick extend +30 days">+30d</button>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text3)"><polyline points="9 18 15 12 9 6"/></svg>
+          <svg id="oc-chev-${uId}" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--text3);transition:transform .18s"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+      </div>
+      <div class="oc-expand" id="${uId}">
+        <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px">
+          ${r.email?`<button type="button" class="oc-ext-btn" onclick="event.stopPropagation();_copyEmail('${esc(r.email||'')}')" title="Copy email to clipboard"><svg class="ic"><use href="#i-clipboard"/></svg> Copy Email</button>`:''}
+          <button type="button" class="oc-ext-btn" onclick="event.stopPropagation();extendOwnerSub('${esc(u)}',7)" title="+7 days">+7d</button>
+          <button type="button" class="oc-ext-btn" onclick="event.stopPropagation();extendOwnerSub('${esc(u)}',90)" title="+90 days">+90d</button>
+          <button type="button" class="btn btn-sm" style="margin-left:auto;font-size:11px" onclick="event.stopPropagation();openManageOwner('${esc(u)}')"><svg class="ic"><use href="#i-pencil"/></svg> Full Manage →</button>
+        </div>
+        <div style="font-size:11px;color:var(--text3);display:flex;flex-wrap:wrap;gap:10px">
+          ${r.phone?`<span><svg class="ic"><use href="#i-phone"/></svg> ${esc(r.phone)}</span>`:''}
+          ${r.customMonthlyRate?`<span style="color:var(--success)"><svg class="ic"><use href="#i-money"/></svg> Custom rate: $${r.customMonthlyRate}/mo</span>`:''}
+          <span style="color:${r.autoExtend?'var(--success)':'var(--text3)'}"><svg class="ic"><use href="#i-${r.autoExtend?'check-circle':'clock'}"/></svg> Auto-extend: ${r.autoExtend?'ON':'OFF'}</span>
+          <span id="oc-storage-${uId}" style="color:var(--text3)"><svg class="ic"><use href="#i-save"/></svg> Storage: loading…</span>
         </div>
       </div>
     </div>`;
   }).join('');
+  // Lazy-load storage for all expanded cards (none expanded yet, but prep the function)
+  body.querySelectorAll('.oc-wrap').forEach(el=>{const u=el.dataset.u;if(u)_prefetchOwnerStorageIntoCard(u);});
 }
 
 // ── Card builders (#15) ──────────────────────────────────────────────
 function _buildPendingCard(p,i){
-  return`<div class="pc-card" style="animation-delay:${i*.06}s">
+  const sla=_slaChip(p.requestedAt,12,24);
+  const slaOver=p.requestedAt&&(Date.now()-new Date(p.requestedAt).getTime())>86400000;
+  return`<div class="pc-card" style="animation-delay:${i*.06}s${slaOver?';border-left:3px solid var(--error)':''}">
     <div class="pc-top">
-      <div class="pc-avatar" style="background:var(--owner)">${p.username[0].toUpperCase()}</div>
+      <div class="pc-avatar" style="background:${slaOver?'var(--error)':'var(--owner)'}">${p.username[0].toUpperCase()}</div>
       <div style="flex:1;min-width:0">
-        <div class="user-name">${esc(p.username)}${p.shopName&&p.shopName!==p.username?` <span style="font-weight:400;font-size:11px;color:var(--text3)">— ${esc(p.shopName)}</span>`:''}</div>
+        <div class="user-name">${esc(p.username)}${p.shopName&&p.shopName!==p.username?` <span style="font-weight:400;font-size:11px;color:var(--text3)">— ${esc(p.shopName)}</span>`:''} ${sla}</div>
         <div class="pc-meta">
           ${p.email?`<span><svg class="ic"><use href="#i-mail"/></svg> ${esc(p.email)}</span>`:''}
           ${p.phone?`<span><svg class="ic"><use href="#i-phone"/></svg> ${esc(p.phone)}</span>`:''}
-          <span><svg class="ic"><use href="#i-clock"/></svg> ${_timeAgo(p.requestedAt)}</span>
+          <span><svg class="ic"><use href="#i-clock"/></svg> Submitted ${_timeAgo(p.requestedAt)}</span>
         </div>
       </div>
     </div>
     <div class="pc-actions">
       <button type="button" class="btn btn-sm btn-success" onclick="openApprovePaymentModal('${esc(p.username)}')"><svg class="ic"><use href="#i-check-circle"/></svg> Approve</button>
       <button type="button" class="btn btn-sm btn-danger" onclick="denyOwner('${esc(p.username)}')"><svg class="ic"><use href="#i-x-circle"/></svg> Deny</button>
+      ${p.email?`<button type="button" class="btn btn-sm" onclick="_copyEmail('${esc(p.email)}')" title="Copy email"><svg class="ic"><use href="#i-clipboard"/></svg></button>`:''}
     </div>
   </div>`;
 }
@@ -5770,11 +5744,12 @@ function _buildResetCard(r,i){
   const statusColor=r.status==='pending'?'var(--warn)':r.status==='approved'?'var(--success)':'var(--error)';
   const statusIcon=r.status==='pending'?'<svg class="ic"><use href="#i-clock"/></svg>':r.status==='approved'?'<svg class="ic"><use href="#i-check-circle"/></svg>':'<svg class="ic"><use href="#i-x-circle"/></svg>';
   const denyNote=r.denyReason?`<div style="font-size:10px;color:var(--text3);margin-top:4px">Denial reason: ${esc(r.denyReason)}</div>`:'';
+  const sla=r.status==='pending'?_slaChip(r.requestedAt,24,72):'';
   return`<div class="pc-card" style="animation-delay:${i*.06}s;border-left:3px solid ${statusColor}">
     <div class="pc-top">
       <div class="pc-avatar" style="background:rgba(239,68,68,.2);color:var(--error);font-size:18px"><svg class="ic"><use href="#i-trash"/></svg></div>
       <div style="flex:1;min-width:0">
-        <div class="user-name">${esc(r.ownerUsername)} <span style="font-size:10px;color:${statusColor};font-weight:700">${statusIcon} ${r.status.toUpperCase()}</span></div>
+        <div class="user-name">${esc(r.ownerUsername)} <span style="font-size:10px;color:${statusColor};font-weight:700">${statusIcon} ${r.status.toUpperCase()}</span> ${sla}</div>
         <div class="pc-meta"><span>Requested ${_timeAgo(r.requestedAt)}</span>${r.respondedAt?`<span>Responded ${_timeAgo(r.respondedAt)}</span>`:''}</div>
         ${denyNote}
       </div>
@@ -5853,31 +5828,35 @@ function _saveStatsSnap(counts){
 async function _fetchTotalStorage(owners){
   const el=document.getElementById('sys-total-storage-val');
   if(!el)return;
-  const reg=getRegistry();
-  let totalBytes=0;
-  // Sum localStorage for any owner data present locally
-  for(let i=0;i<localStorage.length;i++){
-    const k=localStorage.key(i);
-    if(k&&k.startsWith('ims_'))totalBytes+=(localStorage.getItem(k)||'').length*2;
-  }
-  if(totalBytes>0){
-    el.textContent=totalBytes>=1048576?(totalBytes/1048576).toFixed(2)+' MB':(totalBytes/1024).toFixed(1)+' KB';
-    return;
-  }
-  // No local data — fetch from Supabase in parallel for all owners
-  if(!S.db){el.textContent='N/A';return;}
-  try{
-    const nsList=owners.map(u=>(reg[u]||{}).ownerId||u);
-    const unique=[...new Set(nsList)];
-    const docs=await Promise.all(unique.map(ns=>S.db.collection('power_ims5').doc(ns).get().catch(()=>null)));
-    docs.forEach(doc=>{
-      if(!doc||!doc.exists)return;
-      Object.values(doc.data()||{}).forEach(v=>{
-        totalBytes+=typeof v==='string'?v.length*2:JSON.stringify(v).length*2;
+  const _fmt=b=>b>=1048576?(b/1048576).toFixed(2)+' MB':(b/1024).toFixed(1)+' KB';
+  if(S.db){
+    try{
+      // Load the cloud registry to get the authoritative owner list — local registries
+      // can differ between devices if a sync hasn't run yet, which causes each device
+      // to query a different set of owner documents and produce different totals
+      const regDoc=await S.db.collection('power_ims5').doc('_global_registry').get().catch(()=>null);
+      let ownerList=owners;
+      if(regDoc&&regDoc.exists){
+        const cloudReg=_safeJSON((regDoc.data()||{}).registry,{},'_fetchTotalStorage');
+        const cloudOwners=Object.keys(cloudReg).filter(u=>cloudReg[u]&&cloudReg[u].role==='owner');
+        if(cloudOwners.length>0){ownerList=cloudOwners;}
+      }
+      const nsList=ownerList.map(u=>{const e=(getRegistry()[u]||{});return e.ownerId||u;});
+      const unique=[...new Set(nsList)];
+      let totalBytes=0;
+      const docs=await Promise.all(unique.map(ns=>S.db.collection('power_ims5').doc(ns).get().catch(()=>null)));
+      docs.forEach(doc=>{
+        if(!doc||!doc.exists)return;
+        Object.values(doc.data()||{}).forEach(v=>{totalBytes+=typeof v==='string'?v.length*2:JSON.stringify(v).length*2;});
       });
-    });
-    el.textContent=totalBytes>=1048576?(totalBytes/1048576).toFixed(2)+' MB':(totalBytes/1024).toFixed(1)+' KB';
-  }catch(e){el.textContent='N/A';}
+      el.textContent=_fmt(totalBytes);
+      return;
+    }catch(e){}
+  }
+  // Cloud unavailable — fall back to local cache as an estimate
+  let totalBytes=0;
+  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('ims_'))totalBytes+=(localStorage.getItem(k)||'').length*2;}
+  el.textContent=totalBytes>0?_fmt(totalBytes)+' (local est.)':'N/A';
 }
 
 function _renderSysStats(owners,reg,pendingOwners,bannedOwners,pendingSubReqs,pendingResets){
@@ -5888,7 +5867,12 @@ function _renderSysStats(owners,reg,pendingOwners,bannedOwners,pendingSubReqs,pe
   const susCount=ssList.filter(s=>s.status==='suspended').length;
   const expiringSoon=ssList.filter(s=>(s.status==='active'||s.status==='trial')&&s.daysLeft<=5).length;
   const onlineCount=owners.filter(u=>isUserOnline(reg[u])).length;
-  const counts={total:owners.length,paid:paidCount,trial:trialCount,expiredSus:expiredCount+susCount,expiringSoon};
+  // MRR estimate
+  const mrr=_calcMRR(owners,reg);
+  const mrrStr=mrr>0?'$'+mrr.toFixed(0)+'/mo':'—';
+  // Churn this month
+  const churn=_calcChurn(owners,reg);
+  const counts={total:owners.length,paid:paidCount,trial:trialCount,expiredSus:expiredCount+susCount,expiringSoon,mrr:Math.round(mrr),churn};
   const _st=(icon,val,lbl,vc='',bc='',tab='',trendKey='')=>`<div class="owner-stat" style="border-left-color:${bc||'var(--border2)'};border-left-width:4px;cursor:${tab?'pointer':'default'}" ${tab?`onclick="switchSysTab('${tab}')" title="Jump to ${tab} tab"`:''}>
     <div class="stat-icon-box" style="${bc?`background:${bc}20;border-color:${bc}35;color:${bc}`:''}"><span class="stat-icon">${icon}</span></div>
     <div class="stat-body"><div class="stat-val" style="${vc?`color:${vc}`:'color:var(--text)'}">${val}${trendKey?_getStatsTrend(trendKey,val):''}</div><div class="stat-lbl">${lbl}</div></div>
@@ -5897,22 +5881,33 @@ function _renderSysStats(owners,reg,pendingOwners,bannedOwners,pendingSubReqs,pe
     _st('<svg class="ic"><use href="#i-crown"/></svg>',owners.length,'Total Owners','','rgba(45,75,138,1)','owners','total')+
     _st('<svg class="ic"><use href="#i-check-circle"/></svg>',paidCount,'Paid Active','var(--success)','var(--success)','owners','paid')+
     _st('<svg class="ic"><use href="#i-clock"/></svg>',trialCount,'On Trial','var(--warn)','var(--warn)','owners','trial')+
-    _st('<svg class="ic"><use href="#i-circle-green"/></svg>',onlineCount,'Online Now','','rgba(45,75,138,.7)','owners','')+
+    _st('<svg class="ic"><use href="#i-circle-green"/></svg>',onlineCount,'Online Now','','rgba(45,75,138,.7)','','onlineCount')+
     _st('<svg class="ic"><use href="#i-circle-red"/></svg>',expiredCount+susCount,'Expired / Sus.','var(--error)','var(--error)','owners','expiredSus')+
     (expiringSoon?_st('<svg class="ic"><use href="#i-alert"/></svg>',expiringSoon,'Expiring ≤5d','var(--warn)','var(--warn)','owners','expiringSoon'):'')+
+    _st('<svg class="ic"><use href="#i-money"/></svg>',mrrStr,'Est. MRR','var(--success)','var(--success)','','mrr')+
+    (churn?_st('<svg class="ic"><use href="#i-trending-up"/></svg>',churn,'Churned This Month','var(--error)','var(--error)','','churn'):'')+
     _st('<svg class="ic"><use href="#i-clock"/></svg>',pendingOwners.length,'Pending','var(--warn)','var(--warn)','pending','')+
     (pendingSubReqs?_st('<svg class="ic"><use href="#i-gem"/></svg>',pendingSubReqs,'Sub Requests','var(--p)','var(--p)','subs',''):'')+
     `<div class="owner-stat" style="border-left-color:rgba(45,75,138,.6);border-left-width:4px;cursor:default">
       <div class="stat-icon-box" style="background:rgba(45,75,138,.12);border-color:rgba(45,75,138,.25);color:rgba(45,75,138,1)"><span class="stat-icon"><svg class="ic"><use href="#i-save"/></svg></span></div>
       <div class="stat-body"><div class="stat-val" id="sys-total-storage-val" style="color:var(--text)">…</div><div class="stat-lbl">Total Storage</div></div>
     </div>`;
+  // Show stats header (collapse button) only in sys-admin mode
+  const statsHdr=document.getElementById('sys-stats-hdr');if(statsHdr)statsHdr.style.display='flex';
+  // Restore collapsed state
+  if(_lsGet('ims_stats_collapsed',false)){
+    const sa=document.getElementById('owner-stats');if(sa)sa.style.display='none';
+    const sp=document.getElementById('sys-sparkline');if(sp)sp.style.display='none';
+    const cb=document.getElementById('sys-stats-collapse-btn');if(cb)cb.textContent='▼ Show Stats';
+  }
   setTimeout(()=>_saveStatsSnap(counts),2000);
   _fetchTotalStorage(owners);
+  _renderSysSparkline(owners,reg);
   return{paidCount,expiringSoon};
 }
 
 function _renderSysTabBadges(owners,pendingOwners,bannedOwners,pendingSubReqs,pendingResets){
-  const _tb=(id,n,cls='')=>{const el=document.getElementById(id);if(!el)return;el.textContent=n;el.style.display=n>0?'flex':'none';if(cls)el.className='sys-tab-badge '+cls;};
+  const _tb=(id,n,cls='')=>{const el=document.getElementById(id);if(!el)return;el.textContent=n;el.style.display=n>0?'flex':'none';if(cls)el.className='sys-tab-badge '+cls+(n>0?' has-items':'');};
   _tb('stab-owners-badge',owners.length);
   _tb('stab-pending-badge',pendingOwners.length,'tb-warn');
   _tb('stab-subs-badge',pendingSubReqs,'tb-warn');
@@ -5944,7 +5939,7 @@ function _renderSysPending(pendingOwners){
   if(approveAllBtn)approveAllBtn.style.display=pendingOwners.length>1?'':'none';
   document.getElementById('pending-user-list').innerHTML=pendingOwners.length
     ?[...pendingOwners].reverse().map(_buildPendingCard).join('')
-    :`<div class="sys-empty"><div class="sys-empty-icon"><svg class="ic"><use href="#i-sparkle"/></svg></div><strong style="color:var(--text2);font-size:14px">No pending requests</strong><span style="font-size:12px">New registrations awaiting approval will appear here.</span></div>`;
+    :_sysEmptyState('<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="36" stroke="currentColor" stroke-width="2.5" opacity=".18"/><path d="M40 22v18l10 6" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M22 56c4-8 10-12 18-12s14 4 18 12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>','No pending requests','New owner registrations awaiting approval will appear here.');
 }
 
 function _approveAllPending(){
@@ -5975,21 +5970,21 @@ function _renderSysSubReqs(subReqs,pendingSubReqs){
   document.getElementById('sub-req-count').textContent=subReqs.length;
   document.getElementById('sub-req-list').innerHTML=subReqs.length
     ?[...subReqs].reverse().map(_buildSubReqCard).join('')
-    :`<div class="sys-empty"><div class="sys-empty-icon"><svg class="ic"><use href="#i-gem"/></svg></div><strong style="color:var(--text2);font-size:14px">No subscription requests</strong><span style="font-size:12px">Plan upgrade requests from shop owners will appear here.</span></div>`;
+    :_sysEmptyState('<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M22 38l12 12 24-24" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity=".25"/><path d="M40 14l4.5 13H58l-11 8 4.5 13L40 40l-11.5 8L33 35 22 27h13.5z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/></svg>','No subscription requests','Plan upgrade requests from shop owners will appear here.');
 }
 
 function _renderSysResets(resetReqs,pendingResets){
   document.getElementById('reset-req-count').textContent=pendingResets;
   document.getElementById('reset-request-list').innerHTML=resetReqs.length
     ?resetReqs.map(_buildResetCard).join('')
-    :`<div class="sys-empty"><div class="sys-empty-icon"><svg class="ic"><use href="#i-trash"/></svg></div><strong style="color:var(--text2);font-size:14px">No reset requests</strong><span style="font-size:12px">Data reset requests from shop owners will appear here.</span></div>`;
+    :_sysEmptyState('<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="20" y="28" width="40" height="32" rx="5" stroke="currentColor" stroke-width="2.5"/><path d="M32 28V24a8 8 0 0 1 16 0v4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="40" y1="40" x2="40" y2="48" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>','No reset requests','Data reset requests from shop owners will appear here. All clear!');
 }
 
 function _renderSysBanned(bannedOwners){
   document.getElementById('banned-count').textContent=bannedOwners.length;
   document.getElementById('banned-owner-list').innerHTML=bannedOwners.length
     ?bannedOwners.map(_buildBannedCard).join('')
-    :`<div class="sys-empty"><div class="sys-empty-icon"><svg class="ic"><use href="#i-check-circle"/></svg></div><strong style="color:var(--text2);font-size:14px">No banned accounts</strong><span style="font-size:12px">All owners are in good standing.</span></div>`;
+    :_sysEmptyState('<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="32" r="14" stroke="currentColor" stroke-width="2.5"/><path d="M22 62c0-9.9 8.06-18 18-18s18 8.1 18 18" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><polyline points="30 38 40 46 52 34" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>','No banned accounts','All platform owners are in good standing.');
 }
 
 function _renderSysDeleted(){
@@ -6000,7 +5995,7 @@ function _renderSysDeleted(){
   const listEl=document.getElementById('deleted-owner-list');if(!listEl)return;
   listEl.innerHTML=deleted.length
     ?deleted.map((u,i)=>_buildDeletedCard(u,reg[u],i)).join('')
-    :`<div class="sys-empty"><div class="sys-empty-icon"><svg class="ic"><use href="#i-check-circle"/></svg></div><strong style="color:var(--text2);font-size:14px">No deleted accounts</strong><span style="font-size:12px;color:var(--text3)">No tombstoned registry entries found.</span></div>`;
+    :_sysEmptyState('<svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M26 32h28v32a4 4 0 0 1-4 4H30a4 4 0 0 1-4-4V32z" stroke="currentColor" stroke-width="2.5"/><line x1="22" y1="26" x2="58" y2="26" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M34 26v-4h12v4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><line x1="35" y1="42" x2="35" y2="56" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".4"/><line x1="45" y1="42" x2="45" y2="56" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity=".4"/></svg>','No deleted accounts','No tombstoned registry entries found. Clean slate.');
 }
 
 function _buildDeletedCard(u,entry,i){
@@ -6179,8 +6174,11 @@ function _renderMopContent(u){
       </div>
     </div>
 
-    <div style="padding:12px 18px;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:8px">
+    <div style="padding:12px 18px;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:8px;align-items:center">
       <div style="display:flex;align-items:center;gap:6px;padding:7px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;font-size:12px"><svg class="ic" style="color:var(--text2)"><use href="#i-save"/></svg> <strong id="mop-storage-val">…</strong>&nbsp;storage</div>
+      ${r.email?`<button type="button" class="btn btn-sm" onclick="_copyEmail('${esc(r.email)}')" title="Copy email to clipboard"><svg class="ic"><use href="#i-clipboard"/></svg> Copy Email</button>`:''}
+      <button type="button" class="btn btn-sm ${r.autoExtend?'btn-success':''}" onclick="_toggleAutoExtend('${esc(u)}')" title="Toggle auto-extend subscription"><svg class="ic"><use href="#i-${r.autoExtend?'check-circle':'clock'}"/></svg> Auto-Extend ${r.autoExtend?'ON':'OFF'}</button>
+      <button type="button" class="btn btn-sm" onclick="_setCustomRate('${esc(u)}')" title="Set custom monthly billing rate" style="margin-left:auto"><svg class="ic"><use href="#i-money"/></svg> ${r.customMonthlyRate?'Rate: $'+r.customMonthlyRate+'/mo':'Set Rate'}</button>
     </div>
 
     <div style="padding:14px 18px;border-bottom:1px solid var(--border)">
@@ -6197,6 +6195,11 @@ function _renderMopContent(u){
         <button type="button" class="oc-ext-btn" onclick="extendOwnerSub('${esc(u)}',365);openManageOwner('${esc(u)}')">+1 year</button>
       </div>
     </div>
+
+    ${(r.payHistory&&r.payHistory.length)?`<div style="padding:14px 18px 0;border-bottom:1px solid var(--border)">
+      <div style="font-size:11.5px;font-weight:700;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:6px"><svg class="ic"><use href="#i-clock"/></svg> Payment History</div>
+      <div class="pay-timeline-wrap">${[...r.payHistory].reverse().map(h=>`<div class="pay-tl-item"><div class="pay-tl-dot"></div><div style="flex:1;min-width:0"><div style="font-size:12px;font-weight:600;color:var(--text)">${esc(h.plan||'extension')}${h.amount>0?` · $${h.amount}`:''}${h.until?` <span style="font-weight:400;color:var(--text3)">→ until ${h.until}</span>`:''}</div><div style="font-size:10.5px;color:var(--text3);margin-top:2px">${h.date||''} ${h.note?'· '+esc(h.note):''}</div></div></div>`).join('')}</div>
+    </div>`:''}
 
     <div style="padding:14px 18px;border-bottom:1px solid var(--border)">
       <div style="font-size:11.5px;font-weight:700;color:var(--text2);margin-bottom:10px;display:flex;align-items:center;gap:6px"><svg class="ic"><use href="#i-key"/></svg> Actions</div>
@@ -6234,7 +6237,7 @@ function renderSystemOwnerDashboard(){
   const badgeEl=document.getElementById('owner-hero-badge-text');if(badgeEl)badgeEl.textContent='POWER-IMS · System Owner';
 
   const reg=getRegistry();
-  const owners=Object.keys(reg).filter(u=>reg[u].role==='owner');
+  const owners=Object.keys(reg).filter(u=>reg[u]&&reg[u].role==='owner');
   const pendingOwners=_lsGet('ims_pending_owners',[]);
   const bannedOwners=getBannedOwners();
   const subReqs=getSubRequests();
@@ -6251,7 +6254,6 @@ function renderSystemOwnerDashboard(){
   _renderSysResets(resetReqs,pendingResets);
   _renderSysBanned(bannedOwners);
   if(_sysState.tab==='deleted')_renderSysDeleted();
-  updateEmailConfigStatus();
   const liveBadge=document.getElementById('sys-live-badge');
   if(liveBadge){
     if(_sysLastSync){
@@ -6262,6 +6264,244 @@ function renderSystemOwnerDashboard(){
     }
   }
   switchSysTab(_sysState.tab);
+  _bindSysAdminKeys();
+  _updateSysThemeBtn();
+}
+
+// ═══════════════════════════════════════════════════════
+//  SYS-ADMIN DASHBOARD ENHANCEMENTS
+// ═══════════════════════════════════════════════════════
+
+function _sysEmptyState(svgContent,title,sub){
+  return`<div class="sys-empty"><svg class="sys-empty-svg" viewBox="0 0 80 80" fill="none" stroke="var(--text3)" xmlns="http://www.w3.org/2000/svg">${svgContent.replace(/^<svg[^>]*>/,'').replace(/<\/svg>$/, '')}</svg><strong style="color:var(--text2);font-size:14px">${title}</strong><span style="font-size:12px">${sub}</span></div>`;
+}
+
+// Theme toggle
+function _toggleSysTheme(){
+  const isDark=document.documentElement.getAttribute('data-theme')!=='light';
+  setTheme(isDark?'light':'dark');
+  _updateSysThemeBtn();
+}
+function _updateSysThemeBtn(){
+  const icon=document.getElementById('sys-theme-icon');
+  if(!icon)return;
+  const isDark=document.documentElement.getAttribute('data-theme')!=='light';
+  icon.querySelector('use').setAttribute('href',isDark?'#i-sun':'#i-moon');
+  const btn=document.getElementById('sys-theme-toggle-btn');
+  if(btn)btn.title=isDark?'Switch to light mode':'Switch to dark mode';
+}
+
+// MRR estimation
+const _SYS_PLAN_PRICES_KEY='ims_sys_plan_prices';
+function _getSysPlanPrices(){return _lsGet(_SYS_PLAN_PRICES_KEY,{monthly:15,'3months':40,'6months':75,annual:140});}
+function _calcMRR(owners,reg){
+  const prices=_getSysPlanPrices();
+  const mrrMap={monthly:1,'3months':3,'6months':6,annual:12};
+  let mrr=0;
+  owners.forEach(u=>{
+    const r=reg[u];if(!r)return;
+    const ss=getSubStatus(r);if(ss.status!=='active')return;
+    if(r.customMonthlyRate){mrr+=r.customMonthlyRate;return;}
+    const hist=r.payHistory||[];const last=hist[hist.length-1];
+    if(last&&last.plan&&prices[last.plan]&&mrrMap[last.plan])mrr+=prices[last.plan]/mrrMap[last.plan];
+    else mrr+=prices.monthly;
+  });
+  return mrr;
+}
+
+// Churn this month
+function _calcChurn(owners,reg){
+  const ym=new Date().toISOString().slice(0,7);
+  const today=new Date().toISOString().slice(0,10);
+  return owners.filter(u=>{
+    const r=reg[u];if(!r||!r.paidUntil)return false;
+    return r.paidUntil<today&&r.paidUntil.startsWith(ym);
+  }).length;
+}
+
+// Growth sparkline (last 7 days)
+function _renderSysSparkline(owners,reg){
+  const el=document.getElementById('sys-sparkline');if(!el)return;
+  if(_lsGet('ims_stats_collapsed',false)){el.style.display='none';return;}
+  const days=7;const buckets=Array(days).fill(0);
+  const today=new Date();today.setHours(0,0,0,0);
+  owners.forEach(u=>{
+    const r=reg[u];const d=r.createdAt||r.trialStart;if(!d)return;
+    const dt=new Date(d);dt.setHours(0,0,0,0);
+    const diff=Math.floor((today-dt)/86400000);
+    if(diff>=0&&diff<days)buckets[days-1-diff]++;
+  });
+  const max=Math.max(...buckets,1);
+  const total=buckets.reduce((a,b)=>a+b,0);
+  el.style.display='';
+  el.innerHTML=`<div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:6px"><svg class="ic" style="color:rgba(45,75,138,.7)"><use href="#i-trending-up"/></svg> Owner Signups — Last 7 Days<span style="margin-left:auto;font-size:10px;color:var(--text3);font-weight:400">${total} new this week</span></div><div style="display:flex;align-items:flex-end;gap:3px;height:40px">${buckets.map((v,i)=>{
+    const d=new Date(today);d.setDate(d.getDate()-(days-1-i));
+    const lbl=d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
+    return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px" title="${lbl}: ${v} signup${v!==1?'s':''}"><div style="width:100%;border-radius:3px 3px 0 0;background:${v>0?'rgba(45,75,138,.6)':'var(--border2)'};height:${Math.max(3,Math.round(v/max*34))}px;transition:height .3s ease"></div><div style="font-size:8px;color:var(--text3)">${d.getDate()}</div></div>`;}).join('')}</div>`;
+}
+
+// Copy email to clipboard
+function _copyEmail(email){
+  if(!email){showToast('No email on record','warn');return;}
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(email).then(()=>showToast('<svg class="ic"><use href="#i-check-circle"/></svg> Email copied','success')).catch(()=>{_fallbackCopy(email);});
+  }else{_fallbackCopy(email);}
+}
+function _fallbackCopy(text){
+  const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';
+  document.body.appendChild(ta);ta.select();try{document.execCommand('copy');showToast('<svg class="ic"><use href="#i-check-circle"/></svg> Copied','success');}catch(e){showToast('Could not copy','warn');}
+  document.body.removeChild(ta);
+}
+
+// Auto-extend toggle
+function _toggleAutoExtend(u){
+  const reg=getRegistry();if(!reg[u])return;
+  reg[u].autoExtend=!reg[u].autoExtend;
+  saveRegistry(reg);saveRegistryToCloud(reg,true);
+  showToast(reg[u].autoExtend?'<svg class="ic"><use href="#i-check-circle"/></svg> Auto-extend ON for '+u:'Auto-extend OFF for '+u,reg[u].autoExtend?'success':'info');
+  openManageOwner(u);
+}
+
+// Custom monthly rate
+function _setCustomRate(u){
+  const reg=getRegistry();if(!reg[u])return;
+  const cur=reg[u].customMonthlyRate!=null?String(reg[u].customMonthlyRate):'';
+  const val=prompt(`Custom monthly rate for "${u}" in USD (leave blank to clear):`,cur);
+  if(val===null)return;
+  if(val.trim()===''){delete reg[u].customMonthlyRate;showToast('Custom rate cleared','info');}
+  else{const n=parseFloat(val);if(isNaN(n)||n<0){showToast('Invalid amount','warn');return;}reg[u].customMonthlyRate=n;showToast(`Rate set: $${n.toFixed(2)}/month for ${u}`,'success');}
+  saveRegistry(reg);saveRegistryToCloud(reg,true);openManageOwner(u);
+}
+
+// Collapsible stats
+function _toggleStatsCollapse(){
+  const sa=document.getElementById('owner-stats');
+  const sp=document.getElementById('sys-sparkline');
+  const btn=document.getElementById('sys-stats-collapse-btn');
+  if(!sa)return;
+  const isNowVisible=sa.style.display!=='none';
+  sa.style.display=isNowVisible?'none':'';
+  if(sp)sp.style.display=isNowVisible?'none':'';
+  if(btn)btn.textContent=isNowVisible?'▼ Show Stats':'▲ Hide Stats';
+  _lsSet('ims_stats_collapsed',isNowVisible);
+}
+
+// Quick-expand owner card
+function _toggleOwnerExpand(u,panelId){
+  const panel=document.getElementById(panelId);if(!panel)return;
+  const chevron=document.getElementById('oc-chev-'+panelId);
+  const isOpen=panel.classList.contains('show');
+  // Close all others first
+  document.querySelectorAll('.oc-expand.show').forEach(p=>{
+    p.classList.remove('show');
+    const ch=document.getElementById('oc-chev-'+p.id);
+    if(ch)ch.style.transform='';
+  });
+  if(!isOpen){
+    panel.classList.add('show');
+    if(chevron)chevron.style.transform='rotate(90deg)';
+    // Trigger storage fetch for this owner
+    _fetchOwnerStorageToEl('oc-storage-'+panelId,u);
+  }
+}
+
+// Fetch owner storage into a specific element
+async function _fetchOwnerStorageToEl(elId,u){
+  const el=document.getElementById(elId);if(!el)return;
+  const ns=(getRegistry()[u]||{}).ownerId||u;
+  const _fmt=b=>b>=1048576?(b/1048576).toFixed(2)+' MB':(b/1024).toFixed(1)+' KB';
+  let bytes=0;
+  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('ims_'+ns+'_'))bytes+=(localStorage.getItem(k)||'').length*2;}
+  if(bytes>0){el.innerHTML='<svg class="ic"><use href="#i-save"/></svg> Storage: '+_fmt(bytes);return;}
+  if(!S.db){el.innerHTML='<svg class="ic"><use href="#i-save"/></svg> Storage: N/A';return;}
+  try{
+    const doc=await S.db.collection('power_ims5').doc(ns).get();
+    if(!doc.exists){el.innerHTML='<svg class="ic"><use href="#i-save"/></svg> Storage: 0 KB';return;}
+    let cb=0;Object.values(doc.data()||{}).forEach(v=>{cb+=typeof v==='string'?v.length*2:JSON.stringify(v).length*2;});
+    el.innerHTML='<svg class="ic"><use href="#i-save"/></svg> Storage: '+_fmt(cb);
+  }catch(e){el.innerHTML='<svg class="ic"><use href="#i-save"/></svg> Storage: N/A';}
+}
+
+// Prefetch storage in background (no-op if not expanded)
+function _prefetchOwnerStorageIntoCard(u){
+  // Storage is lazy-loaded only when the card expands — no prefetch needed
+}
+
+// SLA chip helper
+function _slaChip(requestedAt,warnHours=24,overHours=48){
+  if(!requestedAt)return'';
+  const ageMs=Date.now()-new Date(requestedAt).getTime();
+  const ageHrs=ageMs/3600000;
+  const ageStr=ageHrs<1?'<1h':ageHrs<24?Math.round(ageHrs)+'h':(ageHrs/24).toFixed(1)+'d';
+  if(ageHrs>overHours)return`<span class="sla-chip sla-over"><svg class="ic" style="width:9px;height:9px"><use href="#i-alert"/></svg> ${ageStr} — overdue</span>`;
+  if(ageHrs>warnHours)return`<span class="sla-chip sla-warn"><svg class="ic" style="width:9px;height:9px"><use href="#i-clock"/></svg> ${ageStr}</span>`;
+  return`<span class="sla-chip sla-ok"><svg class="ic" style="width:9px;height:9px"><use href="#i-clock"/></svg> ${ageStr}</span>`;
+}
+
+// Keyboard shortcuts for sys-admin
+function _bindSysAdminKeys(){
+  if(window._sysKeysBound)return;
+  window._sysKeysBound=true;
+  document.addEventListener('keydown',e=>{
+    const os=document.getElementById('owner-screen');
+    if(!os||os.style.display==='none')return;
+    if(!isSystemOwner())return;
+    const tag=(e.target||{}).tagName;
+    if(tag==='INPUT'||tag==='TEXTAREA'||tag==='SELECT')return;
+    if(e.metaKey||e.ctrlKey||e.altKey)return;
+    const tabs=['owners','pending','subs','resets','banned','deleted','auditlog'];
+    const k=e.key;
+    if(k>='1'&&k<='7'){
+      const idx=parseInt(k)-1;
+      if(tabs[idx]){switchSysTab(tabs[idx]);if(tabs[idx]==='auditlog')_renderAdminLog();if(tabs[idx]==='deleted')_renderSysDeleted();}
+    }else if(k==='r'||k==='R'){
+      e.preventDefault();
+      const rb=document.querySelector('.owner-refresh-btn');if(rb)rb.click();
+    }else if(k==='Escape'){
+      const mop=document.getElementById('manage-owner-panel');
+      if(mop&&mop.style.display!=='none')closeManageOwner();
+    }
+  });
+}
+
+// Audit log PDF export
+function _exportAdminLogPDF(){
+  if(typeof window.jspdf==='undefined'){showToast('PDF library not loaded yet — try again in a moment','warn');return;}
+  const{jsPDF}=window.jspdf;
+  const log=_lsGet('ims_admin_log',[]);
+  if(!log.length){showToast('No audit log entries to export','warn');return;}
+  const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+  const NAVY=[45,75,138],WHITE=[255,255,255],DARK=[20,30,60],MUTED=[106,122,154];
+  const PAGE_W=210,M=14;
+  const actionCol={extend:[16,185,129],delete:[239,68,68],ban:[239,68,68],suspend:[239,68,68],unsuspend:[16,185,129],approve:[16,185,129],deny:[239,68,68],force_reset:[245,158,11]};
+  // Header
+  doc.setFillColor(...NAVY);doc.rect(0,0,PAGE_W,36,'F');
+  doc.setFont('helvetica','bold');doc.setFontSize(15);doc.setTextColor(...WHITE);
+  doc.text('Admin Audit Log',M,13);
+  doc.setFont('helvetica','normal');doc.setFontSize(8);doc.setTextColor(160,190,235);
+  doc.text('Power IMS — System Owner Activity Log',M,19);
+  doc.text('Exported: '+new Date().toLocaleString('en-GB',{dateStyle:'medium',timeStyle:'short'}),M,25);
+  let y=44;
+  const entries=[...log].reverse();
+  entries.forEach((entry,i)=>{
+    if(y>272){doc.addPage();y=14;}
+    const col=actionCol[entry.action]||MUTED;
+    doc.setDrawColor(...col);doc.setLineWidth(0.25);
+    doc.roundedRect(M,y,PAGE_W-2*M,13,1.5,1.5,'D');
+    doc.setFont('helvetica','bold');doc.setFontSize(7.5);doc.setTextColor(...col);
+    const act=(entry.action||'action').replace(/_/g,' ').toUpperCase();
+    doc.text(act,M+3,y+5.5);
+    doc.setFont('helvetica','normal');doc.setTextColor(...DARK);doc.setFontSize(8);
+    const tgt=entry.target||'';
+    doc.text(tgt.length>30?tgt.slice(0,27)+'…':tgt,M+30,y+5.5);
+    doc.setTextColor(...MUTED);doc.setFontSize(7);
+    const note=entry.note||'';
+    doc.text(note.length>60?note.slice(0,57)+'…':note,M+3,y+10.5);
+    doc.text(entry.ts?new Date(entry.ts).toLocaleString('en-GB',{dateStyle:'short',timeStyle:'short'}):'',PAGE_W-M-2,y+5.5,{align:'right'});
+    y+=16;
+  });
+  doc.save('audit-log-'+new Date().toISOString().slice(0,10)+'.pdf');
+  showToast('<svg class="ic"><use href="#i-check-circle"/></svg> Audit log PDF exported','success');
 }
 
 function _exportPartyPDF(type){
@@ -11347,7 +11587,7 @@ async function init(){
     // Wait up to 3s for Supabase SDK to load — but proceed regardless so
     // the auth screen still appears if the user is offline.
     await _waitFor(()=>typeof supabase!=='undefined'&&typeof supabase.createClient==='function',3000);
-    initEmailJS();initSupabase();
+    initSupabase();
     if(hasSession){
       // Fast path for returning users: boot immediately from local cache so the
       // loading screen disappears right away, then refresh the registry quietly
