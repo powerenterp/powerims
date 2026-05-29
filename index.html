@@ -37,7 +37,7 @@
   --shadow:0 4px 28px rgba(0,0,0,.55);--shadow-lg:0 24px 64px rgba(0,0,0,.7);
   --radius:12px;--radius-sm:8px;--radius-lg:18px;--radius-xl:24px;
   --font:'Inter',system-ui,sans-serif;--display:'Plus Jakarta Sans','Inter',sans-serif;--brand:'Gebuk','Plus Jakarta Sans',sans-serif;--mono:'JetBrains Mono',monospace;
-  --nav-h:68px;--hdr-h:58px;
+  --nav-h:76px;--hdr-h:58px;
 }
 [data-theme="dark"]{
   --text:#C2C5D5;--text2:rgba(194,197,213,.70);--text3:rgba(194,197,213,.42);
@@ -208,34 +208,35 @@ html[data-view="mobile"] .brand-text{display:none}
 
 /* ── Bottom Nav ── */
 .bottom-nav{
-  position:fixed;bottom:0;left:0;right:0;z-index:400;
-  padding:6px 8px calc(8px + env(safe-area-inset-bottom));
-  background:var(--surface);border-top:1px solid var(--border);
-  box-shadow:0 -6px 24px rgba(0,0,0,.12);
+  position:fixed;bottom:calc(10px + env(safe-area-inset-bottom));left:4px;right:4px;z-index:400;
+  padding:3px 4px;
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:6px;
+  box-shadow:0 4px 24px rgba(0,0,0,.18);
   display:flex;gap:0;backdrop-filter:blur(40px);-webkit-backdrop-filter:blur(40px);
   transition:background .3s,border-color .3s;
   animation:flyInUp .42s cubic-bezier(.22,1,.36,1)
 }
 .nav-item{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
-  padding:6px 4px 5px;border:none;background:transparent;
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  padding:4px 4px 3px;border:none;background:transparent;
   color:var(--text3);cursor:pointer;font-family:var(--font);
   transition:color .18s;position:relative;-webkit-tap-highlight-color:transparent;outline:none;
 }
 .ni-bubble{
-  width:56px;height:32px;display:flex;align-items:center;justify-content:center;
-  border-radius:16px;transition:background .2s,box-shadow .2s;
+  width:44px;height:26px;display:flex;align-items:center;justify-content:center;
+  border-radius:13px;transition:background .2s,box-shadow .2s;
 }
 .nav-item svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;
   stroke-linecap:round;stroke-linejoin:round;transition:transform .2s cubic-bezier(.34,1.56,.64,1);flex-shrink:0}
 .nav-item .ni-icon{line-height:1;font-size:20px;transition:transform .2s cubic-bezier(.34,1.56,.64,1)}
-.nav-item .ni-label{font-size:10px;font-weight:600;letter-spacing:.02em;white-space:nowrap;line-height:1;opacity:0;transition:opacity .18s,color .18s}
+.nav-item .ni-label{font-size:10px;font-weight:600;letter-spacing:.02em;white-space:nowrap;line-height:1;opacity:1;transition:opacity .18s,color .18s}
 .nav-item.active .ni-label{opacity:1}
 .nav-item:hover{color:var(--text2)}
 .nav-item:hover .ni-bubble{background:var(--p-glass)}
 .nav-item.active{color:var(--p)}
 .nav-item.active .ni-bubble{background:var(--p-glass);box-shadow:0 2px 16px var(--p-glow)}
-.nav-item.active svg{transform:scale(1.1);fill:currentColor;fill-opacity:.12}
+.nav-item.active svg{transform:scale(1.1);fill:currentColor;fill-opacity:.22}
 .nav-item.active .ni-icon{transform:scale(1.1)}
 .nav-item.store-nav.active{color:var(--p)}
 .nav-item.store-nav.active .ni-bubble{background:var(--p-glass);box-shadow:0 2px 14px var(--p-glow)}
@@ -275,8 +276,23 @@ html[data-view="mobile"] .brand-text{display:none}
 /* ── Section color tint ── */
 .bottom-nav{transition:border-top-color .35s ease,box-shadow .35s ease;}
 
+/* ── Sliding active indicator pill ── */
+#nav-pill{position:absolute;top:0;height:2.5px;background:var(--p);border-radius:0 0 3px 3px;pointer-events:none;z-index:2;transition:left .24s cubic-bezier(.34,1.56,.64,1),width .24s cubic-bezier(.34,1.56,.64,1),opacity .2s;opacity:0;}
+
 /* ── Nav badge ── */
 .nav-badge{position:absolute;top:3px;right:4px;min-width:16px;height:16px;background:var(--error);color:#E4E6F5;border-radius:99px;font-size:9px;font-weight:800;display:none;align-items:center;justify-content:center;padding:0 4px;pointer-events:none;border:2px solid var(--bg);z-index:1;}
+
+/* ── Nav overflow "More" popup ── */
+#nav-more-popup{position:fixed;z-index:700;background:var(--surface);border:1px solid var(--border2);border-radius:12px;padding:5px;min-width:148px;box-shadow:0 -8px 28px rgba(0,0,0,.3);animation:flyInUp .18s cubic-bezier(.22,1,.36,1);display:none;}
+.more-sub-item{display:flex;align-items:center;gap:8px;width:100%;padding:9px 13px;border:none;background:transparent;color:var(--text);font-family:var(--font);font-size:12px;font-weight:600;cursor:pointer;border-radius:8px;transition:all .14s;white-space:nowrap}
+.more-sub-item.active{background:var(--p-glass);color:var(--p)}
+.more-sub-icon{width:14px;height:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.more-sub-icon svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+@media(hover:hover){.more-sub-item:hover{background:var(--surface2);color:var(--text)}}
+
+/* ── New-data dot ── */
+.nav-new-dot{position:absolute;top:4px;left:calc(50% + 8px);width:6px;height:6px;background:#22c55e;border-radius:50%;border:1.5px solid var(--surface);display:none;z-index:3;animation:newDotPulse 2.2s ease-in-out infinite}
+@keyframes newDotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.72)}}
 
 
 /* ── Auth field inline validation ── */
@@ -585,18 +601,32 @@ html[data-view="mobile"] .brand-text{display:none}
 .sys-empty{padding:40px 24px;text-align:center;color:var(--text3);font-size:13px;display:flex;flex-direction:column;align-items:center;gap:8px}
 .sys-empty-icon{font-size:32px;opacity:.5}
 .sys-empty-svg{width:72px;height:72px;opacity:.35;margin-bottom:4px}
-/* ── Sparkline ── */
-.sys-sparkline{padding:12px 16px 10px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);margin-bottom:14px;animation:flyInUp .32s cubic-bezier(.22,1,.36,1)}
 /* ── SLA chips ── */
 .sla-chip{display:inline-flex;align-items:center;gap:3px;font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:99px;border:1px solid;white-space:nowrap}
 .sla-chip.sla-ok{background:rgba(16,185,129,.1);color:var(--success);border-color:rgba(16,185,129,.25)}
 .sla-chip.sla-warn{background:rgba(245,158,11,.1);color:var(--warn);border-color:rgba(245,158,11,.25)}
 .sla-chip.sla-over{background:rgba(239,68,68,.12);color:var(--error);border-color:rgba(239,68,68,.3)}
-/* ── Auto-extend badge ── */
-.auto-ext-badge{font-size:9px;background:rgba(16,185,129,.12);color:var(--success);padding:1px 7px;border-radius:99px;font-weight:700;border:1px solid rgba(16,185,129,.3)}
 /* ── Quick-expand inline panel ── */
 .oc-expand{display:none;border-top:1px solid var(--border);padding:12px 18px 14px;background:var(--surface2)}
 .oc-expand.show{display:block;animation:flyInUp .15s ease}
+/* ── Risk & health badges ── */
+.risk-badge{display:inline-flex;align-items:center;gap:2px;font-size:9px;padding:1px 6px;border-radius:99px;font-weight:700;white-space:nowrap}
+.risk-badge.risk-high{background:rgba(239,68,68,.12);color:var(--error);border:1px solid rgba(239,68,68,.25)}
+.risk-badge.risk-med{background:rgba(245,158,11,.12);color:var(--warn);border:1px solid rgba(245,158,11,.25)}
+/* ── Mini sub progress bar inside owner cards ── */
+.oc-mini-bar-wrap{display:inline-block;height:3px;border-radius:99px;background:var(--border);overflow:hidden;width:70px;flex-shrink:0;vertical-align:middle;margin-left:2px}
+.oc-mini-bar-fill{height:100%;border-radius:99px;transition:width .35s}
+/* ── Filter chip count badges ── */
+.chip-count{display:inline-flex;align-items:center;justify-content:center;min-width:14px;height:14px;border-radius:99px;padding:0 3px;font-size:9px;font-weight:800;background:rgba(45,75,138,.15);color:rgba(45,75,138,1);margin-left:2px;vertical-align:middle}
+.chip-count.chip-count-warn{background:rgba(245,158,11,.15);color:var(--warn)}
+.chip-count.chip-count-err{background:rgba(239,68,68,.15);color:var(--error)}
+.sf-chip.sf-expiring.active{background:rgba(239,68,68,.1);color:var(--error);border-color:rgba(239,68,68,.4)}
+/* ── Account health bar in Manage Owner panel ── */
+.mop-health-wrap{height:7px;border-radius:99px;background:var(--border);overflow:hidden;margin-top:8px}
+.mop-health-fill{height:100%;border-radius:99px;transition:width .5s}
+.mop-health-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(90px,1fr));gap:8px;margin-top:10px}
+.mop-health-item{padding:7px 10px;border-radius:9px;border:1px solid var(--border);background:var(--surface);font-size:10.5px;display:flex;align-items:center;gap:6px}
+.mop-health-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 /* ── Pay history timeline ── */
 .pay-timeline-wrap{max-height:200px;overflow-y:auto;padding:0 18px 14px}
 .pay-tl-item{display:flex;gap:10px;padding:7px 0;border-bottom:1px dashed rgba(45,75,138,.15)}
@@ -607,6 +637,32 @@ html[data-view="mobile"] .brand-text{display:none}
 @keyframes sysb-pulse-r{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.55)}70%{box-shadow:0 0 0 6px transparent}}
 .sys-tab-badge.tb-warn.has-items{animation:sysb-pulse 2s ease-in-out infinite}
 .sys-tab-badge.tb-err.has-items{animation:sysb-pulse-r 2s ease-in-out infinite}
+/* ── SLA alert strip ── */
+.sla-strip{display:flex;align-items:center;gap:6px;padding:6px 14px;background:rgba(239,68,68,.06);border-bottom:1px solid rgba(239,68,68,.15);flex-wrap:wrap}
+.sla-strip-lbl{font-size:9.5px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-right:2px}
+.sla-pill{display:inline-flex;align-items:center;gap:3px;padding:2px 9px;border-radius:99px;font-size:10px;font-weight:700;cursor:pointer;transition:opacity .13s;white-space:nowrap}
+.sla-pill:hover{opacity:.75}
+.sla-pill.sla-err{background:rgba(239,68,68,.13);color:var(--error);border:1px solid rgba(239,68,68,.3)}
+.sla-pill.sla-warn{background:rgba(245,158,11,.13);color:var(--warn);border:1px solid rgba(245,158,11,.3)}
+.sla-pill.sla-info{background:rgba(107,114,128,.1);color:var(--text3);border:1px solid rgba(107,114,128,.2)}
+/* ── Dormant badge ── */
+.dormant-badge{font-size:9px;background:rgba(107,114,128,.1);color:#9ca3af;padding:1px 6px;border-radius:99px;font-weight:700;border:1px solid rgba(107,114,128,.25)}
+.dormant-deep{color:#6b7280!important}
+/* ── Admin notes ── */
+.admin-note-badge{font-size:9px;background:rgba(245,158,11,.1);color:var(--warn);padding:1px 6px;border-radius:99px;font-weight:700;border:1px solid rgba(245,158,11,.25)}
+.admin-note-area{width:100%;min-height:72px;resize:vertical;padding:8px 10px;border:1.5px solid var(--border2);border-radius:8px;background:var(--surface2);color:var(--text);font-family:var(--font);font-size:12px;line-height:1.5;outline:none;box-sizing:border-box}
+.admin-note-area:focus{border-color:var(--p);box-shadow:0 0 0 2px var(--p-glass)}
+/* ── Dormant filter chip ── */
+.sf-chip.sf-dormant{background:rgba(107,114,128,.08);color:#9ca3af;border-color:rgba(107,114,128,.2)}
+.sf-chip.sf-dormant.active,.sf-chip.sf-dormant:hover{background:rgba(107,114,128,.18);color:var(--text);border-color:rgba(107,114,128,.4)}
+/* ── Manage Owner Panel – stats strip, edit fields, sub bar ── */
+.mop-stat-strip{display:flex;background:var(--surface2);border-bottom:1px solid var(--border)}
+.mop-stat{flex:1;padding:11px 8px;text-align:center;border-right:1px solid var(--border)}
+.mop-stat:last-child{border-right:none}
+.mop-stat-val{font-size:13px;font-weight:800;color:var(--text);line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mop-stat-lbl{font-size:9.5px;color:var(--text3);font-weight:600;text-transform:uppercase;letter-spacing:.06em;margin-top:2px}
+.mop-sub-bar{height:4px;border-radius:99px;background:var(--border2);overflow:hidden;margin-top:10px}
+.mop-sub-bar-fill{height:100%;border-radius:99px}
 
 /* ── Subscription Gate ── */
 .sub-gate{position:fixed;inset:0;z-index:9999;background:rgba(45,75,138,.97);display:flex;align-items:center;justify-content:center;padding:24px}
@@ -864,7 +920,8 @@ tbody tr:last-child td{border-bottom:none}
 .modal-success.show{display:block}
 
 /* ── Settings Drawer ── */
-.drawer-overlay{position:fixed;inset:0;background:rgba(0,0,0,.55);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:500;opacity:0;pointer-events:none;transition:opacity .25s ease}
+.drawer-overlay{position:fixed;inset:0;background:rgba(15,23,42,.28);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:500;opacity:0;pointer-events:none;transition:opacity .25s ease}
+[data-theme="light"] .drawer-overlay{background:rgba(100,116,139,.18)}
 .drawer-overlay.open{opacity:1;pointer-events:auto}
 .settings-drawer{
   position:fixed;top:0;right:-400px;width:min(380px,95vw);height:100dvh;
@@ -1025,6 +1082,30 @@ tbody tr:last-child td{border-bottom:none}
   display:flex;align-items:center;gap:6px;
 }
 .drawer-footer-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+@keyframes dot-pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.drawer-body::-webkit-scrollbar{width:3px}
+.drawer-body::-webkit-scrollbar-track{background:transparent}
+.drawer-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:99px}
+@keyframes spin{to{transform:rotate(360deg)}}
+.drawer-handle-pill{position:absolute;top:7px;left:50%;transform:translateX(-50%);width:32px;height:4px;background:var(--border2);border-radius:99px;pointer-events:none;opacity:.6;z-index:2}
+html[data-view="desktop"] .drawer-handle-pill{display:none}
+.drawer-role-stripe{position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--p);z-index:2;pointer-events:none}
+.drawer-section{cursor:pointer;user-select:none}
+.drawer-section::after{display:none!important}
+.sec-line{flex:1;height:1px;background:var(--border);opacity:.55;margin:0 8px}
+.sec-arrow{flex-shrink:0;transition:transform .22s;opacity:.35;color:var(--text3)}
+.drawer-section.sec-collapsed .sec-arrow{transform:rotate(-90deg)}
+.drawer-sec-body{overflow:hidden;max-height:600px;opacity:1;transition:max-height .28s cubic-bezier(.4,0,.2,1),opacity .2s ease}
+.drawer-sec-body.sec-hidden{max-height:0!important;opacity:0!important}
+.di-shortcut{font-size:10px;font-weight:700;font-family:var(--mono);color:var(--text3);background:var(--surface2);border:1px solid var(--border);border-radius:5px;padding:1px 5px;flex-shrink:0;margin-right:2px;opacity:.7}
+html[data-view="mobile"] .di-shortcut{display:none}
+.drawer-ver-dot{display:inline-block;width:5px;height:5px;background:var(--p);border-radius:50%;margin-left:3px;vertical-align:middle;animation:dot-pulse 2s ease-in-out infinite}
+#drawer-brand-row{max-height:40px;overflow:hidden;opacity:1;transition:max-height .25s ease,opacity .2s ease,margin-bottom .25s ease}
+.drawer-footer.footer-compact #drawer-brand-row{max-height:0!important;opacity:0!important;margin-bottom:0!important}
+.drawer-section:hover{background:var(--surface2);transition:background .14s}
+.sec-hint-txt{font-size:10px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--text3);margin-left:5px;opacity:0;transition:opacity .2s;pointer-events:none}
+.drawer-section.sec-collapsed .sec-hint-txt{opacity:.75}
+html[data-reduce-motion] .settings-drawer,html[data-reduce-motion] .drawer-sec-body,html[data-reduce-motion] .drawer-item,html[data-reduce-motion] .drawer-overlay,html[data-reduce-motion] .toggle-sw span,html[data-reduce-motion] .toggle-sw span::before,html[data-reduce-motion] .drawer-footer,html[data-reduce-motion] #drawer-brand-row{transition-duration:.001ms!important;animation-duration:.001ms!important}
 
 /* ── Toasts ── */
 .toast-wrap{position:fixed;bottom:calc(var(--nav-h) + 12px);left:50%;transform:translateX(-50%);z-index:900;display:flex;flex-direction:column;gap:6px;pointer-events:none;align-items:center}
@@ -1080,19 +1161,24 @@ tbody tr:last-child td{border-bottom:none}
 .confirm-actions button:active{transform:scale(.97)}
 
 /* ── Page loader ── */
-.page-loader{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;transition:opacity .35s ease}
-.loader-logo{
-  width:88px;height:88px;border-radius:0;overflow:visible;
-  animation:float 2.4s ease-in-out infinite;
-  box-shadow:none;background:transparent
-}
-.loader-logo svg,.loader-logo img{width:88px;height:88px;object-fit:contain;display:block}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-.loader-bar{width:140px;height:2px;background:var(--surface2);border-radius:99px;overflow:hidden}
-.loader-fill{height:100%;background:var(--p);border-radius:99px;animation:loadFill 1.2s ease-in-out infinite}
-@keyframes loadFill{0%{width:0;margin-left:0}50%{width:70%;margin-left:15%}100%{width:0;margin-left:100%}}
-.loader-text{font-family:var(--display);font-size:.95rem;font-weight:700;color:var(--text)}
-.loader-sub{font-size:.7rem;color:var(--text3)}
+.page-loader{position:fixed;inset:0;background:var(--bg);background-image:radial-gradient(ellipse 70% 55% at 50% 48%,var(--surface) 0%,var(--bg) 70%);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;transition:opacity .4s ease}
+.loader-logo{width:96px;height:96px;border-radius:0;overflow:visible;animation:float 2.8s ease-in-out infinite;box-shadow:none;background:transparent;position:relative;margin-bottom:20px}
+.loader-logo::after{content:'';position:absolute;inset:-16px;border-radius:50%;background:radial-gradient(circle,var(--p-glow) 0%,transparent 70%);animation:pulse-ring 2.8s ease-in-out infinite;z-index:-1}
+.loader-logo svg,.loader-logo img{width:96px;height:96px;object-fit:contain;display:block}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes pulse-ring{0%,100%{opacity:.8;transform:scale(1)}50%{opacity:.2;transform:scale(1.25)}}
+.loader-text{font-family:var(--brand);font-size:1.45rem;font-weight:800;color:var(--text);letter-spacing:.1em;opacity:0;animation:ld-up .45s .1s ease forwards;margin-bottom:3px}
+.loader-tagline{font-size:.65rem;color:var(--text3);letter-spacing:.18em;text-transform:uppercase;opacity:0;animation:ld-up .45s .18s ease forwards;margin-bottom:26px}
+.loader-sub{font-size:.72rem;color:var(--text3);opacity:0;animation:ld-up .45s .25s ease forwards;margin-bottom:14px}
+.loader-rings-wrap{opacity:0;animation:ld-up .45s .32s ease forwards}
+.loader-rings-svg{width:68px;height:68px;filter:drop-shadow(0 0 8px rgba(77,117,196,.45))}
+.lo-a{transform-origin:34px 34px;animation:arc-cw 1.8s cubic-bezier(.4,0,.2,1) infinite}
+.lo-b{transform-origin:34px 34px;animation:arc-ccw 1.15s cubic-bezier(.4,0,.6,1) infinite}
+.lo-c{transform-origin:34px 34px;animation:c-pulse 1.8s ease-in-out infinite}
+@keyframes arc-cw{to{transform:rotate(360deg)}}
+@keyframes arc-ccw{to{transform:rotate(-360deg)}}
+@keyframes c-pulse{0%,100%{opacity:.45;transform:scale(1)}50%{opacity:1;transform:scale(1.5)}}
+@keyframes ld-up{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
 .loader{display:inline-block;width:15px;height:15px;border:2px solid rgba(228,230,245,.25);border-top-color:#E4E6F5;border-radius:50%;animation:spin .55s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
@@ -2418,8 +2504,9 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
 <div class="page-loader" id="page-loader">
   <div class="loader-logo"><img src="https://bfzmtbdnucefypqbdohr.supabase.co/storage/v1/object/public/Logo/P.C%20PNG.png" alt="Logo"></div>
   <div class="loader-text">Power</div>
+  <div class="loader-tagline">Inventory Management System</div>
   <div class="loader-sub" id="loader-sub-text">Loading accounts from cloud…</div>
-  <div class="loader-bar"><div class="loader-fill"></div></div>
+  <div class="loader-rings-wrap"><svg class="loader-rings-svg" viewBox="0 0 68 68" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="lga" x1="34" y1="4" x2="34" y2="64" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#e8f3ff" stop-opacity=".97"/><stop offset="100%" stop-color="#4d75c4" stop-opacity=".55"/></linearGradient><linearGradient id="lgb" x1="34" y1="16" x2="34" y2="52" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#a8cfff" stop-opacity=".9"/><stop offset="100%" stop-color="#4d75c4" stop-opacity=".35"/></linearGradient></defs><circle cx="34" cy="34" r="29" stroke="rgba(77,117,196,.13)" stroke-width="1.5"/><circle cx="34" cy="34" r="29" stroke="url(#lga)" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="91 91" class="lo-a"/><circle cx="34" cy="34" r="19" stroke="rgba(77,117,196,.1)" stroke-width="1.5"/><circle cx="34" cy="34" r="19" stroke="url(#lgb)" stroke-width="2" stroke-linecap="round" stroke-dasharray="48 72" class="lo-b"/><circle cx="34" cy="34" r="3" fill="rgba(100,150,220,.6)" class="lo-c"/></svg></div>
 </div>
 
 <div class="toast-wrap" id="toast-wrap"></div>
@@ -2556,158 +2643,192 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
 <!-- SETTINGS DRAWER -->
 <div class="drawer-overlay" id="drawer-overlay" onclick="closeSettings()"></div>
 <div class="settings-drawer" id="settings-drawer">
+  <div class="drawer-handle-pill"></div>
+  <div class="drawer-role-stripe" id="drawer-role-stripe"></div>
   <div id="drawer-hdr" style="display:none"></div>
 
-  <!-- #6 Top strip: logout + title + better close button -->
-  <div class="drawer-top-strip">
-    <button type="button" class="drawer-item" onclick="logout()" style="color:var(--error);flex:1;min-height:54px">
-      <span class="di-icon" style="background:rgba(239,68,68,.1);color:var(--error)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></span>
-      <div class="di-info"><div class="di-label" style="color:var(--error)" data-i18n="settingsLogout">Log Out</div></div>
-    </button>
-    <button type="button" class="drawer-close-btn" onclick="closeSettings()" title="Close settings" aria-label="Close settings">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
-    </button>
-  </div>
+  <div class="drawer-body" style="padding-top:6px">
 
-  <div class="drawer-body">
+    <div class="drawer-section" data-sec="nav" data-i18n="settingsNav" onclick="_toggleDrawerSec('nav')" title="Tap to collapse"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;flex-shrink:0"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Quick Access<span class="sec-hint-txt" id="sec-hint-nav"></span><span class="sec-line"></span><svg class="sec-arrow" id="sec-arrow-nav" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+    <div class="drawer-sec-body" id="sec-body-nav">
+      <button type="button" class="drawer-item" id="drawer-items-btn" onclick="switchTab('ITEMS');closeSettings()">
+        <span class="di-icon" style="background:var(--p-glass);color:var(--p)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
+        <div class="di-info"><div class="di-label" data-i18n="settingsAddItems">Inventory</div><div class="di-sub" data-i18n="settingsAddItemsSub">Browse and manage your item catalog</div></div>
+        <span class="di-shortcut">I</span>
+      </button>
+      <button type="button" class="drawer-item" id="drawer-credit-btn" onclick="switchTab('CREDIT');closeSettings()">
+        <span class="di-icon" style="background:rgba(245,158,11,.12);color:var(--warn)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>
+        <div class="di-info"><div class="di-label">Credit Ledger</div><div class="di-sub">Track customer balances and payments</div></div>
+        <span class="di-shortcut">C</span>
+      </button>
+      <div id="store-settings-section" style="display:none">
+        <div class="drawer-divider"></div>
+        <button type="button" class="drawer-item" onclick="openStoreOptions()">
+          <span class="di-icon" style="background:var(--store-glass);color:var(--store)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span>
+          <div class="di-info"><div class="di-label" data-i18n="settingsStore">Store</div><div class="di-sub">Branch stock, balance &amp; reports</div></div>
+        </button>
+      </div>
+    </div>
 
-    <!-- #5 Navigation section — blue accent -->
-    <div class="drawer-section" data-sec="nav" data-i18n="settingsNav">Navigation</div>
-    <button type="button" class="drawer-item" id="drawer-items-btn" onclick="switchTab('ITEMS');closeSettings()">
-      <span class="di-icon" style="background:var(--p-glass);color:var(--p)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
-      <div class="di-info"><div class="di-label" data-i18n="settingsAddItems">Add Items</div><div class="di-sub" data-i18n="settingsAddItemsSub">Manage inventory catalog</div></div>
-    </button>
-    <button type="button" class="drawer-item" id="drawer-credit-btn" onclick="switchTab('CREDIT');closeSettings()">
-      <span class="di-icon" style="background:rgba(245,158,11,.12);color:var(--warn)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>
-      <div class="di-info"><div class="di-label">Credit Ledger</div><div class="di-sub">Manage credit transactions</div></div>
-    </button>
-    <div id="store-settings-section" style="display:none">
-      <div class="drawer-divider"></div>
-      <div class="drawer-section" data-sec="nav" data-i18n="settingsStore">Store</div>
-      <button type="button" class="drawer-item" onclick="openStoreOptions()">
-        <span class="di-icon" style="background:var(--store-glass);color:var(--store)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span>
-        <div class="di-info"><div class="di-label" data-i18n="settingsStore">Store</div><div class="di-sub">Inventory, balance, report &amp; expenses</div></div>
+    <div class="drawer-divider"></div>
+    <div class="drawer-section" data-sec="data" data-i18n="settingsExport" onclick="_toggleDrawerSec('data')" title="Tap to collapse"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;flex-shrink:0"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Data<span class="sec-hint-txt" id="sec-hint-data"></span><span class="sec-line"></span><svg class="sec-arrow" id="sec-arrow-data" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+    <div class="drawer-sec-body" id="sec-body-data">
+      <button type="button" class="drawer-item" onclick="openExportModal();closeSettings()">
+        <span class="di-icon" style="background:rgba(16,185,129,.12);color:var(--success)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
+        <div class="di-info"><div class="di-label" data-i18n="settingsExportBtn">Export Report</div><div class="di-sub" id="drawer-export-sub">Download as PDF or Excel spreadsheet</div></div>
+      </button>
+      <button type="button" class="drawer-item" onclick="openImportModal();closeSettings()">
+        <span class="di-icon" style="background:rgba(45,75,138,.12);color:var(--p)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
+        <div class="di-info"><div class="di-label">Import from Excel</div><div class="di-sub">Upload .xlsx to add items in bulk</div></div>
+      </button>
+
+      <button type="button" class="drawer-item" onclick="window.print();closeSettings()">
+        <span class="di-icon" style="background:rgba(100,116,139,.12);color:var(--text2)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></span>
+        <div class="di-info"><div class="di-label">Print</div><div class="di-sub" id="drawer-print-sub">Print the current view</div></div>
+      </button>      <button type="button" class="drawer-item" id="btn-backup-data" onclick="backupData();closeSettings()" style="display:none">
+        <span class="di-icon" style="background:rgba(16,185,129,.12);color:var(--success)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span>
+        <div class="di-info"><div class="di-label">Backup Data</div><div class="di-sub">Full JSON snapshot for offline safekeeping</div></div>
+      </button>
+      <button type="button" class="drawer-item" id="btn-restore-data" onclick="triggerRestoreFile();closeSettings()" style="display:none">
+        <span class="di-icon" style="background:rgba(239,68,68,.12);color:var(--error)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.86"/></svg></span>
+        <div class="di-info"><div class="di-label">Restore Data</div><div class="di-sub" style="color:var(--error)">&#9888; Overwrites all current data</div></div>
       </button>
     </div>
 
     <div class="drawer-divider"></div>
-    <!-- #5 Data section — green accent -->
-    <div class="drawer-section" data-sec="data" data-i18n="settingsExport">Export Data</div>
-    <button type="button" class="drawer-item" onclick="openExportModal();closeSettings()">
-      <span class="di-icon" style="background:rgba(16,185,129,.12);color:var(--success)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
-      <div class="di-info"><div class="di-label" data-i18n="settingsExportBtn">Export (PDF &amp; Excel)</div><div class="di-sub">Download report or spreadsheet</div></div>
-    </button>
-    <button type="button" class="drawer-item" onclick="openImportModal();closeSettings()">
-      <span class="di-icon" style="background:rgba(45,75,138,.12);color:var(--p)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></span>
-      <div class="di-info"><div class="di-label">Import from Excel</div><div class="di-sub">Upload .xlsx to restore data</div></div>
-    </button>
-    <button type="button" class="drawer-item" id="btn-backup-data" onclick="backupData();closeSettings()" style="display:none">
-      <span class="di-icon" style="background:rgba(16,185,129,.12);color:var(--success)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span>
-      <div class="di-info"><div class="di-label">Backup Data</div><div class="di-sub">Download full JSON backup</div></div>
-    </button>
-    <button type="button" class="drawer-item" id="btn-restore-data" onclick="triggerRestoreFile();closeSettings()" style="display:none">
-      <span class="di-icon" style="background:rgba(239,68,68,.12);color:var(--error)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.86"/></svg></span>
-      <div class="di-info"><div class="di-label">Restore Data</div><div class="di-sub">Upload JSON backup file</div></div>
-    </button>
+    <div class="drawer-section" data-sec="acct" data-i18n="settingsAccount" onclick="_toggleDrawerSec('acct')" title="Tap to collapse"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;flex-shrink:0"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Account<span class="sec-hint-txt" id="sec-hint-acct"></span><span class="sec-line"></span><svg class="sec-arrow" id="sec-arrow-acct" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+    <div class="drawer-sec-body" id="sec-body-acct">
+      <button type="button" class="drawer-item" onclick="openChangePass();closeSettings()">
+        <span class="di-icon" style="background:rgba(245,158,11,.12);color:var(--warn)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
+        <div class="di-info"><div class="di-label" data-i18n="settingsChangePass">Change Password</div><div class="di-sub">Update your login credentials</div></div>
+      </button>
+      <button type="button" class="drawer-item" id="btn-owner-dash" onclick="closeSettings();handleBrandClick()" style="display:none">
+        <span class="di-icon" style="background:var(--owner-glass);color:var(--owner)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></span>
+        <div class="di-info"><div class="di-label">Shop Owner Dashboard</div><div class="di-sub">Team, branches &amp; subscription</div></div>
+      </button>
+      <button type="button" class="drawer-item" id="btn-request-store" onclick="openRequestItemModal();closeSettings()" style="display:none">
+        <span class="di-icon" style="background:rgba(16,185,129,.12);color:var(--success)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></span>
+        <div class="di-info"><div class="di-label" data-i18n="settingsReqStore">Request from Store</div><div class="di-sub" data-i18n="settingsReqStoreSub">Request items for your branch</div></div>
+      </button>
+    </div>
 
     <div class="drawer-divider"></div>
-    <!-- #5 Account section — amber accent -->
-    <div class="drawer-section" data-sec="acct" data-i18n="settingsAccount">Account</div>
-    <button type="button" class="drawer-item" onclick="openChangePass();closeSettings()">
-      <span class="di-icon" style="background:rgba(245,158,11,.12);color:var(--warn)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
-      <div class="di-info"><div class="di-label" data-i18n="settingsChangePass">Change Password</div><div class="di-sub">Update your login credentials</div></div>
-    </button>
-    <button type="button" class="drawer-item" id="btn-owner-dash" onclick="closeSettings();handleBrandClick()" style="display:none">
-      <span class="di-icon" style="background:var(--owner-glass);color:var(--owner)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg></span>
-      <div class="di-info"><div class="di-label">Shop Owner Dashboard</div><div class="di-sub">Team, branches &amp; subscription</div></div>
-    </button>
-    <button type="button" class="drawer-item" id="btn-request-store" onclick="openRequestItemModal();closeSettings()" style="display:none">
-      <span class="di-icon" style="background:rgba(16,185,129,.12);color:var(--success)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></span>
-      <div class="di-info"><div class="di-label" data-i18n="settingsReqStore">Request from Store</div><div class="di-sub" data-i18n="settingsReqStoreSub">Request items for your branch</div></div>
-    </button>
+    <div class="drawer-section" data-sec="prefs" data-i18n="settingsPrefs" onclick="_toggleDrawerSec('prefs')" title="Tap to collapse"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;flex-shrink:0"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>Preferences<span class="sec-hint-txt" id="sec-hint-prefs"></span><span class="sec-line"></span><svg class="sec-arrow" id="sec-arrow-prefs" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+    <div class="drawer-sec-body" id="sec-body-prefs">
 
-    <div class="drawer-divider"></div>
-    <!-- #3 & #5 Preferences section — icon-box rows, muted accent -->
-    <div class="drawer-section" data-sec="prefs" data-i18n="settingsPrefs">Preferences</div>
-
-    <!-- Light Mode -->
-    <div class="drawer-pref-row">
-      <span class="di-icon" style="background:rgba(245,158,11,.1);color:var(--warn)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>
-      </span>
-      <div class="di-info">
-        <div class="di-label" data-i18n="settingsLight">Light Mode</div>
-        <div class="di-sub">Switch between dark and light theme</div>
+      <div class="drawer-pref-row" onclick="if(!event.target.closest('.toggle-sw'))document.getElementById('dark-toggle').click()">
+        <span class="di-icon" id="drawer-theme-icon" style="background:rgba(245,158,11,.1);color:var(--warn)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </span>
+        <div class="di-info">
+          <div class="di-label" data-i18n="settingsLight">Theme</div>
+          <div class="di-sub" id="drawer-theme-sub">Dark mode</div>
+        </div>
+        <label class="toggle-sw"><input type="checkbox" id="dark-toggle" onchange="setTheme(this.checked?'light':'dark')"><span></span></label>
       </div>
-      <label class="toggle-sw"><input type="checkbox" id="dark-toggle" onchange="setTheme(this.checked?'light':'dark')"><span></span></label>
-    </div>
-
-    <!-- Mobile View -->
-    <div class="drawer-pref-row">
-      <span class="di-icon" style="background:rgba(45,75,138,.1);color:var(--p)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
-      </span>
-      <div class="di-info">
-        <div class="di-label" data-i18n="settingsMobile">Mobile View</div>
-        <div class="di-sub">Optimize layout for small screens</div>
+      <div class="drawer-pref-row" onclick="if(!event.target.closest('.toggle-sw'))document.getElementById('theme-schedule-toggle').click()">
+        <span class="di-icon" style="background:rgba(245,158,11,.1);color:var(--warn)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+        </span>
+        <div class="di-info">
+          <div class="di-label">Auto Schedule</div>
+          <div class="di-sub" id="drawer-schedule-sub">Dark 7pm &middot; Light 7am</div>
+        </div>
+        <label class="toggle-sw"><input type="checkbox" id="theme-schedule-toggle" onchange="_setThemeSchedule(this.checked)"><span></span></label>
       </div>
-      <label class="toggle-sw"><input type="checkbox" id="mobile-toggle" onchange="setViewMode(this.checked?'mobile':'desktop')"><span></span></label>
-    </div>
-
-    <!-- Language -->
-    <div class="drawer-pref-row">
-      <span class="di-icon" style="background:rgba(16,185,129,.1);color:var(--success)">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-      </span>
-      <div class="di-info">
-        <div class="di-label" data-i18n="settingsLang">Language</div>
-        <div class="di-sub">English or አማርኛ</div>
+      <div class="drawer-pref-row" onclick="if(!event.target.closest('.toggle-sw'))document.getElementById('mobile-toggle').click()">
+        <span class="di-icon" style="background:rgba(45,75,138,.1);color:var(--p)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12" y2="18.01"/></svg>
+        </span>
+        <div class="di-info">
+          <div class="di-label" data-i18n="settingsMobile">Mobile View</div>
+          <div class="di-sub" id="drawer-view-sub">Desktop mode</div>
+        </div>
+        <label class="toggle-sw"><input type="checkbox" id="mobile-toggle" onchange="setViewMode(this.checked?'mobile':'desktop')"><span></span></label>
       </div>
-      <select class="drawer-select" id="lang-select" onchange="setLang(this.value)">
-        <option value="en">🇬🇧 English</option>
-        <option value="am">🇪🇹 አማርኛ</option>
-      </select>
-    </div>
 
-    <!-- Auto-Logout -->
-    <div class="drawer-pref-row">
-      <span class="di-icon" style="background:rgba(100,116,139,.1);color:#94a3b8">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      </span>
-      <div class="di-info">
-        <div class="di-label">Auto-Logout</div>
-        <div class="di-sub">Session timeout duration</div>
+      <div class="drawer-pref-row">
+        <span class="di-icon" style="background:rgba(16,185,129,.1);color:var(--success)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        </span>
+        <div class="di-info">
+          <div class="di-label" data-i18n="settingsLang">Language</div>
+          <div class="di-sub" id="drawer-lang-sub">English</div>
+        </div>
+        <select class="drawer-select" id="lang-select" onchange="setLang(this.value)">
+          <option value="en">&#127468;&#127463; English</option>
+          <option value="am">&#127466;&#127481; &#4768;&#4635;&#4653;&#4763;</option>
+        </select>
       </div>
-      <select class="drawer-select" id="auto-logout-select" onchange="_setAutoLogout(this.value)">
-        <option value="0">Off</option>
-        <option value="15">15 min</option>
-        <option value="30">30 min</option>
-        <option value="60">1 hr</option>
-        <option value="120">2 hr</option>
-      </select>
+
+      <div class="drawer-pref-row">
+        <span class="di-icon" style="background:rgba(45,75,138,.1);color:var(--p)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </span>
+        <div class="di-info">
+          <div class="di-label">Session Timeout</div>
+          <div class="di-sub" id="drawer-autologout-sub">Off</div>
+        </div>
+        <select class="drawer-select" id="auto-logout-select" onchange="_setAutoLogout(this.value)">
+          <option value="0">Off</option>
+          <option value="15">15 min</option>
+          <option value="30">30 min</option>
+          <option value="60">1 hr</option>
+          <option value="120">2 hr</option>
+        </select>
+      </div>
+
+      <div class="drawer-pref-row" onclick="if(!event.target.closest('.toggle-sw'))document.getElementById('reduce-motion-toggle').click()">
+        <span class="di-icon" style="background:rgba(100,116,139,.1);color:var(--text2)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="10" y1="15" x2="10" y2="9"/><line x1="14" y1="15" x2="14" y2="9"/></svg>
+        </span>
+        <div class="di-info">
+          <div class="di-label">Reduce Motion</div>
+          <div class="di-sub">Disable drawer animations</div>
+        </div>
+        <label class="toggle-sw"><input type="checkbox" id="reduce-motion-toggle" onchange="_setReduceMotion(this.checked)"><span></span></label>
+      </div>
+      <div id="drawer-countdown-bar" style="display:none;align-items:center;gap:6px;margin:4px 20px 8px;padding:7px 10px;background:var(--surface2);border-radius:8px;border:1px solid var(--border)">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--warn)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span style="font-size:11px;color:var(--text3);flex:1">Auto-logout in</span>
+        <span class="cdb-time" style="font-size:11px;font-weight:700;color:var(--warn);font-family:var(--mono)">--</span>
+      </div>
+
     </div>
 
   </div>
 
-  <!-- #7 Footer: current user + version + sync status -->
-  <div class="drawer-footer">
-    <div class="drawer-footer-row" style="margin-bottom:6px">
+  <!-- Footer: current user + version + sync status + log out -->
+  <div class="drawer-footer" id="drawer-footer">
+    <div id="drawer-profile-card" style="display:none;margin-bottom:10px;padding:9px 12px;background:var(--surface2);border-radius:10px;border:1px solid var(--border)">
+      <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px" id="dpc-name"></div>
+      <div style="font-size:11px;color:var(--text3)" id="dpc-role-shop"></div>
+      <div style="font-size:10.5px;color:var(--text3);margin-top:3px" id="dpc-session"></div>
+    </div>
+    <div class="drawer-footer-row" style="margin-bottom:4px">
       <span style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;overflow:hidden">
-        <span id="drawer-footer-av" style="width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:10px;color:#E4E6F5;flex-shrink:0;background:var(--p)"></span>
-        <span id="drawer-footer-username" style="font-size:12px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+        <span id="drawer-footer-av" onclick="_toggleDrawerProfile()" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:#E4E6F5;flex-shrink:0;background:var(--p);cursor:pointer" title="View profile"></span>
+        <span style="display:flex;flex-direction:column;min-width:0;overflow:hidden">
+          <span id="drawer-footer-username" style="font-size:12px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+          <span id="drawer-footer-role" style="font-size:10.5px;color:var(--text3);white-space:nowrap"></span>
+          <span id="drawer-footer-shop" style="font-size:9.5px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:none"></span>
+        </span>
       </span>
-      <span class="drawer-footer-ver" id="drawer-ver">v6</span>
+      <span class="drawer-footer-ver" id="drawer-ver">v6<span class="drawer-ver-dot"></span></span>
     </div>
-    <div class="drawer-footer-row">
-      <span class="drawer-footer-brand">POWER — IMS</span>
+    <div class="drawer-footer-row" id="drawer-brand-row" style="margin-bottom:8px">
+      <span class="drawer-footer-brand">Power &#8212; IMS</span>
+      <button type="button" onclick="_syncNow()" title="Click to sync now" style="display:flex;align-items:center;gap:5px;background:none;border:none;cursor:pointer;padding:2px 4px;border-radius:6px;color:var(--text3);font-size:11px;font-family:var(--font)" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='none'" id="drawer-footer-sync">
+        <span class="drawer-footer-dot" id="drawer-footer-dot" style="background:var(--text3)"></span>
+        <span id="drawer-footer-sync-txt">Offline</span>
+      </button>
     </div>
-    <div class="drawer-footer-sync" id="drawer-footer-sync">
-      <span class="drawer-footer-dot" id="drawer-footer-dot" style="background:var(--text3)"></span>
-      <span id="drawer-footer-sync-txt">Offline</span>
-    </div>
+    <button type="button" onclick="closeSettings();customConfirm('Log out?','You will be returned to the login screen.','<svg width=&quot;38&quot; height=&quot;38&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;var(--error)&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot;><path d=&quot;M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4&quot;/><polyline points=&quot;16 17 21 12 16 7&quot;/><line x1=&quot;21&quot; y1=&quot;12&quot; x2=&quot;9&quot; y2=&quot;12&quot;/></svg>','Log Out',logout)" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:9px 12px;border-radius:10px;border:1px solid rgba(239,68,68,.25);background:rgba(239,68,68,.07);color:var(--error);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background .15s" onmouseover="this.style.background='rgba(239,68,68,.14)'" onmouseout="this.style.background='rgba(239,68,68,.07)'">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      Log Out
+    </button>
   </div>
 </div>
-
 <!-- Report Date Filter Modal -->
 <div class="modal-overlay" id="rpt-date-filter-modal" onclick="if(event.target===this)closeModal('rpt-date-filter-modal')">
   <div class="modal-box narrow">
@@ -3194,15 +3315,12 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
     <div id="owner-sub-banner"></div>
     <div id="owner-sub-progress" style="display:none"></div>
     <div id="owner-quick-actions" style="display:none"></div>
-    <div style="display:flex;align-items:center;justify-content:flex-end;margin-bottom:6px" id="sys-stats-hdr" style="display:none">
-      <button type="button" id="sys-stats-collapse-btn" onclick="_toggleStatsCollapse()" style="font-size:10px;padding:3px 9px;border:1px solid var(--border2);border-radius:6px;background:transparent;cursor:pointer;color:var(--text3);font-family:var(--font)">▲ Hide Stats</button>
-    </div>
     <div class="owner-stats" id="owner-stats"></div>
-    <div id="sys-sparkline" style="display:none"></div>
+    <div id="sys-sla-strip" style="display:none"></div>
 
     <!-- Tab bar (sys-admin mode only) -->
     <div class="sys-tab-bar" id="sys-tab-bar" style="display:none">
-      <button type="button" class="sys-tab active" id="stab-owners" onclick="switchSysTab('owners')"><svg class="ic"><use href="#i-crown"/></svg> Owners <span class="sys-tab-badge" id="stab-owners-badge" style="display:none">0</span></button>
+      <button type="button" class="sys-tab" id="stab-owners" onclick="switchSysTab('owners')"><svg class="ic"><use href="#i-crown"/></svg> Owners <span class="sys-tab-badge" id="stab-owners-badge" style="display:none">0</span></button>
       <button type="button" class="sys-tab" id="stab-pending" onclick="switchSysTab('pending')"><svg class="ic"><use href="#i-clock"/></svg> Pending <span class="sys-tab-badge tb-warn" id="stab-pending-badge" style="display:none">0</span></button>
       <button type="button" class="sys-tab" id="stab-subs" onclick="switchSysTab('subs')"><svg class="ic"><use href="#i-gem"/></svg> Sub Requests <span class="sys-tab-badge tb-warn" id="stab-subs-badge" style="display:none">0</span></button>
       <button type="button" class="sys-tab" id="stab-resets" onclick="switchSysTab('resets')"><svg class="ic"><use href="#i-trash"/></svg> Resets <span class="sys-tab-badge tb-err" id="stab-resets-badge" style="display:none">0</span></button>
@@ -3219,11 +3337,20 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px soli
       </div>
       <div class="sys-filter-bar" id="sys-owner-filter-bar">
         <input class="sys-search" type="text" id="sys-owner-search" placeholder="Search by name, shop, email…" oninput="_debouncedSysSearch()">
-        <button type="button" class="sf-chip active" id="sf-all"      onclick="setSysFilter('all')">All</button>
-        <button type="button" class="sf-chip sf-trial"   id="sf-trial"  onclick="setSysFilter('trial')">Trial</button>
-        <button type="button" class="sf-chip active"     id="sf-active" onclick="setSysFilter('active')" style="display:none">Active</button>
-        <button type="button" class="sf-chip sf-expired" id="sf-expired" onclick="setSysFilter('expired')">Expired</button>
-        <button type="button" class="sf-chip sf-sus"     id="sf-sus"    onclick="setSysFilter('suspended')">Suspended</button>
+        <button type="button" class="sf-chip active" id="sf-all"      onclick="setSysFilter('all')">All <span class="chip-count" id="sfc-all" style="display:none">0</span></button>
+        <button type="button" class="sf-chip sf-trial"   id="sf-trial"  onclick="setSysFilter('trial')">Trial <span class="chip-count chip-count-warn" id="sfc-trial" style="display:none">0</span></button>
+        <button type="button" class="sf-chip active"     id="sf-active" onclick="setSysFilter('active')" style="display:none">Active <span class="chip-count" id="sfc-active" style="display:none">0</span></button>
+        <button type="button" class="sf-chip sf-expired" id="sf-expired" onclick="setSysFilter('expired')">Expired <span class="chip-count chip-count-err" id="sfc-expired" style="display:none">0</span></button>
+        <button type="button" class="sf-chip sf-sus"     id="sf-sus"    onclick="setSysFilter('suspended')">Suspended <span class="chip-count chip-count-err" id="sfc-sus" style="display:none">0</span></button>
+        <button type="button" class="sf-chip sf-dormant" id="sf-dormant" onclick="setSysFilter('dormant')">Dormant <span class="chip-count chip-count-warn" id="sfc-dormant" style="display:none">0</span></button>
+        <button type="button" class="sf-chip sf-expiring" id="sf-expiring" onclick="setSysFilter('expiring')" title="Owners expiring within 7 days">≤7d Expiry <span class="chip-count chip-count-err" id="sfc-expiring" style="display:none">0</span></button>
+        <select id="sys-owner-sort" onchange="_renderSysOwnerList()" style="margin-left:auto;padding:3px 8px;border:1.5px solid var(--border2);border-radius:7px;background:var(--surface);color:var(--text);font-size:11px;font-family:var(--font);cursor:pointer;outline:none">
+          <option value="status">Sort: Status</option>
+          <option value="lastlogin">Sort: Last Login</option>
+          <option value="expiry">Sort: Expiry</option>
+          <option value="name">Sort: Name</option>
+          <option value="storage">Sort: Users</option>
+        </select>
       </div>
       <div class="bulk-bar" id="bulk-action-bar">
         <input type="checkbox" class="oc-check" id="bulk-select-all-cb" title="Select all" onchange="_bulkToggleAll(this.checked)" />
@@ -3685,11 +3812,14 @@ document.addEventListener('input', function(e){
 
 <!-- BOTTOM NAV -->
 <div class="bottom-nav" id="bottom-nav" style="display:none">
+  <div id="nav-pill"></div>
   <button type="button" class="nav-item" data-tab="PURCHASE" onclick="switchTab('PURCHASE')" id="nav-PURCHASE">
+    <span class="nav-new-dot"></span>
     <span class="ni-bubble"><svg viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg></span>
     <span class="ni-label" data-i18n="navPurchase">Purchase</span>
   </button>
   <button type="button" class="nav-item" data-tab="SALES" onclick="switchTab('SALES')" id="nav-SALES">
+    <span class="nav-new-dot"></span>
     <span class="ni-bubble"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>
     <span class="ni-label" data-i18n="navSales">Sales</span>
   </button>
@@ -3698,6 +3828,7 @@ document.addEventListener('input', function(e){
     <span class="ni-label" data-i18n="navBalance">Balance</span>
   </button>
   <button type="button" class="nav-item" data-tab="EXPENSE" onclick="switchTab('EXPENSE')" id="nav-EXPENSE">
+    <span class="nav-new-dot"></span>
     <span class="ni-bubble"><svg viewBox="0 0 24 24"><path d="M4 2v20l2-1 2 1 2-1 2 1 2-1 2 1 2-1 2 1V2l-2 1-2-1-2 1-2-1-2 1-2-1-2 1-2-1z"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="12" y2="16"/></svg></span>
     <span class="ni-label" data-i18n="navExpense">Expense</span>
   </button>
@@ -3707,10 +3838,12 @@ document.addEventListener('input', function(e){
   </button>
   <button type="button" class="nav-item" data-tab="CREDIT" onclick="switchTab('CREDIT')" id="nav-CREDIT" style="display:none">
     <span class="nav-badge" id="nav-credit-badge"></span>
+    <span class="nav-new-dot"></span>
     <span class="ni-bubble"><svg viewBox="0 0 24 24"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg></span>
     <span class="ni-label">Credit</span>
   </button>
   <button type="button" class="nav-item" data-tab="ITEMS" onclick="switchTab('ITEMS')" id="nav-ITEMS" style="display:none">
+    <span class="nav-new-dot"></span>
     <span class="ni-bubble"><svg viewBox="0 0 24 24"><path d="m16.5 9.4-9-5.19M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
     <span class="ni-label" data-i18n="navItems">Items</span>
   </button>
@@ -3733,7 +3866,13 @@ document.addEventListener('input', function(e){
     <span class="ni-bubble"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg></span>
     <span class="ni-label" data-i18n="navStoreReport">Report</span>
   </button>
+  <button type="button" class="nav-item" id="nav-more-btn" style="display:none" onclick="_navMoreToggle(event)">
+    <span class="nav-badge" id="nav-more-badge"></span>
+    <span class="ni-bubble"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg></span>
+    <span class="ni-label">More</span>
+  </button>
 </div>
+<div id="nav-more-popup" style="display:none"></div>
 <button id="fab-add" class="fab-hidden" onclick="openAddModal()" aria-label="Add new record"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
 
 <script>
@@ -3988,15 +4127,15 @@ const cap=(s,n)=>String(s==null?'':s).slice(0,n);
 
 /* ═══════════════════════════════════════════════════════
    RATE LIMITING — failed login attempts
-   Stored in localStorage so closing the tab doesn't reset it.
+   Stored in _mem so closing the tab doesn't reset it.
 ═══════════════════════════════════════════════════════ */
 const RL_KEY='ims_login_attempts';
 const RL_MAX=8;          // attempts allowed
 const RL_WINDOW=15*60*1000; // 15 min
 function _rlGet(){
-  // Merge localStorage (persists across tabs) with sessionStorage (survives localStorage.clear())
+  // Merge _mem (persists across tabs) with _mem (survives _mem.clear())
   const ls=_lsGet(RL_KEY,{});
-  let ss={};try{ss=JSON.parse(sessionStorage.getItem(RL_KEY)||'{}');}catch(e){}
+  let ss={};try{ss=JSON.parse(_mem.getItem(RL_KEY)||'{}');}catch(e){}
   const merged={};
   [...new Set([...Object.keys(ls),...Object.keys(ss)])].forEach(u=>{
     const le=ls[u],se=ss[u];
@@ -4008,7 +4147,7 @@ function _rlGet(){
 }
 function _rlSave(d){
   try{_lsSet(RL_KEY,d);}catch(e){}
-  try{sessionStorage.setItem(RL_KEY,JSON.stringify(d));}catch(e){}
+  try{_mem.setItem(RL_KEY,JSON.stringify(d));}catch(e){}
 }
 function checkLoginRateLimit(username){
   const d=_rlGet();const now=Date.now();const e=d[username];
@@ -4092,8 +4231,8 @@ const saveRegistry=r=>{
   Object.values(r).forEach(v=>{if(v&&typeof v==='object'&&!v.updatedAt)v.updatedAt=now;});
   try{_lsSet('ims_reg',r);}catch(e){}
   // Record when the local registry was last changed so loadRegistryFromCloud
-  // can skip overwriting localStorage when cloud data is older than our local changes.
-  localStorage.setItem('ims_reg_localAt',now);
+  // can skip overwriting _mem when cloud data is older than our local changes.
+  _mem.setItem('ims_reg_localAt',now);
   // Push registry to cloud so any device can authenticate
   saveRegistryToCloud(r);
 };
@@ -4109,7 +4248,7 @@ function markUserAsActive(u){
     return;
   }
   const forceAt=reg[u].forceLogout;
-  const sessionStart=localStorage.getItem('ims_sessionStart_'+u)||'';
+  const sessionStart=_mem.getItem('ims_sessionStart_'+u)||'';
   if(forceAt&&sessionStart&&forceAt>sessionStart){
     showToast('Your session was terminated by the administrator.','error',4500);
     setTimeout(()=>logout(),2800);
@@ -4143,7 +4282,7 @@ async function loadRegistryFromCloud(){
       const cloudReg=_safeJSON(doc.data().registry,{},'cloud registry');
       const localReg=getRegistry();
       const cloudDocAt=doc.data().updatedAt||'';
-      const localAt=localStorage.getItem('ims_reg_localAt')||'';
+      const localAt=_mem.getItem('ims_reg_localAt')||'';
       // If the local registry was modified more recently than this cloud snapshot
       // (e.g. an owner was just deleted), don't overwrite local — local wins.
       if(localAt&&localAt>cloudDocAt){return localReg;}
@@ -4178,19 +4317,33 @@ function ensureDefaults(){
 
 const ownerNS=()=>S.ownerId||'default';
 const lsKey=k=>`ims_${ownerNS()}_${k}`;
+// Session store — uses sessionStorage so login survives page refreshes
+const _mem=(function(){
+  try{
+    sessionStorage.setItem('_ims_test','1');
+    sessionStorage.removeItem('_ims_test');
+    return sessionStorage;
+  }catch(e){
+    var _d={};
+    return{
+      getItem:function(k){return k in _d?_d[k]:null;},
+      setItem:function(k,v){_d[k]=String(v);},
+      removeItem:function(k){delete _d[k];},
+      clear:function(){_d={};},
+      get length(){return Object.keys(_d).length;},
+      key:function(i){return Object.keys(_d)[i]??null;}
+    };
+  }
+})();
 // Safe JSON parse — logs corruption instead of throwing past the caller
 function _safeJSON(str,fallback,where){
   if(str==null)return fallback;
   try{return JSON.parse(str);}
   catch(e){return fallback;}
 }
-function _lsGet(key,fallback){return _safeJSON(localStorage.getItem(key),fallback,key);}
+function _lsGet(key,fallback){return _safeJSON(_mem.getItem(key),fallback,key);}
 function _lsSet(key,value){
-  try{localStorage.setItem(key,typeof value==='string'?value:JSON.stringify(value));}
-  catch(e){
-    // QuotaExceededError is the most likely cause; surface it to the user.
-    if(typeof showToast==='function')showToast('<svg class="ic"><use href="#i-save"/></svg> Storage full — could not save.','error');
-  }
+  _mem.setItem(key,typeof value==='string'?value:JSON.stringify(value));
 }
 
 function loadUserData(){
@@ -4201,7 +4354,7 @@ function loadUserData(){
   S.expense=_lsGet(`ims_${ns}_expense`,[]);
   S.storeItems=_lsGet(`ims_${ns}_storeItems`,[]);
   S.storeDispatches=_lsGet(`ims_${ns}_storeDispatches`,[]);
-  S.beginBal=parseFloat(localStorage.getItem(`ims_${ns}_beginBal`)||'0')||0;
+  S.beginBal=parseFloat(_mem.getItem(`ims_${ns}_beginBal`)||'0')||0;
   S.branchBeginBal=_lsGet(`ims_${ns}_branchBeginBal`,{});
   // Migrate legacy single beginBal <svg class="ic"><use href="#i-arrow-right"/></svg> first branch if branchBeginBal is empty
   if(S.beginBal&&Object.keys(S.branchBeginBal).length===0){
@@ -4236,7 +4389,7 @@ function loadUserData(){
 function saveUserData(){
   _invalidateCpCache();
   const ns=ownerNS();
-  localStorage.setItem(`ims_${ns}_localAt`,new Date().toISOString());
+  _mem.setItem(`ims_${ns}_localAt`,new Date().toISOString());
   _lsSet(`ims_${ns}_items`,S.items);
   _lsSet(`ims_${ns}_purchase`,S.purchase);
   _lsSet(`ims_${ns}_sales`,S.sales);
@@ -4377,7 +4530,7 @@ function syncToCloud(){
       payload[`br_${b}`]=JSON.stringify(loadBranchReceipts(b));
     });
     S.db.collection('power_ims5').doc(ns).set(payload,{merge:true})
-      .then(()=>{_syncInFlight=false;S_pendingSync=false;setSyncRing(true);localStorage.setItem(`ims_${ns}_syncedAt`,now);_updateOfflineQueueBadge();})
+      .then(()=>{_syncInFlight=false;S_pendingSync=false;setSyncRing(true);_mem.setItem(`ims_${ns}_syncedAt`,now);_updateOfflineQueueBadge();})
       .catch(err=>{_syncInFlight=false;S_pendingSync=true;setSyncRing(false);});
   },1200);
 }
@@ -4436,10 +4589,10 @@ function applyCloudSnapshot(ns,d){
   if(d.creditPayments!==undefined)_lsSet(`ims_${ns}_creditPayments`,d.creditPayments);
   if(d.creditSchedule!==undefined)_lsSet(`ims_${ns}_creditSchedule`,d.creditSchedule);
   if(d.deletedUsers!==undefined)_lsSet(`ims_${ns}_deletedUsers`,d.deletedUsers);
-  try{localStorage.setItem('ims_lastCloudSyncDate',new Date().toISOString().slice(0,10));}catch(e){}
+  try{_mem.setItem('ims_lastCloudSyncDate',new Date().toISOString().slice(0,10));}catch(e){}
   const branches=d.branches?_safeJSON(d.branches,['Main'],'cloud branches'):['Main'];
   branches.forEach(b=>{if(d[`br_${b}`]!==undefined)_lsSet(`ims_${ns}_branchreceipts_${b}`,d[`br_${b}`]);});
-  if(d.resetAt&&d.resetAt!==localStorage.getItem(`ims_${ns}_lastResetAt`)){
+  if(d.resetAt&&d.resetAt!==_mem.getItem(`ims_${ns}_lastResetAt`)){
     _lsSet(`ims_${ns}_lastResetAt`,d.resetAt);
     setTimeout(()=>showToast('<svg class="ic"><use href="#i-alert"/></svg> Your data has been reset by the software owner.','warn'),800);
   }
@@ -4450,7 +4603,7 @@ function startRealtimeSync(){
   const ns=ownerNS();
   if(!S.db||!ns||ns==='_system_')return;
   // Restore last-synced timestamp so page reloads don't lose the guard
-  if(!_lastWrittenAt)_lastWrittenAt=localStorage.getItem(`ims_${ns}_syncedAt`)||'';
+  if(!_lastWrittenAt)_lastWrittenAt=_mem.getItem(`ims_${ns}_syncedAt`)||'';
   S._unsubscribe=S.db.collection('power_ims5').doc(ns).onSnapshot(doc=>{
     try{
       if(!doc.exists)return;
@@ -4458,8 +4611,8 @@ function startRealtimeSync(){
       if(!d||!d.updatedAt||d.updatedAt===_lastWrittenAt)return;
       // If local data was modified after the last successful cloud sync,
       // there are unsynced offline changes — push them up instead of pulling down
-      const localAt=localStorage.getItem(`ims_${ns}_localAt`)||'';
-      const syncedAt=localStorage.getItem(`ims_${ns}_syncedAt`)||_lastWrittenAt;
+      const localAt=_mem.getItem(`ims_${ns}_localAt`)||'';
+      const syncedAt=_mem.getItem(`ims_${ns}_syncedAt`)||_lastWrittenAt;
       if(localAt&&localAt>syncedAt){
         _lastWrittenAt=d.updatedAt;
         syncToCloud();
@@ -4486,7 +4639,7 @@ function startRealtimeSync(){
         return;
       }
       const localReg=getRegistry();
-      const localAt=localStorage.getItem('ims_reg_localAt')||'';
+      const localAt=_mem.getItem('ims_reg_localAt')||'';
       // Skip if local registry was modified after this cloud snapshot (guards against
       // a realtime event restoring a just-deleted owner before cloud confirms the delete).
       if(localAt&&localAt>d.updatedAt)return;
@@ -4513,8 +4666,8 @@ function emergencyReset(){
   // Remove all owner-role entries, keep users/storekeepers in place
   Object.keys(reg).forEach(u=>{if(reg[u].role==='owner')delete reg[u];});
   saveRegistry(reg);
-  localStorage.removeItem('ims_pending_owners');
-  localStorage.removeItem('ims_currentUser');localStorage.removeItem('ims_currentOwner');localStorage.removeItem('ims_currentRole');
+  _mem.removeItem('ims_pending_owners');
+  _mem.removeItem('ims_currentUser');_mem.removeItem('ims_currentOwner');_mem.removeItem('ims_currentRole');
   showMsg('auth-success','<svg class="ic"><use href="#i-check-circle"/></svg> All owner accounts cleared. Use the system owner dashboard to approve new subscribers.','success');
   document.getElementById('auth-user').value='';
   document.getElementById('auth-pass').value='';
@@ -4687,7 +4840,7 @@ async function submitAuth(){
           delete _tr[u].lastFailedAt;
           delete _tr[u].forceLogout;
           saveRegistry(_tr);saveRegistryToCloud(_tr,false);
-          localStorage.setItem('ims_sessionStart_'+u,now);
+          _mem.setItem('ims_sessionStart_'+u,now);
         }
       }catch(_e){}
       // Feature 2: Force password change if sys-owner reset it
@@ -4792,6 +4945,7 @@ async function doLogin(u,ownerId,role){
   document.getElementById('owner-back-btn').style.display='none';
   // <svg class="ic"><use href="#i-sparkle"/></svg> CHANGE 5: Apply tab visibility rules per role
   updateNavForRole();
+  if(window._updateNavOverflow) window._updateNavOverflow();
   initNavHistory();
   showUI();
   // Subscription banner — only shown for shop owners; always clear for other roles
@@ -4819,7 +4973,7 @@ async function doLogin(u,ownerId,role){
   }
   updateStoreNotifBadge();
   updateRequestBadge();
-  const lastTab=localStorage.getItem(`ims_${u}_lastTab`)||'ITEMS';
+  const lastTab=_mem.getItem(`ims_${u}_lastTab`)||'ITEMS';
   // Storekeeper starts on STORE; regular users start on last visited allowed tab
   let startTab;
   if(isStorekeeper()){
@@ -4891,7 +5045,7 @@ function getSubStatus(r){
   // Use the later of the local clock and the last cloud-sync date so rolling back the
   // system clock cannot extend trial or subscription windows
   const localToday=new Date().toISOString().slice(0,10);
-  const lastSync=localStorage.getItem('ims_lastCloudSyncDate')||'';
+  const lastSync=_mem.getItem('ims_lastCloudSyncDate')||'';
   const today=localToday>lastSync?localToday:lastSync;
   if(r.paidUntil&&r.paidUntil>=today){
     const diff=Math.ceil((new Date(r.paidUntil)-new Date(today))/86400000);
@@ -5019,7 +5173,7 @@ function startSysAdminRealtimeSync(){
 
   listen('_global_registry',d=>{
     const cloudReg=_safeJSON(d.registry,{},'sysadmin reg snap');
-    const localAt=localStorage.getItem('ims_reg_localAt')||'';
+    const localAt=_mem.getItem('ims_reg_localAt')||'';
     if(localAt&&d.updatedAt&&localAt>d.updatedAt)return;
     if(Object.keys(cloudReg).length>0)_lsSet('ims_reg',cloudReg);
   });
@@ -5039,9 +5193,9 @@ function startSysAdminRealtimeSync(){
 
 function doLoginSystemOwner(){
   S.user=OWNER_USERNAME;S.ownerId='_system_';S.role='system_owner';
-  localStorage.setItem('ims_currentUser',OWNER_USERNAME);
-  localStorage.setItem('ims_currentOwner','_system_');
-  localStorage.setItem('ims_currentRole','system_owner');
+  _mem.setItem('ims_currentUser',OWNER_USERNAME);
+  _mem.setItem('ims_currentOwner','_system_');
+  _mem.setItem('ims_currentRole','system_owner');
   document.getElementById('auth-screen').style.display='none';
   document.getElementById('app-header').style.display='flex';
   document.getElementById('bottom-nav').style.display='none';
@@ -5064,8 +5218,7 @@ function doLoginSystemOwner(){
   document.getElementById('drawer-hdr').className='drawer-hdr owner-drawer-hdr';
   initSupabase();
   startSysAdminRealtimeSync();
-  hideLoader();
-  Promise.all([loadRegistryFromCloud(),loadPendingOwnersFromCloud()]).then(()=>renderSystemOwnerDashboard());
+  Promise.all([loadRegistryFromCloud(),loadPendingOwnersFromCloud()]).then(()=>{renderSystemOwnerDashboard();hideLoader();}).catch(()=>{renderSystemOwnerDashboard();hideLoader();});
 }
 
 async function loadPendingOwnersFromCloud(){
@@ -5074,7 +5227,7 @@ async function loadPendingOwnersFromCloud(){
     const doc=await S.db.collection('power_ims5').doc('_pending_owners').get();
     if(doc.exists&&doc.data().pending){
       const cloud=_safeJSON(doc.data().pending,[],'cloud pending owners');
-      const local=_safeJSON(localStorage.getItem('ims_pending_owners'),[],'local pending owners');
+      const local=_safeJSON(_mem.getItem('ims_pending_owners'),[],'local pending owners');
       const merged=[...local];
       cloud.forEach(c=>{if(!merged.find(l=>l.username===c.username))merged.push(c);});
       _lsSet('ims_pending_owners',merged);
@@ -5084,7 +5237,7 @@ async function loadPendingOwnersFromCloud(){
     const rdoc=await S.db.collection('power_ims5').doc('_reset_requests').get();
     if(rdoc.exists&&rdoc.data().requests){
       const cloudReqs=_safeJSON(rdoc.data().requests,[],'reset requests');
-      const localReqs=_safeJSON(localStorage.getItem('ims_reset_requests'),[],'local reset requests');
+      const localReqs=_safeJSON(_mem.getItem('ims_reset_requests'),[],'local reset requests');
       const merged=[...localReqs];
       cloudReqs.forEach(c=>{
         const li=merged.findIndex(l=>l.ownerId===c.ownerId&&l.requestedAt===c.requestedAt);
@@ -5097,7 +5250,7 @@ async function loadPendingOwnersFromCloud(){
     const bdoc=await S.db.collection('power_ims5').doc('_banned_owners').get();
     if(bdoc.exists&&bdoc.data().banned){
       const cloudBanned=_safeJSON(bdoc.data().banned,[],'banned owners');
-      const localBanned=_safeJSON(localStorage.getItem(BANNED_LS_KEY),[],'local banned owners');
+      const localBanned=_safeJSON(_mem.getItem(BANNED_LS_KEY),[],'local banned owners');
       const merged=[...localBanned];
       cloudBanned.forEach(c=>{if(!merged.find(l=>l.username===c.username))merged.push(c);});
       _lsSet(BANNED_LS_KEY,merged);
@@ -5107,7 +5260,7 @@ async function loadPendingOwnersFromCloud(){
     const srdoc=await S.db.collection('power_ims5').doc('_sub_requests').get();
     if(srdoc.exists&&srdoc.data().requests){
       const cloudReqs=_safeJSON(srdoc.data().requests,[],'sub requests');
-      const localReqs=_safeJSON(localStorage.getItem(SUB_REQ_KEY),[],'local sub requests');
+      const localReqs=_safeJSON(_mem.getItem(SUB_REQ_KEY),[],'local sub requests');
       const merged=[...localReqs];
       cloudReqs.forEach(c=>{
         const li=merged.findIndex(l=>l.id===c.id);
@@ -5208,14 +5361,14 @@ function deleteOwner(u){
     const ns=(reg[u]||{}).ownerId||u;
     const now=new Date().toISOString();
 
-    // 1. Wipe ALL localStorage keys for this owner's namespace
+    // 1. Wipe ALL _mem keys for this owner's namespace
     const lsKeys=[];
-    for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k)lsKeys.push(k);}
-    lsKeys.forEach(k=>{if(k.startsWith('ims_'+ns+'_'))localStorage.removeItem(k);});
+    for(let i=0;i<_mem.length;i++){const k=_mem.key(i);if(k)lsKeys.push(k);}
+    lsKeys.forEach(k=>{if(k.startsWith('ims_'+ns+'_'))_mem.removeItem(k);});
     // Session keys use the username, not namespace — remove for owner + all sub-users
-    localStorage.removeItem('ims_sessionStart_'+u);
+    _mem.removeItem('ims_sessionStart_'+u);
     Object.keys(reg).forEach(k=>{
-      if(k!==u&&reg[k]&&reg[k].ownerId===ns)localStorage.removeItem('ims_sessionStart_'+k);
+      if(k!==u&&reg[k]&&reg[k].ownerId===ns)_mem.removeItem('ims_sessionStart_'+k);
     });
 
     // 2. Tombstone owner + all sub-users in registry (prevents stale-device resurrection)
@@ -5309,7 +5462,7 @@ function switchSysTab(tab){
 }
 function setSysFilter(f){
   _sysState.filter=f;
-  ['all','trial','active','expired','suspended'].forEach(x=>{
+  ['all','trial','active','expired','suspended','dormant','expiring'].forEach(x=>{
     const el=document.getElementById('sf-'+x);if(el)el.classList.toggle('active',x===f);
   });
   _renderSysOwnerList();
@@ -5442,18 +5595,18 @@ function _deleteOwnerSilent(u){
   const ns=(reg[u]||{}).ownerId||u;
   const now=new Date().toISOString();
 
-  // ── 1. Wipe ALL localStorage keys belonging to this owner's namespace ────
+  // ── 1. Wipe ALL _mem keys belonging to this owner's namespace ────
   // Collect first (can't remove while iterating)
   const lsKeys=[];
-  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k)lsKeys.push(k);}
+  for(let i=0;i<_mem.length;i++){const k=_mem.key(i);if(k)lsKeys.push(k);}
   lsKeys.forEach(function(k){
     // All owner data: ims_<ns>_*
-    if(k.startsWith('ims_'+ns+'_'))localStorage.removeItem(k);
+    if(k.startsWith('ims_'+ns+'_'))_mem.removeItem(k);
   });
   // Session keys use the USERNAME, not the namespace — remove for owner + all sub-users
-  localStorage.removeItem('ims_sessionStart_'+u);
+  _mem.removeItem('ims_sessionStart_'+u);
   Object.keys(reg).forEach(function(k){
-    if(k!==u&&reg[k]&&(reg[k].ownerId===ns))localStorage.removeItem('ims_sessionStart_'+k);
+    if(k!==u&&reg[k]&&(reg[k].ownerId===ns))_mem.removeItem('ims_sessionStart_'+k);
   });
 
   // ── 2. Tombstone registry entries (owner + all sub-users) ────────────────
@@ -5577,24 +5730,46 @@ async function confirmChangePassword(){
 }
 
 function _getOwnerActivity(ns){
-  const items=_safeJSON(localStorage.getItem(`ims_${ns}_items`),[],`ims_${ns}_items`).length;
-  const purchases=_safeJSON(localStorage.getItem(`ims_${ns}_purchase`),[],`ims_${ns}_purchase`).length;
-  const sales=_safeJSON(localStorage.getItem(`ims_${ns}_sales`),[],`ims_${ns}_sales`).length;
-  const lastChange=localStorage.getItem(`ims_${ns}_localAt`)||'';
+  const items=_safeJSON(_mem.getItem(`ims_${ns}_items`),[],`ims_${ns}_items`).length;
+  const purchases=_safeJSON(_mem.getItem(`ims_${ns}_purchase`),[],`ims_${ns}_purchase`).length;
+  const sales=_safeJSON(_mem.getItem(`ims_${ns}_sales`),[],`ims_${ns}_sales`).length;
+  const lastChange=_mem.getItem(`ims_${ns}_localAt`)||'';
   let bytes=0;
-  for(let i=0;i<localStorage.length;i++){
-    const k=localStorage.key(i);
-    if(k&&k.startsWith(`ims_${ns}_`))bytes+=(localStorage.getItem(k)||'').length*2;
+  for(let i=0;i<_mem.length;i++){
+    const k=_mem.key(i);
+    if(k&&k.startsWith(`ims_${ns}_`))bytes+=(_mem.getItem(k)||'').length*2;
   }
   return{items,purchases,sales,lastChange,kb:(bytes/1024).toFixed(1)};
 }
 
 let _sysSrchTimer;
 function _debouncedSysSearch(){clearTimeout(_sysSrchTimer);_sysSrchTimer=setTimeout(_renderSysOwnerList,220);}
+function _isDormant(r,days=30){if(!r.lastLogin)return true;return(Date.now()-new Date(r.lastLogin).getTime())>days*86400000;}
+function _updateFilterChipCounts(){
+  const reg=getRegistry();
+  const owners=Object.keys(reg).filter(u=>reg[u]&&reg[u].role==='owner');
+  const ssCache=Object.fromEntries(owners.map(u=>[u,getSubStatus(reg[u])]));
+  const counts={
+    all:owners.length,
+    trial:owners.filter(u=>ssCache[u].status==='trial').length,
+    active:owners.filter(u=>ssCache[u].status==='active').length,
+    expired:owners.filter(u=>ssCache[u].status==='expired').length,
+    sus:owners.filter(u=>ssCache[u].status==='suspended').length,
+    dormant:owners.filter(u=>_isDormant(reg[u],30)).length,
+    expiring:owners.filter(u=>{const ss=ssCache[u];return(ss.status==='active'||ss.status==='trial')&&ss.daysLeft<=7;}).length,
+  };
+  Object.entries(counts).forEach(([k,v])=>{
+    const el=document.getElementById('sfc-'+k);
+    if(el){el.textContent=v;el.style.display=v>0?'inline-flex':'none';}
+  });
+  const expiringBtn=document.getElementById('sf-expiring');
+  if(expiringBtn)expiringBtn.style.display=counts.expiring>0||_sysState.filter==='expiring'?'':'none';
+}
 function _renderSysOwnerList(){
   const reg=getRegistry();
   const q=(document.getElementById('sys-owner-search')||{}).value||'';
   const filter=_sysState.filter;
+  const sortBy=(document.getElementById('sys-owner-sort')||{}).value||'status';
   let owners=Object.keys(reg).filter(u=>reg[u].role==='owner');
   // Cache sub status once per owner — used for filter, sort, and card rendering
   const ssCache=Object.fromEntries(owners.map(u=>[u,getSubStatus(reg[u])]));
@@ -5602,8 +5777,15 @@ function _renderSysOwnerList(){
     const ql=q.toLowerCase();
     owners=owners.filter(u=>{const r=reg[u];return u.toLowerCase().includes(ql)||(r.shopName||'').toLowerCase().includes(ql)||(r.email||'').toLowerCase().includes(ql);});
   }
-  if(filter!=='all') owners=owners.filter(u=>ssCache[u].status===filter);
+  if(filter==='dormant') owners=owners.filter(u=>_isDormant(reg[u],30));
+  else if(filter==='expiring') owners=owners.filter(u=>{const ss=ssCache[u];return(ss.status==='active'||ss.status==='trial')&&ss.daysLeft<=7;});
+  else if(filter!=='all') owners=owners.filter(u=>ssCache[u].status===filter);
   owners.sort((a,b)=>{
+    if(sortBy==='lastlogin'){const la=reg[a].lastLogin||'';const lb=reg[b].lastLogin||'';return lb.localeCompare(la);}
+    if(sortBy==='expiry'){const ea=reg[a].paidUntil||'';const eb=reg[b].paidUntil||'';return ea.localeCompare(eb);}
+    if(sortBy==='name')return a.localeCompare(b);
+    if(sortBy==='storage'){const ua=Object.keys(reg).filter(k=>reg[k].ownerId===a&&k!==a).length;const ub=Object.keys(reg).filter(k=>reg[k].ownerId===b&&k!==b).length;return ub-ua;}
+    // default: status sort
     const sa=ssCache[a],sb=ssCache[b];
     const rank={expired:0,suspended:1,trial:2,active:3};
     if(rank[sa.status]!==rank[sb.status])return rank[sa.status]-rank[sb.status];
@@ -5623,11 +5805,22 @@ function _renderSysOwnerList(){
     else if(expiringAmber)cardBorder='border-left:3px solid var(--warn);';
     const expiryStyle=isExpired?'color:var(--error);font-weight:700':expiringRed?'color:var(--error);font-weight:700':expiringAmber?'color:var(--warn);font-weight:700':'';
     const avatarColor=isSus?'background:#64748b':isExpired?'background:var(--error)':ss.status==='active'?'background:var(--success)':'background:var(--warn)';
-    const lastLoginStr=r.lastLogin?`<span title="${new Date(r.lastLogin).toLocaleString()}"><svg class="ic"><use href="#i-clock"/></svg> ${_timeAgo(r.lastLogin)}</span>`:'';
-    const autoExtBadge=r.autoExtend?'<span class="auto-ext-badge">↻ Auto-Extend</span>':'';
+    const lastLoginStr=r.lastLogin?`<span title="${new Date(r.lastLogin).toLocaleString()}"><svg class="ic"><use href="#i-clock"/></svg> ${_timeAgo(r.lastLogin)}</span>`:'<span style="color:var(--text3);font-size:10px"><svg class="ic"><use href="#i-clock"/></svg> Never logged in</span>';
+    const dormantDays=r.lastLogin?Math.floor((Date.now()-new Date(r.lastLogin).getTime())/86400000):null;
+    const isDormant30=dormantDays===null||dormantDays>=30;
+    const isDormant60=dormantDays===null||dormantDays>=60;
+    const dormantBadge=isDormant30&&!online?`<span class="dormant-badge" title="${dormantDays===null?'Never logged in':dormantDays+'d since last login'}">${isDormant60?'⚑ ':' '}${dormantDays===null?'Never login':dormantDays+'d idle'}</span>`:'';
+    const notesBadge=r.adminNotes?`<span class="admin-note-badge" title="${esc(r.adminNotes)}">📝 Note</span>`:'';
+    const hasRiskHigh=isExpired||isSus;
+    const hasRiskMed=!hasRiskHigh&&(expiringRed||expiringAmber||(isDormant30&&!online)||!r.email);
+    const riskBadge=hasRiskHigh?'<span class="risk-badge risk-high">⚑ Risk</span>':hasRiskMed?'<span class="risk-badge risk-med">⚠ Watch</span>':'';
+    const miniBarPct=(!isExpired&&!isSus&&ss.daysLeft>0)?Math.min(100,Math.round(ss.daysLeft/(ss.status==='trial'?14:365)*100)):0;
+    const miniBarColor=expiringRed?'var(--error)':expiringAmber?'var(--warn)':'var(--success)';
+    const miniBar=(!isExpired&&!isSus)?`<span class="oc-mini-bar-wrap" title="${ss.daysLeft||0}d remaining"><span class="oc-mini-bar-fill" style="width:${miniBarPct}%;background:${miniBarColor}"></span></span>`:'';
     const uId='oc-exp-'+u.replace(/[^a-z0-9]/gi,'_');
     return`<div class="oc-wrap" style="${cardBorder}animation-delay:${i*.05}s" data-u="${u}">
       <div class="oc-top" onclick="_toggleOwnerExpand('${esc(u)}','${uId}')" style="cursor:pointer">
+        <input type="checkbox" class="oc-check" onclick="event.stopPropagation();_toggleBulkSelect('${esc(u)}')" title="Select for bulk actions" style="margin-right:2px;flex-shrink:0">
         <div class="oc-avatar" style="${avatarColor}">${u[0].toUpperCase()}</div>
         <div class="oc-main">
           <div class="oc-name">
@@ -5636,13 +5829,14 @@ function _renderSysOwnerList(){
             <span class="sub-badge sub-${ss.variant}">${ss.label}</span>
             ${online?'<span style="font-size:9px;background:rgba(16,185,129,.15);color:var(--success);padding:1px 7px;border-radius:99px;font-weight:700">● ONLINE</span>':''}
             ${r.forcePassReset?'<span class="force-reset-badge"><svg class="ic"><use href="#i-alert"/></svg> Pass Reset</span>':''}
-            ${autoExtBadge}
+            ${dormantBadge}${notesBadge}${riskBadge}
           </div>
           <div class="oc-detail">
-            ${r.email?`<span><svg class="ic"><use href="#i-mail"/></svg> ${esc(r.email)}</span>`:''}
+            ${r.email?`<span><svg class="ic"><use href="#i-mail"/></svg> ${esc(r.email)}</span>`:`<span style="color:var(--error);font-size:10px"><svg class="ic"><use href="#i-mail"/></svg> No email</span>`}
             <span><svg class="ic"><use href="#i-users"/></svg> ${userCount} user${userCount!==1?'s':''}</span>
             ${r.paidUntil?`<span style="${expiryStyle}"><svg class="ic"><use href="#i-calendar"/></svg> Until ${r.paidUntil}${(expiringAmber||expiringRed)?` (${ss.daysLeft}d)`:''}${isExpired?' — EXPIRED':''}</span>`:''}
             ${lastLoginStr}
+            ${miniBar}
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
@@ -5660,7 +5854,6 @@ function _renderSysOwnerList(){
         <div style="font-size:11px;color:var(--text3);display:flex;flex-wrap:wrap;gap:10px">
           ${r.phone?`<span><svg class="ic"><use href="#i-phone"/></svg> ${esc(r.phone)}</span>`:''}
           ${r.customMonthlyRate?`<span style="color:var(--success)"><svg class="ic"><use href="#i-money"/></svg> Custom rate: $${r.customMonthlyRate}/mo</span>`:''}
-          <span style="color:${r.autoExtend?'var(--success)':'var(--text3)'}"><svg class="ic"><use href="#i-${r.autoExtend?'check-circle':'clock'}"/></svg> Auto-extend: ${r.autoExtend?'ON':'OFF'}</span>
           <span id="oc-storage-${uId}" style="color:var(--text3)"><svg class="ic"><use href="#i-save"/></svg> Storage: loading…</span>
         </div>
       </div>
@@ -5808,23 +6001,6 @@ function banFromPlatform(u){
 }
 
 // ── Section renderers (#14) ──────────────────────────────────────────
-const _STATS_SNAP_KEY='ims_sysadmin_stats_snap';
-function _getStatsTrend(key,val){
-  const snap=_lsGet(_STATS_SNAP_KEY,{});
-  const prev=snap[key];
-  if(prev===undefined||prev===null)return'';
-  const delta=val-prev;
-  if(delta===0)return'';
-  const dir=delta>0?'▲':'▼';
-  const col=delta>0?(key==='expiredSus'||key==='expiringSoon'?'var(--error)':'var(--success)'):(key==='expiredSus'||key==='expiringSoon'?'var(--success)':'var(--error)');
-  return`<span style="font-size:9px;font-weight:700;color:${col};margin-left:4px">${dir}${Math.abs(delta)}</span>`;
-}
-function _saveStatsSnap(counts){
-  const snap=_lsGet(_STATS_SNAP_KEY,{});
-  Object.assign(snap,counts);
-  _lsSet(_STATS_SNAP_KEY,snap);
-}
-
 async function _fetchTotalStorage(owners){
   const el=document.getElementById('sys-total-storage-val');
   if(!el)return;
@@ -5855,7 +6031,7 @@ async function _fetchTotalStorage(owners){
   }
   // Cloud unavailable — fall back to local cache as an estimate
   let totalBytes=0;
-  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('ims_'))totalBytes+=(localStorage.getItem(k)||'').length*2;}
+  for(let i=0;i<_mem.length;i++){const k=_mem.key(i);if(k&&k.startsWith('ims_'))totalBytes+=(_mem.getItem(k)||'').length*2;}
   el.textContent=totalBytes>0?_fmt(totalBytes)+' (local est.)':'N/A';
 }
 
@@ -5867,42 +6043,26 @@ function _renderSysStats(owners,reg,pendingOwners,bannedOwners,pendingSubReqs,pe
   const susCount=ssList.filter(s=>s.status==='suspended').length;
   const expiringSoon=ssList.filter(s=>(s.status==='active'||s.status==='trial')&&s.daysLeft<=5).length;
   const onlineCount=owners.filter(u=>isUserOnline(reg[u])).length;
-  // MRR estimate
-  const mrr=_calcMRR(owners,reg);
-  const mrrStr=mrr>0?'$'+mrr.toFixed(0)+'/mo':'—';
-  // Churn this month
-  const churn=_calcChurn(owners,reg);
-  const counts={total:owners.length,paid:paidCount,trial:trialCount,expiredSus:expiredCount+susCount,expiringSoon,mrr:Math.round(mrr),churn};
-  const _st=(icon,val,lbl,vc='',bc='',tab='',trendKey='')=>`<div class="owner-stat" style="border-left-color:${bc||'var(--border2)'};border-left-width:4px;cursor:${tab?'pointer':'default'}" ${tab?`onclick="switchSysTab('${tab}')" title="Jump to ${tab} tab"`:''}>
+  const dormant30Count=owners.filter(u=>_isDormant(reg[u],30)).length;
+  const _st=(icon,val,lbl,vc='',bc='',tab='')=>`<div class="owner-stat" style="border-left-color:${bc||'var(--border2)'};border-left-width:4px;cursor:${tab?'pointer':'default'}" ${tab?`onclick="switchSysTab('${tab}')" title="Jump to ${tab} tab"`:''}>
     <div class="stat-icon-box" style="${bc?`background:${bc}20;border-color:${bc}35;color:${bc}`:''}"><span class="stat-icon">${icon}</span></div>
-    <div class="stat-body"><div class="stat-val" style="${vc?`color:${vc}`:'color:var(--text)'}">${val}${trendKey?_getStatsTrend(trendKey,val):''}</div><div class="stat-lbl">${lbl}</div></div>
+    <div class="stat-body"><div class="stat-val" style="${vc?`color:${vc}`:'color:var(--text)'}">${val}</div><div class="stat-lbl">${lbl}</div></div>
   </div>`;
   document.getElementById('owner-stats').innerHTML=
-    _st('<svg class="ic"><use href="#i-crown"/></svg>',owners.length,'Total Owners','','rgba(45,75,138,1)','owners','total')+
-    _st('<svg class="ic"><use href="#i-check-circle"/></svg>',paidCount,'Paid Active','var(--success)','var(--success)','owners','paid')+
-    _st('<svg class="ic"><use href="#i-clock"/></svg>',trialCount,'On Trial','var(--warn)','var(--warn)','owners','trial')+
-    _st('<svg class="ic"><use href="#i-circle-green"/></svg>',onlineCount,'Online Now','','rgba(45,75,138,.7)','','onlineCount')+
-    _st('<svg class="ic"><use href="#i-circle-red"/></svg>',expiredCount+susCount,'Expired / Sus.','var(--error)','var(--error)','owners','expiredSus')+
-    (expiringSoon?_st('<svg class="ic"><use href="#i-alert"/></svg>',expiringSoon,'Expiring ≤5d','var(--warn)','var(--warn)','owners','expiringSoon'):'')+
-    _st('<svg class="ic"><use href="#i-money"/></svg>',mrrStr,'Est. MRR','var(--success)','var(--success)','','mrr')+
-    (churn?_st('<svg class="ic"><use href="#i-trending-up"/></svg>',churn,'Churned This Month','var(--error)','var(--error)','','churn'):'')+
-    _st('<svg class="ic"><use href="#i-clock"/></svg>',pendingOwners.length,'Pending','var(--warn)','var(--warn)','pending','')+
-    (pendingSubReqs?_st('<svg class="ic"><use href="#i-gem"/></svg>',pendingSubReqs,'Sub Requests','var(--p)','var(--p)','subs',''):'')+
+    _st('<svg class="ic"><use href="#i-crown"/></svg>',owners.length,'Total Owners','','rgba(45,75,138,1)','owners')+
+    _st('<svg class="ic"><use href="#i-check-circle"/></svg>',paidCount,'Paid Active','var(--success)','var(--success)','owners')+
+    _st('<svg class="ic"><use href="#i-clock"/></svg>',trialCount,'On Trial','var(--warn)','var(--warn)','owners')+
+    _st('<svg class="ic"><use href="#i-circle-green"/></svg>',onlineCount,'Online Now','','rgba(45,75,138,.7)','')+
+    _st('<svg class="ic"><use href="#i-circle-red"/></svg>',expiredCount+susCount,'Expired / Sus.','var(--error)','var(--error)','owners')+
+    (expiringSoon?_st('<svg class="ic"><use href="#i-alert"/></svg>',expiringSoon,'Expiring ≤5d','var(--warn)','var(--warn)','owners'):'')+
+    _st('<svg class="ic"><use href="#i-clock"/></svg>',pendingOwners.length,'Pending','var(--warn)','var(--warn)','pending')+
+    (dormant30Count?_st('<svg class="ic"><use href="#i-clock"/></svg>',dormant30Count,'Dormant 30d+','var(--text3)','rgba(100,116,139,.6)','owners'):'')+
+    (pendingSubReqs?_st('<svg class="ic"><use href="#i-gem"/></svg>',pendingSubReqs,'Sub Requests','var(--p)','var(--p)','subs'):'')+
     `<div class="owner-stat" style="border-left-color:rgba(45,75,138,.6);border-left-width:4px;cursor:default">
       <div class="stat-icon-box" style="background:rgba(45,75,138,.12);border-color:rgba(45,75,138,.25);color:rgba(45,75,138,1)"><span class="stat-icon"><svg class="ic"><use href="#i-save"/></svg></span></div>
       <div class="stat-body"><div class="stat-val" id="sys-total-storage-val" style="color:var(--text)">…</div><div class="stat-lbl">Total Storage</div></div>
     </div>`;
-  // Show stats header (collapse button) only in sys-admin mode
-  const statsHdr=document.getElementById('sys-stats-hdr');if(statsHdr)statsHdr.style.display='flex';
-  // Restore collapsed state
-  if(_lsGet('ims_stats_collapsed',false)){
-    const sa=document.getElementById('owner-stats');if(sa)sa.style.display='none';
-    const sp=document.getElementById('sys-sparkline');if(sp)sp.style.display='none';
-    const cb=document.getElementById('sys-stats-collapse-btn');if(cb)cb.textContent='▼ Show Stats';
-  }
-  setTimeout(()=>_saveStatsSnap(counts),2000);
   _fetchTotalStorage(owners);
-  _renderSysSparkline(owners,reg);
   return{paidCount,expiringSoon};
 }
 
@@ -6120,11 +6280,11 @@ async function _fetchMopStorage(u){
   const el=document.getElementById('mop-storage-val');
   if(!el)return;
   const ns=(getRegistry()[u]||{}).ownerId||u;
-  // First try localStorage (owner on same device)
+  // First try _mem (owner on same device)
   let bytes=0;
-  for(let i=0;i<localStorage.length;i++){
-    const k=localStorage.key(i);
-    if(k&&k.startsWith(`ims_${ns}_`))bytes+=(localStorage.getItem(k)||'').length*2;
+  for(let i=0;i<_mem.length;i++){
+    const k=_mem.key(i);
+    if(k&&k.startsWith(`ims_${ns}_`))bytes+=(_mem.getItem(k)||'').length*2;
   }
   if(bytes>0){el.textContent=(bytes/1024).toFixed(1)+' KB';return;}
   // Fall back to Supabase cloud document
@@ -6148,6 +6308,34 @@ function _renderMopContent(u){
   const users=Object.keys(reg).filter(k=>reg[k].ownerId===u&&k!==u);
   const isSus=ss.status==='suspended';
   const avatarBg=isSus?'#64748b':ss.status==='expired'?'var(--error)':ss.status==='active'?'var(--success)':'var(--warn)';
+  const _SUB_LIM={trial:2,basic:2,pro:10,enterprise:Infinity};
+  const userLimit=_SUB_LIM[r.sub||'trial']||2;
+  const userLimitStr=userLimit===Infinity?'∞':String(userLimit);
+  const planLabel=r.sub?r.sub.charAt(0).toUpperCase()+r.sub.slice(1):'Trial';
+  const daysLeft=ss.daysLeft||0;
+  const daysColor=daysLeft>30?'var(--success)':daysLeft>7?'var(--warn)':'var(--error)';
+  const daysDisplay=isSus?'Suspended':ss.status==='expired'?'Expired':daysLeft+'d left';
+  const subBarFill=Math.min(100,Math.round(daysLeft/365*100));
+  const subBarColor=daysLeft>30?'var(--success)':daysLeft>7?'var(--warn)':'var(--error)';
+  const loginAgoStr=r.lastLogin?_timeAgo(r.lastLogin):'Never';
+  // Account health score (0–100)
+  let _hs=0;
+  if(ss.status==='active')_hs+=35;else if(ss.status==='trial')_hs+=15;
+  if(r.lastLogin){const _ld=Math.floor((Date.now()-new Date(r.lastLogin).getTime())/86400000);if(_ld<=7)_hs+=25;else if(_ld<=30)_hs+=15;else if(_ld<=60)_hs+=5;}
+  if(r.email)_hs+=15;
+  if(r.phone)_hs+=10;
+  if(r.payHistory&&r.payHistory.length)_hs+=10;
+  if(!r.forcePassReset)_hs+=5;
+  const _healthColor=_hs>=75?'var(--success)':_hs>=40?'var(--warn)':'var(--error)';
+  const _healthLabel=_hs>=75?'Healthy':_hs>=40?'At Risk':'Critical';
+  const _healthItems=[
+    {ok:ss.status==='active',label:'Active Subscription'},
+    {ok:!!r.lastLogin&&Math.floor((Date.now()-new Date(r.lastLogin||0).getTime())/86400000)<=30,label:'Active Last 30d'},
+    {ok:!!r.email,label:'Email on Record'},
+    {ok:!!r.phone,label:'Phone on Record'},
+    {ok:!!(r.payHistory&&r.payHistory.length),label:'Payment History'},
+    {ok:!r.forcePassReset,label:'Password Secure'},
+  ];
 
   document.getElementById('mop-content').innerHTML=`
     <div style="display:flex;align-items:center;gap:10px;padding:14px 18px;background:var(--surface2);border-bottom:1px solid var(--border)">
@@ -6174,17 +6362,33 @@ function _renderMopContent(u){
       </div>
     </div>
 
+    <div class="mop-stat-strip">
+      <div class="mop-stat"><div class="mop-stat-val">${planLabel}</div><div class="mop-stat-lbl">Plan</div></div>
+      <div class="mop-stat"><div class="mop-stat-val">${users.length}<span style="font-size:10px;font-weight:600;color:var(--text3)">/${userLimitStr}</span></div><div class="mop-stat-lbl">Users</div></div>
+      <div class="mop-stat"><div class="mop-stat-val" style="color:${isSus?'var(--text3)':ss.status==='expired'?'var(--error)':daysColor}">${daysDisplay}</div><div class="mop-stat-lbl">Expires</div></div>
+      <div class="mop-stat"><div class="mop-stat-val" style="font-size:11px">${loginAgoStr}</div><div class="mop-stat-lbl">Last Login</div></div>
+    </div>
+
     <div style="padding:12px 18px;border-bottom:1px solid var(--border);display:flex;flex-wrap:wrap;gap:8px;align-items:center">
       <div style="display:flex;align-items:center;gap:6px;padding:7px 13px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;font-size:12px"><svg class="ic" style="color:var(--text2)"><use href="#i-save"/></svg> <strong id="mop-storage-val">…</strong>&nbsp;storage</div>
       ${r.email?`<button type="button" class="btn btn-sm" onclick="_copyEmail('${esc(r.email)}')" title="Copy email to clipboard"><svg class="ic"><use href="#i-clipboard"/></svg> Copy Email</button>`:''}
-      <button type="button" class="btn btn-sm ${r.autoExtend?'btn-success':''}" onclick="_toggleAutoExtend('${esc(u)}')" title="Toggle auto-extend subscription"><svg class="ic"><use href="#i-${r.autoExtend?'check-circle':'clock'}"/></svg> Auto-Extend ${r.autoExtend?'ON':'OFF'}</button>
       <button type="button" class="btn btn-sm" onclick="_setCustomRate('${esc(u)}')" title="Set custom monthly billing rate" style="margin-left:auto"><svg class="ic"><use href="#i-money"/></svg> ${r.customMonthlyRate?'Rate: $'+r.customMonthlyRate+'/mo':'Set Rate'}</button>
+    </div>
+
+    <div style="padding:14px 18px;border-bottom:1px solid var(--border)">
+      <div style="font-size:11.5px;font-weight:700;color:var(--text2);margin-bottom:6px;display:flex;align-items:center;gap:6px;justify-content:space-between">
+        <span><svg class="ic"><use href="#i-check-circle"/></svg> Account Health</span>
+        <span style="font-size:13px;font-weight:800;color:${_healthColor}">${_hs}/100 — ${_healthLabel}</span>
+      </div>
+      <div class="mop-health-wrap"><div class="mop-health-fill" style="width:${_hs}%;background:${_healthColor}"></div></div>
+      <div class="mop-health-grid">${_healthItems.map(it=>`<div class="mop-health-item"><span class="mop-health-dot" style="background:${it.ok?'var(--success)':'var(--error)'}"></span><span style="color:${it.ok?'var(--text2)':'var(--text3)'}">${it.label}</span></div>`).join('')}</div>
     </div>
 
     <div style="padding:14px 18px;border-bottom:1px solid var(--border)">
       <div style="font-size:11.5px;font-weight:700;color:var(--text2);margin-bottom:10px;display:flex;align-items:center;gap:6px"><svg class="ic"><use href="#i-gem"/></svg> Subscription</div>
       <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:10px">
         <span style="font-size:12.5px;color:var(--text2)">Paid until: <strong style="color:var(--text)">${r.paidUntil||'—'}</strong></span>
+        ${r.sub?`<span class="sub-badge sub-${ss.variant}" style="font-size:10px;padding:2px 8px">${planLabel}</span>`:''}
         <button type="button" class="btn btn-sm" onclick="openSubModal('${esc(u)}')" style="margin-left:auto"><svg class="ic"><use href="#i-gem"/></svg> Manage Plan</button>
       </div>
       <div style="display:flex;flex-wrap:wrap;gap:6px;align-items:center">
@@ -6194,6 +6398,7 @@ function _renderMopContent(u){
         <button type="button" class="oc-ext-btn" onclick="extendOwnerSub('${esc(u)}',90);openManageOwner('${esc(u)}')">+90 days</button>
         <button type="button" class="oc-ext-btn" onclick="extendOwnerSub('${esc(u)}',365);openManageOwner('${esc(u)}')">+1 year</button>
       </div>
+      ${!isSus&&ss.status!=='expired'?`<div class="mop-sub-bar"><div class="mop-sub-bar-fill" style="width:${subBarFill}%;background:${subBarColor}"></div></div>`:''}
     </div>
 
     ${(r.payHistory&&r.payHistory.length)?`<div style="padding:14px 18px 0;border-bottom:1px solid var(--border)">
@@ -6213,6 +6418,15 @@ function _renderMopContent(u){
       </div>
     </div>
 
+    <div style="padding:14px 18px;border-bottom:1px solid var(--border)">
+      <div style="font-size:11.5px;font-weight:700;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:6px"><svg class="ic"><use href="#i-pencil"/></svg> Admin Notes <span style="font-size:10px;font-weight:400;color:var(--text3);margin-left:auto">Internal only — not visible to owner</span></div>
+      <textarea id="mop-admin-notes" class="admin-note-area" placeholder="Add internal notes about this owner… (billing issues, support history, follow-ups)">${esc(r.adminNotes||'')}</textarea>
+      <div style="display:flex;align-items:center;gap:8px;margin-top:8px">
+        <button type="button" class="btn btn-sm btn-primary" onclick="saveAdminNote('${esc(u)}')"><svg class="ic"><use href="#i-check-circle"/></svg> Save Note</button>
+        ${r.adminNotes?`<button type="button" class="btn btn-sm" onclick="saveAdminNote('${esc(u)}',true)" style="color:var(--error);border-color:rgba(239,68,68,.3)"><svg class="ic"><use href="#i-x"/></svg> Clear</button><span style="font-size:10px;color:var(--text3);margin-left:4px">Last updated: ${r.adminNotesAt?new Date(r.adminNotesAt).toLocaleString():'unknown'}</span>`:''}
+      </div>
+    </div>
+
     <div style="padding:14px 18px">
       <div style="font-size:11.5px;font-weight:700;color:var(--text2);margin-bottom:10px;display:flex;align-items:center;gap:6px"><svg class="ic"><use href="#i-users"/></svg> Users under this owner (${users.length})</div>
       ${users.length?users.map(uk=>{
@@ -6227,6 +6441,39 @@ function _renderMopContent(u){
         </div>`;
       }).join(''):`<div style="font-size:12px;color:var(--text3);padding:6px 0">No sub-users yet.</div>`}
     </div>`;
+}
+
+// ── Admin notes ──────────────────────────────────────────────────────
+function saveAdminNote(u,clear=false){
+  const reg=getRegistry();if(!reg[u])return;
+  const txt=clear?'':(document.getElementById('mop-admin-notes')?.value||'').trim();
+  reg[u].adminNotes=txt||undefined;
+  if(txt)reg[u].adminNotesAt=new Date().toISOString();
+  else delete reg[u].adminNotesAt;
+  saveRegistry(reg);saveRegistryToCloud(reg,true);
+  showToast(clear?'Note cleared':'<svg class="ic"><use href="#i-check-circle"/></svg> Note saved','success');
+  openManageOwner(u);
+}
+
+// ── SLA strip renderer ────────────────────────────────────────────────
+function _renderSlaStrip(pendingOwners,subReqs,resetReqs){
+  const el=document.getElementById('sys-sla-strip');if(!el)return;
+  const now=Date.now();
+  const overdue24h=pendingOwners.filter(p=>p.requestedAt&&(now-new Date(p.requestedAt).getTime())>86400000).length;
+  const overdue48h=subReqs.filter(q=>q.status==='pending'&&q.requestedAt&&(now-new Date(q.requestedAt).getTime())>172800000).length;
+  const pendingResets=resetReqs.filter(r=>r.status==='pending').length;
+  const reg=getRegistry();
+  const owners=Object.keys(reg).filter(u=>reg[u]&&reg[u].role==='owner');
+  const dormant60=owners.filter(u=>_isDormant(reg[u],60)).length;
+  const parts=[];
+  if(overdue24h)parts.push(`<span class="sla-pill sla-err" onclick="switchSysTab('pending')" title="Click to view pending tab"><svg class="ic" style="width:10px;height:10px"><use href="#i-alert"/></svg> ${overdue24h} pending >${'24h'}</span>`);
+  if(overdue48h)parts.push(`<span class="sla-pill sla-warn" onclick="switchSysTab('subs')" title="Click to view sub requests"><svg class="ic" style="width:10px;height:10px"><use href="#i-alert"/></svg> ${overdue48h} sub req >${'48h'}</span>`);
+  if(pendingResets)parts.push(`<span class="sla-pill sla-warn" onclick="switchSysTab('resets')" title="Click to view resets tab"><svg class="ic" style="width:10px;height:10px"><use href="#i-trash"/></svg> ${pendingResets} reset pending</span>`);
+  if(dormant60)parts.push(`<span class="sla-pill sla-info" onclick="setSysFilter('dormant')" title="Click to filter dormant owners"><svg class="ic" style="width:10px;height:10px"><use href="#i-clock"/></svg> ${dormant60} dormant >60d</span>`);
+  if(!parts.length){el.style.display='none';return;}
+  el.style.display='flex';
+  el.className='sla-strip';
+  el.innerHTML=`<span class="sla-strip-lbl">⚑ SLA Alerts</span>${parts.join('')}`;
 }
 
 // ── Orchestrator ─────────────────────────────────────────────────────
@@ -6246,8 +6493,10 @@ function renderSystemOwnerDashboard(){
   const pendingResets=resetReqs.filter(r=>r.status==='pending').length;
 
   const{paidCount,expiringSoon}=_renderSysStats(owners,reg,pendingOwners,bannedOwners,pendingSubReqs,pendingResets);
+  _renderSlaStrip(pendingOwners,subReqs,resetReqs);
   _renderSysTabBadges(owners,pendingOwners,bannedOwners,pendingSubReqs,pendingResets);
   _renderSysHeroPills(owners,paidCount,pendingOwners,expiringSoon,pendingSubReqs,pendingResets);
+  _updateFilterChipCounts();
   _renderSysOwnerList();
   _renderSysPending(pendingOwners);
   _renderSysSubReqs(subReqs,pendingSubReqs);
@@ -6291,55 +6540,6 @@ function _updateSysThemeBtn(){
   if(btn)btn.title=isDark?'Switch to light mode':'Switch to dark mode';
 }
 
-// MRR estimation
-const _SYS_PLAN_PRICES_KEY='ims_sys_plan_prices';
-function _getSysPlanPrices(){return _lsGet(_SYS_PLAN_PRICES_KEY,{monthly:15,'3months':40,'6months':75,annual:140});}
-function _calcMRR(owners,reg){
-  const prices=_getSysPlanPrices();
-  const mrrMap={monthly:1,'3months':3,'6months':6,annual:12};
-  let mrr=0;
-  owners.forEach(u=>{
-    const r=reg[u];if(!r)return;
-    const ss=getSubStatus(r);if(ss.status!=='active')return;
-    if(r.customMonthlyRate){mrr+=r.customMonthlyRate;return;}
-    const hist=r.payHistory||[];const last=hist[hist.length-1];
-    if(last&&last.plan&&prices[last.plan]&&mrrMap[last.plan])mrr+=prices[last.plan]/mrrMap[last.plan];
-    else mrr+=prices.monthly;
-  });
-  return mrr;
-}
-
-// Churn this month
-function _calcChurn(owners,reg){
-  const ym=new Date().toISOString().slice(0,7);
-  const today=new Date().toISOString().slice(0,10);
-  return owners.filter(u=>{
-    const r=reg[u];if(!r||!r.paidUntil)return false;
-    return r.paidUntil<today&&r.paidUntil.startsWith(ym);
-  }).length;
-}
-
-// Growth sparkline (last 7 days)
-function _renderSysSparkline(owners,reg){
-  const el=document.getElementById('sys-sparkline');if(!el)return;
-  if(_lsGet('ims_stats_collapsed',false)){el.style.display='none';return;}
-  const days=7;const buckets=Array(days).fill(0);
-  const today=new Date();today.setHours(0,0,0,0);
-  owners.forEach(u=>{
-    const r=reg[u];const d=r.createdAt||r.trialStart;if(!d)return;
-    const dt=new Date(d);dt.setHours(0,0,0,0);
-    const diff=Math.floor((today-dt)/86400000);
-    if(diff>=0&&diff<days)buckets[days-1-diff]++;
-  });
-  const max=Math.max(...buckets,1);
-  const total=buckets.reduce((a,b)=>a+b,0);
-  el.style.display='';
-  el.innerHTML=`<div style="font-size:11px;font-weight:700;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:6px"><svg class="ic" style="color:rgba(45,75,138,.7)"><use href="#i-trending-up"/></svg> Owner Signups — Last 7 Days<span style="margin-left:auto;font-size:10px;color:var(--text3);font-weight:400">${total} new this week</span></div><div style="display:flex;align-items:flex-end;gap:3px;height:40px">${buckets.map((v,i)=>{
-    const d=new Date(today);d.setDate(d.getDate()-(days-1-i));
-    const lbl=d.toLocaleDateString('en-US',{month:'short',day:'numeric'});
-    return`<div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:2px" title="${lbl}: ${v} signup${v!==1?'s':''}"><div style="width:100%;border-radius:3px 3px 0 0;background:${v>0?'rgba(45,75,138,.6)':'var(--border2)'};height:${Math.max(3,Math.round(v/max*34))}px;transition:height .3s ease"></div><div style="font-size:8px;color:var(--text3)">${d.getDate()}</div></div>`;}).join('')}</div>`;
-}
-
 // Copy email to clipboard
 function _copyEmail(email){
   if(!email){showToast('No email on record','warn');return;}
@@ -6353,15 +6553,6 @@ function _fallbackCopy(text){
   document.body.removeChild(ta);
 }
 
-// Auto-extend toggle
-function _toggleAutoExtend(u){
-  const reg=getRegistry();if(!reg[u])return;
-  reg[u].autoExtend=!reg[u].autoExtend;
-  saveRegistry(reg);saveRegistryToCloud(reg,true);
-  showToast(reg[u].autoExtend?'<svg class="ic"><use href="#i-check-circle"/></svg> Auto-extend ON for '+u:'Auto-extend OFF for '+u,reg[u].autoExtend?'success':'info');
-  openManageOwner(u);
-}
-
 // Custom monthly rate
 function _setCustomRate(u){
   const reg=getRegistry();if(!reg[u])return;
@@ -6371,19 +6562,6 @@ function _setCustomRate(u){
   if(val.trim()===''){delete reg[u].customMonthlyRate;showToast('Custom rate cleared','info');}
   else{const n=parseFloat(val);if(isNaN(n)||n<0){showToast('Invalid amount','warn');return;}reg[u].customMonthlyRate=n;showToast(`Rate set: $${n.toFixed(2)}/month for ${u}`,'success');}
   saveRegistry(reg);saveRegistryToCloud(reg,true);openManageOwner(u);
-}
-
-// Collapsible stats
-function _toggleStatsCollapse(){
-  const sa=document.getElementById('owner-stats');
-  const sp=document.getElementById('sys-sparkline');
-  const btn=document.getElementById('sys-stats-collapse-btn');
-  if(!sa)return;
-  const isNowVisible=sa.style.display!=='none';
-  sa.style.display=isNowVisible?'none':'';
-  if(sp)sp.style.display=isNowVisible?'none':'';
-  if(btn)btn.textContent=isNowVisible?'▼ Show Stats':'▲ Hide Stats';
-  _lsSet('ims_stats_collapsed',isNowVisible);
 }
 
 // Quick-expand owner card
@@ -6411,7 +6589,7 @@ async function _fetchOwnerStorageToEl(elId,u){
   const ns=(getRegistry()[u]||{}).ownerId||u;
   const _fmt=b=>b>=1048576?(b/1048576).toFixed(2)+' MB':(b/1024).toFixed(1)+' KB';
   let bytes=0;
-  for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(k&&k.startsWith('ims_'+ns+'_'))bytes+=(localStorage.getItem(k)||'').length*2;}
+  for(let i=0;i<_mem.length;i++){const k=_mem.key(i);if(k&&k.startsWith('ims_'+ns+'_'))bytes+=(_mem.getItem(k)||'').length*2;}
   if(bytes>0){el.innerHTML='<svg class="ic"><use href="#i-save"/></svg> Storage: '+_fmt(bytes);return;}
   if(!S.db){el.innerHTML='<svg class="ic"><use href="#i-save"/></svg> Storage: N/A';return;}
   try{
@@ -7131,14 +7309,14 @@ function cancelSubRequest(reqId){
 const _SUB_ACT_KEY='ims_sub_act_attempts';
 const _SUB_ACT_MAX=5;
 const _SUB_ACT_WINDOW=30*60*1000;
-function _subActAttempts(){try{return JSON.parse(localStorage.getItem(_SUB_ACT_KEY)||'{"count":0,"first":0}');}catch(e){return{count:0,first:0};}}
-function _subActRecord(){const d=_subActAttempts();const now=Date.now();if(now-d.first>_SUB_ACT_WINDOW){d.count=1;d.first=now;}else{d.count++;}try{localStorage.setItem(_SUB_ACT_KEY,JSON.stringify(d));}catch(e){}}
+function _subActAttempts(){try{return JSON.parse(_mem.getItem(_SUB_ACT_KEY)||'{"count":0,"first":0}');}catch(e){return{count:0,first:0};}}
+function _subActRecord(){const d=_subActAttempts();const now=Date.now();if(now-d.first>_SUB_ACT_WINDOW){d.count=1;d.first=now;}else{d.count++;}try{_mem.setItem(_SUB_ACT_KEY,JSON.stringify(d));}catch(e){}}
 function activateSubCode(){
   hideMsg('sub-act-error');hideMsg('sub-act-success');
   const now=Date.now();
-  // Check rate limit from localStorage
+  // Check rate limit from _mem
   const actD=_subActAttempts();
-  // Also check registry-backed attempt count so clearing localStorage doesn't bypass the limit
+  // Also check registry-backed attempt count so clearing _mem doesn't bypass the limit
   const reg=getRegistry();
   const _regActs=(reg[S.ownerId]||{})._subActAttempts||{count:0,first:0};
   const lsBlocked=actD.count>=_SUB_ACT_MAX&&now-actD.first<_SUB_ACT_WINDOW;
@@ -7152,7 +7330,7 @@ function activateSubCode(){
   if(code.length!==8||!/^\d{8}$/.test(code)){showMsg('sub-act-error','Enter a valid 8-digit code.');return;}
   const reqs=getSubRequests();
   const idx=reqs.findIndex(q=>q.username===S.ownerId&&q.code===code&&q.status==='code_ready');
-  // Record attempt in both localStorage and registry before checking result
+  // Record attempt in both _mem and registry before checking result
   _subActRecord();
   if(reg[S.ownerId]){
     const ra=reg[S.ownerId]._subActAttempts||{count:0,first:0};
@@ -7221,6 +7399,7 @@ function exitOwnerDashboard(){
   document.getElementById('owner-back-btn').style.display='none';
   document.getElementById('app-header').className='app-header';
   renderTab();
+  setTimeout(function(){if(window._updateNavPill)window._updateNavPill();},60);
 }
 
 function handleBrandClick(){
@@ -7363,7 +7542,7 @@ async function approveMyUser(i){
   const pwd=isHashed(p.password)?p.password:await sha256Hex(p.password);
   reg[p.username]={password:pwd,ownerId:S.ownerId,role,branch,status:'active'};
   saveRegistry(reg);
-  if(p.avatar)localStorage.setItem(`ims_${p.username}_avatar`,p.avatar);
+  if(p.avatar)_mem.setItem(`ims_${p.username}_avatar`,p.avatar);
   if(!S.perms[p.username])S.perms[p.username]={};
   S.perms[p.username].branches=[branch];
   pending.splice(i,1);
@@ -8200,10 +8379,10 @@ function approveDataReset(reqAt){
       const ns=fresh[fi].ownerId;
       const empty='[]';
       ['items','purchase','sales','expense','storeItems','storeDispatches'].forEach(k=>{
-        localStorage.setItem(`ims_${ns}_${k}`,empty);
+        _mem.setItem(`ims_${ns}_${k}`,empty);
       });
-      localStorage.setItem(`ims_${ns}_beginBal`,'0');
-      localStorage.setItem(`ims_${ns}_branchBeginBal`,'{}');
+      _mem.setItem(`ims_${ns}_beginBal`,'0');
+      _mem.setItem(`ims_${ns}_branchBeginBal`,'{}');
       if(S.db){
         const now=new Date().toISOString();
         S.db.collection('power_ims5').doc(ns).set({
@@ -8250,7 +8429,9 @@ function getStoreStock(itemId){
 function setTheme(th){
   S.theme=th;document.documentElement.setAttribute('data-theme',th==='light'?'light':'dark');
   const tog=document.getElementById('dark-toggle');if(tog)tog.checked=(th==='light');
-  if(S.user)localStorage.setItem(`ims_${S.user}_theme`,th);
+  if(S.user)_mem.setItem(`ims_${S.user}_theme`,th);
+  const themeSub=document.getElementById('drawer-theme-sub');if(themeSub)themeSub.textContent=th==='light'?'Light mode':'Dark mode';
+  const themeIcon=document.getElementById('drawer-theme-icon');if(themeIcon)themeIcon.innerHTML=th==='light'?'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>':'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
 }
 function translatePage(){
   document.querySelectorAll('[data-i18n]').forEach(el=>{
@@ -8272,8 +8453,9 @@ function translatePage(){
   });
 }
 function setLang(l){
-  S.lang=l;if(S.user)localStorage.setItem(`ims_${S.user}_lang`,l);
+  S.lang=l;if(S.user)_mem.setItem(`ims_${S.user}_lang`,l);
   if(document.getElementById('lang-select'))document.getElementById('lang-select').value=l;
+  const langSub=document.getElementById('drawer-lang-sub');if(langSub)langSub.textContent=l==='am'?'አማርኛ':'English';
   translatePage();
   if(S.tab)renderTab();
 }
@@ -8289,7 +8471,8 @@ function setViewMode(mode){
     btn.title=mode==='mobile'?'Switch to Desktop View':'Switch to Mobile View';
     btn.className='icon-btn no-print'+(mode==='mobile'?' mobile-active':'');
   }
-  if(S.user)localStorage.setItem(`ims_${S.user}_view`,mode);
+  if(S.user)_mem.setItem(`ims_${S.user}_view`,mode);
+  const viewSub=document.getElementById('drawer-view-sub');if(viewSub)viewSub.textContent=mode==='mobile'?'Mobile mode':'Desktop mode';
   renderHeadActions();
 }
 function toggleViewMode(){
@@ -8302,14 +8485,14 @@ function toggleCardView(){
   const cur=document.documentElement.getAttribute('data-card')==='1';
   const next=cur?'0':'1';
   document.documentElement.setAttribute('data-card',next);
-  if(S.user)localStorage.setItem(`ims_${S.user}_cardview`,next);
+  if(S.user)_mem.setItem(`ims_${S.user}_cardview`,next);
   showToast(next==='1'?'⊞ Card view on':'≡ Table view on');
   renderHeadActions();
 }
 function loadPrefs(){
-  setTheme(localStorage.getItem(`ims_${S.user}_theme`)||'light');
-  setLang(localStorage.getItem(`ims_${S.user}_lang`)||'en');
-  const savedView=localStorage.getItem(`ims_${S.user}_view`);
+  setTheme(_mem.getItem(`ims_${S.user}_theme`)||'light');
+  setLang(_mem.getItem(`ims_${S.user}_lang`)||'en');
+  const savedView=_mem.getItem(`ims_${S.user}_view`);
   setViewMode(savedView||(window.screen.width<768?'mobile':'desktop'));
 }
 /* ═══════════════════════════════════════════════════════
@@ -8328,6 +8511,7 @@ function showUI(){
   document.getElementById('bottom-nav').style.display='flex';
   document.getElementById('owner-screen').style.display='none';
   setTimeout(_updateFAB,100);
+  setTimeout(function(){if(window._updateNavPill)window._updateNavPill();},60);
 }
 const FOCUSABLE='a[href],button:not([disabled]),input:not([disabled]),select:not([disabled]),textarea:not([disabled]),[tabindex]:not([tabindex="-1"])';
 let _modalPrevFocus=null;
@@ -8375,11 +8559,11 @@ function _draftSave(){
     (flds['f-qty']&&parseFloat(flds['f-qty'])>0)||
     (flds['f-amt']&&parseFloat(flds['f-amt'])>0)
   );
-  if(meaningful)localStorage.setItem(_draftKey(),JSON.stringify({tab:S.tab,flds}));
-  else localStorage.removeItem(_draftKey());
+  if(meaningful)_mem.setItem(_draftKey(),JSON.stringify({tab:S.tab,flds}));
+  else _mem.removeItem(_draftKey());
 }
-function _draftLoad(){try{const r=localStorage.getItem(_draftKey());return r?JSON.parse(r):null;}catch(e){return null;}}
-function _draftClear(){if(S&&S.tab)localStorage.removeItem(_draftKey());}
+function _draftLoad(){try{const r=_mem.getItem(_draftKey());return r?JSON.parse(r):null;}catch(e){return null;}}
+function _draftClear(){if(S&&S.tab)_mem.removeItem(_draftKey());}
 let _partyChipData=[],_reasonChipData=[];
 function _setPartyChip(fieldId,i){const el=document.getElementById(fieldId);if(el)el.value=_partyChipData[i]||'';}
 function _setReasonChip(i){const el=document.getElementById('f-reason');if(el)el.value=_reasonChipData[i]||'';}
@@ -8428,6 +8612,11 @@ function closeSettings(){
   dr.classList.remove('open');
   document.getElementById('drawer-overlay').classList.remove('open');
   dr.querySelectorAll('.drawer-item').forEach(el=>{el.style.animation='';});
+  if(typeof _drawerCountdownInterval!=='undefined')clearInterval(_drawerCountdownInterval);
+  var _cFooter=document.getElementById('drawer-footer');
+  if(_cFooter)_cFooter.classList.remove('footer-compact');
+  var _cCard=document.getElementById('drawer-profile-card');
+  if(_cCard)_cCard.style.display='none';
 }
 /* swipe-to-close for settings drawer */
 (function(){
@@ -8457,7 +8646,7 @@ function logout(){
   S.navHistory=[];
   _lastWrittenAt='';
   S.user=null;S.ownerId=null;S.role=null;
-  localStorage.removeItem('ims_currentUser');localStorage.removeItem('ims_currentOwner');localStorage.removeItem('ims_currentRole');
+  _mem.removeItem('ims_currentUser');_mem.removeItem('ims_currentOwner');_mem.removeItem('ims_currentRole');
   closeSettings();
   document.getElementById('app-header').style.display='none';
   document.getElementById('content').style.display='none';
@@ -8590,6 +8779,8 @@ function switchTab(tab){
     return; // silently block — no error needed since tabs are hidden
   }
   if(!canRead(tab)&&tab!=='ITEMS'&&tab!=='STOREBALANCE'){showToast(L('toastNoPermTab'),'error');return;}
+  // Double-tap active tab → scroll to top
+  if(tab===S.tab){window.scrollTo({top:0,behavior:'smooth'});return;}
   // Capture flag before resetting it so we can use it for history.pushState below
   const fromPopState=S._historyFromPopState;
   // Navigation history: push current tab before switching, unless this is from browser back
@@ -8606,8 +8797,11 @@ function switchTab(tab){
   const _ht=document.getElementById('hdr-page-title');if(_ht)_ht.textContent=meta.title;
   document.getElementById('page-sub').textContent=meta.sub;
   document.querySelectorAll('.nav-item').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  if(window._updateNavOverflow) window._updateNavOverflow();
+  if(window._updateNavPill) window._updateNavPill();
+  if(window._markTabSeen) window._markTabSeen(tab);
   _syncDrawerActive();
-  if(S.user)localStorage.setItem(`ims_${S.user}_lastTab`,tab);
+  if(S.user)_mem.setItem(`ims_${S.user}_lastTab`,tab);
   // Only push a new history entry when the user navigates forward; popstate already moved the pointer
   if(!fromPopState&&typeof history!=='undefined'&&history.pushState){try{history.pushState({tab:tab},'',window.location.href);}catch(e){}}
   window.scrollTo({top:0,behavior:'smooth'});
@@ -8666,6 +8860,7 @@ function renderTab(){
   else if(S.tab==='EXPENSE')renderExpense();
   else if(S.tab==='REPORT')renderReport();
   else if(S.tab==='CREDIT')renderCreditPage();
+  if(window._updateNavNewDots) window._updateNavNewDots();
   // Restore focus to the same input field if it still exists after render
   if(_prevFocusId){
     const el=document.getElementById(_prevFocusId);
@@ -9042,7 +9237,7 @@ function buildTxForm(row,mode,isP,idx){
     <div id="f-session-table"></div>
     <div class="modal-error" id="f-error"></div>`;
   if(d.id){const item=S.items.find(m=>m.id===d.id);if(item){document.getElementById('f-name').value=item.name;document.getElementById('f-desc').value=item.desc;}}
-  if(mode==='add'){const lp=sessionStorage.getItem('ims_lp_'+(isP?'P':'S'));const lb=sessionStorage.getItem('ims_lb');const lpm=sessionStorage.getItem('ims_lpm_'+(isP?'P':'S'));if(lp){const el=document.getElementById('f-party');if(el&&!el.value)el.value=lp;}if(lb&&!S.userBranch){const el=document.getElementById('f-branch');if(el&&el.tagName==='SELECT')el.value=lb;}if(lpm){const el=document.getElementById('f-payment');if(el)el.value=lpm;}}
+  if(mode==='add'){const lp=_mem.getItem('ims_lp_'+(isP?'P':'S'));const lb=_mem.getItem('ims_lb');const lpm=_mem.getItem('ims_lpm_'+(isP?'P':'S'));if(lp){const el=document.getElementById('f-party');if(el&&!el.value)el.value=lp;}if(lb&&!S.userBranch){const el=document.getElementById('f-branch');if(el&&el.tagName==='SELECT')el.value=lb;}if(lpm){const el=document.getElementById('f-payment');if(el)el.value=lpm;}}
   recalcFormTotals(isP);
   setTimeout(()=>{document.getElementById('f-party')?.focus();if(typeof _attachTxFormEnhancements==='function')_attachTxFormEnhancements(isP,mode,idx??-1);},50);
 }
@@ -10189,7 +10384,8 @@ function _renderAllBranchesReport(branchTabsHtml,datebar){
   }).join('');
 
   const tot=S.branches.reduce((acc,b)=>{const c=_reportCalc(b);acc.ib+=c.initBal;acc.tSC+=c.tSC;acc.tSCrOut+=c.tSCrOut;acc.tPC+=c.tPC;acc.tPCr+=c.tPCr;acc.tE+=c.tE;acc.net+=c.net;acc.coh+=c.coh;acc.tVwh+=c.tVwh;acc.tWh3+=c.tWh3;acc.tComm+=c.tComm;return acc;},{ib:0,tSC:0,tSCrOut:0,tPC:0,tPCr:0,tE:0,net:0,coh:0,tVwh:0,tWh3:0,tComm:0});
-  const _inRng=r=>{if(!r.date)return true;const d=r.date.slice(0,10);if(S.reportRange.from&&d<S.reportRange.from)return false;if(S.reportRange.to&&d>S.reportRange.to)return false;return true;};
+  const _dmy2ymd=s=>{const p=(s||'').split('-');return p.length===3?p[2]+'-'+p[1]+'-'+p[0]:s;};
+  const _inRng=r=>{if(!r.date)return true;const d=_dmy2ymd(r.date.slice(0,10));if(S.reportRange.from&&d<S.reportRange.from)return false;if(S.reportRange.to&&d>S.reportRange.to)return false;return true;};
   tot.tStoreE=S.expense.filter(e=>!e.branch||e.branch==='STORE').filter(_inRng).reduce((a,b)=>a+(parseFloat(b.amt)||0),0);
   tot.net-=tot.tStoreE;
   tot.coh-=tot.tStoreE;
@@ -10275,22 +10471,24 @@ function _renderSingleBranchReport(branch,branchTabsHtml,datebar){
   const creditPurchases=PR.filter(p=>p.payment&&p.payment!=='CASH');
   const creditSales=SR.filter(s=>s.payment&&s.payment!=='CASH');
   const _creditBadge=(cid,totalAmt)=>{const p=getCreditPaidAmt(cid);const fp=p>=totalAmt-0.001;const pp=p>0.001&&!fp;return fp?`<span class="td-badge badge-cash"><svg class="ic"><use href="#i-check-circle"/></svg> PAID</span>`:pp?`<span class="td-badge" style="background:rgba(45,75,138,.14);color:var(--p2);border:1px solid rgba(45,75,138,.25);font-size:9px"><svg class="ic"><use href="#i-zap"/></svg> PARTIAL</span>`:`<span class="td-badge badge-credit">CREDIT</span>`;};
-  const cpRows=creditPurchases.length?creditPurchases.map(r=>{const tot=(parseFloat(r.qty)||0)*(parseFloat(r.uPrice)||0);return`<tr>
+  const _calcPT=r=>{const b=(parseFloat(r.qty)||0)*(parseFloat(r.uPrice)||0);return b+(r.vatOn?b*0.15:0);};
+  const _calcST=s=>{const b=(s.qty||0)*(s.sPrice||0);return b+(s.vatOn?b*0.15:0)-(s.wh3On?b*0.03:0)-(s.vwhOn?b*0.075:0)-(s.commission||0);};
+  const cpRows=creditPurchases.length?creditPurchases.map(r=>{const tot=_calcPT(r);return`<tr>
     <td>${(r.date||'').slice(0,10)}</td><td>${esc(r.party||'—')}</td><td>${esc(r.name||'—')}</td>
     <td style="color:var(--text3)">${esc(r.desc||'—')}</td>
     <td class="num">${fmtQ(parseFloat(r.qty)||0)}</td>
     <td class="num">${fmt(tot)}</td>
     <td>${_creditBadge(r._cid,tot)}</td>
   </tr>`;}  ).join(''):`<tr><td colspan="7" class="credit-empty">${L('noCreditPurchInRange')}</td></tr>`;
-  const csRows=creditSales.length?creditSales.map(s=>{const b=(s.qty||0)*(s.sPrice||0);const v=s.vatOn?b*0.15:0;const wh=(s.wh3On?b*0.03:0)+(s.vwhOn?b*0.075:0);const tot=b+v-wh;return`<tr>
+  const csRows=creditSales.length?creditSales.map(s=>{const tot=_calcST(s);return`<tr>
     <td>${(s.date||'').slice(0,10)}</td><td>${esc(s.party||'—')}</td><td>${esc(s.name||'—')}</td>
     <td style="color:var(--text3)">${esc(s.desc||'—')}</td>
     <td class="num">${fmtQ(parseFloat(s.qty)||0)}</td>
     <td class="num">${fmt(tot)}</td>
     <td>${_creditBadge(s._cid,tot)}</td>
   </tr>`;}).join(''):`<tr><td colspan="7" class="credit-empty">${L('noCreditSalesInRange')}</td></tr>`;
-  const creditTotalP=creditPurchases.reduce((a,r)=>a+(parseFloat(r.qty)||0)*(parseFloat(r.uPrice)||0),0);
-  const creditTotalS=creditSales.reduce((a,s)=>{const b=(s.qty||0)*(s.sPrice||0);return a+b+(s.vatOn?b*0.15:0)-(s.wh3On?b*0.03:0)-(s.vwhOn?b*0.075:0);},0);
+  const creditTotalP=creditPurchases.reduce((a,r)=>a+_calcPT(r),0);
+  const creditTotalS=creditSales.reduce((a,s)=>a+_calcST(s),0);
   // ── Analytics: sparklines, period-comparison, top-5 ──────
   const _aS=branch?S.sales.filter(s=>s.branch===branch):S.sales;
   const _aP=branch?S.purchase.filter(p=>p.branch===branch):S.purchase;
@@ -10940,6 +11138,7 @@ function openStoreOptions(){
   openModal('store-options-modal');
 }
 function doExport(){
+  if(typeof _trackLastExport==='function')_trackLastExport(_expFormat==='PDF'?'PDF':'Excel');
   closeModal('export-modal');
   if(_expFormat==='PDF')exportPDF(_expSheet);else exportXL(_expSheet);
 }
@@ -11580,9 +11779,9 @@ async function init(){
   let loggedIn=false;
   try{
     ensureDefaults();
-    const savedUser=localStorage.getItem('ims_currentUser');
-    const savedOwner=localStorage.getItem('ims_currentOwner');
-    const savedRole=localStorage.getItem('ims_currentRole');
+    const savedUser=_mem.getItem('ims_currentUser');
+    const savedOwner=_mem.getItem('ims_currentOwner');
+    const savedRole=_mem.getItem('ims_currentRole');
     const hasSession=!!(savedUser&&savedOwner&&savedRole);
     // Wait up to 3s for Supabase SDK to load — but proceed regardless so
     // the auth screen still appears if the user is offline.
@@ -12106,7 +12305,7 @@ document.addEventListener('DOMContentLoaded',init);
 function _setAuthLang(l){
   // Set lang without calling setLang() to avoid renderTab() side-effects on auth screen
   if(typeof S!=='undefined') S.lang=l;
-  try{ localStorage.setItem('ims__auth_lang',l); }catch(e){}
+  try{ _mem.setItem('ims__auth_lang',l); }catch(e){}
   if(typeof translatePage==='function') translatePage();
   document.querySelectorAll('.auth-lang-btn').forEach(b=>b.classList.toggle('active',b.id==='auth-lang-'+l));
   // Manually update auth screen elements not covered by translatePage data-i18n
@@ -12158,7 +12357,7 @@ if(_origSetAuthMode) window.setAuthMode=function(m){
   _origSetAuthMode(m);
   ['auth-user-field','auth-pass-field'].forEach(id=>{const el=document.getElementById(id);if(el)el.className='field';});
   ['auth-user-vi','auth-pass-vi'].forEach(id=>{const el=document.getElementById(id);if(el){el.textContent='';el.className='auth-vi';}});
-  var cl=(typeof S!=='undefined'&&S.lang)||localStorage.getItem('ims__auth_lang')||'en';
+  var cl=(typeof S!=='undefined'&&S.lang)||_mem.getItem('ims__auth_lang')||'en';
   if(cl!=='en'&&typeof _setAuthLang==='function') _setAuthLang(cl);
 };
 
@@ -12238,6 +12437,130 @@ function _storeNav(tab){
   document.getElementById('nav-STORE').classList.remove('popup-open');
   if(typeof switchTab==='function') switchTab(tab);
 }
+
+// ── Nav pill (sliding top indicator) ──
+window._updateNavPill = function(){
+  var nav=document.getElementById('bottom-nav');
+  var pill=document.getElementById('nav-pill');
+  if(!nav||!pill||nav.style.display==='none') return;
+  var active=nav.querySelector('.nav-item.active:not(#nav-more-btn)');
+  if(!active){pill.style.opacity='0';return;}
+  var navRect=nav.getBoundingClientRect();
+  var itemRect=active.getBoundingClientRect();
+  var bubble=active.querySelector('.ni-bubble');
+  var bw=bubble?bubble.getBoundingClientRect().width:32;
+  var left=(itemRect.left-navRect.left)+(itemRect.width-bw)/2;
+  pill.style.left=left+'px';
+  pill.style.width=bw+'px';
+  pill.style.opacity='1';
+};
+window.addEventListener('resize',function(){if(window._updateNavPill)window._updateNavPill();});
+
+// ── Nav overflow (More button for >5 visible tabs) ──
+window._updateNavOverflow = function(){
+  var MAX=5;
+  var nav=document.getElementById('bottom-nav');
+  var moreBtn=document.getElementById('nav-more-btn');
+  var morePopup=document.getElementById('nav-more-popup');
+  if(!nav||!moreBtn||!morePopup) return;
+  var allIds=['PURCHASE','SALES','BALANCE','EXPENSE','REPORT','CREDIT','ITEMS'];
+  var permVis=allIds.map(function(t){return document.getElementById('nav-'+t);}).filter(function(el){return el&&el.style.display!=='none';});
+  if(permVis.length<=MAX){
+    permVis.forEach(function(el){el.style.display='flex';});
+    moreBtn.style.display='none';
+    morePopup.style.display='none';
+
+    return;
+  }
+  var activeTab=typeof S!=='undefined'?S.tab:null;
+  var activeEl=activeTab?document.getElementById('nav-'+activeTab):null;
+  var inNav=permVis.slice(0,MAX-1);
+  var inMore=permVis.slice(MAX-1);
+  if(activeEl&&inMore.indexOf(activeEl)!==-1){
+    var last=inNav[MAX-2];
+    inNav[MAX-2]=activeEl;
+    inMore=[last].concat(inMore.filter(function(el){return el!==activeEl;}));
+  }
+  inNav.forEach(function(el){if(el)el.style.display='flex';});
+  inMore.forEach(function(el){if(el)el.style.display='none';});
+  moreBtn.style.display='flex';
+  var anyActive=inMore.some(function(el){return el&&el.classList.contains('active');});
+  if(anyActive) moreBtn.classList.add('active'); else moreBtn.classList.remove('active');
+  // Badge rollup: sum badges + new-dots from overflow tabs
+  var totalBadge=inMore.reduce(function(sum,el){
+    var b=el.querySelector('.nav-badge');
+    if(b&&b.style.display!=='none'){var n=parseInt(b.textContent)||1;return sum+n;}
+    return sum;
+  },0);
+  var moreBadge=document.getElementById('nav-more-badge');
+  if(moreBadge){
+    if(totalBadge>0){moreBadge.textContent=totalBadge>99?'99+':totalBadge;moreBadge.style.display='flex';}
+    else moreBadge.style.display='none';
+  }
+  morePopup.innerHTML=inMore.map(function(el){
+    var tab=el.dataset.tab;
+    var label=el.querySelector('.ni-label');
+    var bubble=el.querySelector('.ni-bubble');
+    var labelText=label?label.textContent.trim():tab;
+    var svgHtml=bubble?bubble.innerHTML:'';
+    var isAct=tab===activeTab;
+    var hasDot=el.querySelector('.nav-new-dot')&&el.querySelector('.nav-new-dot').style.display!=='none';
+    var dotHtml=hasDot?'<span style="width:6px;height:6px;background:#22c55e;border-radius:50%;flex-shrink:0;display:inline-block"></span>':'';
+    return '<button type="button" class="more-sub-item'+(isAct?' active':'')+'" onclick="_navMoreSelect(\''+tab+'\')"><span class="more-sub-icon">'+svgHtml+'</span><span style="flex:1">'+labelText+'</span>'+dotHtml+'</button>';
+  }).join('');
+  if(window._updateNavShortcuts) window._updateNavShortcuts();
+};
+function _navMoreSelect(tab){
+  var p=document.getElementById('nav-more-popup');
+  if(p)p.style.display='none';
+  if(typeof switchTab==='function') switchTab(tab);
+}
+function _navMoreToggle(e){
+  var moreBtn=document.getElementById('nav-more-btn');
+  var popup=document.getElementById('nav-more-popup');
+  if(!popup) return;
+  if(popup.style.display!=='none'){popup.style.display='none';return;}
+  var r=moreBtn.getBoundingClientRect();
+  popup.style.bottom=(window.innerHeight-r.top+8)+'px';
+  popup.style.left=Math.max(4,r.left-20)+'px';
+  popup.style.display='block';
+}
+document.addEventListener('click',function(e){
+  var popup=document.getElementById('nav-more-popup');
+  if(popup&&popup.style.display!=='none'&&!e.target.closest('#nav-more-popup')&&!e.target.closest('#nav-more-btn')){
+    popup.style.display='none';
+  }
+});
+
+// ── New-data dot helpers ──
+var _NAV_DOT_TABS=['PURCHASE','SALES','EXPENSE','CREDIT','ITEMS'];
+function _navTabCount(tab){
+  if(typeof S==='undefined') return 0;
+  var map={PURCHASE:S.purchase,SALES:S.sales,EXPENSE:S.expense,CREDIT:S.creditPayments,ITEMS:S.items};
+  var arr=map[tab];return arr?arr.length:0;
+}
+window._markTabSeen=function(tab){
+  if(typeof S==='undefined'||!S.user) return;
+  _mem.setItem('ims_'+S.user+'_navSeen_'+tab,_navTabCount(tab));
+  var el=document.getElementById('nav-'+tab);
+  if(el){var d=el.querySelector('.nav-new-dot');if(d)d.style.display='none';}
+};
+window._updateNavNewDots=function(){
+  if(typeof S==='undefined'||!S.user) return;
+  _NAV_DOT_TABS.forEach(function(tab){
+    if(tab===S.tab) return;
+    var key='ims_'+S.user+'_navSeen_'+tab;
+    var seen=parseInt(_mem.getItem(key));
+    if(isNaN(seen)) return; // never visited — no dot yet
+    var current=_navTabCount(tab);
+    var el=document.getElementById('nav-'+tab);
+    if(!el) return;
+    var dot=el.querySelector('.nav-new-dot');
+    if(dot) dot.style.display=(current>seen)?'block':'none';
+  });
+  if(window._updateNavOverflow) window._updateNavOverflow();
+};
+
 
 /* ═══════════════════════════════════════════════════════
    ADMIN OVERLAY — Ctrl+Shift+A shortcut
@@ -12359,45 +12682,207 @@ function _refreshDrawer(){
     fuAv.textContent = (S.user||'?')[0].toUpperCase();
     fuAv.style.background = roleColors[S.role] || '#6b7280';
   }
+  var stripe = document.getElementById('drawer-role-stripe');
+  if(stripe) stripe.style.background = roleColors[S.role] || '#6b7280';
   if(fuName) fuName.textContent = S.user || '';
+  var roleLabels = {system_owner:'System Owner',owner:'Owner',manager:'Manager',storekeeper:'Store Keeper',readonly:'Read Only',user:'User'};
+  var fuRole = document.getElementById('drawer-footer-role');
+  if(fuRole) fuRole.textContent = roleLabels[S.role] || S.role || '';
+  var isLight = document.documentElement.getAttribute('data-theme')==='light';
+  var togDark = document.getElementById('dark-toggle');
+  if(togDark) togDark.checked = isLight;
+  var themeSub = document.getElementById('drawer-theme-sub');
+  if(themeSub) themeSub.textContent = isLight ? 'Light mode' : 'Dark mode';
+  var themeIcon = document.getElementById('drawer-theme-icon');
+  if(themeIcon) themeIcon.innerHTML = isLight ? '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>' : '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>';
+  var isMobile = document.documentElement.getAttribute('data-view')==='mobile';
+  var togMob = document.getElementById('mobile-toggle');
+  if(togMob) togMob.checked = isMobile;
+  var viewSub = document.getElementById('drawer-view-sub');
+  if(viewSub) viewSub.textContent = isMobile ? 'Mobile mode' : 'Desktop mode';
+  var langSub = document.getElementById('drawer-lang-sub');
+  if(langSub) langSub.textContent = (S.lang||'en')==='am' ? 'አማርኛ' : 'English';
+  var alSub = document.getElementById('drawer-autologout-sub');
+  if(alSub){var alVal=_mem.getItem('ims__auto_logout')||'0';var alMap={'0':'Off','15':'15 min','30':'30 min','60':'1 hr','120':'2 hr'};alSub.textContent=alMap[alVal]||'Off';}
 
   // Auto-logout select value
   var alSel = document.getElementById('auto-logout-select');
-  if(alSel) alSel.value = localStorage.getItem('ims__auto_logout') || '0';
+  if(alSel) alSel.value = _mem.getItem('ims__auto_logout') || '0';
+  var _expSub=document.getElementById('drawer-export-sub');
+  if(_expSub){var _le='';try{_le=_mem.getItem('ims__last_export')||'';}catch(e){}if(_le)_expSub.textContent='Last export: '+_le;}
 
   // Footer sync dot + text
   var fdot = document.getElementById('drawer-footer-dot');
   var ftxt = document.getElementById('drawer-footer-sync-txt');
+  if(fdot){fdot.innerHTML='';fdot.style.width='7px';fdot.style.height='7px';}
   if(fdot && ftxt){
     if(S.db && S.dbConnected){
       fdot.style.background = 'var(--success)';
+      fdot.style.animation = '';
       ftxt.textContent = 'Cloud sync active';
     } else if(S.db){
       fdot.style.background = 'var(--warn)';
+      fdot.style.animation = 'dot-pulse 1.4s ease-in-out infinite';
       ftxt.textContent = 'Connecting to cloud…';
     } else {
       fdot.style.background = '#94a3b8';
+      fdot.style.animation = '';
       ftxt.textContent = 'Offline — no cloud connection';
     }
   }
+  var _bkSub=document.querySelector('#btn-backup-data .di-sub');
+  if(_bkSub&&typeof S!=='undefined'&&S.items){var _iCnt=(S.items||[]).length,_tCnt=((S.purchase||[]).length+(S.sales||[]).length+(S.expense||[]).length);_bkSub.textContent=_iCnt+' item'+(_iCnt!==1?'s':'')+' · '+_tCnt+' record'+(_tCnt!==1?'s':'');}
+  var _schedTog=document.getElementById('theme-schedule-toggle');
+  if(_schedTog){var _sa='';try{_sa=_mem.getItem('ims__theme_auto')||'0';}catch(e){}_schedTog.checked=_sa==='1';}
+  var _rmTog=document.getElementById('reduce-motion-toggle');
+  if(_rmTog)_rmTog.checked=document.documentElement.hasAttribute('data-reduce-motion');
+  var _shopEl=document.getElementById('drawer-footer-shop');
+  if(_shopEl&&typeof S!=='undefined'&&S.ownerId){var _reg2={};try{_reg2=typeof getRegistry==='function'?getRegistry():{};}catch(e){}var _sn=(_reg2[S.ownerId]&&_reg2[S.ownerId].shopName)||'';_shopEl.textContent=_sn;_shopEl.style.display=_sn?'':'none';}
+  var _prSub=document.getElementById('drawer-print-sub');
+  if(_prSub&&typeof S!=='undefined'){var _tL={'ITEMS':'items catalog','SALES':'sales report','PURCHASE':'purchase report','CREDIT':'credit ledger','BALANCE':'balance sheet','REPORT':'full report','EXPENSE':'expense report','STORE':'store report'};_prSub.textContent='Print '+((S.tab&&_tL[S.tab])||'current view');}
+  if(typeof _startDrawerCountdown==='function')_startDrawerCountdown();
 }
 
 function _syncNow(){
   var ftxt = document.getElementById('drawer-footer-sync-txt');
   var fdot = document.getElementById('drawer-footer-dot');
+  if(fdot){
+    fdot.style.background='none';fdot.style.width='auto';fdot.style.height='auto';fdot.style.animation='';
+    fdot.innerHTML='<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="var(--warn)" stroke-width="3" stroke-linecap="round" style="animation:spin .8s linear infinite"><path d="M21 12a9 9 0 1 1-18 0"/></svg>';
+  }
   if(ftxt) ftxt.textContent = 'Syncing…';
-  if(fdot) fdot.style.background = 'var(--warn)';
   if(typeof loadRegistryFromCloud === 'function'){
     loadRegistryFromCloud().then(function(){
-      setTimeout(_refreshDrawer, 1200);
+      setTimeout(_refreshDrawer, 400);
     }).catch(function(){
+      if(fdot){fdot.innerHTML='';fdot.style.width='7px';fdot.style.height='7px';fdot.style.background='var(--error)';}
       if(ftxt) ftxt.textContent = 'Sync failed';
     });
   } else {
+    if(fdot){fdot.innerHTML='';fdot.style.width='7px';fdot.style.height='7px';}
     if(ftxt) ftxt.textContent = 'No cloud available';
   }
 }
 
+
+function _toggleDrawerSec(sec){
+  var body=document.getElementById('sec-body-'+sec);
+  var section=document.querySelector('.drawer-section[data-sec="'+sec+'"]');
+  if(!body)return;
+  var hiding=!body.classList.contains('sec-hidden');
+  body.classList.toggle('sec-hidden',hiding);
+  if(section){
+    section.classList.toggle('sec-collapsed',hiding);
+    section.title=hiding?'Tap to expand':'Tap to collapse';
+    var hint=document.getElementById('sec-hint-'+sec);
+    if(hint){
+      if(hiding){var cnt=[...body.querySelectorAll('.drawer-item,.drawer-pref-row')].filter(function(el){return el.style.display!=='none';}).length;hint.textContent='— '+cnt;}
+      else{hint.textContent='';}
+    }
+  }
+}
+
+function _toggleDrawerProfile(){
+  var card=document.getElementById('drawer-profile-card');
+  if(!card)return;
+  var visible=card.style.display!=='none';
+  card.style.display=visible?'none':'block';
+  if(!visible){
+    var roleLabels={system_owner:'System Owner',owner:'Owner',manager:'Manager',storekeeper:'Store Keeper',readonly:'Read Only',user:'User'};
+    var n=document.getElementById('dpc-name');
+    var rs=document.getElementById('dpc-role-shop');
+    var sess=document.getElementById('dpc-session');
+    if(n)n.textContent=S&&S.user?S.user:'';
+    if(rs){var r=roleLabels[S&&S.role?S.role:'']||'';var sh=S&&(S.shop||S.owner)?S.shop||S.owner:'';rs.textContent=sh?r+' · '+sh:r;}
+    if(sess){var el=Math.floor((Date.now()-(_sessionStart||Date.now()))/60000);sess.textContent='Session: '+(el<1?'Just started':el+'m');}
+  }
+}
+
+var _drawerCountdownInterval=null;
+function _startDrawerCountdown(){
+  clearInterval(_drawerCountdownInterval);
+  var bar=document.getElementById('drawer-countdown-bar');
+  if(!bar||!_autoLogoutMins||_autoLogoutMins<=0){if(bar)bar.style.display='none';return;}
+  bar.style.display='flex';
+  function _tick(){
+    var t=bar.querySelector('.cdb-time');
+    if(!t)return;
+    var remaining=(_lastActivity+_autoLogoutMins*60000)-Date.now();
+    if(remaining<=0){t.textContent='Logging out…';return;}
+    var m=Math.floor(remaining/60000);
+    var s=Math.floor((remaining%60000)/1000);
+    t.textContent=m+'m '+s+'s';
+  }
+  _tick();
+  _drawerCountdownInterval=setInterval(_tick,10000);
+}
+
+function _trackLastExport(type){
+  try{_mem.setItem('ims__last_export',type);}catch(e){}
+  var sub=document.getElementById('drawer-export-sub');
+  if(sub)sub.textContent='Last export: '+type;
+}
+
+// Compact footer when drawer body is scrolled
+(function(){
+  function _setupCompactFooter(){
+    var body=document.querySelector('#settings-drawer .drawer-body');
+    var footer=document.getElementById('drawer-footer');
+    if(!body||!footer)return;
+    body.addEventListener('scroll',function(){
+      footer.classList.toggle('footer-compact',this.scrollTop>44);
+    },{passive:true});
+  }
+  if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',_setupCompactFooter);}
+  else{_setupCompactFooter();}
+})();
+
+// Drawer keyboard shortcuts — I = Inventory, C = Credit (only when drawer is open)
+document.addEventListener('keydown',function(e){
+  var dr=document.getElementById('settings-drawer');
+  if(!dr||!dr.classList.contains('open'))return;
+  if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT'||e.target.tagName==='TEXTAREA')return;
+  if(e.key==='i'||e.key==='I'){if(typeof switchTab==='function')switchTab('ITEMS');closeSettings();}
+  if(e.key==='c'||e.key==='C'){if(typeof switchTab==='function')switchTab('CREDIT');closeSettings();}
+});
+
+var _themeScheduleInterval = null;
+function _setThemeSchedule(on){
+  try{_mem.setItem('ims__theme_auto', on?'1':'0');}catch(e){}
+  clearInterval(_themeScheduleInterval);
+  _themeScheduleInterval = null;
+  var sub = document.getElementById('drawer-schedule-sub');
+  if(!on){return;}
+  function _checkSchedule(){
+    var h = new Date().getHours();
+    var should = (h >= 19 || h < 7) ? 'dark' : 'light';
+    if(document.documentElement.getAttribute('data-theme') !== should && typeof setTheme === 'function') setTheme(should);
+  }
+  _checkSchedule();
+  _themeScheduleInterval = setInterval(_checkSchedule, 60000);
+}
+
+function _setReduceMotion(on){
+  if(on) document.documentElement.setAttribute('data-reduce-motion','1');
+  else   document.documentElement.removeAttribute('data-reduce-motion');
+  try{_mem.setItem('ims__reduce_motion', on?'1':'0');}catch(e){}
+  var tog = document.getElementById('reduce-motion-toggle');
+  if(tog) tog.checked = on;
+}
+
+// Init schedule + reduce-motion from _mem on page load
+(function(){
+  function _drawerPrefsInit(){
+    try{
+      var rm = _mem.getItem('ims__reduce_motion');
+      if(rm === '1') _setReduceMotion(true);
+      var sa = _mem.getItem('ims__theme_auto');
+      if(sa === '1') _setThemeSchedule(true);
+    }catch(e){}
+  }
+  if(document.readyState === 'loading') document.addEventListener('DOMContentLoaded', _drawerPrefsInit);
+  else _drawerPrefsInit();
+})();
 // ── Auto-logout timer ──
 var _autoLogoutTimer = null;
 var _autoLogoutMins = 0;
@@ -12405,7 +12890,9 @@ var _lastActivity = Date.now();
 
 function _setAutoLogout(mins){
   _autoLogoutMins = parseInt(mins, 10) || 0;
-  try{ localStorage.setItem('ims__auto_logout', String(_autoLogoutMins)); }catch(e){}
+  try{ _mem.setItem('ims__auto_logout', String(_autoLogoutMins)); }catch(e){}
+  var _alMap={'0':'Off','15':'15 min','30':'30 min','60':'1 hr','120':'2 hr'};
+  var _alSub=document.getElementById('drawer-autologout-sub');if(_alSub)_alSub.textContent=_alMap[String(_autoLogoutMins)]||'Off';
   clearInterval(_autoLogoutTimer);
   _autoLogoutTimer = null;
   if(_autoLogoutMins > 0){
@@ -12439,7 +12926,7 @@ document.addEventListener('keydown',function(e){
 
 // Restore auto-logout setting on load
 (function(){
-  var saved = localStorage.getItem('ims__auto_logout');
+  var saved = _mem.getItem('ims__auto_logout');
   if(saved && parseInt(saved,10) > 0) _setAutoLogout(saved);
 })();
 
@@ -13215,9 +13702,9 @@ document.addEventListener('keydown',function(e){
     var party=document.getElementById('f-party')?.value?.trim();
     var branch=document.getElementById('f-branch')?.value;
     var payment=document.getElementById('f-payment')?.value;
-    if(party)  sessionStorage.setItem('ims_lp_'+(isP?'P':'S'),party);
-    if(branch) sessionStorage.setItem('ims_lb',branch);
-    if(payment)sessionStorage.setItem('ims_lpm_'+(isP?'P':'S'),payment);
+    if(party)  _mem.setItem('ims_lp_'+(isP?'P':'S'),party);
+    if(branch) _mem.setItem('ims_lb',branch);
+    if(payment)_mem.setItem('ims_lpm_'+(isP?'P':'S'),payment);
     return _oST.apply(this,arguments);
   };
 })();
@@ -13295,13 +13782,13 @@ document.addEventListener('keydown',function(e){
   /* ── 3. Remember username ── */
   function _initRemember(){
     var u=document.getElementById('auth-user');
-    if(u&&!u.value){var saved=localStorage.getItem('ims_last_user');if(saved)u.value=saved;}
+    if(u&&!u.value){var saved=_mem.getItem('ims_last_user');if(saved)u.value=saved;}
     var _oLogin=window.doLogin;
     if(_oLogin&&!window._loginPatched){
       window._loginPatched=true;
       window.doLogin=function(){
         var u2=document.getElementById('auth-user');
-        if(u2&&u2.value.trim())localStorage.setItem('ims_last_user',u2.value.trim());
+        if(u2&&u2.value.trim())_mem.setItem('ims_last_user',u2.value.trim());
         return _oLogin.apply(this,arguments);
       };
     }
@@ -13377,7 +13864,7 @@ document.addEventListener('keydown',function(e){
   function _updateStrip(){
     var strip=document.getElementById('_sstrip');if(!strip)return;
     try{
-      var reg=JSON.parse(localStorage.getItem('ims_registry')||'{}');
+      var reg=JSON.parse(_mem.getItem('ims_registry')||'{}');
       var counts={all:0,active:0,trial:0,expired:0,suspended:0};
       Object.keys(reg).forEach(function(u){
         var r=reg[u];if(!r||r.role!=='owner')return;
@@ -13460,7 +13947,7 @@ document.addEventListener('keydown',function(e){
       _oRL.apply(this,arguments);
       var body=document.getElementById('user-list-body');if(!body)return;
       try{
-        var reg=JSON.parse(localStorage.getItem('ims_registry')||'{}');
+        var reg=JSON.parse(_mem.getItem('ims_registry')||'{}');
         var items=Array.from(body.querySelectorAll('.oc-wrap'));
         if(!items.length)return;
         var sorted=_applySort(items.map(function(el){return el.dataset.u;}),reg);
@@ -13616,7 +14103,7 @@ document.addEventListener('keydown',function(e){
       hint.className='_utaken checking';hint.textContent='Checking...';
       clearTimeout(tmr);
       tmr=setTimeout(function(){
-        try{var reg=JSON.parse(localStorage.getItem('ims_registry')||'{}');
+        try{var reg=JSON.parse(_mem.getItem('ims_registry')||'{}');
           if(reg[v]){hint.className='_utaken taken';hint.textContent='✗ "'+v+'" is already taken';}
           else{hint.className='_utaken avail';hint.textContent='✓ Username is available';}
         }catch(e){hint.className='_utaken hidden';}
@@ -13673,7 +14160,7 @@ document.addEventListener('keydown',function(e){
     var hint=document.createElement('div');hint.className='_remhint';
     hint.innerHTML='<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Remembered from last session';
     uf.appendChild(hint);
-    var saved=localStorage.getItem('ims_last_user');
+    var saved=_mem.getItem('ims_last_user');
     if(saved&&ue.value===saved)hint.classList.add('vis');
     ue.addEventListener('input',function(){hint.classList.remove('vis');});
   }
