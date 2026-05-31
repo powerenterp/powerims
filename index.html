@@ -211,13 +211,20 @@ html[data-view="mobile"] .brand-text{display:none}
 .bottom-nav{
   position:fixed;bottom:0;left:0;right:0;z-index:400;
   padding:0 4px;padding-bottom:env(safe-area-inset-bottom);
-  background:var(--surface);border-top:1px solid var(--border);
-  box-shadow:0 -2px 10px rgba(0,0,0,.07);
+  background:rgba(255,255,255,0.72);
+  -webkit-backdrop-filter:blur(18px) saturate(160%);
+  backdrop-filter:blur(18px) saturate(160%);
+  border-top:1px solid rgba(255,255,255,0.45);
+  box-shadow:0 -2px 20px rgba(0,0,0,.08);
   display:flex;gap:0;
   transition:background .3s,border-color .3s;
   animation:flyInUp .3s ease
 }
-[data-theme="dark"] .bottom-nav{box-shadow:0 -2px 14px rgba(0,0,0,.28)}
+[data-theme="dark"] .bottom-nav{
+  background:rgba(24,24,28,0.72);
+  border-top-color:rgba(255,255,255,0.08);
+  box-shadow:0 -2px 24px rgba(0,0,0,.38)
+}
 .nav-item{
   flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
   padding:8px 4px 6px;min-height:54px;border:none;background:transparent;
@@ -3765,7 +3772,7 @@ tbody td.num { padding-right: 16px; }
 </div>
 
 <!-- OWNER SELF-SERVICE SUBSCRIPTION MODAL -->
-<div class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="owner-sub-self-modal-title" id="owner-sub-self-modal">
+<div class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="owner-sub-self-modal-title" id="owner-sub-self-modal" style="z-index:10000">
   <div class="modal-box narrow">
     <div class="modal-hdr owner-hdr">
       <div class="modal-hdr-icon-wrap" aria-hidden="true"><span class="modal-hdr-icon"><svg class="ic"><use href="#i-credit-card"/></svg></span></div>
@@ -4899,7 +4906,7 @@ function startRealtimeSync(){
         Object.keys(localReg).forEach(u=>{
           const localT=localReg[u]?.updatedAt||'';
           const cloudT=merged[u]?.updatedAt||'';
-          if(localT>cloudT){merged[u]=localReg[u];}
+          if(localReg[u]?._deleted||localT>cloudT){merged[u]=localReg[u];}
         });
         _lsSet('ims_reg',merged);
       }catch(e){}
@@ -7560,9 +7567,7 @@ function _subActRecord(){const d=_subActAttempts();const now=Date.now();if(now-d
 function activateSubCode(){
   hideMsg('sub-act-error');hideMsg('sub-act-success');
   const now=Date.now();
-  // Check rate limit from _mem
   const actD=_subActAttempts();
-  // Also check registry-backed attempt count so clearing _mem doesn't bypass the limit
   const reg=getRegistry();
   const _regActs=(reg[S.ownerId]||{})._subActAttempts||{count:0,first:0};
   const lsBlocked=actD.count>=_SUB_ACT_MAX&&now-actD.first<_SUB_ACT_WINDOW;
@@ -7574,40 +7579,52 @@ function activateSubCode(){
   }
   const code=(document.getElementById('sub-act-code')?.value||'').trim();
   if(code.length!==8||!/^\d{8}$/.test(code)){showMsg('sub-act-error','Enter a valid 8-digit code.');return;}
-  const reqs=getSubRequests();
-  const idx=reqs.findIndex(q=>q.username===S.ownerId&&q.code===code&&q.status==='code_ready');
-  // Record attempt in both _mem and registry before checking result
-  _subActRecord();
-  if(reg[S.ownerId]){
-    const ra=reg[S.ownerId]._subActAttempts||{count:0,first:0};
-    if(now-ra.first>_SUB_ACT_WINDOW){ra.count=1;ra.first=now;}else{ra.count++;}
-    reg[S.ownerId]._subActAttempts=ra;
+  function _doActivate(){
+    const reqs=getSubRequests();
+    const idx=reqs.findIndex(q=>q.username===S.ownerId&&q.code===code&&q.status==='code_ready');
+    _subActRecord();
+    if(reg[S.ownerId]){
+      const ra=reg[S.ownerId]._subActAttempts||{count:0,first:0};
+      if(now-ra.first>_SUB_ACT_WINDOW){ra.count=1;ra.first=now;}else{ra.count++;}
+      reg[S.ownerId]._subActAttempts=ra;
+      saveRegistry(reg);
+    }
+    if(idx===-1){
+      const alreadyUsed=reqs.some(q=>q.username===S.ownerId&&q.code===code&&q.status==='activated');
+      showMsg('sub-act-error',alreadyUsed?'This code has already been used.':'Code not found. Check the code and try again.');return;
+    }
+    const req=reqs[idx];
+    if(!reg[S.ownerId])return;
+    reg[S.ownerId].paidUntil=req.paidUntil;
+    reg[S.ownerId].status='active';
+    reg[S.ownerId].sub=req.plan;
+    if(!reg[S.ownerId].payHistory)reg[S.ownerId].payHistory=[];
+    reg[S.ownerId].payHistory.push({date:new Date().toISOString().slice(0,10),amount:0,plan:req.plan,until:req.paidUntil,note:'Activated via code'});
     saveRegistry(reg);
+    reqs[idx].status='activated';reqs[idx].activatedAt=new Date().toISOString();
+    saveSubRequests(reqs);
+    const ss=getSubStatus(reg[S.ownerId]);
+    const bannerEl=document.getElementById('app-sub-banner');
+    if(bannerEl)bannerEl.innerHTML=buildSubBanner(ss);
+    const gate=document.getElementById('sub-gate');if(gate)gate.style.display='none';
+    showMsg('sub-act-success',`<svg class="ic"><use href="#i-sparkle"/></svg> Subscription activated! Active until ${req.paidUntil}`);
+    setTimeout(()=>{closeModal('owner-sub-self-modal');renderOwnerSubModal();},1800);
   }
-  if(idx===-1){
-    const alreadyUsed=reqs.some(q=>q.username===S.ownerId&&q.code===code&&q.status==='activated');
-    showMsg('sub-act-error',alreadyUsed?'This code has already been used.':'Code not found. Check the code and try again.');return;
+  // Pull latest requests from cloud so a code generated on another device is found
+  if(S.db){
+    S.db.collection('power_ims5').doc('_sub_requests').get().then(d=>{
+      if(d.exists&&d.data().requests){
+        const cr=_safeJSON(d.data().requests,[],'sub_requests');
+        const lr=_lsGet(SUB_REQ_KEY,[]);
+        const mg=[...lr];
+        cr.forEach(c=>{const li=mg.findIndex(l=>l.id===c.id);if(li===-1)mg.push(c);else mg[li]=c;});
+        _lsSet(SUB_REQ_KEY,mg);
+      }
+      _doActivate();
+    }).catch(()=>_doActivate());
+  }else{
+    _doActivate();
   }
-  const req=reqs[idx];
-  // Apply paidUntil to registry
-  if(!reg[S.ownerId])return;
-  reg[S.ownerId].paidUntil=req.paidUntil;
-  reg[S.ownerId].status='active';
-  reg[S.ownerId].sub=req.plan;
-  if(!reg[S.ownerId].payHistory)reg[S.ownerId].payHistory=[];
-  reg[S.ownerId].payHistory.push({date:new Date().toISOString().slice(0,10),amount:0,plan:req.plan,until:req.paidUntil,note:'Activated via code'});
-  saveRegistry(reg);
-  // Mark request activated
-  reqs[idx].status='activated';reqs[idx].activatedAt=new Date().toISOString();
-  saveSubRequests(reqs);
-  // Refresh subscription banner
-  const ss=getSubStatus(reg[S.ownerId]);
-  const bannerEl=document.getElementById('app-sub-banner');
-  if(bannerEl)bannerEl.innerHTML=buildSubBanner(ss);
-  // Hide sub-gate if visible
-  const gate=document.getElementById('sub-gate');if(gate)gate.style.display='none';
-  showMsg('sub-act-success',`<svg class="ic"><use href="#i-sparkle"/></svg> Subscription activated! Active until ${req.paidUntil}`);
-  setTimeout(()=>{closeModal('owner-sub-self-modal');renderOwnerSubModal();},1800);
 }
 
 // ── System owner: generate activation code for a request ──
@@ -8906,6 +8923,7 @@ function logout(){
   const pe=document.getElementById('auth-pass-eye');if(pe)pe.innerHTML='<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
   const ce=document.getElementById('auth-confirm-eye');if(ce)ce.innerHTML='<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
   setAuthMode('login');
+  document.getElementById('sub-gate').style.display='none';
   document.getElementById('auth-screen').style.display='flex';
   setTimeout(()=>{const u=document.getElementById('auth-user');if(u)u.focus();},80);
   document.getElementById('app-header').className='app-header';
@@ -14920,7 +14938,6 @@ document.addEventListener('keydown',function(e){
       }
     }catch(e){}
   });
-})();
 })();
 </script>
 
