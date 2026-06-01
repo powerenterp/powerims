@@ -632,7 +632,7 @@ html[data-view="mobile"] .brand-text{display:none}
 .mop-health-item{padding:7px 10px;border-radius:9px;border:1px solid var(--border);background:var(--surface);font-size:10.5px;display:flex;align-items:center;gap:6px}
 .mop-health-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
 /* ── Pay history timeline ── */
-.pay-timeline-wrap{max-height:200px;overflow-y:auto;padding:0 18px 14px}
+.pay-timeline-wrap{max-height:200px;overflow-y:auto;padding:0 18px 14px;scroll-behavior:smooth}
 .pay-tl-item{display:flex;gap:10px;padding:7px 0;border-bottom:1px dashed rgba(45,75,138,.15)}
 .pay-tl-item:last-child{border-bottom:none}
 .pay-tl-dot{width:9px;height:9px;border-radius:50%;background:rgba(45,75,138,.6);flex-shrink:0;margin-top:4px}
@@ -717,7 +717,7 @@ html[data-view="mobile"] .brand-text{display:none}
 .sub-plan-card-price{font-size:10px;color:var(--text3);margin-top:2px}
 
 /* ── Payment history ── */
-.pay-history{max-height:130px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius-sm)}
+.pay-history{max-height:130px;overflow-y:auto;border:1px solid var(--border);border-radius:var(--radius-sm);scroll-behavior:smooth}
 .pay-history-row{display:flex;align-items:center;gap:8px;padding:7px 10px;border-bottom:1px solid var(--border);font-size:11px}
 .pay-history-row:last-child{border-bottom:none}
 .pay-history-date{color:var(--text3);font-family:var(--mono);font-size:10px;white-space:nowrap}
@@ -772,7 +772,7 @@ input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none}
 .table-row-count{font-size:11px;color:var(--text3);font-family:var(--mono);white-space:nowrap}
 
 /* ── Tables ── */
-.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
 table{width:100%;border-collapse:collapse;font-size:13px;min-width:700px}
 thead th{
   background:var(--surface2);padding:10px 12px;text-align:left;
@@ -1152,6 +1152,32 @@ html[data-view="mobile"] .di-shortcut{display:none}
 /* #17 What's New / changelog */
 .drawer-whats-new-btn{background:var(--p-glass);color:var(--p);border:none;cursor:pointer;font-size:9px;font-weight:700;padding:2px 6px;border-radius:5px;font-family:var(--font);margin-left:4px;vertical-align:middle;line-height:1.4;display:none}
 .drawer-whats-new-btn.show{display:inline-flex;align-items:center}
+/* ── Improvement 3: Pinned empty-state hint ── */
+.drawer-pin-hint{display:flex;align-items:center;gap:10px;padding:10px 20px 8px;color:var(--text3);font-size:11px;font-style:italic;pointer-events:none}
+.drawer-pin-hint-icon{width:28px;height:28px;border-radius:8px;background:var(--surface2);border:1px dashed var(--border2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+/* ── Improvements 4 & 5 & 6: Footer CSS classes ── */
+.drawer-footer-av{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:#E4E6F5;flex-shrink:0;background:var(--p);cursor:pointer}
+.drawer-footer-info{display:flex;flex-direction:column;flex:1;min-width:0;overflow:hidden}
+.drawer-footer-username{font-size:12px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.drawer-footer-role{font-size:10.5px;color:var(--text3);white-space:nowrap}
+.drawer-footer-shop{font-size:9.5px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:none}
+.drawer-footer-main{margin-bottom:6px;gap:10px}
+.drawer-footer-meta{margin-bottom:8px}
+.drawer-sync-btn{display:flex;align-items:center;gap:5px;background:none;border:none;cursor:pointer;padding:3px 6px;border-radius:6px;color:var(--text3);font-size:10.5px;font-family:var(--font);flex-shrink:0;transition:background .14s}
+.drawer-sync-btn:hover{background:var(--surface2)}
+.drawer-logout-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:9px 12px;border-radius:10px;border:1px solid rgba(239,68,68,.25);background:rgba(239,68,68,.07);color:var(--error);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background .15s}
+.drawer-logout-btn:hover{background:rgba(239,68,68,.14)}
+.drawer-profile-card{display:none;margin-bottom:10px;padding:9px 12px;background:var(--surface2);border-radius:10px;border:1px solid var(--border)}
+.drawer-profile-card-hdr{display:flex;align-items:flex-start;justify-content:space-between;gap:4px}
+.drawer-profile-card-name{font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px;flex:1;min-width:0}
+.drawer-profile-card-detail{font-size:11px;color:var(--text3)}
+.drawer-profile-card-session{font-size:10.5px;color:var(--text3);margin-top:3px}
+/* ── Improvement 7: Auto-schedule time pickers ── */
+.drawer-schedule-times{display:none;flex-direction:column;gap:5px;margin:0 20px 6px;padding:8px 10px;background:var(--surface2);border-radius:8px;border:1px solid var(--border)}
+.drawer-schedule-times.show{display:flex}
+.drawer-schedule-time-row{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text3)}
+.drawer-schedule-time-inp{padding:3px 7px;border:1.5px solid var(--border2);border-radius:6px;background:var(--surface);color:var(--text);font-family:var(--mono);font-size:11px;cursor:pointer;outline:none;width:78px;-webkit-appearance:none}
+.drawer-schedule-time-inp:focus{border-color:var(--p)}
 #drawer-changelog-modal{position:fixed;inset:0;z-index:600;display:flex;align-items:center;justify-content:center;background:rgba(15,23,42,.4);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);opacity:0;pointer-events:none;transition:opacity .2s}
 #drawer-changelog-modal.open{opacity:1;pointer-events:auto}
 .drawer-changelog-box{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:20px 22px;max-width:310px;width:90%;max-height:72vh;overflow-y:auto;box-shadow:var(--shadow-lg)}
@@ -1675,7 +1701,7 @@ html[data-card="1"] tbody tr.row-zero{border-color:rgba(245,158,11,.3)}
 .credit-section-count{margin-left:auto;font-size:10px;font-weight:700;padding:2px 8px;border-radius:99px}
 .credit-section-count.purchase{background:rgba(239,68,68,.13);color:var(--error)}
 .credit-section-count.sales{background:rgba(16,185,129,.13);color:var(--success)}
-.credit-table-wrap{border:1px solid var(--border);border-radius:0 0 var(--radius-sm) var(--radius-sm);overflow-x:auto;-webkit-overflow-scrolling:touch}
+.credit-table-wrap{border:1px solid var(--border);border-radius:0 0 var(--radius-sm) var(--radius-sm);overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
 .credit-table{width:100%;border-collapse:collapse;font-size:11px}
 .credit-table thead th{background:var(--surface3);color:var(--text2);padding:7px 10px;text-align:left;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
 .credit-table tbody tr{border-top:1px solid var(--border)}
@@ -2870,11 +2896,16 @@ tbody td.num { padding-right: 16px; }
   <div class="drawer-body" style="padding-top:0">
 
     <!-- #5 Pinned section (hidden until items are pinned) -->
-    <div class="drawer-section" data-sec="pinned" id="sec-pinned-hdr" style="display:none" onclick="_toggleDrawerSec('pinned')" title="Tap to collapse" role="button" aria-expanded="true" tabindex="0"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;flex-shrink:0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Pinned<span class="sec-hint-txt" id="sec-hint-pinned"></span><span class="sec-line"></span><svg class="sec-arrow" id="sec-arrow-pinned" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
-    <div class="drawer-sec-body" id="sec-body-pinned"></div>
+    <div class="drawer-section" data-sec="pinned" id="sec-pinned-hdr" style="display:none" onclick="_toggleDrawerSec('pinned')" title="Click to collapse" role="button" aria-expanded="true" tabindex="0"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;flex-shrink:0"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>Pinned<span class="sec-hint-txt" id="sec-hint-pinned"></span><span class="sec-line"></span><svg class="sec-arrow" id="sec-arrow-pinned" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+    <div class="drawer-sec-body" id="sec-body-pinned">
+      <div class="drawer-pin-hint" id="drawer-pin-hint">
+        <span class="drawer-pin-hint-icon" aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="17" x2="12" y2="22"/><path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V17z"/></svg></span>
+        Long-press any item to pin it here
+      </div>
+    </div>
     <div class="drawer-divider" id="drawer-pinned-divider" style="display:none"></div>
 
-    <div class="drawer-section" data-sec="nav" data-i18n="settingsNav" onclick="_toggleDrawerSec('nav')" title="Tap to collapse" role="button" aria-expanded="true" tabindex="0"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;flex-shrink:0"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Quick Access<span class="sec-hint-txt" id="sec-hint-nav"></span><span class="sec-line"></span><svg class="sec-arrow" id="sec-arrow-nav" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+    <div class="drawer-section" data-sec="nav" data-i18n="settingsNav" onclick="_toggleDrawerSec('nav')" title="Click to collapse" role="button" aria-expanded="true" tabindex="0"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;flex-shrink:0"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Quick Access<span class="sec-hint-txt" id="sec-hint-nav"></span><span class="sec-line"></span><svg class="sec-arrow" id="sec-arrow-nav" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
     <div class="drawer-sec-body" id="sec-body-nav">
       <button type="button" class="drawer-item" id="drawer-items-btn" onclick="switchTab('ITEMS');closeSettings()">
         <span class="di-icon" aria-hidden="true" style="background:var(--p-glass);color:var(--p)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg></span>
@@ -2896,7 +2927,7 @@ tbody td.num { padding-right: 16px; }
     </div>
 
     <div class="drawer-divider"></div>
-    <div class="drawer-section" data-sec="data" data-i18n="settingsExport" onclick="_toggleDrawerSec('data')" title="Tap to collapse" role="button" aria-expanded="true" tabindex="0"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;flex-shrink:0"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Data<span class="sec-hint-txt" id="sec-hint-data"></span><span class="sec-line"></span><svg class="sec-arrow" id="sec-arrow-data" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+    <div class="drawer-section" data-sec="data" data-i18n="settingsExport" onclick="_toggleDrawerSec('data')" title="Click to collapse" role="button" aria-expanded="true" tabindex="0"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;flex-shrink:0"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Data<span class="sec-hint-txt" id="sec-hint-data"></span><span class="sec-line"></span><svg class="sec-arrow" id="sec-arrow-data" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
     <div class="drawer-sec-body" id="sec-body-data">
       <button type="button" class="drawer-item" id="drawer-export-btn" onclick="openExportModal();closeSettings()" aria-label="Export report">
         <span class="di-icon" aria-hidden="true" style="background:rgba(16,185,129,.12);color:var(--success)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg></span>
@@ -2938,7 +2969,7 @@ tbody td.num { padding-right: 16px; }
     </div>
 
     <div class="drawer-divider"></div>
-    <div class="drawer-section" data-sec="acct" data-i18n="settingsAccount" onclick="_toggleDrawerSec('acct')" title="Tap to collapse" role="button" aria-expanded="true" tabindex="0"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;flex-shrink:0"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Account<span class="sec-hint-txt" id="sec-hint-acct"></span><span class="sec-line"></span><svg class="sec-arrow" id="sec-arrow-acct" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+    <div class="drawer-section" data-sec="acct" data-i18n="settingsAccount" onclick="_toggleDrawerSec('acct')" title="Click to collapse" role="button" aria-expanded="true" tabindex="0"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;flex-shrink:0"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>Account<span class="sec-hint-txt" id="sec-hint-acct"></span><span class="sec-line"></span><svg class="sec-arrow" id="sec-arrow-acct" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
     <div class="drawer-sec-body" id="sec-body-acct">
       <button type="button" class="drawer-item" id="drawer-changepass-btn" onclick="openChangePass();closeSettings()" aria-label="Change password">
         <span class="di-icon" aria-hidden="true" style="background:rgba(245,158,11,.12);color:var(--warn)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg></span>
@@ -2955,7 +2986,7 @@ tbody td.num { padding-right: 16px; }
     </div>
 
     <div class="drawer-divider"></div>
-    <div class="drawer-section" data-sec="prefs" data-i18n="settingsPrefs" onclick="_toggleDrawerSec('prefs')" title="Tap to collapse" role="button" aria-expanded="true" tabindex="0"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;flex-shrink:0"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>Preferences<span class="sec-hint-txt" id="sec-hint-prefs"></span><span class="sec-line"></span><svg class="sec-arrow" id="sec-arrow-prefs" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
+    <div class="drawer-section" data-sec="prefs" data-i18n="settingsPrefs" onclick="_toggleDrawerSec('prefs')" title="Click to collapse" role="button" aria-expanded="true" tabindex="0"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-right:5px;flex-shrink:0"><line x1="4" y1="6" x2="20" y2="6"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>Preferences<span class="sec-hint-txt" id="sec-hint-prefs"></span><span class="sec-line"></span><svg class="sec-arrow" id="sec-arrow-prefs" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg></div>
     <div class="drawer-sec-body" id="sec-body-prefs">
 
       <div class="drawer-pref-row" onclick="if(!event.target.closest('.toggle-sw'))document.getElementById('dark-toggle').click()">
@@ -2977,6 +3008,16 @@ tbody td.num { padding-right: 16px; }
           <div class="di-sub" id="drawer-schedule-sub">Dark 7pm &middot; Light 7am</div>
         </div>
         <label class="toggle-sw"><input type="checkbox" id="theme-schedule-toggle" onchange="_setThemeSchedule(this.checked)"><span></span></label>
+      </div>
+      <div class="drawer-schedule-times" id="drawer-schedule-times">
+        <div class="drawer-schedule-time-row">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+          Dark at <input type="time" class="drawer-schedule-time-inp" id="dark-time-inp" value="19:00" onchange="_saveScheduleTimes()" aria-label="Dark mode start time">
+        </div>
+        <div class="drawer-schedule-time-row">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg>
+          Light at <input type="time" class="drawer-schedule-time-inp" id="light-time-inp" value="07:00" onchange="_saveScheduleTimes()" aria-label="Light mode start time">
+        </div>
       </div>
       <div class="drawer-pref-row" onclick="if(!event.target.closest('.toggle-sw'))document.getElementById('mobile-toggle').click()">
         <span class="di-icon" aria-hidden="true" style="background:rgba(45,75,138,.1);color:var(--p)">
@@ -3038,38 +3079,39 @@ tbody td.num { padding-right: 16px; }
 
   <!-- Footer: current user + version + sync status + log out -->
   <div class="drawer-footer" id="drawer-footer">
-    <!-- #16 Profile card with inline edit -->
-    <div id="drawer-profile-card" style="display:none;margin-bottom:10px;padding:9px 12px;background:var(--surface2);border-radius:10px;border:1px solid var(--border)">
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:4px">
-        <div style="font-size:12px;font-weight:700;color:var(--text);margin-bottom:2px;flex:1;min-width:0" id="dpc-name"></div>
+    <!-- Profile card with inline edit -->
+    <div id="drawer-profile-card" class="drawer-profile-card">
+      <div class="drawer-profile-card-hdr">
+        <div class="drawer-profile-card-name" id="dpc-name"></div>
         <button type="button" class="drawer-profile-edit-btn" onclick="_drawerProfileEdit()" title="Edit display name" aria-label="Edit display name"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button>
       </div>
-      <div style="font-size:11px;color:var(--text3)" id="dpc-role-shop"></div>
-      <div style="font-size:10.5px;color:var(--text3);margin-top:3px" id="dpc-session"></div>
+      <div class="drawer-profile-card-detail" id="dpc-role-shop"></div>
+      <div class="drawer-profile-card-session" id="dpc-session"></div>
       <div class="dpc-edit-row" id="dpc-edit-row" style="display:none">
         <input type="text" class="dpc-edit-input" id="dpc-edit-input" placeholder="Display name" aria-label="Enter new display name" maxlength="50">
         <button type="button" class="dpc-save-btn" onclick="_drawerSaveProfileName()">Save</button>
       </div>
     </div>
-    <div class="drawer-footer-row" style="margin-bottom:4px">
-      <span style="display:flex;align-items:center;gap:8px;flex:1;min-width:0;overflow:hidden">
-        <span id="drawer-footer-av" onclick="_toggleDrawerProfile()" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:11px;color:#E4E6F5;flex-shrink:0;background:var(--p);cursor:pointer" title="View profile"></span>
-        <span style="display:flex;flex-direction:column;min-width:0;overflow:hidden">
-          <span id="drawer-footer-username" style="font-size:12px;font-weight:700;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
-          <span id="drawer-footer-role" style="font-size:10.5px;color:var(--text3);white-space:nowrap"></span>
-          <span id="drawer-footer-shop" style="font-size:9.5px;color:var(--text3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:none"></span>
-        </span>
+    <!-- Row 1: avatar + user info + sync status -->
+    <div class="drawer-footer-row drawer-footer-main">
+      <span id="drawer-footer-av" onclick="_toggleDrawerProfile()" class="drawer-footer-av" title="View profile"></span>
+      <span class="drawer-footer-info">
+        <span id="drawer-footer-username" class="drawer-footer-username"></span>
+        <span id="drawer-footer-role" class="drawer-footer-role"></span>
+        <span id="drawer-footer-shop" class="drawer-footer-shop"></span>
       </span>
-      <span class="drawer-footer-ver" id="drawer-ver">v6<span class="drawer-ver-dot"></span></span><button type="button" class="drawer-whats-new-btn" id="drawer-whats-new-btn" onclick="_drawerShowChangelog()" aria-label="What's new in this version">NEW</button>
-    </div>
-    <div class="drawer-footer-row" id="drawer-brand-row" style="margin-bottom:8px">
-      <span class="drawer-footer-brand">Power &#8212; IMS</span>
-      <button type="button" onclick="_syncNow()" title="Click to sync now" style="display:flex;align-items:center;gap:5px;background:none;border:none;cursor:pointer;padding:2px 4px;border-radius:6px;color:var(--text3);font-size:11px;font-family:var(--font)" onmouseover="this.style.background='var(--surface2)'" onmouseout="this.style.background='none'" id="drawer-footer-sync">
-        <span class="drawer-footer-dot" id="drawer-footer-dot" style="background:var(--text3)"></span>
+      <button type="button" class="drawer-sync-btn" onclick="_syncNow()" title="Click to sync now" id="drawer-footer-sync">
+        <span class="drawer-footer-dot" id="drawer-footer-dot"></span>
         <span id="drawer-footer-sync-txt">Offline</span>
       </button>
     </div>
-    <button type="button" onclick="closeSettings();customConfirm('Log out?','You will be returned to the login screen.','<svg width=&quot;38&quot; height=&quot;38&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;var(--error)&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot;><path d=&quot;M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4&quot;/><polyline points=&quot;16 17 21 12 16 7&quot;/><line x1=&quot;21&quot; y1=&quot;12&quot; x2=&quot;9&quot; y2=&quot;12&quot;/></svg>','Log Out',logout)" style="width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:9px 12px;border-radius:10px;border:1px solid rgba(239,68,68,.25);background:rgba(239,68,68,.07);color:var(--error);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background .15s" onmouseover="this.style.background='rgba(239,68,68,.14)'" onmouseout="this.style.background='rgba(239,68,68,.07)'">
+    <!-- Row 2: brand + version + changelog -->
+    <div class="drawer-footer-row drawer-footer-meta" id="drawer-brand-row">
+      <span class="drawer-footer-brand">Power &#8212; IMS</span>
+      <span class="drawer-footer-ver" id="drawer-ver">v6<span class="drawer-ver-dot"></span></span>
+      <button type="button" class="drawer-whats-new-btn" id="drawer-whats-new-btn" onclick="_drawerShowChangelog()" aria-label="What's new in this version">NEW</button>
+    </div>
+    <button type="button" class="drawer-logout-btn" onclick="closeSettings();customConfirm('Log out?','You will be returned to the login screen.','<svg width=&quot;38&quot; height=&quot;38&quot; viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;var(--error)&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot;><path d=&quot;M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4&quot;/><polyline points=&quot;16 17 21 12 16 7&quot;/><line x1=&quot;21&quot; y1=&quot;12&quot; x2=&quot;9&quot; y2=&quot;12&quot;/></svg>','Log Out',logout)">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
       Log Out
     </button>
@@ -3583,10 +3625,11 @@ tbody td.num { padding-right: 16px; }
       <button type="button" class="sys-tab" role="tab" id="stab-banned" onclick="switchSysTab('banned')"><svg class="ic"><use href="#i-ban"/></svg> Banned <span class="sys-tab-badge tb-err" id="stab-banned-badge" style="display:none">0</span></button>
       <button type="button" class="sys-tab" role="tab" id="stab-deleted" onclick="switchSysTab('deleted');_renderSysDeleted()"><svg class="ic"><use href="#i-trash"/></svg> Deleted <span class="sys-tab-badge tb-err" id="stab-deleted-badge" style="display:none">0</span></button>
       <button type="button" class="sys-tab" role="tab" id="stab-auditlog" onclick="switchSysTab('auditlog');_renderAdminLog()"><svg class="ic"><use href="#i-clock"/></svg> Audit Log</button>
+      <button type="button" class="sys-tab" role="tab" id="stab-timeline" onclick="switchSysTab('timeline');_renderSysTimeline()"><svg class="ic"><use href="#i-calendar-days"/></svg> Timeline</button>
     </div>
 
     <!-- Owners section -->
-    <div class="owner-section sys-sec active" role="tabpanel" id="sys-sec-owners">
+    <div class="owner-section sys-sec" role="tabpanel" id="sys-sec-owners">
       <div class="owner-section-hdr">
         <h3 id="owner-users-title"><svg class="ic"><use href="#i-crown"/></svg> All Platform Owners</h3>
         <button type="button" class="btn btn-sm" style="background:rgba(45,75,138,.12);color:rgba(45,75,138,1);border-color:rgba(45,75,138,.3)" id="owner-add-user-btn" onclick="openAddUserModal()">+ Add User</button>
@@ -3623,6 +3666,8 @@ tbody td.num { padding-right: 16px; }
         <button type="button" class="bulk-btn" onclick="_bulkResetPass()"><svg class="ic"><use href="#i-key"/></svg> Reset Pass</button>
         <div class="bulk-sep"></div>
         <button type="button" class="bulk-btn bulk-success" onclick="_bulkExportCSV()" title="Export selected owners to CSV"><svg class="ic"><use href="#i-download"/></svg> Export</button>
+        <!-- Improvement 10: Broadcast Tool -->
+        <button type="button" class="bulk-btn" onclick="_bulkBroadcast()" title="Send a broadcast notification/message to selected owners"><svg class="ic"><use href="#i-bell"/></svg> Broadcast</button>
         <button type="button" class="bulk-btn bulk-danger" style="margin-left:auto" onclick="_bulkDelete()"><svg class="ic"><use href="#i-trash"/></svg> Delete</button>
         <button type="button" class="bulk-btn" onclick="_bulkClearSelection()"><svg class="ic"><use href="#i-x"/></svg> Clear</button>
       </div>
@@ -3685,12 +3730,38 @@ tbody td.num { padding-right: 16px; }
         <button type="button" class="bulk-btn" onclick="_exportAdminLogPDF()" style="font-size:11px;padding:4px 12px"><svg class="ic"><use href="#i-file"/></svg> Export PDF</button>
         <button type="button" class="bulk-btn bulk-danger" onclick="_clearAdminLog()" style="font-size:11px;padding:4px 12px"><svg class="ic"><use href="#i-trash"/></svg> Clear</button>
       </div>
+      <!-- Improvement 7: Audit log filter chips -->
+      <div class="sys-filter-bar" id="audit-filter-bar" style="padding:8px 14px;border-bottom:1px solid var(--border)">
+        <button type="button" class="sf-chip active" id="alf-all"     onclick="_setAuditFilter('all')">All</button>
+        <button type="button" class="sf-chip"        id="alf-approve" onclick="_setAuditFilter('approve')">Approved</button>
+        <button type="button" class="sf-chip"        id="alf-deny"    onclick="_setAuditFilter('deny')">Denied / Banned</button>
+        <button type="button" class="sf-chip"        id="alf-reset"   onclick="_setAuditFilter('reset')">Resets</button>
+        <button type="button" class="sf-chip"        id="alf-bulk"    onclick="_setAuditFilter('bulk')">Bulk Actions</button>
+        <select id="audit-date-filter" onchange="_renderAdminLog()" style="margin-left:auto;padding:3px 8px;border:1.5px solid var(--border2);border-radius:7px;background:var(--surface);color:var(--text);font-size:11px;font-family:var(--font);cursor:pointer;outline:none">
+          <option value="all">All time</option>
+          <option value="today">Today</option>
+          <option value="7d">Last 7 days</option>
+          <option value="30d">Last 30 days</option>
+        </select>
+      </div>
       <div id="admin-log-hdr" style="display:none;grid-template-columns:150px 1fr 1fr;gap:10px;padding:6px 16px;background:var(--surface2);border-bottom:1px solid var(--border);font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text3)">
         <span>Timestamp</span><span>Action</span><span>Notes</span>
       </div>
       <div id="admin-log-list"></div>
     </div>
 
+    <!-- Subscription Renewal Timeline (improvement 6) -->
+    <div class="owner-section sys-sec" role="tabpanel" id="sys-sec-timeline">
+      <div class="owner-section-hdr">
+        <h3><svg class="ic"><use href="#i-calendar-days"/></svg> Renewal Timeline</h3>
+        <div style="display:flex;gap:6px;align-items:center;margin-left:auto">
+          <button type="button" class="sf-chip active" id="tl-btn-30" onclick="_setTimelineWindow(30)">30 days</button>
+          <button type="button" class="sf-chip" id="tl-btn-60" onclick="_setTimelineWindow(60)">60 days</button>
+          <button type="button" class="sf-chip" id="tl-btn-90" onclick="_setTimelineWindow(90)">90 days</button>
+        </div>
+      </div>
+      <div id="sys-timeline-body" style="padding:12px 16px"></div>
+    </div>
 
     <!-- Branch comparison (shop-owner mode only) -->
     <div class="owner-section" id="section-branch-cmp" style="display:none">
@@ -4347,7 +4418,7 @@ const fmt=n=>{const v=parseFloat(n)||0;return v.toLocaleString(undefined,{minimu
 const fmtQ=n=>(parseFloat(n)||0).toLocaleString();
 const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;');
 function _timeAgo(ts){if(!ts)return'';const s=Math.floor((Date.now()-new Date(ts))/1000);if(s<60)return'just now';if(s<3600)return`${Math.floor(s/60)}m ago`;if(s<86400)return`${Math.floor(s/3600)}h ago`;if(s<2592000)return`${Math.floor(s/86400)}d ago`;return new Date(ts).toLocaleDateString();}
-const _dateSortAsc=(a,b)=>(a.date||'')<(b.date||'')?-1:(a.date||'')>(b.date||'')?1:0;
+const _dateSortAsc=(a,b)=>{const d=(a.date||'')<(b.date||'')?-1:(a.date||'')>(b.date||'')?1:0;if(d!==0)return d;return(a.createdAt||'').localeCompare(b.createdAt||'');};
 const toEthiopianDate=gDate=>{const yr=gDate.getFullYear(),mo=gDate.getMonth()+1,dy=gDate.getDate();const a=Math.floor((14-mo)/12),y=yr+4800-a,m=mo+12*a-3;const jdn=dy+Math.floor((153*m+2)/5)+365*y+Math.floor(y/4)-Math.floor(y/100)+Math.floor(y/400)-32045;const ET_EPOCH=1723856,offset=jdn-ET_EPOCH,r=offset%1461,n=(r%365)+365*Math.floor(r/1460);return{year:4*Math.floor(offset/1461)+Math.floor(r/365)-Math.floor(r/1460),month:Math.floor(n/30)+1,day:n%30+1};};
 const nowDt=()=>{const et=toEthiopianDate(new Date());return `${String(et.day).padStart(2,'0')}-${String(et.month).padStart(2,'0')}-${et.year}`;}
 const sum=(arr,fn)=>arr.reduce((a,b)=>a+(parseFloat(fn(b))||0),0);
@@ -5536,10 +5607,22 @@ function _clearAdminLog(){
   );
 }
 function _renderAdminLog(){
-  const log=_getAdminLog();
+  let log=_getAdminLog();
   const el=document.getElementById('admin-log-list');if(!el)return;
   const hdr=document.getElementById('admin-log-hdr');
   const countBadge=document.getElementById('audit-log-count');
+  // Improvement 7: apply action type filter
+  const af=window._auditFilter||'all';
+  if(af==='approve')log=log.filter(e=>e.action.startsWith('approve')||e.action.startsWith('restore'));
+  else if(af==='deny')log=log.filter(e=>e.action.startsWith('deny')||e.action.startsWith('ban'));
+  else if(af==='reset')log=log.filter(e=>e.action.includes('reset')||e.action.includes('pass'));
+  else if(af==='bulk')log=log.filter(e=>e.action.startsWith('bulk'));
+  // Improvement 7: apply date filter
+  const df=(document.getElementById('audit-date-filter')||{}).value||'all';
+  const now=Date.now();
+  if(df==='today')log=log.filter(e=>new Date(e.ts).toDateString()===new Date().toDateString());
+  else if(df==='7d')log=log.filter(e=>(now-new Date(e.ts).getTime())<7*86400000);
+  else if(df==='30d')log=log.filter(e=>(now-new Date(e.ts).getTime())<30*86400000);
   if(!log.length){
     if(hdr)hdr.style.display='none';
     if(countBadge)countBadge.style.display='none';
@@ -5555,6 +5638,7 @@ function _renderAdminLog(){
     mark_contacted:'Marked as contacted',
     admin_unlock:'Admin panel unlocked',admin_lock:'Admin panel locked',
     bulk_extend:'Bulk extended subscription',bulk_suspend:'Bulk suspended',bulk_delete:'Bulk deleted',
+    dormant_escalated:'Dormant auto-escalated',broadcast:'Broadcast sent',
   };
   el.innerHTML=log.map(e=>{
     const label=_actionLabel[e.action]||e.action;
@@ -5694,7 +5778,7 @@ function _setOwnerDashMode(mode){
   backBtns.forEach(b=>b.style.display=mode==='sys-admin'?'none':'');
 }
 
-const _sysState={tab:sessionStorage.getItem('ims_sys_tab')||'owners',filter:'all'};
+const _sysState={tab:sessionStorage.getItem('ims_sys_tab')||'pending',filter:'all'};
 function switchSysTab(tab){
   _sysState.tab=tab;
   try{sessionStorage.setItem('ims_sys_tab',tab);}catch(e){}
@@ -6060,6 +6144,14 @@ function _renderSysOwnerList(){
     const miniBarPct=(!isExpired&&!isSus&&ss.daysLeft>0)?Math.min(100,Math.round(ss.daysLeft/(ss.status==='trial'?14:365)*100)):0;
     const miniBarColor=expiringRed?'var(--error)':expiringAmber?'var(--warn)':'var(--success)';
     const miniBar=(!isExpired&&!isSus)?`<span class="oc-mini-bar-wrap" title="${ss.daysLeft||0}d remaining"><span class="oc-mini-bar-fill" style="width:${miniBarPct}%;background:${miniBarColor}"></span></span>`:'';
+    // Improvement 9: Owner Health Score (0-100)
+    let health=0;
+    if(ss.status==='active')health+=40;else if(ss.status==='trial')health+=20;
+    if(r.lastLogin){const d=Math.floor((Date.now()-new Date(r.lastLogin).getTime())/86400000);if(d<=7)health+=30;else if(d<=30)health+=20;else if(d<=90)health+=10;}
+    if(r.email)health+=15;
+    if(!r.forcePassReset)health+=15;
+    const healthColor=health>=75?'var(--success)':health>=45?'var(--warn)':'var(--error)';
+    const healthBadge=`<span title="Owner health score: ${health}/100" style="font-size:9px;padding:1px 7px;border-radius:99px;font-weight:700;background:${healthColor}20;color:${healthColor};border:1px solid ${healthColor}40">⬤ ${health}</span>`;
     const uId='oc-exp-'+u.replace(/[^a-z0-9]/gi,'_');
     return`<div class="oc-wrap" style="${cardBorder}animation-delay:${i*.05}s" data-u="${u}">
       <div class="oc-top" onclick="_toggleOwnerExpand('${esc(u)}','${uId}')" style="cursor:pointer">
@@ -6072,7 +6164,7 @@ function _renderSysOwnerList(){
             <span class="sub-badge sub-${ss.variant}">${ss.label}</span>
             ${online?'<span style="font-size:9px;background:rgba(16,185,129,.15);color:var(--success);padding:1px 7px;border-radius:99px;font-weight:700">● ONLINE</span>':''}
             ${r.forcePassReset?'<span class="force-reset-badge"><svg class="ic"><use href="#i-alert"/></svg> Pass Reset</span>':''}
-            ${dormantBadge}${notesBadge}${riskBadge}
+            ${dormantBadge}${notesBadge}${riskBadge}${healthBadge}
           </div>
           <div class="oc-detail">
             ${r.email?`<span><svg class="ic"><use href="#i-mail"/></svg> ${esc(r.email)}</span>`:`<span style="color:var(--error);font-size:10px"><svg class="ic"><use href="#i-mail"/></svg> No email</span>`}
@@ -6287,6 +6379,8 @@ function _renderSysStats(owners,reg,pendingOwners,bannedOwners,pendingSubReqs,pe
   const expiringSoon=ssList.filter(s=>(s.status==='active'||s.status==='trial')&&s.daysLeft<=5).length;
   const onlineCount=owners.filter(u=>isUserOnline(reg[u])).length;
   const dormant30Count=owners.filter(u=>_isDormant(reg[u],30)).length;
+  // Improvement 1: MRR — active owners × rate (customMonthlyRate or $5 default)
+  const mrr=owners.filter(u=>getSubStatus(reg[u]).status==='active').reduce((s,u)=>s+(parseFloat(reg[u].customMonthlyRate)||5),0);
   const _st=(icon,val,lbl,vc='',bc='',tab='')=>`<div class="owner-stat" style="border-left-color:${bc||'var(--border2)'};border-left-width:4px;cursor:${tab?'pointer':'default'}" ${tab?`onclick="switchSysTab('${tab}')" title="Jump to ${tab} tab"`:''}>
     <div class="stat-icon-box" style="${bc?`background:${bc}20;border-color:${bc}35;color:${bc}`:''}"><span class="stat-icon">${icon}</span></div>
     <div class="stat-body"><div class="stat-val" style="${vc?`color:${vc}`:'color:var(--text)'}">${val}</div><div class="stat-lbl">${lbl}</div></div>
@@ -6295,15 +6389,29 @@ function _renderSysStats(owners,reg,pendingOwners,bannedOwners,pendingSubReqs,pe
     _st('<svg class="ic"><use href="#i-crown"/></svg>',owners.length,'Total Owners','','rgba(45,75,138,1)','owners')+
     _st('<svg class="ic"><use href="#i-check-circle"/></svg>',paidCount,'Paid Active','var(--success)','var(--success)','owners')+
     _st('<svg class="ic"><use href="#i-clock"/></svg>',trialCount,'On Trial','var(--warn)','var(--warn)','owners')+
-    _st('<svg class="ic"><use href="#i-circle-green"/></svg>',onlineCount,'Online Now','','rgba(45,75,138,.7)','')+
+    // Improvement 4: Online Now → live user feed popover on click
+    `<div class="owner-stat" style="border-left-color:rgba(45,75,138,.7);border-left-width:4px;cursor:pointer" onclick="_showOnlinePopover(this)" title="Click to see who is online now">
+      <div class="stat-icon-box"><span class="stat-icon"><svg class="ic"><use href="#i-circle-green"/></svg></span></div>
+      <div class="stat-body"><div class="stat-val" style="color:var(--text)">${onlineCount}</div><div class="stat-lbl">Online Now ↗</div></div>
+    </div>`+
     _st('<svg class="ic"><use href="#i-circle-red"/></svg>',expiredCount+susCount,'Expired / Sus.','var(--error)','var(--error)','owners')+
-    (expiringSoon?_st('<svg class="ic"><use href="#i-alert"/></svg>',expiringSoon,'Expiring ≤5d','var(--warn)','var(--warn)','owners'):'')+
+    // Improvement 2: Expiring ≤5d → filter expiring owners + Broadcast for reminders
+    (expiringSoon?`<div class="owner-stat" style="border-left-color:var(--warn);border-left-width:4px;cursor:pointer" onclick="setSysFilter('expiring');switchSysTab('owners')" title="Click to filter expiring owners — select all then use Broadcast to send renewal reminders">
+      <div class="stat-icon-box" style="background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.3);color:var(--warn)"><span class="stat-icon"><svg class="ic"><use href="#i-alert"/></svg></span></div>
+      <div class="stat-body"><div class="stat-val" style="color:var(--warn)">${expiringSoon}</div><div class="stat-lbl">Expiring ≤5d ↗</div></div>
+    </div>`:'')+
     _st('<svg class="ic"><use href="#i-clock"/></svg>',pendingOwners.length,'Pending','var(--warn)','var(--warn)','pending')+
     (dormant30Count?_st('<svg class="ic"><use href="#i-clock"/></svg>',dormant30Count,'Dormant 30d+','var(--text3)','rgba(100,116,139,.6)','owners'):'')+
     (pendingSubReqs?_st('<svg class="ic"><use href="#i-gem"/></svg>',pendingSubReqs,'Sub Requests','var(--p)','var(--p)','subs'):'')+
-    `<div class="owner-stat" style="border-left-color:rgba(45,75,138,.6);border-left-width:4px;cursor:default">
+    // Improvement 5: Storage → click for per-owner breakdown
+    `<div class="owner-stat" style="border-left-color:rgba(45,75,138,.6);border-left-width:4px;cursor:pointer" onclick="_showStorageBreakdown()" title="Click to view per-owner storage breakdown">
       <div class="stat-icon-box" style="background:rgba(45,75,138,.12);border-color:rgba(45,75,138,.25);color:rgba(45,75,138,1)"><span class="stat-icon"><svg class="ic"><use href="#i-save"/></svg></span></div>
-      <div class="stat-body"><div class="stat-val" id="sys-total-storage-val" style="color:var(--text)">…</div><div class="stat-lbl">Total Storage</div></div>
+      <div class="stat-body"><div class="stat-val" id="sys-total-storage-val" style="color:var(--text)">…</div><div class="stat-lbl">Total Storage ↗</div></div>
+    </div>`+
+    // Improvement 1: Revenue Summary Card
+    `<div class="owner-stat" style="border-left-color:var(--success);border-left-width:4px;cursor:default" title="Estimated MRR — active owners × monthly rate ($5 default or custom rate)">
+      <div class="stat-icon-box" style="background:rgba(16,185,129,.12);border-color:rgba(16,185,129,.3);color:var(--success)"><span class="stat-icon"><svg class="ic"><use href="#i-money"/></svg></span></div>
+      <div class="stat-body"><div class="stat-val" style="color:var(--success)">$${mrr.toFixed(0)}/mo</div><div class="stat-lbl">Est. MRR${expiringSoon?` <span style="color:var(--warn);font-size:9px;font-weight:700">↓${expiringSoon} at risk</span>`:''}</div></div>
     </div>`;
   _fetchTotalStorage(owners);
   return{paidCount,expiringSoon};
@@ -6707,12 +6815,24 @@ function _renderSlaStrip(pendingOwners,subReqs,resetReqs){
   const pendingResets=resetReqs.filter(r=>r.status==='pending').length;
   const reg=getRegistry();
   const owners=Object.keys(reg).filter(u=>reg[u]&&reg[u].role==='owner');
-  const dormant60=owners.filter(u=>_isDormant(reg[u],60)).length;
+  const dormant60only=owners.filter(u=>_isDormant(reg[u],60)&&!_isDormant(reg[u],90)).length;
+  // Improvement 3: dormant >90d auto-escalation — flag active accounts for review
+  const dormant90=owners.filter(u=>_isDormant(reg[u],90)).length;
+  if(dormant90>0){
+    const toFlag=owners.filter(u=>_isDormant(reg[u],90)&&getSubStatus(reg[u]).status==='active'&&!reg[u]._dormantEscalated);
+    if(toFlag.length>0){
+      toFlag.forEach(u=>{reg[u]._dormantEscalated=true;reg[u]._dormantEscalatedAt=new Date().toISOString();});
+      try{saveRegistry(reg);saveRegistryToCloud(reg,true);}catch(e){}
+      _logAdminAction('dormant_escalated',toFlag.join(', '),`${toFlag.length} account(s) auto-flagged after 90d inactivity`);
+    }
+  }
   const parts=[];
   if(overdue24h)parts.push(`<span class="sla-pill sla-err" onclick="switchSysTab('pending')" title="Click to view pending tab"><svg class="ic" style="width:10px;height:10px"><use href="#i-alert"/></svg> ${overdue24h} pending >${'24h'}</span>`);
   if(overdue48h)parts.push(`<span class="sla-pill sla-warn" onclick="switchSysTab('subs')" title="Click to view sub requests"><svg class="ic" style="width:10px;height:10px"><use href="#i-alert"/></svg> ${overdue48h} sub req >${'48h'}</span>`);
   if(pendingResets)parts.push(`<span class="sla-pill sla-warn" onclick="switchSysTab('resets')" title="Click to view resets tab"><svg class="ic" style="width:10px;height:10px"><use href="#i-trash"/></svg> ${pendingResets} reset pending</span>`);
-  if(dormant60)parts.push(`<span class="sla-pill sla-info" onclick="setSysFilter('dormant')" title="Click to filter dormant owners"><svg class="ic" style="width:10px;height:10px"><use href="#i-clock"/></svg> ${dormant60} dormant >60d</span>`);
+  if(dormant60only)parts.push(`<span class="sla-pill sla-info" onclick="setSysFilter('dormant')" title="Click to filter dormant owners"><svg class="ic" style="width:10px;height:10px"><use href="#i-clock"/></svg> ${dormant60only} dormant >60d</span>`);
+  // Improvement 3: show >90d escalation as a separate high-priority pill
+  if(dormant90)parts.push(`<span class="sla-pill sla-err" onclick="setSysFilter('dormant')" title="Auto-escalated: ${dormant90} account(s) flagged after 90d inactivity — click to filter"><svg class="ic" style="width:10px;height:10px"><use href="#i-alert"/></svg> ${dormant90} dormant >90d ⚑ escalated</span>`);
   if(!parts.length){el.style.display='none';return;}
   el.style.display='flex';
   el.className='sla-strip';
@@ -6758,6 +6878,165 @@ function renderSystemOwnerDashboard(){
   switchSysTab(_sysState.tab);
   _bindSysAdminKeys();
   _updateSysThemeBtn();
+}
+
+// ═══════════════════════════════════════════════════════
+//  IMPROVEMENTS: new functions (1–10)
+// ═══════════════════════════════════════════════════════
+
+// Improvement 4: Online Now — live user feed popover
+function _showOnlinePopover(btn){
+  document.querySelectorAll('.sys-online-popover').forEach(p=>p.remove());
+  const reg=getRegistry();
+  const owners=Object.keys(reg).filter(u=>reg[u]&&reg[u].role==='owner');
+  const online=owners.filter(u=>isUserOnline(reg[u]));
+  const pop=document.createElement('div');
+  pop.className='sys-online-popover';
+  pop.style.cssText='position:absolute;z-index:9999;background:var(--surface);border:1.5px solid var(--border2);border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.18);padding:14px 16px;min-width:220px;max-width:320px;font-size:12px;';
+  if(!online.length){
+    pop.innerHTML='<div style="color:var(--text3);text-align:center;padding:8px 0"><svg class="ic" style="width:20px;height:20px;margin-bottom:4px;display:block;margin:0 auto 6px"><use href="#i-circle-green"/></svg>No users online right now</div>';
+  }else{
+    pop.innerHTML='<div style="font-weight:700;color:var(--text);margin-bottom:10px;display:flex;align-items:center;gap:6px"><svg class="ic"><use href="#i-circle-green"/></svg> '+online.length+' Online Now</div>'+
+      online.map(u=>{
+        const r=reg[u];
+        const since=r.lastActive?Math.floor((Date.now()-new Date(r.lastActive).getTime())/60000):null;
+        const sinceStr=since===null?'':since<1?'just now':since<60?since+'m ago':Math.floor(since/60)+'h ago';
+        return`<div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border)">
+          <div style="width:28px;height:28px;border-radius:50%;background:var(--success);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0">${u[0].toUpperCase()}</div>
+          <div style="flex:1;min-width:0"><div style="font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(u)}</div><div style="color:var(--text3);font-size:10px">${esc(r.shopName||'')} ${sinceStr?'· '+sinceStr:''}</div></div>
+          <span style="font-size:9px;background:rgba(16,185,129,.15);color:var(--success);padding:1px 7px;border-radius:99px;font-weight:700;white-space:nowrap">● LIVE</span>
+        </div>`;
+      }).join('');
+  }
+  pop.innerHTML+='<div style="text-align:right;margin-top:8px"><button type="button" onclick="this.closest(\'.sys-online-popover\').remove()" style="font-size:10px;padding:2px 10px;border:1px solid var(--border2);border-radius:6px;background:var(--surface2);cursor:pointer;color:var(--text3)">Close</button></div>';
+  const rect=(btn||document.getElementById('owner-stats')).getBoundingClientRect();
+  pop.style.top=(rect.bottom+8+window.scrollY)+'px';
+  pop.style.left=Math.min(rect.left,window.innerWidth-340)+'px';
+  document.body.appendChild(pop);
+  setTimeout(()=>document.addEventListener('click',function h(e){if(!pop.contains(e.target)){pop.remove();document.removeEventListener('click',h);}},{once:false}),50);
+}
+
+// Improvement 5: Storage — per-owner breakdown modal
+function _showStorageBreakdown(){
+  const reg=getRegistry();
+  const owners=Object.keys(reg).filter(u=>reg[u]&&reg[u].role==='owner');
+  const mem=window.localStorage;
+  const rows=owners.map(u=>{
+    let bytes=0;
+    for(let i=0;i<mem.length;i++){const k=mem.key(i);if(k&&k.startsWith('ims_'+u+'_'))bytes+=((mem.getItem(k)||'').length*2);}
+    return{u,bytes,kb:(bytes/1024)};
+  }).sort((a,b)=>b.bytes-a.bytes);
+  const total=rows.reduce((s,r)=>s+r.bytes,0);
+  const fmt=b=>b<1024?b+'B':b<1048576?(b/1024).toFixed(1)+'KB':(b/1048576).toFixed(2)+'MB';
+  const maxKb=rows.length?rows[0].kb:1;
+  let html=`<div style="font-size:13px;font-weight:700;margin-bottom:12px;color:var(--text)"><svg class="ic"><use href="#i-save"/></svg> Storage Breakdown <span style="font-size:11px;color:var(--text3);font-weight:400">— Total: ${fmt(total)}</span></div>`;
+  if(!rows.length){html+='<p style="color:var(--text3);font-size:12px">No owner data found.</p>';}
+  else{
+    html+=rows.map(r=>{
+      const pct=maxKb>0?Math.min(100,Math.round(r.kb/maxKb*100)):0;
+      const barColor=pct>75?'var(--error)':pct>40?'var(--warn)':'var(--success)';
+      return`<div style="margin-bottom:10px">
+        <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:3px"><span style="font-weight:600">${esc(r.u)}</span><span style="color:var(--text3)">${fmt(r.bytes)}</span></div>
+        <div style="height:6px;border-radius:99px;background:var(--border2);overflow:hidden"><div style="width:${pct}%;height:100%;background:${barColor};border-radius:99px;transition:width .4s"></div></div>
+      </div>`;
+    }).join('');
+  }
+  html+=`<div style="text-align:right;margin-top:14px"><button type="button" class="btn btn-sm" onclick="document.getElementById('sys-storage-modal').remove()">Close</button></div>`;
+  const modal=document.createElement('div');
+  modal.id='sys-storage-modal';
+  modal.style.cssText='position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;';
+  modal.innerHTML=`<div style="background:var(--surface);border-radius:16px;padding:24px;width:min(420px,92vw);max-height:80vh;overflow-y:auto;box-shadow:0 16px 48px rgba(0,0,0,.25)">${html}</div>`;
+  modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
+  document.body.appendChild(modal);
+}
+
+// Improvement 6: Renewal Timeline render
+let _tlWindow=30;
+function _setTimelineWindow(days){
+  _tlWindow=days;
+  [30,60,90].forEach(d=>{const b=document.getElementById('tl-btn-'+d);if(b)b.classList.toggle('active',d===days);});
+  _renderSysTimeline();
+}
+function _renderSysTimeline(){
+  const body=document.getElementById('sys-timeline-body');if(!body)return;
+  const reg=getRegistry();
+  const owners=Object.keys(reg).filter(u=>reg[u]&&reg[u].role==='owner');
+  const now=Date.now();
+  const windowMs=_tlWindow*86400000;
+  const upcoming=owners.map(u=>{
+    const r=reg[u],ss=getSubStatus(r);
+    if(!r.paidUntil)return null;
+    const exp=new Date(r.paidUntil).getTime();
+    const daysLeft=Math.ceil((exp-now)/86400000);
+    if(daysLeft<-7||daysLeft>_tlWindow)return null;
+    return{u,r,ss,exp,daysLeft};
+  }).filter(Boolean).sort((a,b)=>a.exp-b.exp);
+  if(!upcoming.length){
+    body.innerHTML=`<div style="text-align:center;padding:32px;color:var(--text3)"><svg class="ic" style="width:32px;height:32px;margin-bottom:8px;display:block;margin:0 auto 8px"><use href="#i-calendar-days"/></svg><div style="font-size:13px">No renewals in the next ${_tlWindow} days</div></div>`;
+    return;
+  }
+  const groups={overdue:[],week:[],month:[],later:[]};
+  upcoming.forEach(item=>{
+    if(item.daysLeft<0)groups.overdue.push(item);
+    else if(item.daysLeft<=7)groups.week.push(item);
+    else if(item.daysLeft<=30)groups.month.push(item);
+    else groups.later.push(item);
+  });
+  const renderGroup=(label,items,color)=>items.length?`<div style="margin-bottom:18px"><div style="font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:${color};margin-bottom:8px;display:flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:50%;background:${color};display:inline-block"></span>${label} (${items.length})</div>${items.map(item=>`<div style="display:flex;align-items:center;gap:12px;padding:8px 10px;background:var(--surface2);border-radius:8px;margin-bottom:5px;border-left:3px solid ${color}">
+    <div style="width:30px;height:30px;border-radius:50%;background:${color};color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0">${item.u[0].toUpperCase()}</div>
+    <div style="flex:1;min-width:0"><div style="font-weight:600;font-size:12px">${esc(item.u)}${item.r.shopName&&item.r.shopName!==item.u?` <span style="font-weight:400;color:var(--text3);font-size:11px">• ${esc(item.r.shopName)}</span>`:''}</div><div style="font-size:10px;color:var(--text3)">Expires ${item.r.paidUntil}</div></div>
+    <div style="text-align:right;flex-shrink:0"><div style="font-size:12px;font-weight:700;color:${color}">${item.daysLeft<0?Math.abs(item.daysLeft)+'d overdue':item.daysLeft===0?'Today':item.daysLeft+'d left'}</div><button type="button" class="oc-ext-btn" style="font-size:10px;padding:2px 8px;margin-top:3px" onclick="extendOwnerSub('${esc(item.u)}',30)">+30d</button></div>
+  </div>`).join('')}</div>`:'';
+  body.innerHTML=renderGroup('Overdue',groups.overdue,'var(--error)')+renderGroup('This week',groups.week,'var(--warn)')+renderGroup('This month',groups.month,'var(--p)')+renderGroup('Later',groups.later,'var(--text3)');
+}
+
+// Improvement 7: Audit log filter state
+let _auditFilter='all';
+function _setAuditFilter(type){
+  _auditFilter=type;
+  document.querySelectorAll('[id^="alf-"]').forEach(b=>b.classList.toggle('active',b.id==='alf-'+type));
+  _renderAdminLog();
+}
+
+// Improvement 10: Bulk Broadcast Tool
+function _bulkBroadcast(){
+  const sel=Array.from(document.querySelectorAll('.oc-check:checked:not(#bulk-select-all-cb)')).map(c=>{const w=c.closest('.oc-wrap');return w?w.dataset.u:null;}).filter(Boolean);
+  const reg=getRegistry();
+  const targets=sel.length?sel:Object.keys(reg).filter(u=>reg[u]&&reg[u].role==='owner');
+  const withEmail=targets.filter(u=>reg[u]&&reg[u].email);
+  const modal=document.createElement('div');
+  modal.id='sys-broadcast-modal';
+  modal.style.cssText='position:fixed;inset:0;z-index:10000;background:rgba(0,0,0,.45);display:flex;align-items:center;justify-content:center;';
+  modal.innerHTML=`<div style="background:var(--surface);border-radius:16px;padding:24px;width:min(480px,94vw);box-shadow:0 16px 48px rgba(0,0,0,.25)">
+    <div style="font-size:15px;font-weight:700;margin-bottom:4px"><svg class="ic"><use href="#i-bell"/></svg> Broadcast Message</div>
+    <div style="font-size:11px;color:var(--text3);margin-bottom:16px">Sending to <strong>${withEmail.length}</strong> owner(s) with email${sel.length?` (${sel.length} selected)`:' (all)'} — will copy message to clipboard &amp; log the action.</div>
+    <div style="margin-bottom:10px"><label style="font-size:11px;font-weight:600;color:var(--text2);display:block;margin-bottom:4px">Subject</label><input id="bc-subject" type="text" placeholder="e.g. Subscription Renewal Reminder" style="width:100%;padding:8px 10px;border:1.5px solid var(--border2);border-radius:8px;background:var(--surface2);color:var(--text);font-size:12px;font-family:var(--font);outline:none;box-sizing:border-box"></div>
+    <div style="margin-bottom:16px"><label style="font-size:11px;font-weight:600;color:var(--text2);display:block;margin-bottom:4px">Message</label><textarea id="bc-message" rows="5" placeholder="Write your message here…" style="width:100%;padding:8px 10px;border:1.5px solid var(--border2);border-radius:8px;background:var(--surface2);color:var(--text);font-size:12px;font-family:var(--font);outline:none;resize:vertical;box-sizing:border-box"></textarea></div>
+    <div style="background:var(--surface2);border-radius:8px;padding:8px 12px;font-size:10px;color:var(--text3);margin-bottom:16px">Recipients: ${withEmail.map(u=>`<strong>${esc(u)}</strong> &lt;${esc(reg[u].email)}&gt;`).join(', ')||'No email addresses found'}</div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button type="button" class="btn btn-sm" onclick="document.getElementById('sys-broadcast-modal').remove()">Cancel</button>
+      <button type="button" class="btn btn-sm" style="background:rgba(45,75,138,.12);color:rgba(45,75,138,1);border-color:rgba(45,75,138,.3)" onclick="_sendBroadcastMsg(${JSON.stringify(withEmail)})"><svg class="ic"><use href="#i-bell"/></svg> Send / Copy</button>
+    </div>
+  </div>`;
+  modal.addEventListener('click',e=>{if(e.target===modal)modal.remove();});
+  document.body.appendChild(modal);
+}
+function _sendBroadcastMsg(targets){
+  const subject=(document.getElementById('bc-subject')||{}).value||'';
+  const message=(document.getElementById('bc-message')||{}).value||'';
+  if(!message.trim()){showToast('Please write a message first','warn');return;}
+  const reg=getRegistry();
+  const mailtoList=targets.filter(u=>reg[u]&&reg[u].email).map(u=>reg[u].email).join(';');
+  const text=`Subject: ${subject}\n\n${message}`;
+  try{navigator.clipboard.writeText(text);}catch(e){}
+  if(mailtoList){
+    const a=document.createElement('a');
+    a.href=`mailto:${mailtoList}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(message)}`;
+    a.click();
+  }
+  _logAdminAction('broadcast',targets.length+' owner(s)',subject||'(no subject)');
+  document.getElementById('sys-broadcast-modal').remove();
+  showToast('<svg class="ic"><use href="#i-bell"/></svg> Broadcast sent to '+targets.length+' owner(s)','success');
 }
 
 // ═══════════════════════════════════════════════════════
@@ -6866,7 +7145,11 @@ function _slaChip(requestedAt,warnHours=24,overHours=48){
   const ageStr=ageHrs<1?'<1h':ageHrs<24?Math.round(ageHrs)+'h':(ageHrs/24).toFixed(1)+'d';
   if(ageHrs>overHours)return`<span class="sla-chip sla-over"><svg class="ic" style="width:9px;height:9px"><use href="#i-alert"/></svg> ${ageStr} — overdue</span>`;
   if(ageHrs>warnHours)return`<span class="sla-chip sla-warn"><svg class="ic" style="width:9px;height:9px"><use href="#i-clock"/></svg> ${ageStr}</span>`;
-  return`<span class="sla-chip sla-ok"><svg class="ic" style="width:9px;height:9px"><use href="#i-clock"/></svg> ${ageStr}</span>`;
+  // Improvement 8: show countdown to SLA deadline (warnHours from submission)
+  const remainMs=(warnHours*3600000)-ageMs;
+  const remH=Math.floor(remainMs/3600000);const remM=Math.floor((remainMs%3600000)/60000);
+  const countdownStr=remH>0?remH+'h '+remM+'m left':remM+'m left';
+  return`<span class="sla-chip sla-ok" title="SLA deadline in ${countdownStr}"><svg class="ic" style="width:9px;height:9px"><use href="#i-clock"/></svg> ${ageStr} <span style="color:var(--success);font-size:8px">(${countdownStr})</span></span>`;
 }
 
 // Keyboard shortcuts for sys-admin
@@ -11401,7 +11684,6 @@ function doExport(){
 }
 function exportPDF(tab){
   if(!canExport()){showToast('No export permission','error');return;}
-  if(Date.now()-_reAuthLastAt>=_REAUTH_GRACE){requireReAuth('Confirm data export',()=>exportPDF(tab));return;}
   if(typeof window.jspdf==='undefined'||!window.jspdf.jsPDF){showToast('PDF library not loaded','error');return;}
   const {jsPDF}=window.jspdf;
   const doc=new jsPDF({orientation:'landscape',unit:'pt',format:'a4'});
@@ -11453,7 +11735,6 @@ function exportPDF(tab){
 function fmtN(n){return typeof n==='number'?n.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}):(n||'');}
 function exportXL(tab,opts={}){
   if(!canExport()){showToast('No export permission','error');return;}
-  if(Date.now()-_reAuthLastAt>=_REAUTH_GRACE){requireReAuth('Confirm data export',()=>exportXL(tab,opts));return;}
   if(typeof XLSX==='undefined'){showToast('XLSX not loaded','error');return;}
   const hideZeroBalance=!!opts.hideZeroBalance;
   let headers=[],data=[];
@@ -11685,7 +11966,9 @@ function _parseImpDate(v){
 }
 function _dateSort(a,b){
   const parseDate=d=>{if(!d)return new Date(0);const p=d.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);return p?new Date(p[3],p[2]-1,p[1]):new Date(d);};
-  return parseDate(b.date||'').getTime()-parseDate(a.date||'').getTime();
+  const dt=parseDate(b.date||'').getTime()-parseDate(a.date||'').getTime();
+  if(dt!==0)return dt;
+  return(a.createdAt||'').localeCompare(b.createdAt||'');
 }
 
 /* ── Date range preset chips ─────────────────────────── */
@@ -12996,7 +13279,7 @@ function _refreshDrawer(){
   // Footer sync dot + text
   var fdot = document.getElementById('drawer-footer-dot');
   var ftxt = document.getElementById('drawer-footer-sync-txt');
-  if(fdot){fdot.innerHTML='';fdot.style.width='7px';fdot.style.height='7px';}
+  if(fdot){fdot.innerHTML='';}
   if(fdot && ftxt){
     if(S.db && S.dbConnected){
       fdot.style.background = 'var(--success)';
@@ -13015,7 +13298,10 @@ function _refreshDrawer(){
   var _bkSub=document.querySelector('#btn-backup-data .di-sub');
   if(_bkSub&&typeof S!=='undefined'&&S.items){var _iCnt=(S.items||[]).length,_tCnt=((S.purchase||[]).length+(S.sales||[]).length+(S.expense||[]).length);_bkSub.textContent=_iCnt+' item'+(_iCnt!==1?'s':'')+' · '+_tCnt+' record'+(_tCnt!==1?'s':'');}
   var _schedTog=document.getElementById('theme-schedule-toggle');
-  if(_schedTog){var _sa='';try{_sa=_mem.getItem('ims__theme_auto')||'0';}catch(e){}_schedTog.checked=_sa==='1';}
+  var _schedSa='';try{_schedSa=_mem.getItem('ims__theme_auto')||'0';}catch(e){}
+  if(_schedTog) _schedTog.checked=_schedSa==='1';
+  var _st=document.getElementById('drawer-schedule-times');
+  if(_st) _st.classList.toggle('show',_schedSa==='1');
   var _shopEl=document.getElementById('drawer-footer-shop');
   if(_shopEl&&typeof S!=='undefined'&&S.ownerId){var _reg2={};try{_reg2=typeof getRegistry==='function'?getRegistry():{};}catch(e){}var _sn=(_reg2[S.ownerId]&&_reg2[S.ownerId].shopName)||'';_shopEl.textContent=_sn;_shopEl.style.display=_sn?'':'none';}
   var _prSub=document.getElementById('drawer-print-sub');
@@ -13035,11 +13321,11 @@ function _syncNow(){
     loadRegistryFromCloud().then(function(){
       setTimeout(_refreshDrawer, 400);
     }).catch(function(){
-      if(fdot){fdot.innerHTML='';fdot.style.width='7px';fdot.style.height='7px';fdot.style.background='var(--error)';}
+      if(fdot){fdot.innerHTML='';fdot.style.background='var(--error)';}
       if(ftxt) ftxt.textContent = 'Sync failed';
     });
   } else {
-    if(fdot){fdot.innerHTML='';fdot.style.width='7px';fdot.style.height='7px';}
+    if(fdot){fdot.innerHTML='';}
     if(ftxt) ftxt.textContent = 'No cloud available';
   }
 }
@@ -13127,16 +13413,32 @@ document.addEventListener('keydown',function(e){
 });
 
 var _themeScheduleInterval = null;
+function _saveScheduleTimes(){
+  var di=document.getElementById('dark-time-inp');
+  var li=document.getElementById('light-time-inp');
+  try{
+    if(di) _mem.setItem('ims__dark_time', di.value);
+    if(li) _mem.setItem('ims__light_time', li.value);
+  }catch(e){}
+  if(_themeScheduleInterval) _setThemeSchedule(true);
+}
 function _setThemeSchedule(on){
   try{_mem.setItem('ims__theme_auto', on?'1':'0');}catch(e){}
   clearInterval(_themeScheduleInterval);
   _themeScheduleInterval = null;
-  var sub = document.getElementById('drawer-schedule-sub');
+  var st=document.getElementById('drawer-schedule-times');
+  if(st) st.classList.toggle('show', !!on);
   if(!on){return;}
   function _checkSchedule(){
-    var h = new Date().getHours();
-    var should = (h >= 19 || h < 7) ? 'dark' : 'light';
-    if(document.documentElement.getAttribute('data-theme') !== should && typeof setTheme === 'function') setTheme(should);
+    var darkVal=(document.getElementById('dark-time-inp')||{}).value||'19:00';
+    var lightVal=(document.getElementById('light-time-inp')||{}).value||'07:00';
+    var darkH=parseInt(darkVal,10)||19;
+    var lightH=parseInt(lightVal,10)||7;
+    var h=new Date().getHours();
+    var should;
+    if(darkH>lightH){should=(h>=darkH||h<lightH)?'dark':'light';}
+    else{should=(h>=darkH&&h<lightH)?'dark':'light';}
+    if(document.documentElement.getAttribute('data-theme')!==should&&typeof setTheme==='function') setTheme(should);
   }
   _checkSchedule();
   _themeScheduleInterval = setInterval(_checkSchedule, 60000);
@@ -13146,6 +13448,10 @@ function _setThemeSchedule(on){
 (function(){
   function _drawerPrefsInit(){
     try{
+      var di=document.getElementById('dark-time-inp');
+      var li=document.getElementById('light-time-inp');
+      if(di) di.value=_mem.getItem('ims__dark_time')||'19:00';
+      if(li) li.value=_mem.getItem('ims__light_time')||'07:00';
       var sa = _mem.getItem('ims__theme_auto');
       if(sa === '1') _setThemeSchedule(true);
     }catch(e){}
@@ -14505,11 +14811,14 @@ document.addEventListener('keydown',function(e){
     var pinDiv=document.getElementById('drawer-pinned-divider');
     if(!pinBody) return;
     pinBody.querySelectorAll('.drawer-pin-clone').forEach(function(el){el.remove();});
+    var pinHint=document.getElementById('drawer-pin-hint');
     if(_pins.length===0){
       if(pinHdr) pinHdr.style.display='none';
       if(pinDiv) pinDiv.style.display='none';
+      if(pinHint) pinHint.style.display='';
       return;
     }
+    if(pinHint) pinHint.style.display='none';
     if(pinHdr) pinHdr.style.display='';
     if(pinDiv) pinDiv.style.display='';
     _pins.forEach(function(id){
@@ -15144,9 +15453,9 @@ function _attachFormEnter(mode,idx,submitFn,submitKeepFn){
 ───────────────────────────────────────────────────────── */
 function _formSetup(tab,mode,idx){
   _attachDateFmt('f-date');
-  // 3. Searchable select for item pickers
-  var fid=document.getElementById('f-id');if(fid)window._makeSearchableSelect(fid);
-  var fit=document.getElementById('f-item');if(fit)window._makeSearchableSelect(fit);
+  // 3. Searchable select for item pickers (only apply to <select> elements)
+  var fid=document.getElementById('f-id');if(fid&&fid.tagName==='SELECT')window._makeSearchableSelect(fid);
+  var fit=document.getElementById('f-item');if(fit&&fit.tagName==='SELECT')window._makeSearchableSelect(fit);
 
   if(tab==='ITEMS'){
     // 2. Inline validation
@@ -15177,6 +15486,8 @@ function _formSetup(tab,mode,idx){
 ───────────────────────────────────────────────────────── */
 var _oOAM=window.openAddModal;
 window.openAddModal=function(){
+  // Clear edit-form-body to prevent stale duplicate-ID conflicts with add-form-body
+  var eb=document.getElementById('edit-form-body');if(eb)eb.innerHTML='';
   _oOAM.apply(this,arguments);
   setTimeout(function(){
     var tab=typeof S!=='undefined'?S.tab:'';
@@ -15189,6 +15500,8 @@ window.openAddModal=function(){
 ───────────────────────────────────────────────────────── */
 var _oOEM=window.openEditModal;
 window.openEditModal=function(idx,listType){
+  // Clear add-form-body to prevent stale duplicate-ID conflicts with edit-form-body
+  var ab=document.getElementById('add-form-body');if(ab)ab.innerHTML='';
   _oOEM.apply(this,arguments);
   setTimeout(function(){
     // Map listType to the tab/form name _formSetup understands
