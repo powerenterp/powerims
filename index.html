@@ -900,6 +900,32 @@ tbody tr:last-child td{border-bottom:none}
 }
 .field-row{display:grid;gap:11px;grid-template-columns:1fr 1fr}
 .field-row-3{display:grid;gap:11px;grid-template-columns:1fr 1fr 1fr}
+.item-thumb, .img-preview{
+  width:48px;height:48px;border-radius:12px;
+  background:var(--surface3);border:1px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.item-thumb img, .img-preview img{
+  width:100%;height:100%;object-fit:cover;
+  cursor:zoom-in;
+}
+.img-preview{margin-top:6px}
+.img-preview-empty{font-size:11px;color:var(--text3)}
+#img-lightbox{
+  position:fixed;inset:0;display:none;align-items:center;justify-content:center;
+  background:rgba(2,6,23,.82);padding:24px;z-index:99999;
+}
+#img-lightbox.show{display:flex}
+#img-lightbox img{
+  max-width:100%;max-height:100%;object-fit:contain;border-radius:16px;
+  box-shadow:0 24px 70px rgba(0,0,0,.45);background:#fff;
+}
+#img-lightbox .lightbox-close{
+  position:absolute;top:16px;right:16px;padding:10px 12px;border:none;
+  border-radius:999px;background:rgba(255,255,255,.14);color:#fff;
+  cursor:pointer;font-size:13px;font-weight:700;backdrop-filter:blur(8px)
+}
 .modal-btn{
   width:100%;padding:12px;border:none;border-radius:9px;
   background:var(--p);color:#E4E6F5;font-weight:700;cursor:pointer;
@@ -9685,6 +9711,10 @@ function buildItemForm(row,mode,idx){
       <div class="field"><label>${L('itemNameLbl')} *</label><input id="f-name" value="${esc(d.name)}" placeholder="${L('itemNamePh')}"></div>
     </div>
     <div class="field"><label>${L('descLbl')}</label><input id="f-desc" value="${esc(d.desc||'')}" placeholder="${L('descPh')}"></div>
+    <div class="field"><label>Image</label><input type="file" id="f-image-file" accept="image/*" onchange="onItemImageChange(this)"></div>
+    <input type="hidden" id="f-image-data">
+    <div id="f-img-preview" class="img-preview"><span class="img-preview-empty">No image selected</span></div>
+    ${d.image?`<button type="button" class="modal-btn outline" style="margin-top:6px" onclick="clearItemImage()">Remove image</button>`:''}
     <div id="f-dup-warn" class="dup-warn"><svg class="ic" style="flex-shrink:0"><use href="#i-alert"/></svg><span id="f-dup-msg"></span></div>
     <button type="button" class="modal-btn" onclick="submitItemForm('${mode}',${idx??-1})">${mode==='add'?`<svg class="ic"><use href="#i-plus"/></svg> ${L('addItem')}`:`<svg class="ic"><use href="#i-save"/></svg> ${L('editUserBtn')}`}</button>
     ${mode==='add'?`<button type="button" class="modal-btn outline" onclick="submitItemForm('add',-1,true)"><svg class="ic"><use href="#i-plus"/></svg> ${L('addAnotherBtn')}</button>`:''}
@@ -9692,11 +9722,16 @@ function buildItemForm(row,mode,idx){
     <div id="f-add-count" style="text-align:center;font-size:11px;color:var(--success);min-height:16px;margin-top:4px"></div>
     <div id="f-session-table"></div>
     <div class="modal-error" id="f-error"></div>`;
+  if(d.image){
+    const imgData=document.getElementById('f-image-data'); if(imgData) imgData.value=d.image;
+    const preview=document.getElementById('f-img-preview'); if(preview) preview.innerHTML=`<img src="${esc(d.image)}" alt="${esc(d.name)}">`;
+  }
 }
 function submitItemForm(mode,idx,keepOpen=false){
   const id=cap(document.getElementById('f-id').value.trim(),MAX_NAME_LEN);
   const name=cap(document.getElementById('f-name').value.trim(),MAX_NAME_LEN);
   const desc=cap(document.getElementById('f-desc').value.trim(),MAX_NOTE_LEN);
+  const image=document.getElementById('f-image-data')?.value||'';
   if(!id||!name){showMsg('f-error','Item ID and Name are required');return;}
   const dupIdx=S.items.findIndex(m=>m.id.toLowerCase()===id.toLowerCase());
   if(dupIdx!==-1&&(mode==='add'||dupIdx!==idx)){showMsg('f-error','Item ID already exists — choose a unique one');return;}
@@ -9707,8 +9742,8 @@ function submitItemForm(mode,idx,keepOpen=false){
     }else{const dw=document.getElementById('f-dup-warn');if(dw&&dw.style.display!=='flex'){dw.style.display='flex';const dm=document.getElementById('f-dup-msg');if(dm)dm.innerHTML=`Item named <strong>${esc(S.items[nameDupIdx].name)}</strong> already exists. Click submit again to add anyway.`;}}
     return;
   }
-  if(mode==='add')S.items.push({id,name,desc,_by:S.user,createdAt:new Date().toISOString()});
-  else S.items[idx]={...S.items[idx],id,name,desc,_by:S.user};
+  if(mode==='add')S.items.push({id,name,desc,image,_by:S.user,createdAt:new Date().toISOString()});
+  else S.items[idx]={...S.items[idx],id,name,desc,image,_by:S.user};
   saveUserData();renderTab();updateSuggestions();
   if(keepOpen){
     _draftClear();
@@ -9717,12 +9752,54 @@ function submitItemForm(mode,idx,keepOpen=false){
     const c=document.getElementById('f-add-count');if(c)c.textContent=`${_addCount} item${_addCount>1?'s':''} added`;
     renderSessionTable();
     document.getElementById('f-id').value='';document.getElementById('f-name').value='';document.getElementById('f-desc').value='';
+    const imgFile=document.getElementById('f-image-file'); if(imgFile) imgFile.value='';
+    const imgData=document.getElementById('f-image-data'); if(imgData) imgData.value='';
+    const preview=document.getElementById('f-img-preview'); if(preview) preview.innerHTML='<span class="img-preview-empty">No image selected</span>';
     document.getElementById('f-id').focus();
   }else{
     _noDraftSave=true;
     closeModal(mode==='add'?'add-row-modal':'edit-row-modal');
     showToast(mode==='add'?L('toastItemAdded'):L('toastItemUpdated'),'success');
   }
+}
+
+function onItemImageChange(input){
+  const file=input?.files?.[0];
+  const imgData=document.getElementById('f-image-data');
+  const preview=document.getElementById('f-img-preview');
+  if(!file){
+    if(imgData)imgData.value='';
+    if(preview)preview.innerHTML='<span class="img-preview-empty">No image selected</span>';
+    return;
+  }
+  if(!file.type.startsWith('image/')){showMsg('f-error','Please choose a valid image file');input.value='';if(imgData)imgData.value='';return;}
+  compressImageFile(file,640,0.45,(dataUrl)=>{
+    if(!dataUrl){showMsg('f-error','Unable to process the image file');input.value='';if(imgData)imgData.value='';if(preview)preview.innerHTML='<span class="img-preview-empty">No image selected</span>';return;}
+    if(imgData)imgData.value=dataUrl;
+    if(preview){preview.innerHTML='';const img=document.createElement('img');img.src=dataUrl;img.alt='Item Image';preview.appendChild(img);}
+  });
+}
+function clearItemImage(){
+  const input=document.getElementById('f-image-file');
+  const imgData=document.getElementById('f-image-data');
+  const preview=document.getElementById('f-img-preview');
+  if(input)input.value='';
+  if(imgData)imgData.value='';
+  if(preview)preview.innerHTML='<span class="img-preview-empty">No image selected</span>';
+}
+function compressImageFile(file,maxDim=640,quality=0.45,cb){
+  const img=new Image();
+  const url=URL.createObjectURL(file);
+  img.onload=()=>{
+    const ratio=Math.min(maxDim/img.width,maxDim/img.height,1);
+    const w=Math.round(img.width*ratio);const h=Math.round(img.height*ratio);
+    const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+    const ctx=canvas.getContext('2d');ctx.drawImage(img,0,0,w,h);
+    URL.revokeObjectURL(url);
+    cb(canvas.toDataURL('image/jpeg',quality));
+  };
+  img.onerror=()=>{URL.revokeObjectURL(url);cb('');};
+  img.src=url;
 }
 
 function buildTxForm(row,mode,isP,idx){
@@ -9733,6 +9810,7 @@ function buildTxForm(row,mode,isP,idx){
   const d=row||(isP?{date:nowDt(),party:'',branch:S.userBranch||S.branches[0]||'Main',id:'',name:'',desc:'',qty:'',uPrice:'',vatOn:false,payment:'CASH'}:{date:nowDt(),party:'',branch:S.userBranch||S.branches[0]||'Main',id:'',name:'',desc:'',qty:'',sPrice:'',vatOn:true,wh3On:false,vwhOn:false,payment:'CASH'});
   const vatChk=isP?(d.vatOn||false):(d.vatOn===undefined?true:d.vatOn);
   const wh3Chk=d.wh3On||false;const vwhChk=d.vwhOn||false;
+  const itemImage=d.itemImage||S.items.find(m=>m.id===d.id)?.image||'';
   const itemOpts=S.items.filter(m=>m.id).map(m=>`<option value="${esc(m.id)}" ${m.id===d.id?'selected':''}>${esc(m.id)} — ${esc(m.name)}${m.desc?' · '+esc(m.desc):''}</option>`).join('');
   const availBranches=S.userBranch?[S.userBranch]:S.branches;
   const branchOpts=availBranches.map(b=>`<option value="${esc(b)}" ${b===(d.branch||availBranches[0])?'selected':''}>${esc(b)}</option>`).join('');
@@ -9751,6 +9829,7 @@ function buildTxForm(row,mode,isP,idx){
       <div class="field"><label>${L('itemNameAutoLbl')}</label><input id="f-name" readonly style="background:var(--surface3);cursor:not-allowed"></div>
       <div class="field"><label>${L('descAutoLbl')}</label><input id="f-desc" readonly style="background:var(--surface3);cursor:not-allowed"></div>
     </div>
+    <div class="field"><label>Item Image</label><div id="f-item-image" class="item-thumb">${itemImage?`<img src="${esc(itemImage)}" alt="${esc(d.name)}">`:'—'}</div></div>
     <div class="field-row">
       <div class="field"><label>${L('dispatchQtyLbl')} *</label><input type="number" id="f-qty" value="${qty}" placeholder="0" min="0" step="any" oninput="recalcFormTotals(${isP})"></div>
       <div class="field"><label>${isP?L('unitPurchPriceLbl'):L('unitSellPriceLbl')} *</label><input type="number" id="f-price" value="${price}" placeholder="0.00" min="0" step="any" oninput="recalcFormTotals(${isP})"></div>
@@ -9798,6 +9877,8 @@ function autoFillItem(){
     const recent=arr.filter(r=>r.id===item.id&&(!party||r.party===party)).sort((a,b)=>(b.date||'').localeCompare(a.date||''))[0];
     const priceEl=document.getElementById('f-price');
     if(recent&&recent[pk]&&priceEl&&!priceEl.value){priceEl.value=recent[pk];priceEl.classList.add('_price-filled');setTimeout(()=>priceEl.classList.remove('_price-filled'),1200);}
+    const imageEl=document.getElementById('f-item-image');
+    if(imageEl){imageEl.innerHTML=item.image?`<img src="${esc(item.image)}" alt="${esc(item.name)}">`:'—';}
   }
   recalcFormTotals(isP);
 }
@@ -9849,7 +9930,7 @@ function submitTxForm(mode,idx,isP,keepOpen=false){
   const _cid=payment==='CREDIT'?`cr_${isP?'p':'s'}_${Date.now()}_${Math.random().toString(36).slice(2,7)}`:undefined;
   if(isP){
     const vatOn=document.getElementById('f-vat')?.checked??false;
-    const row={date,party,branch,id:itemId,name:item.name,desc:item.desc,qty,uPrice:price,payment,vatOn,notes,_by:S.user};
+    const row={date,party,branch,id:itemId,name:item.name,desc:item.desc,itemImage:item.image||'',qty,uPrice:price,payment,vatOn,notes,_by:S.user};
     if(_cid)row._cid=_cid;
     if(mode==='add'){row.createdAt=new Date().toISOString();S.purchase.push(row);}else S.purchase[idx]={...S.purchase[idx],...row};
   }else{
@@ -9857,7 +9938,7 @@ function submitTxForm(mode,idx,isP,keepOpen=false){
     const wh3On=document.getElementById('f-wh3')?.checked??false;
     const vwhOn=document.getElementById('f-vwh')?.checked??false;
     const commission=parseFloat(document.getElementById('f-commission')?.value)||0;
-    const row={date,party,branch,id:itemId,name:item.name,desc:item.desc,qty,sPrice:price,payment,vatOn,wh3On,vwhOn,commission,notes,_by:S.user};
+    const row={date,party,branch,id:itemId,name:item.name,desc:item.desc,itemImage:item.image||'',qty,sPrice:price,payment,vatOn,wh3On,vwhOn,commission,notes,_by:S.user};
     if(_cid)row._cid=_cid;
     if(mode==='add'){row.createdAt=new Date().toISOString();S.sales.push(row);}else S.sales[idx]={...S.sales[idx],...row};
   }
@@ -9954,16 +10035,17 @@ function submitExpenseForm(mode,idx,keepOpen=false){
 function renderItems(){
   document.getElementById('tab-content').innerHTML=`<div class="table-wrap">
     <table>
-      <thead><tr><th>${L('partNo')}</th><th>${L('itemName')}</th><th>${L('desc')}</th></tr></thead>
+      <thead><tr><th>Image</th><th>${L('partNo')}</th><th>${L('itemName')}</th><th>${L('desc')}</th></tr></thead>
       <tbody>
         ${S.items.filter(r=>r.id||r.name).filter(r=>shouldUserSeeData(r)).map((row)=>{
           const _ri=S.items.indexOf(row);
           return`<tr oncontextmenu="showCtxMenu(event,${_ri},'items')" title="Right-click for options">
+            <td data-label="Image"><div class="item-thumb">${row.image?`<img src="${esc(row.image)}" alt="${esc(row.name)}">`:'—'}</div></td>
             <td class="td-mono" data-label="Part No.">${esc(row.id)}</td>
             <td style="font-weight:600" data-label="Item Name">${esc(row.name)}</td>
             <td style="color:var(--text3)" data-label="Description">${esc(row.desc)}</td>
           </tr>`;}).join('')}
-        ${!S.items.filter(r=>r.id||r.name).filter(r=>shouldUserSeeData(r)).length?`<tr><td colspan="3">${_emptyState(_ES.pkg,'No items yet','Add your catalog to start tracking stock and transactions','openAddModal()')}</td></tr>`:''}
+        ${!S.items.filter(r=>r.id||r.name).filter(r=>shouldUserSeeData(r)).length?`<tr><td colspan="4">${_emptyState(_ES.pkg,'No items yet','Add your catalog to start tracking stock and transactions','openAddModal()')}</td></tr>`:''}
       </tbody>
     </table>
   </div>`;
@@ -9984,6 +10066,8 @@ function renderTx(){
   let totQty=0,totVal=0,totComm=0;
   const rows=visible.map(row=>{
     const i=list.indexOf(row);
+    const itemImg=row.itemImage||S.items.find(it=>it.id===row.id)?.image||'';
+    const imgCell=`<td data-label="Image"><div class="item-thumb">${itemImg?`<img src="${esc(itemImg)}" alt="${esc(row.name)}">`:'—'}</div></td>`;
     const qty=parseFloat(row.qty)||0;
     const price=parseFloat(isP?row.uPrice:row.sPrice)||0;
     const base=qty*price;let total=base;
@@ -10001,6 +10085,7 @@ function renderTx(){
       <td class="td-mono" data-label="Date" style="font-size:11.5px">${(row.date||'').replace('T',' ')}</td>
       <td data-label="${isP?'Supplier':'Customer'}" style="font-weight:500">${esc(row.party||'—')}</td>
       <td data-label="Branch"><span class="td-badge badge-other" style="font-size:10px">${esc(row.branch||'Main')}</span></td>
+      ${imgCell}
       <td class="td-mono" data-label="Part No.">${esc(row.id||'—')}</td>
       <td data-label="Item Name" style="font-weight:500">${esc(row.name||'—')}</td>
       <td data-label="Description" style="color:var(--text3)">${esc(row.desc||'')}</td>
@@ -10013,15 +10098,15 @@ function renderTx(){
     </tr>`;
   }).join('');
   const commColHdr=!isP?`<th class="num">Commission</th>`:'';
-  const colCount=isP?11:12;
-  const cols=`<th>${L('date')}</th><th>${isP?L('supplier'):L('customer')}</th><th>${L('branch')}</th><th>${L('partNo')}</th><th>${L('itemName')}</th><th>${L('desc')}</th><th class="num">${L('qty')}</th><th class="num">${isP?L('unitPrice'):L('price')}</th><th>${L('vat').split(' ')[0]}</th><th class="num">${L('totalPrice')}</th>${commColHdr}<th>${L('payment')}</th>`;
+  const colCount=isP?12:13;
+  const cols=`<th>${L('date')}</th><th>${isP?L('supplier'):L('customer')}</th><th>${L('branch')}</th><th>Image</th><th>${L('partNo')}</th><th>${L('itemName')}</th><th>${L('desc')}</th><th class="num">${L('qty')}</th><th class="num">${isP?L('unitPrice'):L('price')}</th><th>${L('vat').split(' ')[0]}</th><th class="num">${L('totalPrice')}</th>${commColHdr}<th>${L('payment')}</th>`;
   document.getElementById('tab-content').innerHTML=`${_drChipStrip()}${_rowCapNotice}<div class="table-wrap">
     <table>
       <thead><tr>${cols}</tr></thead>
       <tbody>
         ${rows||`<tr><td colspan="${colCount}">${_emptyState(isP?_ES.cart:_ES.trend,isP?'No purchases yet':'No sales yet',isP?'Record your first purchase to get started':'Record your first sale to get started','openAddModal()')}</td></tr>`}
         ${visible.length?`<tr class="summary-row">
-          <td colspan="6" data-label="">${L('totals').toUpperCase()}</td>
+          <td colspan="7" data-label="">${L('totals').toUpperCase()}</td>
           <td class="num td-mono" data-label="Qty">${fmtQ(totQty)}</td>
           <td data-label=""></td><td data-label=""></td>
           <td class="num td-mono ${colorClass(totVal)}" data-label="Total">${fmt(totVal)}</td>
@@ -12271,13 +12356,43 @@ async function submitChangePass(){
 /* ═══════════════════════════════════════════════════════
    KEYBOARD & CLICK
 ═══════════════════════════════════════════════════════ */
-document.addEventListener('click',e=>{if(!e.target.closest('#ctx-menu'))hideCtxMenu();});
+function showImageModal(src,alt='Image'){
+  const lightbox=document.getElementById('img-lightbox');
+  const img=document.getElementById('img-lightbox-img');
+  if(!lightbox||!img||!src)return;
+  img.src=src;img.alt=alt;
+  lightbox.classList.add('show');
+  document.body.style.overflow='hidden';
+}
+function closeImageModal(){
+  const lightbox=document.getElementById('img-lightbox');
+  if(lightbox){lightbox.classList.remove('show');}
+  document.body.style.overflow='';
+}
+document.addEventListener('click',e=>{
+  const img=e.target.closest('img');
+  if(img && img.id!=='img-lightbox-img'){
+    const container=img.closest('.item-thumb, .img-preview');
+    if(container){
+      e.stopPropagation();
+      showImageModal(img.src,img.alt||'Image');
+      return;
+    }
+  }
+  if(!e.target.closest('#ctx-menu'))hideCtxMenu();
+});
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'){
+    closeImageModal();
     closeSettings();closeApprovals();closeStoreReceipts();closeStoreRequestsPanel();cancelConfirm();
     closeModal('receipt-modal');closeModal('add-row-modal');closeModal('edit-row-modal');closeModal('store-receipt-print-modal');closeModal('request-item-modal');closeModal('credit-pay-modal');
     hideCtxMenu();
   }
+});
+
+document.addEventListener('click',e=>{
+  const lightbox=document.getElementById('img-lightbox');
+  if(lightbox && lightbox.classList.contains('show') && e.target===lightbox){closeImageModal();}
 });
 
 /* Long-press context menu for iOS / touch devices */
@@ -15570,4 +15685,8 @@ window.openEditModal=function(idx,listType){
 
 })();
 </script>
+<div id="img-lightbox" aria-hidden="true">
+  <button type="button" class="lightbox-close" onclick="event.stopPropagation();closeImageModal()">✕</button>
+  <img id="img-lightbox-img" alt="">
+</div>
 </body></html>
