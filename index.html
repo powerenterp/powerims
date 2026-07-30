@@ -743,7 +743,10 @@ html[data-view="mobile"] .brand-text{display:none}
 
 /* ── Focus rings (keyboard navigation) ── */
 :focus-visible{outline:2px solid var(--p);outline-offset:3px;border-radius:4px}
-input:focus-visible,select:focus-visible,textarea:focus-visible{outline:none}
+input:focus-visible,select:focus-visible,textarea:focus-visible,
+button:focus-visible,a:focus-visible,.modal-hdr-close:focus-visible{
+  outline:2px solid var(--p);outline-offset:3px;border-radius:4px
+}
 .icon-btn:focus-visible,.btn:focus-visible,.modal-btn:focus-visible,
 .nav-item:focus-visible,.drawer-item:focus-visible,.hdr-chip:focus-visible{
   outline:2px solid var(--p);outline-offset:2px
@@ -900,6 +903,9 @@ tbody tr:last-child td{border-bottom:none}
 }
 .field-row{display:grid;gap:11px;grid-template-columns:1fr 1fr}
 .field-row-3{display:grid;gap:11px;grid-template-columns:1fr 1fr 1fr}
+@media(max-width:640px){
+  .field-row,.field-row-3{grid-template-columns:1fr}
+}
 .item-thumb, .img-preview{
   width:48px;height:48px;border-radius:12px;
   background:var(--surface3);border:1px solid var(--border);
@@ -1387,6 +1393,20 @@ html[data-view="mobile"] .di-shortcut{display:none}
   .auth-hdr{padding:10px 14px}
   .auth-hdr .ah-icon{width:32px;height:32px;border-radius:0}
   .auth-mode-hdr h2{font-size:1.25rem}
+  .field-row,.field-row-3{grid-template-columns:1fr}
+  .field input,.field select,.field textarea{min-height:48px;padding:12px 14px}
+  .modal-btn{min-height:50px;padding:14px 16px}
+  .bottom-nav{padding-bottom:calc(16px + env(safe-area-inset-bottom));}
+  .nav-item{min-height:60px;padding:10px 6px 8px;}
+  .nav-item .ni-label{font-size:11.5px;}
+  .hdr-right{gap:8px;}
+  .hdr-chip,.icon-btn{min-width:44px;min-height:44px;}
+  .drawer-item{min-height:58px;padding:14px 20px;}
+  .drawer-body{padding-bottom:calc(28px + env(safe-area-inset-bottom));}
+  .toggle-sw{width:44px;height:24px;}
+  .toggle-sw span::before{width:19px;height:19px;}
+  .drawer-item .di-sub{font-size:12px;}
+  .drawer-item .di-label{font-size:14px;}
 }
 .auth-hdr{
   flex-shrink:0;padding:16px 24px;
@@ -1742,8 +1762,9 @@ html[data-view="mobile"] table{min-width:360px!important;font-size:13px}
 html[data-view="mobile"] tbody td{padding:11px 10px}
 html[data-view="mobile"] thead th{padding:9px 10px;font-size:9px}
 html[data-view="mobile"] .field-row,html[data-view="mobile"] .field-row-3{grid-template-columns:1fr!important}
-html[data-view="mobile"] .modal-overlay{align-items:flex-end;padding:0}
-html[data-view="mobile"] .modal-box{width:100%!important;max-width:100%!important;border-radius:22px 22px 0 0!important;max-height:96dvh}
+html[data-view="mobile"] .modal-overlay{align-items:flex-end;padding:0;overflow-y:auto;scroll-behavior:smooth;overscroll-behavior-y:contain}
+html[data-view="mobile"] .modal-box{width:100%!important;max-width:100%!important;border-radius:22px 22px 0 0!important;max-height:calc(100dvh - 20px);min-height:0;overflow:hidden}
+html[data-view="mobile"] .modal-body{padding:18px 18px 20px}
 html[data-view="mobile"] .field input,html[data-view="mobile"] .field select,html[data-view="mobile"] .field textarea{padding:13px 14px;font-size:16px;border-radius:9px}
 html[data-view="mobile"] .btn{min-height:42px;padding:9px 14px}
 html[data-view="mobile"] .modal-btn{min-height:50px;font-size:14px;border-radius:11px}
@@ -1781,8 +1802,18 @@ html[data-view="mobile"] .perm-user-card{padding:12px}
 html[data-view="mobile"] .perm-user-hdr{flex-wrap:wrap}
 html[data-view="mobile"] .perm-quick-set{width:100%;margin-top:8px;justify-content:flex-start}
 html[data-view="mobile"] .perm-chips{flex-wrap:wrap}
-html[data-view="mobile"] .drawer-item{padding:12px 17px}
+html[data-view="mobile"] .drawer-item{padding:13px 18px;min-height:58px}
 html[data-view="mobile"] .drawer-item .di-label{font-size:13px}
+html[data-view="mobile"] .settings-drawer{width:100%!important;max-width:100%!important;right:0;left:0;border-left:none;border-radius:0;}
+html[data-view="mobile"] .drawer-body{padding:10px 0 calc(22px + env(safe-area-inset-bottom));}
+html[data-view="mobile"] .field label{font-size:12.5px;}
+html[data-view="mobile"] .field input,html[data-view="mobile"] .field select,html[data-view="mobile"] .field textarea{min-height:48px;}
+html[data-view="mobile"] .modal-btn{padding:14px 16px;}
+html[data-view="mobile"] .app-header{padding:0 14px;}
+html[data-view="mobile"] .hdr-right{gap:10px;}
+html[data-view="mobile"] .icon-btn{width:42px;height:42px;}
+html[data-view="mobile"] .nav-item{min-height:58px;}
+html[data-view="mobile"] .bottom-nav{padding:0 6px;padding-bottom:calc(14px + env(safe-area-inset-bottom));}
 html[data-view="mobile"] .table-search-bar{display:none}
 #view-mode-btn.mobile-active{background:var(--store-glass);color:var(--store);border-color:rgba(16,185,129,.35)}
 html[data-view="desktop"] body{overflow-x:auto}
@@ -2949,6 +2980,10 @@ tbody td.num { padding-right: 16px; }
           <span class="di-icon" aria-hidden="true" style="background:var(--store-glass);color:var(--store)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span>
           <div class="di-info"><div class="di-label" data-i18n="settingsStore">Store</div><div class="di-sub">Branch stock, balance &amp; reports</div></div>
         </button>
+        <button type="button" class="drawer-item" id="drawer-tax-settings-btn" onclick="openTaxSettings()">
+          <span class="di-icon" aria-hidden="true" style="background:rgba(59,130,246,.12);color:var(--info)"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22"/><path d="M4 8h16"/><path d="M4 16h16"/></svg></span>
+          <div class="di-info"><div class="di-label">Tax Settings</div><div class="di-sub">Enable or disable VAT and withholding</div></div>
+        </button>
       </div>
     </div>
 
@@ -3256,6 +3291,27 @@ tbody td.num { padding-right: 16px; }
       <button type="button" class="modal-btn" onclick="switchTab('STOREBALANCE');closeModal('store-options-modal')">Store Balance</button>
       <button type="button" class="modal-btn" onclick="switchTab('STOREREPORT');closeModal('store-options-modal')">Store Report</button>
       <button type="button" class="modal-btn" onclick="switchTab('EXPENSE');closeModal('store-options-modal')">Store Expense</button>
+    </div>
+  </div>
+</div>
+
+<div class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="tax-settings-modal-title" id="tax-settings-modal">
+  <div class="modal-box narrow">
+    <div class="modal-hdr">
+      <div class="modal-hdr-icon-wrap" aria-hidden="true"><span class="modal-hdr-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1v22"/><path d="M4 8h16"/><path d="M4 16h16"/></svg></span></div>
+      <div>
+        <h2 id="tax-settings-modal-title">Tax Settings</h2>
+        <p style="margin:0;font-size:13px;color:var(--text3)">Set defaults for VAT and withholding when entering sales.</p>
+      </div>
+      <button type="button" class="modal-hdr-close" aria-label="Close" onclick="closeModal('tax-settings-modal')"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
+    </div>
+    <div class="modal-body" style="padding:16px;display:grid;gap:14px">
+      <div class="field"><label>VAT (15%)</label><label class="toggle-sw"><input type="checkbox" id="tax-vat-toggle"><span></span></label></div>
+      <div class="field"><label>Withholding 3%</label><label class="toggle-sw"><input type="checkbox" id="tax-wh3-toggle"><span></span></label></div>
+      <div class="field"><label>VAT Withholding 7.5%</label><label class="toggle-sw"><input type="checkbox" id="tax-vwh-toggle"><span></span></label></div>
+      <div style="font-size:12px;color:var(--text3);line-height:1.4">These values are saved per user and used as defaults when adding new sales/purchase entries.</div>
+      <button type="button" class="modal-btn" onclick="saveTaxPrefs()">Save Tax Settings</button>
+      <button type="button" class="modal-btn secondary" onclick="closeModal('tax-settings-modal')">Cancel</button>
     </div>
   </div>
 </div>
@@ -9066,6 +9122,28 @@ function loadPrefs(){
   setLang(_mem.getItem(`ims_${S.user}_lang`)||'en');
   const savedView=_mem.getItem(`ims_${S.user}_view`);
   setViewMode(savedView||(window.screen.width<768?'mobile':'desktop'));
+  loadTaxPrefs();
+}
+function loadTaxPrefs(){
+  if(!S.user) return;
+  const prefs=_safeJSON(_mem.getItem(`ims_${S.user}_taxPrefs`),{vat:true,wh3:false,vwh:false});
+  S.taxPrefs=prefs;
+  const vatEl=document.getElementById('tax-vat-toggle');
+  const wh3El=document.getElementById('tax-wh3-toggle');
+  const vwhEl=document.getElementById('tax-vwh-toggle');
+  if(vatEl)vatEl.checked=!!prefs.vat;
+  if(wh3El)wh3El.checked=!!prefs.wh3;
+  if(vwhEl)vwhEl.checked=!!prefs.vwh;
+}
+function saveTaxPrefs(){
+  if(!S.user) return;
+  const vatOn=document.getElementById('tax-vat-toggle')?.checked??true;
+  const wh3On=document.getElementById('tax-wh3-toggle')?.checked??false;
+  const vwhOn=document.getElementById('tax-vwh-toggle')?.checked??false;
+  S.taxPrefs={vat:vatOn,wh3:wh3On,vwh:vwhOn};
+  _mem.setItem(`ims_${S.user}_taxPrefs`,JSON.stringify(S.taxPrefs));
+  closeModal('tax-settings-modal');
+  showToast('Tax settings saved','success');
 }
 /* ═══════════════════════════════════════════════════════
    UI
@@ -9807,9 +9885,11 @@ function buildTxForm(row,mode,isP,idx){
   document.getElementById('add-form-icon').innerHTML=icon;
   document.getElementById('add-form-title').textContent=mode==='add'?`Add ${t} Record`:`Edit ${t} Record`;
   document.getElementById('add-form-sub').textContent='Fill in the transaction details';
-  const d=row||(isP?{date:nowDt(),party:'',branch:S.userBranch||S.branches[0]||'Main',id:'',name:'',desc:'',qty:'',uPrice:'',vatOn:false,payment:'CASH'}:{date:nowDt(),party:'',branch:S.userBranch||S.branches[0]||'Main',id:'',name:'',desc:'',qty:'',sPrice:'',vatOn:true,wh3On:false,vwhOn:false,payment:'CASH'});
-  const vatChk=isP?(d.vatOn||false):(d.vatOn===undefined?true:d.vatOn);
-  const wh3Chk=d.wh3On||false;const vwhChk=d.vwhOn||false;
+  const taxPrefs=S.taxPrefs||{vat:true,wh3:false,vwh:false};
+  const d=row||(isP?{date:nowDt(),party:'',branch:S.userBranch||S.branches[0]||'Main',id:'',name:'',desc:'',qty:'',uPrice:'',vatOn:taxPrefs.vat,payment:'CASH'}:{date:nowDt(),party:'',branch:S.userBranch||S.branches[0]||'Main',id:'',name:'',desc:'',qty:'',sPrice:'',vatOn:taxPrefs.vat,wh3On:taxPrefs.wh3,vwhOn:taxPrefs.vwh,payment:'CASH'});
+  const vatChk=isP?(d.vatOn||false):(d.vatOn===undefined?taxPrefs.vat:d.vatOn);
+  const wh3Chk=d.wh3On===undefined?taxPrefs.wh3:d.wh3On;
+  const vwhChk=d.vwhOn===undefined?taxPrefs.vwh:d.vwhOn;
   const itemImage=d.itemImage||S.items.find(m=>m.id===d.id)?.image||'';
   const itemOpts=S.items.filter(m=>m.id).map(m=>`<option value="${esc(m.id)}" ${m.id===d.id?'selected':''}>${esc(m.id)} — ${esc(m.name)}${m.desc?' · '+esc(m.desc):''}</option>`).join('');
   const availBranches=S.userBranch?[S.userBranch]:S.branches;
@@ -11761,6 +11841,11 @@ function openExportModal(){
 function openStoreOptions(){
   closeSettings();
   openModal('store-options-modal');
+}
+function openTaxSettings(){
+  closeSettings();
+  loadTaxPrefs();
+  openModal('tax-settings-modal');
 }
 function doExport(){
   if(typeof _trackLastExport==='function')_trackLastExport(_expFormat==='PDF'?'PDF':'Excel');
