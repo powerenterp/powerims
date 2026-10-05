@@ -1,4 +1,11 @@
 <!DOCTYPE html><html lang="en"><head>
+<script>
+(function(){var _si=window.setInterval;
+window.setInterval=function(fn,ms){var a=[].slice.call(arguments,2);
+ if(typeof fn!=='function'||ms>15000)return _si.apply(window,arguments);
+ return _si.apply(window,[function(){if(!document.hidden)fn.apply(this,a)},ms]);};})();
+</script>
+
 <script>(function(){try{var u=localStorage.getItem('ims_currentUser');var t=u?localStorage.getItem('ims_'+u+'_theme'):null;if(!t)t=window.matchMedia('(prefers-color-scheme:dark)').matches?'dark':'light';document.documentElement.setAttribute('data-theme',t);}catch(e){document.documentElement.setAttribute('data-theme','dark');}})();</script>
 <meta charset="UTF-8">
 <!-- Accessibility: removed maximum-scale=1.0 + user-scalable=no so users can pinch-zoom (WCAG 1.4.4) -->
@@ -775,7 +782,7 @@ button:focus-visible,a:focus-visible,.modal-hdr-close:focus-visible{
 .table-row-count{font-size:11px;color:var(--text3);font-family:var(--mono);white-space:nowrap}
 
 /* ── Tables ── */
-.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;scroll-behavior:smooth}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse;font-size:13px;min-width:700px}
 thead th{
   background:var(--surface2);padding:10px 12px;text-align:left;
@@ -2687,7 +2694,7 @@ button:focus-visible { outline: 2px solid var(--p); outline-offset: 2px; }
 }
 
 /* 7. Table sticky header */
-thead { position: sticky; top: 0; z-index: 10; }
+thead { position: static; }
 
 /* 8. Table row stripe - more visible */
 tbody tr:nth-child(even) td { background: rgba(255,255,255,.04) !important; }
@@ -2713,8 +2720,10 @@ tbody td.num { padding-right: 16px; }
   width: 32px;
   background: linear-gradient(to right, transparent 0%, var(--bg, #fff) 100%);
   pointer-events: none;
-  opacity: .7;
+  opacity: 0;
+  transition: opacity .2s;
 }
+.table-wrap.has-overflow::after { opacity: .7; }
 
 /* 13. Modal backdrop blur - reduce for performance */
 .modal-overlay { backdrop-filter: blur(6px) !important; -webkit-backdrop-filter: blur(6px) !important; }
@@ -2815,9 +2824,16 @@ tbody td.num { padding-right: 16px; }
 /* 32. Native-feeling momentum scrolling & scroll containment inside modals
    and horizontally-scrollable tables — stops iOS from "leaking" the scroll
    into the page behind a modal, and smooths inertial scrolling. */
-.modal-box,.table-wrap,.drawer-changelog-box{
+.modal-box,.drawer-changelog-box{
   -webkit-overflow-scrolling:touch;
   overscroll-behavior:contain;
+}
+/* Tables only scroll horizontally — never trap vertical wheel/touch scroll,
+   so the page keeps scrolling when the cursor is over a table. */
+.table-wrap{
+  -webkit-overflow-scrolling:touch;
+  overscroll-behavior-x:contain;
+  overscroll-behavior-y:auto;
 }
 
 /* 33. On short/small phones, keep modal footers reachable: cap modal height
@@ -11718,6 +11734,12 @@ function printReceiptDirectly(){
 .rcpt-total{border:2px solid rgba(45,75,138,.25);border-radius:6px;padding:10px 12px;text-align:center;margin:10px 0}
 .rcpt-total-val{font-size:22px;font-weight:800;color:#2D4B8A;font-family:monospace}
 .rcpt-footer{text-align:center;color:rgba(45,75,138,.55);font-size:9px;margin-top:10px;border-top:2px dashed #2D4B8A;padding-top:10px;line-height:1.6}
+
+/* ── Accessibility: respect reduced motion, visible focus on table rows ── */
+@media (prefers-reduced-motion: reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important;scroll-behavior:auto!important}
+}
+.table-wrap tbody tr:focus-visible{outline:2px solid var(--p);outline-offset:-2px}
 </style>${document.getElementById('receipt-content').innerHTML}`;
     const _apc=()=>{pa.innerHTML='';window.removeEventListener('afterprint',_apc);};
     window.addEventListener('afterprint',_apc);
@@ -15844,4 +15866,13 @@ window.openEditModal=function(idx,listType){
   <button type="button" class="lightbox-close" onclick="event.stopPropagation();closeImageModal()">✕</button>
   <img id="img-lightbox-img" alt="">
 </div>
+<script>
+(function(){
+ function mark(){document.querySelectorAll('.table-wrap tbody tr').forEach(function(r){
+  if(!r.hasAttribute('tabindex')&&!r.querySelector('.empty,[colspan]')){r.tabIndex=0;}});}
+ var t;new MutationObserver(function(){clearTimeout(t);t=setTimeout(mark,120)}).observe(document.body,{childList:true,subtree:true});
+ document.addEventListener('keydown',function(e){
+  if((e.key==='Enter'||e.key===' ')&&e.target.matches&&e.target.matches('.table-wrap tbody tr')){e.preventDefault();e.target.click();}});
+ mark();})();
+</script>
 </body></html>
