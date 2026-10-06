@@ -7447,8 +7447,8 @@ function _exportPartyPDF(type){
   if(selected){
     const partyRecs=allRecs.filter(r=>(r.party||'')==selected);
     const total=partyRecs.reduce((a,r)=>a+calcAmt(r),0);
-    const cashTotal=partyRecs.filter(r=>r.payment==='CASH').reduce((a,r)=>a+calcAmt(r),0);
-    const creditTotal=total-cashTotal;
+    const cashTotal=partyRecs.filter(r=>r.payment==='CASH').reduce((a,r)=>a+calcAmt(r),0)+partyRecs.filter(r=>r.payment==='CREDIT'&&r._cid).reduce((a,r)=>a+Math.min(getCreditPaidAmt(r._cid),calcAmt(r)),0);
+    const creditTotal=Math.max(0,total-cashTotal);
 
     // ── PARTY INFO CARD ────────────────────────────────────
     const cardH=28,cardY=y;
@@ -7612,11 +7612,11 @@ function exportReportPDF(){
     const rows=[
       ['Opening Balance',      f(c.initBal),   false],
       ['Purchase on Cash',     f(c.tPC),        false],
-      ['Purchase on Credit',   f(c.tPCr),       false],
-      ['Total Purchase',       f(c.tPC+c.tPCr), false, true],
+      ['Purchase on Credit',   f(c.tPCrOut),    false],
+      ['Total Purchase',       f(c.tPTot), false, true],
       ['Sales on Cash',        f(c.tSC),        false],
       ['Sales on Credit (out)',f(c.tSCrOut),    false],
-      ['Total Sales',          f(c.tSC+c.tSCr), false, true],
+      ['Total Sales',          f(c.tSTot), false, true],
       ['Expenses',             f(c.tE),         false],
       ['Net Profit / Loss',    f(c.net),        c.net<0, true],
       ['VAT Withholding 7.5%', f(c.tVwh),       false],
@@ -7650,7 +7650,7 @@ function exportReportPDF(){
   let y=40;
   if(isOwner()&&activeBranch===''){
     // All branches: one table per branch, then combined totals
-    const tot={initBal:0,tPC:0,tPCr:0,tSC:0,tSCr:0,tSCrOut:0,tE:0,net:0,coh:0,tVwh:0,tWh3:0,tComm:0};
+    const tot={initBal:0,tPC:0,tPCr:0,tPCrOut:0,tPTot:0,tSTot:0,tSC:0,tSCr:0,tSCrOut:0,tE:0,net:0,coh:0,tVwh:0,tWh3:0,tComm:0};
     S.branches.forEach(b=>{
       const c=_reportCalc(b);
       Object.keys(tot).forEach(k=>{if(c[k]!==undefined)tot[k]+=c[k];});
@@ -10093,12 +10093,14 @@ function submitTxForm(mode,idx,isP,keepOpen=false){
     }
   }
   const item=S.items.find(m=>m.id===itemId)||{name:'',desc:''};
-  const _cid=payment==='CREDIT'?`cr_${isP?'p':'s'}_${Date.now()}_${Math.random().toString(36).slice(2,7)}`:undefined;
+  // Keep the existing credit ID when editing, so recorded payments stay linked to this record
+  const _existingRow=mode==='edit'?(isP?S.purchase:S.sales)[idx]:null;
+  const _cid=payment==='CREDIT'?((_existingRow&&_existingRow._cid)||`cr_${isP?'p':'s'}_${Date.now()}_${Math.random().toString(36).slice(2,7)}`):undefined;
   if(isP){
     const vatOn=document.getElementById('f-vat')?.checked??false;
     const row={date,party,branch,id:itemId,name:item.name,desc:item.desc,itemImage:item.image||'',qty,uPrice:price,payment,vatOn,notes,_by:S.user};
     if(_cid)row._cid=_cid;
-    if(mode==='add'){row.createdAt=new Date().toISOString();S.purchase.push(row);}else S.purchase[idx]={...S.purchase[idx],...row};
+    if(mode==='add'){row.createdAt=new Date().toISOString();S.purchase.push(row);}else{S.purchase[idx]={...S.purchase[idx],...row};if(!_cid)delete S.purchase[idx]._cid;}
   }else{
     const vatOn=document.getElementById('f-vat')?.checked??true;
     const wh3On=document.getElementById('f-wh3')?.checked??false;
@@ -10106,7 +10108,7 @@ function submitTxForm(mode,idx,isP,keepOpen=false){
     const commission=parseFloat(document.getElementById('f-commission')?.value)||0;
     const row={date,party,branch,id:itemId,name:item.name,desc:item.desc,itemImage:item.image||'',qty,sPrice:price,payment,vatOn,wh3On,vwhOn,commission,notes,_by:S.user};
     if(_cid)row._cid=_cid;
-    if(mode==='add'){row.createdAt=new Date().toISOString();S.sales.push(row);}else S.sales[idx]={...S.sales[idx],...row};
+    if(mode==='add'){row.createdAt=new Date().toISOString();S.sales.push(row);}else{S.sales[idx]={...S.sales[idx],...row};if(!_cid)delete S.sales[idx]._cid;}
   }
   saveUserData();renderTab();updateSuggestions();
   if(keepOpen){
@@ -11058,10 +11060,14 @@ function _reportCalc(branch){
   const ER=inRange(branch==='STORE'?S.expense.filter(e=>!e.branch||e.branch==='STORE'):branch?S.expense.filter(e=>e.branch===branch):S.expense.filter(e=>e.branch&&e.branch!=='STORE'));
   const storeER=inRange(S.expense.filter(e=>!e.branch||e.branch==='STORE'));
   const initBal=branch?_branchBal(branch):S.branches.reduce((a,b)=>a+_branchBal(b),0);
-  const tPC=PR.filter(p=>p.payment==='CASH').reduce((a,b)=>a+calcPT(b),0);
-  const tPCr=PR.filter(p=>p.payment!=='CASH').reduce((a,b)=>a+calcPT(b),0);
-  const tSC=SR.filter(s=>s.payment==='CASH').reduce((a,b)=>a+calcST(b),0);
-  const tSCr=SR.filter(s=>s.payment!=='CASH').reduce((a,b)=>a+calcST(b),0);
+  const _isCash=r=>!r.payment||r.payment==='CASH';
+  const tPC=PR.filter(_isCash).reduce((a,b)=>a+calcPT(b),0);
+  const tPCr=PR.filter(p=>p.payment==='CREDIT').reduce((a,b)=>a+calcPT(b),0);
+  const tPOth=PR.filter(p=>!_isCash(p)&&p.payment!=='CREDIT').reduce((a,b)=>a+calcPT(b),0); // e.g. STORE TRANSFER - not credit
+  const tSC=SR.filter(_isCash).reduce((a,b)=>a+calcST(b),0);
+  const tSCr=SR.filter(s=>s.payment==='CREDIT').reduce((a,b)=>a+calcST(b),0);
+  const tSOth=SR.filter(s=>!_isCash(s)&&s.payment!=='CREDIT').reduce((a,b)=>a+calcST(b),0);
+  const tPTot=tPC+tPCr+tPOth, tSTot=tSC+tSCr+tSOth;
   const tE=ER.reduce((a,b)=>a+(parseFloat(b.amt)||0),0);
   const tStoreE=branch?0:storeER.reduce((a,b)=>a+(parseFloat(b.amt)||0),0);
   // Credit payments settled: use actual partial amounts paid, capped at the full credit value
@@ -11076,7 +11082,7 @@ function _reportCalc(branch){
     const tot=calcST(s);return a+tot-Math.min(getCreditPaidAmt(s._cid),tot);},0);
   // Cash on hand: only actual cash movements (paid credit settlements included)
   const coh=initBal+tSC+tSCrPaid-tPC-tPCrPaid-tE;
-  const totalSales=tSC+tSCr;
+  const totalSales=tSTot;
   // Net P/L via FIFO: net per entry = qty×sPrice − qty×uPrice (matched purchase lot)
   const allBranchPR=branch?S.purchase.filter(p=>p.branch===branch):S.purchase;
   const fifo={};
@@ -11100,7 +11106,7 @@ function _reportCalc(branch){
   const tVwh=SR.filter(s=>s.payment==='CASH').reduce((a,s)=>{const b=(s.qty||0)*(s.sPrice||0);return a+(s.vwhOn?b*0.075:0);},0);
   const tWh3=SR.filter(s=>s.payment==='CASH').reduce((a,s)=>{const b=(s.qty||0)*(s.sPrice||0);return a+(s.wh3On?b*0.03:0);},0);
   const tComm=SR.reduce((a,s)=>a+(parseFloat(s.commission)||0),0);
-  return{PR,SR,ER,initBal,tPC,tPCr,tPCrPaid,tPCrOut,tSC,tSCr,tSCrPaid,tSCrOut,tE,tStoreE,net,coh,totalSales:totalSalesPL,totalPurchases,entryPL,tVwh,tWh3,tComm};
+  return{PR,SR,ER,initBal,tPC,tPCr,tPOth,tSOth,tPTot,tSTot,tPCrPaid,tPCrOut,tSC,tSCr,tSCrPaid,tSCrOut,tE,tStoreE,net,coh,totalSales:totalSalesPL,totalPurchases,entryPL,tVwh,tWh3,tComm};
 }
 
 function renderReport(){
@@ -11154,11 +11160,11 @@ function _renderAllBranchesReport(branchTabsHtml,datebar){
     const rows=[
       {l:L('initBalance'),v:c.initBal,edit:true},
       {l:L('purchOnCash'),v:c.tPC,neg:true},
-      {l:L('purchOnCredit'),v:c.tPCr,neg:true},
-      {l:L('totalPurchaseLabel'),v:c.tPC+c.tPCr,neg:true},
+      {l:L('purchOnCredit'),v:c.tPCrOut,neg:true},
+      {l:L('totalPurchaseLabel'),v:c.tPTot,neg:true},
       {l:L('salesOnCash'),v:c.tSC,pos:true},
       {l:L('salesOnCredit'),v:c.tSCrOut,pos:true},
-      {l:L('totalSalesLabel'),v:c.tSC+c.tSCr,pos:true},
+      {l:L('totalSalesLabel'),v:c.tSTot,pos:true},
       {l:`${esc(b)} ${L('branchExpenses')}`,v:c.tE,neg:true},
       {l:L('netProfitLoss'),v:c.net,total:true},
       {l:L('vatWH'),v:c.tVwh},
@@ -11174,7 +11180,7 @@ function _renderAllBranchesReport(branchTabsHtml,datebar){
     </div>`;
   }).join('');
 
-  const tot=S.branches.reduce((acc,b)=>{const c=_reportCalc(b);acc.ib+=c.initBal;acc.tSC+=c.tSC;acc.tSCrOut+=c.tSCrOut;acc.tPC+=c.tPC;acc.tPCr+=c.tPCr;acc.tE+=c.tE;acc.net+=c.net;acc.coh+=c.coh;acc.tVwh+=c.tVwh;acc.tWh3+=c.tWh3;acc.tComm+=c.tComm;return acc;},{ib:0,tSC:0,tSCrOut:0,tPC:0,tPCr:0,tE:0,net:0,coh:0,tVwh:0,tWh3:0,tComm:0});
+  const tot=S.branches.reduce((acc,b)=>{const c=_reportCalc(b);acc.ib+=c.initBal;acc.tSC+=c.tSC;acc.tSCrOut+=c.tSCrOut;acc.tPC+=c.tPC;acc.tPCr+=c.tPCr;acc.tPCrOut+=c.tPCrOut;acc.tPTot+=c.tPTot;acc.tE+=c.tE;acc.net+=c.net;acc.coh+=c.coh;acc.tVwh+=c.tVwh;acc.tWh3+=c.tWh3;acc.tComm+=c.tComm;return acc;},{ib:0,tSC:0,tSCrOut:0,tPC:0,tPCr:0,tPCrOut:0,tPTot:0,tE:0,net:0,coh:0,tVwh:0,tWh3:0,tComm:0});
   const _dmy2ymd=s=>{const p=(s||'').split('-');return p.length===3?p[2]+'-'+p[1]+'-'+p[0]:s;};
   const _inRng=r=>{if(!r.date)return true;const d=_dmy2ymd(r.date.slice(0,10));if(S.reportRange.from&&d<S.reportRange.from)return false;if(S.reportRange.to&&d>S.reportRange.to)return false;return true;};
   tot.tStoreE=S.expense.filter(e=>!e.branch||e.branch==='STORE').filter(_inRng).reduce((a,b)=>a+(parseFloat(b.amt)||0),0);
@@ -11185,8 +11191,8 @@ function _renderAllBranchesReport(branchTabsHtml,datebar){
     {l:L('salesOnCash'),v:tot.tSC,pos:true},
     {l:L('salesOnCredit'),v:tot.tSCrOut,pos:true},
     {l:L('purchOnCash'),v:tot.tPC,neg:true},
-    {l:L('purchOnCredit'),v:tot.tPCr,neg:true},
-    {l:L('totalPurchaseLabel'),v:tot.tPC+tot.tPCr,neg:true},
+    {l:L('purchOnCredit'),v:tot.tPCrOut,neg:true},
+    {l:L('totalPurchaseLabel'),v:tot.tPTot,neg:true},
     {l:L('branchExpenses'),v:tot.tE,neg:true},
     {l:L('storeExpenses'),v:tot.tStoreE,neg:true},
     {l:L('netProfitLoss'),v:tot.net,total:true},
@@ -11246,8 +11252,8 @@ function _renderSingleBranchReport(branch,branchTabsHtml,datebar){
     {l:`${L('salesOnCash')}${label?` ${label}`:''}`,v:c.tSC,pos:true},
     {l:`${L('salesOnCredit')}${label?` ${label}`:''}`,v:c.tSCrOut,pos:true},
     {l:`${L('purchOnCash')}${label?` ${label}`:''}`,v:c.tPC,neg:true},
-    {l:`${L('purchOnCredit')}${label?` ${label}`:''}`,v:c.tPCr,neg:true},
-    {l:`${L('totalPurchaseLabel')}${label?` ${label}`:''}`,v:c.tPC+c.tPCr,neg:true},
+    {l:`${L('purchOnCredit')}${label?` ${label}`:''}`,v:c.tPCrOut,neg:true},
+    {l:`${L('totalPurchaseLabel')}${label?` ${label}`:''}`,v:c.tPTot,neg:true},
     {l:branch==='STORE'?L('storeExpenses'):L('branchExpenses'),v:c.tE,neg:true},
     {l:L('netProfitLoss'),v:c.net,total:true},
     {l:L('vatWH'),v:c.tVwh},
@@ -11259,8 +11265,8 @@ function _renderSingleBranchReport(branch,branchTabsHtml,datebar){
     <div class="report-label">${r.l}${r.edit&&isOwner()?`<input type="number" value="${r.v}" oninput="_setBranchBal('${esc(r.branch||S.branches[0])}',this.value)" style="margin-left:12px;width:120px;padding:4px 8px;border:1.5px solid var(--border2);border-radius:6px;background:var(--surface2);color:var(--text);font-family:var(--mono);font-size:12px;outline:none">`:''}</div>
     <div class="report-val ${r.neg?'num-neg':r.pos?'num-pos':r.v<0?'num-neg':r.v>0?'num-pos':''}">${r.edit&&isOwner()?'':fmt(r.v)}</div>
   </div>`).join('');
-  const creditPurchases=PR.filter(p=>p.payment&&p.payment!=='CASH');
-  const creditSales=SR.filter(s=>s.payment&&s.payment!=='CASH');
+  const creditPurchases=PR.filter(p=>p.payment==='CREDIT');
+  const creditSales=SR.filter(s=>s.payment==='CREDIT');
   const _creditBadge=(cid,totalAmt)=>{const p=getCreditPaidAmt(cid);const fp=p>=totalAmt-0.001;const pp=p>0.001&&!fp;return fp?`<span class="td-badge badge-cash"><svg class="ic"><use href="#i-check-circle"/></svg> PAID</span>`:pp?`<span class="td-badge" style="background:rgba(45,75,138,.14);color:var(--p2);border:1px solid rgba(45,75,138,.25);font-size:9px"><svg class="ic"><use href="#i-zap"/></svg> PARTIAL</span>`:`<span class="td-badge badge-credit">CREDIT</span>`;};
   const _calcPT=r=>{const b=(parseFloat(r.qty)||0)*(parseFloat(r.uPrice)||0);return b+(r.vatOn?b*0.15:0);};
   const _calcST=s=>{const b=(s.qty||0)*(s.sPrice||0);return b+(s.vatOn?b*0.15:0)-(s.wh3On?b*0.03:0)-(s.vwhOn?b*0.075:0)-(s.commission||0);};
@@ -11278,8 +11284,11 @@ function _renderSingleBranchReport(branch,branchTabsHtml,datebar){
     <td class="num">${fmt(tot)}</td>
     <td>${_creditBadge(s._cid,tot)}</td>
   </tr>`;}).join(''):`<tr><td colspan="7" class="credit-empty">${L('noCreditSalesInRange')}</td></tr>`;
-  const creditTotalP=creditPurchases.reduce((a,r)=>a+_calcPT(r),0);
-  const creditTotalS=creditSales.reduce((a,s)=>a+_calcST(s),0);
+  const _outst=(r,tot)=>r._cid?Math.max(0,tot-getCreditPaidAmt(r._cid)):tot;
+  const creditTotalP=creditPurchases.reduce((a,r)=>a+_outst(r,_calcPT(r)),0);
+  const creditTotalS=creditSales.reduce((a,s)=>a+_outst(s,_calcST(s)),0);
+  const creditPendP=creditPurchases.filter(r=>_outst(r,_calcPT(r))>0.001).length;
+  const creditPendS=creditSales.filter(s=>_outst(s,_calcST(s))>0.001).length;
   // ── Analytics: sparklines, period-comparison, top-5 ──────
   const _aS=branch?S.sales.filter(s=>s.branch===branch):S.sales;
   const _aP=branch?S.purchase.filter(p=>p.branch===branch):S.purchase;
@@ -11290,14 +11299,14 @@ function _renderSingleBranchReport(branch,branchTabsHtml,datebar){
   const _pm=_et.month>1?{month:_et.month-1,year:_et.year}:{month:13,year:_et.year-1};
   const _inM=(r,mo,yr)=>{const dm=String(r.date||'').match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);return dm&&+dm[2]===mo&&+dm[3]===yr;};
   const _noR=!S.reportRange.from&&!S.reportRange.to;
-  const _cS=_noR?_aS.filter(r=>_inM(r,_et.month,_et.year)).reduce((a,r)=>a+(parseFloat(r.qty)||0)*(parseFloat(r.sPrice)||0),0):c.tSC+c.tSCr;
+  const _cS=_noR?_aS.filter(r=>_inM(r,_et.month,_et.year)).reduce((a,r)=>a+(parseFloat(r.qty)||0)*(parseFloat(r.sPrice)||0),0):c.tSTot;
   const _pS=_noR?_aS.filter(r=>_inM(r,_pm.month,_pm.year)).reduce((a,r)=>a+(parseFloat(r.qty)||0)*(parseFloat(r.sPrice)||0),0):0;
   const _cN=_noR?_cS-_aP.filter(r=>_inM(r,_et.month,_et.year)).reduce((a,r)=>a+(parseFloat(r.qty)||0)*(parseFloat(r.uPrice)||0),0):c.net;
   const _pN=_noR?_pS-_aP.filter(r=>_inM(r,_pm.month,_pm.year)).reduce((a,r)=>a+(parseFloat(r.qty)||0)*(parseFloat(r.uPrice)||0),0):0;
   const _pLbl=_noR?L('vsLastMonth'):L('inRange');
   const _statGrid=`<div class="report-stat-grid no-print">
-    <div class="report-stat-card"><div class="report-stat-label">${L('totalSalesLabel')}</div><div class="report-stat-val">${fmt(c.tSC+c.tSCr)}</div><div class="report-stat-row">${_sparkline(_sBkts)}${_noR?_delta(_cS,_pS):''}<span style="font-size:10px;color:var(--text3)">${_pLbl}</span></div></div>
-    <div class="report-stat-card"><div class="report-stat-label">${L('totalPurchaseLabel')}</div><div class="report-stat-val">${fmt(c.tPC+c.tPCr)}</div><div class="report-stat-row">${_sparkline(_pBkts)}</div></div>
+    <div class="report-stat-card"><div class="report-stat-label">${L('totalSalesLabel')}</div><div class="report-stat-val">${fmt(c.tSTot)}</div><div class="report-stat-row">${_sparkline(_sBkts)}${_noR?_delta(_cS,_pS):''}<span style="font-size:10px;color:var(--text3)">${_pLbl}</span></div></div>
+    <div class="report-stat-card"><div class="report-stat-label">${L('totalPurchaseLabel')}</div><div class="report-stat-val">${fmt(c.tPTot)}</div><div class="report-stat-row">${_sparkline(_pBkts)}</div></div>
     <div class="report-stat-card"><div class="report-stat-label">${L('netPLShort')}</div><div class="report-stat-val ${c.net>=0?'num-pos':'num-neg'}">${fmt(c.net)}</div><div class="report-stat-row">${_sparkline(_nBkts)}${_noR?_delta(_cN,_pN):''}<span style="font-size:10px;color:var(--text3)">${_pLbl}</span></div></div>
     <div class="report-stat-card"><div class="report-stat-label">${L('cashOnHand')}</div><div class="report-stat-val ${c.coh>=0?'num-pos':'num-neg'}">${fmt(c.coh)}</div><div class="report-stat-row"><span style="font-size:10px;color:var(--text3)">${fmt(c.tE)} ${L('expensesShort')}</span></div></div>
   </div>`;
@@ -11351,7 +11360,7 @@ function _renderSingleBranchReport(branch,branchTabsHtml,datebar){
       <div class="credit-section-hdr">
         <div class="credit-section-hdr-icon purchase"><svg class="ic"><use href="#i-cart"/></svg></div>
         <span class="credit-section-title">${L('creditPurchTitle')}</span>
-        <span class="credit-section-count purchase">${creditPurchases.length} · ${fmt(creditTotalP)}</span>
+        <span class="credit-section-count purchase">${creditPendP} · ${fmt(creditTotalP)}</span>
       </div>
       <div class="credit-table-wrap"><table class="credit-table">
         <thead><tr><th>${L('date')}</th><th>${L('supplier')}</th><th>${L('item')}</th><th>${L('desc')}</th><th class="num">${L('qty')}</th><th class="num">${L('amount')}</th><th>${L('method')}</th></tr></thead>
@@ -11362,7 +11371,7 @@ function _renderSingleBranchReport(branch,branchTabsHtml,datebar){
       <div class="credit-section-hdr">
         <div class="credit-section-hdr-icon sales"><svg class="ic"><use href="#i-money"/></svg></div>
         <span class="credit-section-title">${L('creditSalesTitle')}</span>
-        <span class="credit-section-count sales">${creditSales.length} · ${fmt(creditTotalS)}</span>
+        <span class="credit-section-count sales">${creditPendS} · ${fmt(creditTotalS)}</span>
       </div>
       <div class="credit-table-wrap"><table class="credit-table">
         <thead><tr><th>${L('date')}</th><th>${L('customer')}</th><th>${L('item')}</th><th>${L('desc')}</th><th class="num">${L('qty')}</th><th class="num">${L('amount')}</th><th>${L('method')}</th></tr></thead>
@@ -11494,8 +11503,8 @@ function _printPartyReport(type){
     :(activeBranch?S.purchase.filter(p=>p.branch===activeBranch):S.purchase).filter(inRange);
   const partyRecs=allRecs.filter(r=>(r.party||'')==selected);
   const total=partyRecs.reduce((a,r)=>a+calcAmt(r),0);
-  const cashTotal=partyRecs.filter(r=>r.payment==='CASH').reduce((a,r)=>a+calcAmt(r),0);
-  const creditTotal=total-cashTotal;
+  const cashTotal=partyRecs.filter(r=>r.payment==='CASH').reduce((a,r)=>a+calcAmt(r),0)+partyRecs.filter(r=>r.payment==='CREDIT'&&r._cid).reduce((a,r)=>a+Math.min(getCreditPaidAmt(r._cid),calcAmt(r)),0);
+  const creditTotal=Math.max(0,total-cashTotal);
   const _printPayBadge=r=>{
     if(r.payment==='CASH')return`<span class="pay-badge pay-cash">PAID</span>`;
     if(r._cid){const p=getCreditPaidAmt(r._cid),t=calcAmt(r),fp=p>=t-0.001,pp=p>0.001&&!fp;
