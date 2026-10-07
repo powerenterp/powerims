@@ -7517,7 +7517,7 @@ function _exportPartyPDF(type){
     doc.autoTable({
       startY:y,
       head:[['Date','Item','Description','Qty','Unit Price','Amount','Payment']],
-      body:partyRecs.map(r=>{const _p=r._cid?getCreditPaidAmt(r._cid):0,_t=calcAmt(r),_fp=_p>=_t-0.001,_pp=_p>0.001&&!_fp;const payLbl=r.payment==='CASH'?'PAID':r._cid?(_fp?'PAID':_pp?'PARTIAL':'CREDIT'):r.payment||'—';return[(r.date||'').slice(0,10),r.name||r.id||'—',r.desc||'—',fmtQ(parseFloat(r.qty)||0),f(isCustomer?(r.sPrice||0):(parseFloat(r.uPrice)||0)),f(_t),payLbl];}),
+      body:partyRecs.map(r=>{const _p=r._cid?getCreditPaidAmt(r._cid):0,_t=calcAmt(r),_fp=_p>=_t-0.006,_pp=_p>0.001&&!_fp;const payLbl=r.payment==='CASH'?'PAID':r._cid?(_fp?'PAID':_pp?'PARTIAL':'CREDIT'):r.payment||'—';return[(r.date||'').slice(0,10),r.name||r.id||'—',r.desc||'—',fmtQ(parseFloat(r.qty)||0),f(isCustomer?(r.sPrice||0):(parseFloat(r.uPrice)||0)),f(_t),payLbl];}),
       foot:[['','','','','TOTAL',f(total),'']],
       margin:{left:M,right:M},
       styles:{fontSize:7.5,cellPadding:2.5,textColor:DARK},
@@ -8530,7 +8530,7 @@ function updateNotifBadge(){
   const overdue=[
     ...S.sales.filter(s=>s.payment==='CREDIT'&&s._cid).map(s=>({_cid:s._cid,_amt:calcST(s),date:s.date})),
     ...(S.purchase||[]).filter(p=>p.payment==='CREDIT'&&p._cid).map(p=>({_cid:p._cid,_amt:calcPT(p),date:p.date}))
-  ].filter(r=>getCreditPaidAmt(r._cid)<r._amt-0.001&&_creditAgeDays(r.date)>=31);
+  ].filter(r=>getCreditPaidAmt(r._cid)<r._amt-0.006&&_creditAgeDays(r.date)>=31);
   const n=overdue.length;
   badge.textContent=n>9?'9+':String(n);
   badge.style.display=n>0?'flex':'none';
@@ -8549,7 +8549,7 @@ function openCustDrawer(party){
   document.getElementById('cdr-name').textContent=party;
   document.getElementById('cdr-sub').textContent=`${aSales.length} credit sale(s) · ${aPurch.length} credit purchase(s)`;
   const _cItem=(r,amt)=>{
-    const paid=getCreditPaidAmt(r._cid),rem=Math.max(0,amt-paid),isPaid=paid>=amt-0.001,days=_creditAgeDays(r.date);
+    const paid=getCreditPaidAmt(r._cid),rem=Math.max(0,amt-paid),isPaid=paid>=amt-0.006,days=_creditAgeDays(r.date);
     const schd=(S.creditSchedule||[]).filter(s=>s.cid===r._cid&&!s.paid);
     return`<div class="cdr-item"${!isPaid&&days>30?` style="border-color:var(--error)"`:''}><div style="display:flex;justify-content:space-between;align-items:flex-start;gap:6px"><div><span style="font-size:11.5px;font-weight:600">${esc(r.name||r.id||'—')}</span><span style="font-size:10px;color:var(--text3);margin-left:6px">${(r.date||'').slice(0,10)}</span></div><span style="font-family:var(--mono);font-size:12px;font-weight:700">${fmt(amt)}</span></div><div style="display:flex;align-items:center;gap:6px;margin-top:5px;flex-wrap:wrap">${isPaid?'<span class="td-badge badge-cash" style="font-size:9px">PAID</span>':_agingBadge(days)}${!isPaid?`<span style="font-size:10px;color:var(--text3)">Bal: <strong class="td-mono" style="color:var(--error)">${fmt(rem)}</strong></span>`:''}${canWrite('CREDIT')&&!isPaid?`<button type="button" class="btn btn-sm" onclick="openCreditPayModal('${r._cid}',${amt})" style="font-size:9px;padding:2px 7px">+ Pay</button><button type="button" class="btn btn-sm" onclick="openScheduleModal('${r._cid}',${amt})" style="font-size:9px;padding:2px 7px;opacity:.75"><svg class="ic" style="width:10px;height:10px"><use href="#i-calendar"/></svg> Sched</button>`:''}${schd.length?`<span class="aging-badge aging-warn">${schd.length} scheduled</span>`:''}</div></div>`;
   };
@@ -10257,7 +10257,7 @@ function renderTx(){
     if(!isP){if(row.wh3On)total-=base*0.03;if(row.vwhOn)total-=base*0.075;if(comm)total-=comm;}
     totQty+=qty;totVal+=total;totComm+=comm;
     const pmBadge=m=>{
-      if(m==='CREDIT'&&row._cid){const p=getCreditPaidAmt(row._cid);const fp=p>=total-0.001;const pp=p>0.001&&!fp;if(fp)return`<span class="td-badge badge-cash"><svg class="ic"><use href="#i-check-circle"/></svg> PAID</span>`;if(pp)return`<span class="td-badge" style="background:rgba(45,75,138,.14);color:var(--p2);border:1px solid rgba(45,75,138,.25);font-size:9px"><svg class="ic"><use href="#i-zap"/></svg> PARTIAL</span>`;}
+      if(m==='CREDIT'&&row._cid){const p=getCreditPaidAmt(row._cid);const fp=p>=total-0.006;const pp=p>0.001&&!fp;if(fp)return`<span class="td-badge badge-cash"><svg class="ic"><use href="#i-check-circle"/></svg> PAID</span>`;if(pp)return`<span class="td-badge" style="background:rgba(45,75,138,.14);color:var(--p2);border:1px solid rgba(45,75,138,.25);font-size:9px"><svg class="ic"><use href="#i-zap"/></svg> PARTIAL</span>`;}
       return`<span class="td-badge ${m==='CASH'?'badge-cash':m==='CREDIT'?'badge-credit':m==='STORE TRANSFER'?'badge-store':'badge-other'}">${m||'CASH'}</span>`;
     };
     const taxCell=`<td class="num" data-label="Tax">${row.vatOn?`<span class="td-badge badge-cash" style="font-size:9px">VAT</span>`:''}</td>`;
@@ -10499,13 +10499,13 @@ function exportCreditPDF(){
   const byType=activeFilter==='sales'?all.filter(r=>r._type==='sale'):
                activeFilter==='purchases'?all.filter(r=>r._type==='purchase'):all;
   let filtered=activeFilter==='paid'
-    ?byType.filter(r=>getCreditPaidAmt(r._cid)>=r._amt-0.001)
-    :byType.filter(r=>getCreditPaidAmt(r._cid)<r._amt-0.001);
+    ?byType.filter(r=>getCreditPaidAmt(r._cid)>=r._amt-0.006)
+    :byType.filter(r=>getCreditPaidAmt(r._cid)<r._amt-0.006);
   if(activeParty)filtered=filtered.filter(r=>(r.party||'')===activeParty);
   filtered.forEach(row=>{
     const paidAmt=getCreditPaidAmt(row._cid);
     const balance=Math.max(0,row._amt-paidAmt);
-    const isFullyPaid=paidAmt>=row._amt-0.001;
+    const isFullyPaid=paidAmt>=row._amt-0.006;
     const status=isFullyPaid?'PAID':paidAmt>0.001?'PARTIAL':'OUTSTANDING';
     const typeLabel=row._type==='sale'?'SALE':'PURCHASE';
     totalAmt+=row._amt;
@@ -10798,7 +10798,7 @@ function getCreditPaidAmt(cid){
 function openCreditPayModal(cid,totalAmt){
   _cpCid=cid;_cpTotalAmt=totalAmt;
   const paid=getCreditPaidAmt(cid);
-  const remaining=Math.max(0,totalAmt-paid);
+  const remaining=(totalAmt-paid)<0.006?0:(totalAmt-paid);
   document.getElementById('credit-pay-subtitle').textContent='Enter the amount received/paid';
   document.getElementById('credit-pay-summary').innerHTML=
     `<div style="display:flex;justify-content:space-between"><span>Total Credit</span><strong class="td-mono">${fmt(totalAmt)}</strong></div>`+
@@ -10819,7 +10819,7 @@ function saveCreditPayment(){
   const err=document.getElementById('credit-pay-error');
   if(amt<=0){err.textContent='Enter a positive amount.';return;}
   const paid=getCreditPaidAmt(_cpCid);
-  if(paid+amt>_cpTotalAmt+0.001){err.textContent=`Amount exceeds remaining balance of ${fmt(_cpTotalAmt-paid)}.`;return;}
+  if(paid+amt>_cpTotalAmt+0.006){err.textContent=`Amount exceeds remaining balance of ${fmt(_cpTotalAmt-paid)}.`;return;}
   if(!S.creditPayments)S.creditPayments=[];
   S.creditPayments.push({cid:_cpCid,paidAt:new Date().toISOString(),paidBy:S.user,amount:amt,note:note||undefined});
   saveUserData();
@@ -10859,7 +10859,7 @@ function payAllCreditForParty(party){
     ...S.sales.filter(s=>s.payment==='CREDIT'&&s._cid&&(s.party||'')===party).map(r=>({...r,_amt:calcST(r)})),
     ...S.purchase.filter(p=>p.payment==='CREDIT'&&p._cid&&(p.party||'')===party).map(r=>({...r,_amt:calcPT(r)}))
   ];
-  const outstanding=rows.filter(r=>getCreditPaidAmt(r._cid)<r._amt-0.001);
+  const outstanding=rows.filter(r=>getCreditPaidAmt(r._cid)<r._amt-0.006);
   if(!outstanding.length){showToast('No outstanding balance for '+party,'warn');return;}
   const totalRemaining=outstanding.reduce((a,r)=>a+Math.max(0,r._amt-getCreditPaidAmt(r._cid)),0);
   customConfirm('Pay All Outstanding?',
@@ -10868,7 +10868,7 @@ function payAllCreditForParty(party){
       if(!S.creditPayments)S.creditPayments=[];
       outstanding.forEach(r=>{
         const remaining=Math.max(0,r._amt-getCreditPaidAmt(r._cid));
-        if(remaining>0.001)S.creditPayments.push({cid:r._cid,paidAt:new Date().toISOString(),paidBy:S.user,amount:remaining});
+        if(remaining>0.006)S.creditPayments.push({cid:r._cid,paidAt:new Date().toISOString(),paidBy:S.user,amount:remaining});
       });
       saveUserData();renderTab();
       showToast(`<svg class="ic"><use href="#i-check-circle"/></svg> ${outstanding.length} record(s) settled for ${party}`,'success');
@@ -10882,7 +10882,7 @@ function payAllCreditForPartyType(party,type){
   const source=type==='sale'
     ?S.sales.filter(s=>s.payment==='CREDIT'&&s._cid&&(s.party||'')===party).map(r=>({...r,_amt:calcST(r)}))
     :S.purchase.filter(p=>p.payment==='CREDIT'&&p._cid&&(p.party||'')===party).map(r=>({...r,_amt:calcPT(r)}));
-  const outstanding=source.filter(r=>getCreditPaidAmt(r._cid)<r._amt-0.001);
+  const outstanding=source.filter(r=>getCreditPaidAmt(r._cid)<r._amt-0.006);
   if(!outstanding.length){showToast('No outstanding balance for '+party+' ('+type+')','warn');return;}
   const totalRemaining=outstanding.reduce((a,r)=>a+Math.max(0,r._amt-getCreditPaidAmt(r._cid)),0);
   const label=type==='sale'?'Receivable':'Payable';
@@ -10893,7 +10893,7 @@ function payAllCreditForPartyType(party,type){
       if(!S.creditPayments)S.creditPayments=[];
       outstanding.forEach(r=>{
         const remaining=Math.max(0,r._amt-getCreditPaidAmt(r._cid));
-        if(remaining>0.001)S.creditPayments.push({cid:r._cid,paidAt:new Date().toISOString(),paidBy:S.user,amount:remaining});
+        if(remaining>0.006)S.creditPayments.push({cid:r._cid,paidAt:new Date().toISOString(),paidBy:S.user,amount:remaining});
       });
       saveUserData();renderTab();
       showToast(`<svg class="ic"><use href="#i-check-circle"/></svg> ${outstanding.length} ${label.toLowerCase()} record(s) settled for ${party}`,'success');
@@ -10930,9 +10930,9 @@ function renderCreditPage(){
   } else if(activeFilter === 'purchases') {
     filteredParties = [...new Set(all.filter(r=>r._type==='purchase').map(r=>r.party||'').filter(Boolean))].sort();
   } else if(activeFilter === 'paid') {
-    filteredParties = [...new Set(all.filter(r=>getCreditPaidAmt(r._cid)>=r._amt-0.001).map(r=>r.party||'').filter(Boolean))].sort();
+    filteredParties = [...new Set(all.filter(r=>getCreditPaidAmt(r._cid)>=r._amt-0.006).map(r=>r.party||'').filter(Boolean))].sort();
   } else if(activeFilter === 'outstanding') {
-    filteredParties = [...new Set(all.filter(r=>getCreditPaidAmt(r._cid)<r._amt-0.001).map(r=>r.party||'').filter(Boolean))].sort();
+    filteredParties = [...new Set(all.filter(r=>getCreditPaidAmt(r._cid)<r._amt-0.006).map(r=>r.party||'').filter(Boolean))].sort();
   }
 
   if(activeParty && !filteredParties.includes(activeParty)){
@@ -10944,14 +10944,14 @@ function renderCreditPage(){
   const byType=activeFilter==='sales'?all.filter(r=>r._type==='sale'):
                activeFilter==='purchases'?all.filter(r=>r._type==='purchase'):all;
   let filtered=isPaidView
-    ?byType.filter(r=>getCreditPaidAmt(r._cid)>=r._amt-0.001)
-    :byType.filter(r=>getCreditPaidAmt(r._cid)<r._amt-0.001);
+    ?byType.filter(r=>getCreditPaidAmt(r._cid)>=r._amt-0.006)
+    :byType.filter(r=>getCreditPaidAmt(r._cid)<r._amt-0.006);
   if(activeParty)filtered=filtered.filter(r=>(r.party||'')===activeParty);
 
   const rows=filtered.map(row=>{
     const paidAmt=getCreditPaidAmt(row._cid);
     const remaining=Math.max(0,row._amt-paidAmt);
-    const isFullyPaid=paidAmt>=row._amt-0.001;
+    const isFullyPaid=paidAmt>=row._amt-0.006;
     const isPartial=paidAmt>0.001&&!isFullyPaid;
     const payments=(S.creditPayments||[]).filter(p=>p.cid===row._cid);
     const ageDays=_creditAgeDays(row.date);
@@ -10995,10 +10995,10 @@ function renderCreditPage(){
     </tr>`;
   }).join('');
 
-  const numOutstandingAll=all.filter(r=>getCreditPaidAmt(r._cid)<r._amt-0.001).length;
-  const numPaidAll=all.filter(r=>getCreditPaidAmt(r._cid)>=r._amt-0.001).length;
-  const numOutstandingSales=all.filter(r=>r._type==='sale'&&getCreditPaidAmt(r._cid)<r._amt-0.001).length;
-  const numOutstandingPurch=all.filter(r=>r._type==='purchase'&&getCreditPaidAmt(r._cid)<r._amt-0.001).length;
+  const numOutstandingAll=all.filter(r=>getCreditPaidAmt(r._cid)<r._amt-0.006).length;
+  const numPaidAll=all.filter(r=>getCreditPaidAmt(r._cid)>=r._amt-0.006).length;
+  const numOutstandingSales=all.filter(r=>r._type==='sale'&&getCreditPaidAmt(r._cid)<r._amt-0.006).length;
+  const numOutstandingPurch=all.filter(r=>r._type==='purchase'&&getCreditPaidAmt(r._cid)<r._amt-0.006).length;
 
   const summaryCards=`
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:14px 16px;background:var(--surface2);border-bottom:1px solid var(--border)">
@@ -11023,11 +11023,11 @@ function renderCreditPage(){
     const salesTot=partySales.reduce((a,r)=>a+r._amt,0);
     const salesPaid=partySales.reduce((a,r)=>a+getCreditPaidAmt(r._cid),0);
     const salesOut=Math.max(0,salesTot-salesPaid);
-    const hasSalesOut=partySales.some(r=>getCreditPaidAmt(r._cid)<r._amt-0.001);
+    const hasSalesOut=partySales.some(r=>getCreditPaidAmt(r._cid)<r._amt-0.006);
     const purchTot=partyPurch.reduce((a,r)=>a+r._amt,0);
     const purchPaid=partyPurch.reduce((a,r)=>a+getCreditPaidAmt(r._cid),0);
     const purchOut=Math.max(0,purchTot-purchPaid);
-    const hasPurchOut=partyPurch.some(r=>getCreditPaidAmt(r._cid)<r._amt-0.001);
+    const hasPurchOut=partyPurch.some(r=>getCreditPaidAmt(r._cid)<r._amt-0.006);
     const salesRow=hasSales?`<div style="display:flex;align-items:center;gap:14px;flex-wrap:wrap">
       <span class="td-badge badge-cash" style="font-size:10px;min-width:82px;text-align:center">${L('creditReceivableLabel')}</span>
       <span style="color:var(--text2);font-size:12px">${L('total')} <strong class="td-mono" style="color:var(--text)">${fmt(salesTot)}</strong></span>
@@ -11334,10 +11334,10 @@ function _renderSingleBranchReport(branch,branchTabsHtml,datebar){
   </div>`).join('');
   const creditPurchases=_newest(PR.filter(p=>p.payment==='CREDIT'));
   const creditSales=_newest(SR.filter(s=>s.payment==='CREDIT'));
-  const _creditBadge=(cid,totalAmt)=>{const p=getCreditPaidAmt(cid);const fp=p>=totalAmt-0.001;const pp=p>0.001&&!fp;return fp?`<span class="td-badge badge-cash"><svg class="ic"><use href="#i-check-circle"/></svg> PAID</span>`:pp?`<span class="td-badge" style="background:rgba(45,75,138,.14);color:var(--p2);border:1px solid rgba(45,75,138,.25);font-size:9px"><svg class="ic"><use href="#i-zap"/></svg> PARTIAL</span>`:`<span class="td-badge badge-credit">CREDIT</span>`;};
+  const _creditBadge=(cid,totalAmt)=>{const p=getCreditPaidAmt(cid);const fp=p>=totalAmt-0.006;const pp=p>0.001&&!fp;return fp?`<span class="td-badge badge-cash"><svg class="ic"><use href="#i-check-circle"/></svg> PAID</span>`:pp?`<span class="td-badge" style="background:rgba(45,75,138,.14);color:var(--p2);border:1px solid rgba(45,75,138,.25);font-size:9px"><svg class="ic"><use href="#i-zap"/></svg> PARTIAL</span>`:`<span class="td-badge badge-credit">CREDIT</span>`;};
   const _calcPT=r=>{const b=(parseFloat(r.qty)||0)*(parseFloat(r.uPrice)||0);return b+(r.vatOn?b*0.15:0);};
   const _calcST=s=>{const b=(s.qty||0)*(s.sPrice||0);return b+(s.vatOn?b*0.15:0)-(s.wh3On?b*0.03:0)-(s.vwhOn?b*0.075:0)-(s.commission||0);};
-  const _hasBal=(r,tot)=>r._cid?(tot-getCreditPaidAmt(r._cid))>0.001:true;
+  const _hasBal=(r,tot)=>r._cid?(tot-getCreditPaidAmt(r._cid))>0.006:true;
   const openCreditPurchases=creditPurchases.filter(r=>_hasBal(r,_calcPT(r)));
   const openCreditSales=creditSales.filter(s=>_hasBal(s,_calcST(s)));
   const cpRows=openCreditPurchases.length?openCreditPurchases.map(r=>{const tot=_calcPT(r);return`<tr>
@@ -11483,7 +11483,7 @@ function _renderPartyListReport(type,branch,branchTabsHtml,datebar){
     const total=partyRecs.reduce((a,r)=>a+calcAmt(r),0);
     const _payBadge=r=>{
       if(r.payment==='CASH')return`<span class="td-badge badge-cash"><svg class="ic"><use href="#i-check-circle"/></svg> PAID</span>`;
-      if(r._cid){const p=getCreditPaidAmt(r._cid),t=calcAmt(r),fp=p>=t-0.001,pp=p>0.001&&!fp;
+      if(r._cid){const p=getCreditPaidAmt(r._cid),t=calcAmt(r),fp=p>=t-0.006,pp=p>0.001&&!fp;
         if(fp)return`<span class="td-badge badge-cash"><svg class="ic"><use href="#i-check-circle"/></svg> PAID</span>`;
         if(pp)return`<span class="td-badge" style="background:rgba(245,158,11,.13);color:#b45309;border:1px solid rgba(245,158,11,.3);font-size:9px"><svg class="ic"><use href="#i-zap"/></svg> PARTIAL</span>`;
       }
@@ -11582,7 +11582,7 @@ function _printPartyReport(type){
   const creditTotal=Math.max(0,total-cashTotal);
   const _printPayBadge=r=>{
     if(r.payment==='CASH')return`<span class="pay-badge pay-cash">PAID</span>`;
-    if(r._cid){const p=getCreditPaidAmt(r._cid),t=calcAmt(r),fp=p>=t-0.001,pp=p>0.001&&!fp;
+    if(r._cid){const p=getCreditPaidAmt(r._cid),t=calcAmt(r),fp=p>=t-0.006,pp=p>0.001&&!fp;
       if(fp)return`<span class="pay-badge pay-cash">PAID</span>`;
       if(pp)return`<span class="pay-badge" style="background:rgba(245,158,11,.13);color:#b45309;border:1px solid rgba(245,158,11,.3)">PARTIAL</span>`;
     }
@@ -12128,14 +12128,14 @@ function exportXL(tab,opts={}){
     const byType=activeFilter==='sales'?all.filter(r=>r._type==='sale'):
                  activeFilter==='purchases'?all.filter(r=>r._type==='purchase'):all;
     let filtered=activeFilter==='paid'
-      ?byType.filter(r=>getCreditPaidAmt(r._cid)>=r._amt-0.001)
-      :byType.filter(r=>getCreditPaidAmt(r._cid)<r._amt-0.001);
+      ?byType.filter(r=>getCreditPaidAmt(r._cid)>=r._amt-0.006)
+      :byType.filter(r=>getCreditPaidAmt(r._cid)<r._amt-0.006);
     if(activeParty)filtered=filtered.filter(r=>(r.party||'')===activeParty);
     let totalAmt=0,totalPaid=0,totalBalance=0;
     filtered.forEach(row=>{
       const paidAmt=getCreditPaidAmt(row._cid);
       const balance=Math.max(0,row._amt-paidAmt);
-      const isFullyPaid=paidAmt>=row._amt-0.001;
+      const isFullyPaid=paidAmt>=row._amt-0.006;
       const status=isFullyPaid?'PAID':paidAmt>0.001?'PARTIAL':'OUTSTANDING';
       const typeLabel=row._type==='sale'?'SALE':'PURCHASE';
       totalAmt+=row._amt;
