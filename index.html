@@ -10240,7 +10240,7 @@ function renderTx(){
   const list=isP?S.purchase:S.sales;
   const branchF=document.getElementById('branch-filter')?.value||'';
   const effectiveBranchF=S.userBranch?S.userBranch:branchF;
-  const _allVisible=list.filter(r=>r.id||r.name||r.party||r.qty).filter(r=>!effectiveBranchF||r.branch===effectiveBranchF).filter(r=>shouldUserSeeData(r)).filter(r=>_drPass(r)).slice().sort(_dateSort);
+  const _allVisible=list.filter(r=>r.id||r.name||r.party||r.qty).filter(r=>!effectiveBranchF||r.branch===effectiveBranchF).filter(r=>shouldUserSeeData(r)).filter(r=>_drPass(r)).slice().reverse().sort(_dateSort);
   const MAX_ROWS=500;
   const visible=_allVisible.slice(0,MAX_ROWS);
   const _rowCapNotice=_allVisible.length>MAX_ROWS?`<div style="padding:8px 14px;font-size:11px;color:var(--warn);background:rgba(245,158,11,.08);border-bottom:1px solid var(--border)">Showing first ${MAX_ROWS} of ${_allVisible.length} records — use date or branch filters to narrow results.</div>`:'';
@@ -10495,7 +10495,7 @@ function exportCreditPDF(){
   const all=[
     ...creditSales.map(r=>({...r,_type:'sale',_amt:calcST(r)})),
     ...creditPurch.map(r=>({...r,_type:'purchase',_amt:calcPT(r)}))
-  ].sort(_dateSort);
+  ].reverse().sort(_dateSort);
   const byType=activeFilter==='sales'?all.filter(r=>r._type==='sale'):
                activeFilter==='purchases'?all.filter(r=>r._type==='purchase'):all;
   let filtered=activeFilter==='paid'
@@ -10639,7 +10639,7 @@ function renderStoreReport(){
     {l:L('totalExpenses'),v:totalExpense,icon:'<svg class="ic"><use href="#i-cash-fly"/></svg>'},
     {l:L('storeNetValue'),v:netValue,total:true,icon:'<svg class="ic"><use href="#i-trending-up"/></svg>'},
   ];
-  const dispatchRows=SD.map(d=>`<tr>
+  const dispatchRows=_newest(SD).map(d=>`<tr>
     <td class="td-mono" data-label="Date" style="font-size:11px">${(d.date||'').slice(0,10)}</td>
     <td data-label="Item Name" style="font-weight:600">${esc(d.itemName||'—')}</td>
     <td data-label="Description" style="color:var(--text3)">${esc(d.itemDesc||'—')}</td>
@@ -10719,7 +10719,7 @@ function renderStore(){
   const dispatches=S.storeDispatches;
   const totalStoreVal=sum(items,s=>s.qty*(s.cost||0));
 
-  const storeRows=[...items].sort(_dateSort).map(s=>`
+  const storeRows=[...items].reverse().sort(_dateSort).map(s=>`
     <tr oncontextmenu="showCtxMenu(event,${items.indexOf(s)},'storeItems')" title="Right-click for options">
       <td class="td-mono" data-label="Part No.">${esc(s.itemId)}</td>
       <td data-label="Item Name" style="font-weight:600">${esc(s.itemName)}</td>
@@ -10733,7 +10733,7 @@ function renderStore(){
 
   if(!S._dispatchPage)S._dispatchPage=1;
   const PAGE=30;
-  const sortedDispatches=[...dispatches].sort(_dateSort);
+  const sortedDispatches=[...dispatches].reverse().sort(_dateSort);
   const dispSlice=sortedDispatches.slice(0,S._dispatchPage*PAGE);
   const hasMore=sortedDispatches.length>dispSlice.length;
   const dispatchRows=dispSlice.map(d=>{
@@ -10921,7 +10921,7 @@ function renderCreditPage(){
   const all=[
     ...creditSales.map(r=>({...r,_type:'sale',_amt:calcST(r)})),
     ...creditPurch.map(r=>({...r,_type:'purchase',_amt:calcPT(r)}))
-  ].sort(_dateSort);
+  ].reverse().sort(_dateSort);
   const allParties=[...new Set(all.map(r=>r.party||'').filter(Boolean))].sort();
   // Filter parties based on active filter context
   let filteredParties = allParties;
@@ -11080,7 +11080,7 @@ function renderExpense(){
   const isOwnerRole=isOwner()||isSystemOwner();
   const activeCtx=S.userBranch||(isOwnerRole?(S.expenseBranch||(S.branches[0]||'STORE')):'STORE');
   const allRows=S.expense.filter(r=>r.reason||r.amt).filter(r=>shouldUserSeeData(r));
-  const rows=(activeCtx==='STORE'?allRows.filter(r=>!r.branch||r.branch==='STORE'):allRows.filter(r=>r.branch===activeCtx)).filter(r=>_drPass(r)).slice().sort(_dateSort);
+  const rows=(activeCtx==='STORE'?allRows.filter(r=>!r.branch||r.branch==='STORE'):allRows.filter(r=>r.branch===activeCtx)).filter(r=>_drPass(r)).slice().reverse().sort(_dateSort);
   const total=rows.reduce((a,b)=>a+(parseFloat(b.amt)||0),0);
   const tabsHtml=isOwnerRole?`<div style="display:flex;flex-wrap:wrap;gap:6px;padding:10px 16px;background:var(--surface2);border-bottom:1px solid var(--border)">
     ${S.branches.map(b=>`<button type="button" class="btn btn-sm${activeCtx===b?' btn-primary':''}" onclick="S.expenseBranch='${esc(b)}';renderTab()"><svg class="ic"><use href="#i-building"/></svg> ${esc(b)}</button>`).join('')}
@@ -11166,7 +11166,7 @@ function _reportCalc(branch){
     const cogs=consumeFIFO(s.id,parseFloat(s.qty)||0);
     if(srSet.has(s)){const saleAmt=(parseFloat(s.qty)||0)*(parseFloat(s.sPrice)||0);const comm=parseFloat(s.commission)||0;const wh3=s.wh3On?saleAmt*0.03:0;entryPLMap.set(s,{saleAmt,cogs,profit:saleAmt-cogs-comm-wh3});}
   });
-  const entryPL=SR.map(s=>{const d=entryPLMap.get(s);if(d)return{...s,...d};const saleAmt=(parseFloat(s.qty)||0)*(parseFloat(s.sPrice)||0);const comm=parseFloat(s.commission)||0;const wh3=s.wh3On?saleAmt*0.03:0;return{...s,saleAmt,cogs:0,profit:saleAmt-comm-wh3};});
+  const entryPL=_newest(SR.map(s=>{const d=entryPLMap.get(s);if(d)return{...s,...d};const saleAmt=(parseFloat(s.qty)||0)*(parseFloat(s.sPrice)||0);const comm=parseFloat(s.commission)||0;const wh3=s.wh3On?saleAmt*0.03:0;return{...s,saleAmt,cogs:0,profit:saleAmt-comm-wh3};}));
   const totalSalesPL=entryPL.reduce((a,e)=>a+e.saleAmt,0);
   const totalPurchases=entryPL.reduce((a,e)=>a+e.cogs,0);
   const net=entryPL.reduce((a,e)=>a+e.profit,0)-tE;
@@ -11332,8 +11332,8 @@ function _renderSingleBranchReport(branch,branchTabsHtml,datebar){
     <div class="report-label">${r.l}${r.edit&&isOwner()?`<input type="number" value="${r.v}" oninput="_setBranchBal('${esc(r.branch||S.branches[0])}',this.value)" style="margin-left:12px;width:120px;padding:4px 8px;border:1.5px solid var(--border2);border-radius:6px;background:var(--surface2);color:var(--text);font-family:var(--mono);font-size:12px;outline:none">`:''}</div>
     <div class="report-val ${r.neg?'num-neg':r.pos?'num-pos':r.v<0?'num-neg':r.v>0?'num-pos':''}">${r.edit&&isOwner()?'':fmt(r.v)}</div>
   </div>`).join('');
-  const creditPurchases=PR.filter(p=>p.payment==='CREDIT');
-  const creditSales=SR.filter(s=>s.payment==='CREDIT');
+  const creditPurchases=_newest(PR.filter(p=>p.payment==='CREDIT'));
+  const creditSales=_newest(SR.filter(s=>s.payment==='CREDIT'));
   const _creditBadge=(cid,totalAmt)=>{const p=getCreditPaidAmt(cid);const fp=p>=totalAmt-0.001;const pp=p>0.001&&!fp;return fp?`<span class="td-badge badge-cash"><svg class="ic"><use href="#i-check-circle"/></svg> PAID</span>`:pp?`<span class="td-badge" style="background:rgba(45,75,138,.14);color:var(--p2);border:1px solid rgba(45,75,138,.25);font-size:9px"><svg class="ic"><use href="#i-zap"/></svg> PARTIAL</span>`:`<span class="td-badge badge-credit">CREDIT</span>`;};
   const _calcPT=r=>{const b=(parseFloat(r.qty)||0)*(parseFloat(r.uPrice)||0);return b+(r.vatOn?b*0.15:0);};
   const _calcST=s=>{const b=(s.qty||0)*(s.sPrice||0);return b+(s.vatOn?b*0.15:0)-(s.wh3On?b*0.03:0)-(s.vwhOn?b*0.075:0)-(s.commission||0);};
@@ -12124,7 +12124,7 @@ function exportXL(tab,opts={}){
     const all=[
       ...creditSales.map(r=>({...r,_type:'sale',_amt:calcST(r)})),
       ...creditPurch.map(r=>({...r,_type:'purchase',_amt:calcPT(r)}))
-    ].sort(_dateSort);
+    ].reverse().sort(_dateSort);
     const byType=activeFilter==='sales'?all.filter(r=>r._type==='sale'):
                  activeFilter==='purchases'?all.filter(r=>r._type==='purchase'):all;
     let filtered=activeFilter==='paid'
@@ -12315,6 +12315,8 @@ function _dateSort(a,b){
   if(dt!==0)return dt;
   return(b.createdAt||'').localeCompare(a.createdAt||'');
 }
+// Newest first. Same date -> last recorded on top (createdAt, then array position).
+function _newest(a){return a.slice().reverse().sort(_dateSort);}
 
 /* ── Date range preset chips ─────────────────────────── */
 let _drPreset='all';
