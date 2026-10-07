@@ -19,14 +19,14 @@ window.setInterval=function(fn,ms){var a=[].slice.call(arguments,2);
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta http-equiv="X-Content-Type-Options" content="nosniff">
 <title>POWER-IMS</title>
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%232D4B8A%22/%3E%3Cpath%20d%3D%22M32%2013v17%22%20stroke%3D%22%23fff%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cpath%20d%3D%22M21%2020a19%2019%200%201%200%2022%200%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3C/svg%3E">
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20viewBox%3D%220%200%2064%2064%22%3E%3Crect%20width%3D%2264%22%20height%3D%2264%22%20rx%3D%2214%22%20fill%3D%22%232D4B8A%22/%3E%3Cpath%20d%3D%22M32%2013v17%22%20stroke%3D%22%23fff%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3Cpath%20d%3D%22M21%2020a19%2019%200%201%200%2022%200%22%20fill%3D%22none%22%20stroke%3D%22%23fff%22%20stroke-width%3D%226%22%20stroke-linecap%3D%22round%22/%3E%3C/svg%3E">
+<link rel="icon" type="image/png" href="https://bfzmtbdnucefypqbdohr.supabase.co/storage/v1/object/public/Logo/P.C%20PNG.png">
+<link rel="apple-touch-icon" href="https://bfzmtbdnucefypqbdohr.supabase.co/storage/v1/object/public/Logo/P.C%20PNG.png">
 
-<script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-<script defer src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script defer src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+<script async src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script async src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script async src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -4596,7 +4596,8 @@ const fmt=n=>{const v=parseFloat(n)||0;return v.toLocaleString(undefined,{minimu
 const fmtQ=n=>(parseFloat(n)||0).toLocaleString();
 const esc=s=>String(s||'').replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;');
 function _timeAgo(ts){if(!ts)return'';const s=Math.floor((Date.now()-new Date(ts))/1000);if(s<60)return'just now';if(s<3600)return`${Math.floor(s/60)}m ago`;if(s<86400)return`${Math.floor(s/3600)}h ago`;if(s<2592000)return`${Math.floor(s/86400)}d ago`;return new Date(ts).toLocaleDateString();}
-const _dateSortAsc=(a,b)=>{const d=(a.date||'')<(b.date||'')?-1:(a.date||'')>(b.date||'')?1:0;if(d!==0)return d;return(a.createdAt||'').localeCompare(b.createdAt||'');};
+const _dateMs=d=>{if(!d)return 0;if(d instanceof Date)return d.getTime();const t=String(d).trim();let m=t.match(/^(\d{1,2})[-\/.](\d{1,2})[-\/.](\d{4})$/);if(m)return new Date(+m[3],m[2]-1,+m[1]).getTime();m=t.match(/^(\d{4})-(\d{1,2})-(\d{1,2})(?:$|T|\s)/);if(m)return new Date(+m[1],m[2]-1,+m[3]).getTime();const v=new Date(t).getTime();return isNaN(v)?0:v;};
+const _dateSortAsc=(a,b)=>{const d=_dateMs(a.date)-_dateMs(b.date);if(d!==0)return d;return(a.createdAt||'').localeCompare(b.createdAt||'');};
 const toEthiopianDate=gDate=>{const yr=gDate.getFullYear(),mo=gDate.getMonth()+1,dy=gDate.getDate();const a=Math.floor((14-mo)/12),y=yr+4800-a,m=mo+12*a-3;const jdn=dy+Math.floor((153*m+2)/5)+365*y+Math.floor(y/4)-Math.floor(y/100)+Math.floor(y/400)-32045;const ET_EPOCH=1723856,offset=jdn-ET_EPOCH,r=offset%1461,n=(r%365)+365*Math.floor(r/1460);return{year:4*Math.floor(offset/1461)+Math.floor(r/365)-Math.floor(r/1460),month:Math.floor(n/30)+1,day:n%30+1};};
 const nowDt=()=>{const et=toEthiopianDate(new Date());return `${String(et.day).padStart(2,'0')}-${String(et.month).padStart(2,'0')}-${et.year}`;}
 const sum=(arr,fn)=>arr.reduce((a,b)=>a+(parseFloat(fn(b))||0),0);
@@ -10052,7 +10053,7 @@ function autoFillItem(){
   if(item){
     const party=(document.getElementById('f-party')?.value||'').trim();
     const arr=isP?S.purchase:S.sales;const pk=isP?'uPrice':'sPrice';
-    const recent=arr.filter(r=>r.id===item.id&&(!party||r.party===party)).sort((a,b)=>(b.date||'').localeCompare(a.date||''))[0];
+    const recent=arr.filter(r=>r.id===item.id&&(!party||r.party===party)).sort((a,b)=>_dateMs(b.date)-_dateMs(a.date)||(b.createdAt||'').localeCompare(a.createdAt||''))[0];
     const priceEl=document.getElementById('f-price');
     if(recent&&recent[pk]&&priceEl&&!priceEl.value){priceEl.value=recent[pk];priceEl.classList.add('_price-filled');setTimeout(()=>priceEl.classList.remove('_price-filled'),1200);}
     const imageEl=document.getElementById('f-item-image');
@@ -12310,10 +12311,9 @@ function _parseImpDate(v){
   }
 }
 function _dateSort(a,b){
-  const parseDate=d=>{if(!d)return new Date(0);const p=d.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);return p?new Date(p[3],p[2]-1,p[1]):new Date(d);};
-  const dt=parseDate(b.date||'').getTime()-parseDate(a.date||'').getTime();
+  const dt=_dateMs(b.date)-_dateMs(a.date);
   if(dt!==0)return dt;
-  return(a.createdAt||'').localeCompare(b.createdAt||'');
+  return(b.createdAt||'').localeCompare(a.createdAt||'');
 }
 
 /* ── Date range preset chips ─────────────────────────── */
@@ -12702,8 +12702,10 @@ async function init(){
     if(_lsub)_lsub.textContent=hasSession?'Signing you in…':'Loading accounts from cloud…';
     // Wait up to 3s for Supabase SDK to load — but proceed regardless so
     // the auth screen still appears if the user is offline.
-    await _waitFor(()=>typeof supabase!=='undefined'&&typeof supabase.createClient==='function',3000);
+    await _waitFor(()=>typeof supabase!=='undefined'&&typeof supabase.createClient==='function',5000);
     initSupabase();
+    // Slow network: if the SDK arrives late, connect to the cloud as soon as it does
+    if(!S.db)_waitFor(()=>typeof supabase!=='undefined'&&typeof supabase.createClient==='function',60000).then(ok=>{if(ok&&!S.db){try{initSupabase();loadRegistryFromCloud().catch(()=>{});}catch(e){}}});
     if(hasSession){
       // Fast path for returning users: boot immediately from local cache so the
       // loading screen disappears right away, then refresh the registry quietly
@@ -12717,7 +12719,7 @@ async function init(){
       ensureDefaults();
       const reg=getRegistry();
       if(reg[savedUser]&&reg[savedUser].status!=='suspended'){
-        loggedIn=true;doLogin(savedUser,savedOwner,savedRole);
+        loggedIn=true;try{doLogin(savedUser,savedOwner,savedRole);}catch(_e){loggedIn=false;console.error(_e);}
         // Refresh registry in the background; suspend if account was revoked since last visit
         loadRegistryFromCloud().then(()=>{
           const fresh=getRegistry();
@@ -12744,15 +12746,23 @@ async function init(){
       }
       const freshReg=getRegistry();
       if(freshReg[savedUser]&&freshReg[savedUser].status!=='suspended'){
-        loggedIn=true;doLogin(savedUser,savedOwner,savedRole);
+        loggedIn=true;try{doLogin(savedUser,savedOwner,savedRole);}catch(_e){loggedIn=false;console.error(_e);}
         return;
       }
     }
   }catch(e){}finally{
+    window._bootDone=true;
     if(!loggedIn){hideLoader();document.getElementById('auth-screen').style.display='flex';setTimeout(()=>{const u=document.getElementById('auth-user');if(u)u.focus();},120);}
   }
 }
-document.addEventListener('DOMContentLoaded',init);
+window._bootDone=false;
+function _bootWatchdogShowAuth(){
+  if(window._bootDone)return;
+  try{hideLoader();}catch(e){}
+  const a=document.getElementById('auth-screen');if(a)a.style.display='flex';
+}
+setTimeout(_bootWatchdogShowAuth,9000);
+if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',init);else init();
 
 /* ═══════════════════════════════════════════════════════
    v6 UI ENHANCEMENTS
@@ -16199,5 +16209,17 @@ tr.open .ux-sum .chev{transform:rotate(-135deg)}
 :is(#add-row-modal,#edit-row-modal) #f-total-display{font-family:var(--mono);font-size:1.05rem;font-weight:800;color:var(--p);overflow-wrap:anywhere;line-height:1.15}
 :is(#add-row-modal,#edit-row-modal) .dup-warn{margin:0 0 6px}
 :is(#add-row-modal,#edit-row-modal) .modal-error{margin-top:4px}
+</style>
+
+<style id="ux-fixes2">
+/* + button: right side, fully above the bottom bar (clear of the balance tab) */
+@media(max-width:768px){#ux-plus:not(.off){left:auto!important;right:16px!important;top:-66px!important;transform:none!important}}
+html[data-view="mobile"] #ux-plus:not(.off){left:auto!important;right:16px!important;top:-66px!important;transform:none!important}
+/* search bar visible on mobile */
+html[data-view="mobile"] .table-search-bar{display:flex!important}
+@media(max-width:768px){.table-search-bar{display:flex!important}}
+/* Add/Edit dialog: Date + Party in one row, no gap */
+:is(#add-row-modal,#edit-row-modal) .field-row:has(#f-date){display:grid!important;grid-template-columns:minmax(104px,.8fr) 1.2fr!important;gap:6px!important}
+:is(#add-row-modal,#edit-row-modal) .field-row:has(#f-date)>.field{max-width:none!important;width:100%;min-width:0}
 </style>
 </body></html>
