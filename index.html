@@ -13310,28 +13310,6 @@ if(_origSetAuthMode) window.setAuthMode=function(m){
 })();
 
 
-// ── Swipe to switch tabs ──
-(function(){
-  var _sx=0,_sy=0;
-  var _allTabs=['PURCHASE','SALES','BALANCE','EXPENSE','REPORT','CREDIT','ITEMS'];
-  var _content=document.getElementById('content');
-  if(!_content)return;
-  _content.addEventListener('touchstart',function(e){
-    _sx=e.touches[0].clientX;_sy=e.touches[0].clientY;
-  },{passive:true});
-  _content.addEventListener('touchend',function(e){
-    var dx=e.changedTouches[0].clientX-_sx;
-    var dy=e.changedTouches[0].clientY-_sy;
-    if(Math.abs(dx)<55||Math.abs(dx)<Math.abs(dy)*1.4)return;
-    if(typeof S==='undefined'||typeof switchTab!=='function')return;
-    var visible=_allTabs.filter(function(t){var el=document.getElementById('nav-'+t);return el&&el.style.display!=='none';});
-    var ci=visible.indexOf(S.tab);
-    if(ci===-1)return;
-    if(dx<0&&ci<visible.length-1) switchTab(visible[ci+1]);
-    else if(dx>0&&ci>0) switchTab(visible[ci-1]);
-  },{passive:true});
-})();
-
 // ── Store long-press sub-menu ──
 (function(){
   var _lpt=null;
@@ -16013,10 +15991,6 @@ button.btn[onclick*="xport"],button.btn[onclick*="rint"],button.rpt-pdf-btn,.bul
 @media(pointer:coarse){.btn,.nav-item,.drawer-item{min-height:44px}}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 html.ux-large{font-size:112.5%}
-#ux-kpi{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;padding:12px 14px 4px}
-#ux-kpi .k{background:var(--surface);border:1px solid var(--border);border-radius:var(--ux-r);box-shadow:var(--ux-sh);padding:12px 14px}
-#ux-kpi .k small{display:block;font-size:11px;font-weight:600;color:var(--text3);letter-spacing:.04em;text-transform:uppercase}
-#ux-kpi .k b{display:block;font-size:1.25rem;font-weight:800;margin-top:4px}
 @media(max-width:640px){
 #tab-content table.ux-card,#tab-content table.ux-card tbody,#tab-content table.ux-card tr{display:block;width:100%}
 #tab-content table.ux-card thead{display:none}
@@ -16032,25 +16006,15 @@ html.ux-large{font-size:112.5%}
   var busy=false;
   function cards(){
     tc.querySelectorAll('table:not(.ux-card)').forEach(function(t){
-      var th=t.querySelectorAll('thead th');if(th.length<4)return;
+      var th=t.querySelectorAll('thead th');if(th.length<4||t.querySelector('td[data-label]'))return;
       var lb=[].map.call(th,function(h){return (h.textContent||'').trim();});
       t.querySelectorAll('tbody tr').forEach(function(r){[].forEach.call(r.children,function(c,i){if(!c.hasAttribute('colspan'))c.setAttribute('data-label',lb[i]||'');});});
       t.classList.add('ux-card');
     });
   }
-  function kpi(){
-    if(typeof S==='undefined'||!S||S.tab!=='ITEMS'||document.getElementById('ux-kpi')||typeof _reportCalc!=='function')return;
-    var c;try{c=_reportCalc('');}catch(e){return;}
-    var f=typeof fmt==='function'?fmt:function(n){return n;};
-    var g='var(--success)',r='var(--error)';
-    var d=[['Sales',c.tSTot,g],['Purchases',c.tPTot,r],['Net profit',c.net,c.net>=0?g:r],['Cash on hand',c.coh,'var(--p)']];
-    var el=document.createElement('div');el.id='ux-kpi';
-    el.innerHTML=d.map(function(x){return '<div class="k"><small>'+x[0]+'</small><b style="color:'+x[2]+'">'+f(x[1])+'</b></div>';}).join('');
-    tc.insertBefore(el,tc.firstChild);
-  }
   new MutationObserver(function(){
     if(busy)return;busy=true;
-    requestAnimationFrame(function(){try{cards();kpi();}catch(e){}busy=false;});
+    requestAnimationFrame(function(){try{cards();}catch(e){}busy=false;});
   }).observe(tc,{childList:true,subtree:true});
   /* Larger-text option in the settings drawer */
   try{
@@ -16062,6 +16026,114 @@ html.ux-large{font-size:112.5%}
       pb.parentNode.insertBefore(b,pb.nextSibling);
     }
   }catch(e){}
+})();
+</script>
+
+<style id="ux-mobile">
+/* scrolling inside dialogs: header + footer fixed, only the body scrolls */
+html:has(.modal-overlay.open){overflow:hidden}
+.modal-overlay.open{bottom:var(--ux-kb,0px)!important}
+.modal-overlay.open .modal-box{margin-bottom:0!important}
+.modal-box:has(>.modal-body){display:flex!important;flex-direction:column;overflow:hidden!important;max-height:92dvh!important}
+.modal-box>.modal-hdr{flex:0 0 auto}
+.modal-box>.modal-body{flex:1 1 auto;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+html[data-view="mobile"] .modal-overlay{align-items:flex-end!important;padding:0!important}
+html[data-view="mobile"] .modal-box{width:100%!important;border-radius:18px 18px 0 0!important;max-height:94dvh!important}
+/* compact entry form */
+:is(#add-row-modal,#edit-row-modal) .modal-body{padding:12px 14px}
+:is(#add-row-modal,#edit-row-modal) .field{margin-bottom:8px}
+:is(#add-row-modal,#edit-row-modal) .field label{font-size:11px;margin-bottom:3px}
+:is(#add-row-modal,#edit-row-modal) .field :is(input,select):not([type=checkbox]):not([type=radio]){height:38px!important;min-height:38px!important;padding:0 10px!important;font-size:14px!important;border-radius:8px!important}
+:is(#add-row-modal,#edit-row-modal) .field-row{gap:8px}
+:is(#add-row-modal,#edit-row-modal) .field:has(>#f-date){max-width:150px}
+:is(#add-row-modal,#edit-row-modal) :is(#f-name,#f-desc)[readonly]{border:0!important;background:transparent!important;box-shadow:none!important;padding:0!important;height:auto!important;min-height:0!important;font-weight:600;cursor:default!important}
+.ux-actions{position:sticky;bottom:0;z-index:3;display:flex;gap:8px;margin-top:8px;padding:10px 0 2px;background:var(--surface);border-top:1px solid var(--border)}
+:is(#add-row-modal,#edit-row-modal) .ux-actions>.modal-btn{flex:1 1 0!important;min-height:42px!important;margin:0!important;padding:8px 6px!important;font-size:12.5px!important;line-height:1.15;white-space:normal}
+/* quick-add + in the bottom bar (phones) */
+#ux-plus{display:none}
+@media(max-width:768px){
+#ux-plus:not(.off){display:flex;flex:0 0 auto;align-items:center;justify-content:center;width:48px;height:48px;margin-top:-16px;border:0;border-radius:50%;background:var(--p);color:#E4E6F5;box-shadow:0 6px 16px var(--p-glow);cursor:pointer}
+#ux-plus svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:2.4}
+#fab-add{display:none!important}}
+/* compact, expandable record cards */
+td.ux-sum,td.ux-act{display:none}
+html[data-card="1"] tbody tr.ux-rec>td:not(.ux-sum):not(.ux-act){display:none!important}
+html[data-card="1"] tbody tr.ux-rec.open>td:not(.ux-sum):not(.ux-act):not([data-label=""]){display:flex!important}
+html[data-card="1"] tbody tr.ux-rec>td.ux-sum{display:block!important;padding:10px 12px!important;border:0!important;text-align:left!important;cursor:pointer}
+html[data-card="1"] tbody tr.ux-rec>td.ux-sum::before{display:none}
+html[data-card="1"] tbody tr.ux-rec.open>td.ux-act{display:block!important;padding:8px 12px!important;border:0!important}
+.ux-sum .r1,.ux-sum .r2{display:flex;justify-content:space-between;align-items:center;gap:8px}
+.ux-sum .r1 b{font-size:14px}
+.ux-sum .r2{margin-top:3px;font-size:11.5px;color:var(--text3)}
+.ux-sum .chev{flex:0 0 auto;width:7px;height:7px;margin-left:6px;border-right:2px solid var(--text3);border-bottom:2px solid var(--text3);transform:rotate(45deg);transition:transform .2s}
+tr.open .ux-sum .chev{transform:rotate(-135deg)}
+</style>
+<script>
+(function(){
+  var tc=document.getElementById('tab-content'),nav=document.getElementById('bottom-nav');
+  function esc(t){var d=document.createElement('div');d.textContent=t==null?'':t;return d.innerHTML;}
+  /* record cards */
+  function recs(){
+    if(!tc)return;
+    tc.querySelectorAll('tbody tr:not(.ux-rec):not(.summary-row)').forEach(function(tr){
+      var g=function(l){var c=tr.querySelector('td[data-label="'+l+'"]');return c?c.textContent.trim():'';};
+      var name=g('Item Name')||g('Reason')||g('Description'),tot=g('Total')||g('Amount');
+      if(!tr.querySelector('td[data-label="Date"]')||!tot)return;
+      var pay=tr.querySelector('td[data-label="Payment"]');
+      var party=g('Supplier')||g('Customer'),qty=g('Qty'),pr=g('Unit Price')||g('Price');
+      var meta=[g('Date'),party,qty&&pr?qty+' × '+pr:qty].filter(Boolean).map(esc).join(' · ');
+      var sum=document.createElement('td');sum.className='ux-sum';
+      sum.innerHTML='<div class="r1"><b>'+esc(name)+'</b><b>'+esc(tot)+'</b></div><div class="r2"><span>'+meta+'</span><span>'+(pay?pay.innerHTML:'')+'<i class="chev"></i></span></div>';
+      var act=document.createElement('td');act.className='ux-act';
+      act.innerHTML='<button type="button" class="btn btn-sm ux-actbtn">Edit / Delete…</button>';
+      tr.insertBefore(sum,tr.firstChild);tr.appendChild(act);tr.classList.add('ux-rec');
+    });
+  }
+  if(tc){
+    tc.addEventListener('click',function(e){
+      var b=e.target.closest('.ux-actbtn');
+      if(b){var r=b.getBoundingClientRect(),tr=b.closest('tr');tr.dispatchEvent(new MouseEvent('contextmenu',{bubbles:true,cancelable:true,clientX:r.left,clientY:r.bottom}));return;}
+      var s=e.target.closest('td.ux-sum');if(!s)return;
+      var tr=s.parentNode,was=tr.classList.contains('open');
+      tr.parentNode.querySelectorAll('tr.open').forEach(function(x){x.classList.remove('open');});
+      if(!was)tr.classList.add('open');
+    });
+    var busy=false;
+    new MutationObserver(function(){if(busy)return;busy=true;requestAnimationFrame(function(){try{recs();}catch(e){}busy=false;});}).observe(tc,{childList:true,subtree:true});
+  }
+  /* sticky side-by-side form buttons */
+  function fix(b){
+    if(!b||b.querySelector(':scope>.ux-actions'))return;
+    var bs=[].filter.call(b.children,function(c){return c.classList&&c.classList.contains('modal-btn');});
+    if(!bs.length)return;
+    var w=document.createElement('div');w.className='ux-actions';b.insertBefore(w,bs[0]);
+    bs.forEach(function(x){w.appendChild(x);});
+  }
+  ['add-form-body','edit-form-body'].forEach(function(id){
+    var b=document.getElementById(id);if(!b)return;
+    new MutationObserver(function(){fix(b);}).observe(b,{childList:true});
+  });
+  /* keyboard height for dialogs */
+  if(window.visualViewport){
+    var kb=function(){var v=window.visualViewport,h=Math.max(0,window.innerHeight-v.height-v.offsetTop);document.documentElement.style.setProperty('--ux-kb',h>60?h+'px':'0px');};
+    window.visualViewport.addEventListener('resize',kb);
+  }
+  /* "+" quick-add in the middle of the bottom bar */
+  if(nav){
+    var plus=document.createElement('button');plus.type='button';plus.id='ux-plus';plus.setAttribute('aria-label','Add record');
+    plus.innerHTML='<svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>';
+    plus.onclick=function(){if(typeof openAddModal==='function')openAddModal();};
+    function place(){
+      var it=[].filter.call(nav.children,function(c){return c.classList&&c.classList.contains('nav-item')&&c.id!=='nav-more-btn'&&c.style.display!=='none';});
+      var ref=it[Math.floor(it.length/2)];
+      if(ref)nav.insertBefore(plus,ref);else nav.appendChild(plus);
+      var ok=typeof _FAB_TABS!=='undefined'&&typeof S!=='undefined'&&S&&_FAB_TABS.has(S.tab);
+      plus.classList.toggle('off',!ok);
+    }
+    var o=window.switchTab;
+    if(typeof o==='function')window.switchTab=function(){var r=o.apply(this,arguments);try{place();}catch(e){}return r;};
+    place();
+  }
 })();
 </script>
 </body></html>
